@@ -8,7 +8,7 @@ import sx.blah.discord.handle.obj.IUser;
 public class UnknownCommandHandler extends CommandHandler {
 
 	public UnknownCommandHandler(IDiscordClient client) {
-		super(client);
+		super(client, null, null);
 	}
 
 	@Override

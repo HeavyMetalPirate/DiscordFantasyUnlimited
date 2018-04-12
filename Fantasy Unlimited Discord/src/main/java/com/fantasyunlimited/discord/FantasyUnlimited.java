@@ -18,7 +18,7 @@ import sx.blah.discord.handle.obj.IMessage;
 public class FantasyUnlimited extends BaseBot implements IListener<MessageReceivedEvent> {
 	
 	private final Properties properties;
-	private static final String PREFIX = "prefix";
+	public static final String PREFIX_KEY = "prefix";
 	
 	private Map<String, CommandHandler> commands = new HashMap<String, CommandHandler>();
 	private UnknownCommandHandler unknown;
@@ -34,7 +34,7 @@ public class FantasyUnlimited extends BaseBot implements IListener<MessageReceiv
 	}
 
 	private void setupCommands() {
-		commands.put("ping", new PingCommandHandler(client)); //ping command
+		commands.put(PingCommandHandler.CMD, new PingCommandHandler(client, properties)); //ping command
 		
 		//handler for unknown commands
 		unknown = new UnknownCommandHandler(client);
@@ -43,11 +43,11 @@ public class FantasyUnlimited extends BaseBot implements IListener<MessageReceiv
 	@Override
 	public void handle(MessageReceivedEvent event) {
 		IMessage message = event.getMessage();
-		if(message.getContent().startsWith(properties.getProperty(PREFIX)) == false) {
+		if(message.getContent().startsWith(properties.getProperty(PREFIX_KEY)) == false) {
 			return;
 		}	
 		
-		String content = message.getContent().substring(properties.getProperty(PREFIX).length()); //Strip the prefix
+		String content = message.getContent().substring(properties.getProperty(PREFIX_KEY).length()); //Strip the prefix
 		if(content.trim().isEmpty()) { return; }
 		
 		String command = content.split(" ")[0];

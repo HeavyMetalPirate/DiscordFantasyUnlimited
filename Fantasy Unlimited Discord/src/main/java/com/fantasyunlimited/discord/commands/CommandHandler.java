@@ -1,9 +1,14 @@
 package com.fantasyunlimited.discord.commands;
 
+import java.util.Properties;
+
+import com.fantasyunlimited.discord.FantasyUnlimited;
+
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.IListener;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MessageBuilder;
 import sx.blah.discord.util.MissingPermissionsException;
@@ -12,8 +17,13 @@ import sx.blah.discord.util.RateLimitException;
 public abstract class CommandHandler implements IListener<MessageReceivedEvent> {
 	
 	protected final IDiscordClient client;
-	public CommandHandler(IDiscordClient client) {
+	protected final String command;
+	protected final Properties properties;
+	
+	public CommandHandler(IDiscordClient client, Properties properties, String command) {
 		this.client = client;
+		this.command = command;
+		this.properties = properties;
 	}
 	
 	protected void sendMessage(IChannel channel, String message) {
@@ -32,5 +42,10 @@ public abstract class CommandHandler implements IListener<MessageReceivedEvent> 
 			System.err.print("Missing permissions for channel!");
 			e.printStackTrace();
 		}
+	}
+	
+	protected String stripCommandFromMessage(IMessage message) {
+		String content = message.getContent().substring(properties.getProperty(FantasyUnlimited.PREFIX_KEY).length()); //Strip the prefix
+		return content.substring(command.length()).trim(); //Strip the command with leading and trailing whitespace removed
 	}
 }
