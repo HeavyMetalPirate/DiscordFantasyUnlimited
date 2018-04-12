@@ -1,0 +1,8 @@
+###### IGNORING WEB ADMIN EMERGENCY FRONTEND FOR NOW ######
+Might add REST capabilities or even a full homepage later on, depending on how things are going
+
+###########################################################
+
+Discord Bot features:
+
+- Start bot & login
