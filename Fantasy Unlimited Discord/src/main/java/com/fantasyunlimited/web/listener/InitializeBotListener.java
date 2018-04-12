@@ -1,5 +1,8 @@
 package com.fantasyunlimited.web.listener;
 
+import java.io.IOException;
+import java.util.Properties;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -23,17 +26,22 @@ public class InitializeBotListener implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
-		ClientBuilder builder = new ClientBuilder(); // Creates a new client builder instance
-		Configuration.LOAD_EXTERNAL_MODULES = false;
-		final String token = "NDM0MDY3NTk5NTg0NjU3NDE5.DbFAnA.fJi6akk6NzLYEnHFPbFum1oTtQU"; //Testing token for a Test Bot
-		builder.withToken(token);
+		
 		
 		try {
+			Properties properties = new Properties();
+			properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("bot.properties"));
+			
+			ClientBuilder builder = new ClientBuilder(); // Creates a new client builder instance
+			Configuration.LOAD_EXTERNAL_MODULES = false;
+			final String token = properties.getProperty("token"); //Testing token for a Test Bot
+			builder.withToken(token);
+			
 			logger.debug("Logging Discord bot in...");
 			IDiscordClient client = builder.login(); // Builds the IDiscordClient instance and logs it in
-			event.getServletContext().setAttribute("DiscordBot", new FantasyUnlimited(client)); // Creating the bot instance & tying it to the servlet context
-		} catch (DiscordException e) { // Error occurred logging in
-			System.err.println("Error occurred while logging in!");
+			event.getServletContext().setAttribute("DiscordBot", new FantasyUnlimited(client, properties)); // Creating the bot instance & tying it to the servlet context
+		} catch (DiscordException | IOException e) { // Error occurred logging in
+			System.err.println("Error intializing bot!");
 			logger.error(e);
 		}
 	}

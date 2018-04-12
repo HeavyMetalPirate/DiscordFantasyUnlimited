@@ -1,5 +1,7 @@
 package com.fantasyunlimited.discord;
 
+import java.util.Properties;
+
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.EventDispatcher;
 import sx.blah.discord.api.events.IListener;
@@ -12,9 +14,14 @@ import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
 
 public class FantasyUnlimited extends BaseBot implements IListener<MessageReceivedEvent> {
-
-	public FantasyUnlimited(IDiscordClient discordClient) {
+	
+	private final Properties properties;
+	private static final String PREFIX = "prefix";
+	
+	public FantasyUnlimited(IDiscordClient discordClient, Properties properties) {
 		super(discordClient);
+		this.properties = properties;
+		
 		EventDispatcher dispatcher = discordClient.getDispatcher();
 		dispatcher.registerListener(this);
 	}
@@ -22,6 +29,10 @@ public class FantasyUnlimited extends BaseBot implements IListener<MessageReceiv
 	@Override
 	public void handle(MessageReceivedEvent event) {
 		IMessage message = event.getMessage();
+		if(message.getContent().startsWith(properties.getProperty(PREFIX)) == false) {
+			return;
+		}	
+		
 		IChannel channel = message.getChannel();
 		sendMessage(channel, "You typed: " + message.getContent());
 	}
