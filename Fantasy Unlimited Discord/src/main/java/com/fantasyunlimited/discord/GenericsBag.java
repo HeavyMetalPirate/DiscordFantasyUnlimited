@@ -31,11 +31,17 @@ public abstract class GenericsBag<T extends GenericItem> {
 				throw new InitializationException("Item Id" + item.getId() + " already in use!");
 			}
 			
+			if(!passSanityChecks(item)) {
+				throw new InitializationException("Item Id " + item.getId() + " (" + item.getClass().getName() + ")" + " didn't pass sanity checks.");
+			}
+			
 			items.add(item);
 			usedIds.add(item.getId());
 		}
 	}
-
+	
+	public abstract boolean passSanityChecks(T item);
+	
 	public List<T> getItems() {
 		return items;
 	}

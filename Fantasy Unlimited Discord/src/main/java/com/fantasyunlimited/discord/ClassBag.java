@@ -9,4 +9,10 @@ public class ClassBag extends GenericsBag<CharacterClass>{
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
+	public boolean passSanityChecks(CharacterClass item) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
 }

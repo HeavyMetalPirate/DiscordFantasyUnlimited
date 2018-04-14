@@ -37,8 +37,9 @@ public class FantasyUnlimited extends BaseBot {
 	
 	private static FantasyUnlimited INSTANCE;
 	
-	private final IUser owner;
+	private IUser owner;
 	
+	private final Properties properties;
 	private final MessageReceivedHandler messageReceivedHandler;
 	private final ReactionAddHandler reactionAddHandler;
 	
@@ -50,39 +51,27 @@ public class FantasyUnlimited extends BaseBot {
 	
 	public FantasyUnlimited(IDiscordClient discordClient, Properties properties) {
 		super(discordClient);
-	
-		owner = client.getUserByID(Long.parseLong(properties.getProperty("owner")));
-		
+		this.properties = properties;
 		messageReceivedHandler = new MessageReceivedHandler(discordClient, properties);
 		reactionAddHandler = new ReactionAddHandler(discordClient, properties);
 		
 		EventDispatcher dispatcher = discordClient.getDispatcher();
-		dispatcher.registerListeners(messageReceivedHandler, reactionAddHandler);
-		
-		try {
-			initializeXStream();
-			weaponBag.initialize(xstream);
-			equipmentBag.initialize(xstream);
-			raceBag.initialize(xstream);
-			classBag.initialize(xstream);
-		}
-		catch(Exception e) {
-			sendExceptionMessage(e);
-		}
-		
-		logger.debug("Initialized: " + weaponBag.getItems().size() + " Weapons");
-		logger.debug("Initialized: " + equipmentBag.getItems().size() + " Equipments");
-		logger.debug("Initialized: " + raceBag.getItems().size() + " Races");
-		logger.debug("Initialized: " + classBag.getItems().size() + " Classes");
+		dispatcher.registerListeners(new BotInitializedHandler(), messageReceivedHandler, reactionAddHandler);
 				
 		INSTANCE = this;
 	}	
 	
 	public void sendExceptionMessage(Throwable e) {
+		if(owner == null) {
+			owner = client.getUserByID(Long.parseLong(properties.getProperty("owner")));
+			
+		}
+		
 		logger.error(e);
 		sendMessage(client, owner.getOrCreatePMChannel(), "An error occured.");
 		StringBuilder builder = new StringBuilder();
 		builder.append("```");
+		builder.append(e.getClass().getCanonicalName() + ": ");
 		builder.append(e.getMessage() + "\n");
 		for(StackTraceElement element: e.getStackTrace()) {
 			builder.append("\tat " + element.toString() + "\n");
@@ -90,6 +79,7 @@ public class FantasyUnlimited extends BaseBot {
 		Throwable next = e.getCause();
 		while(next != null) {
 			builder.append("Cause:\n");
+			builder.append(next.getClass().getCanonicalName() + ": ");
 			builder.append(next.getMessage() + "\n");
 			for(StackTraceElement element: next.getStackTrace()) {
 				builder.append("\tat " + element.toString() + "\n");
@@ -100,7 +90,7 @@ public class FantasyUnlimited extends BaseBot {
 		sendMessage(client, owner.getOrCreatePMChannel(), builder.toString());
 	}
 	
-	private void initializeXStream() {
+	public XStream initializeXStream() {
 		xstream.alias("Class", CharacterClass.class);
 		xstream.alias("Race", Race.class);
 		xstream.alias("ClassBonus", ClassBonus.class);
@@ -111,9 +101,10 @@ public class FantasyUnlimited extends BaseBot {
 		xstream.alias("AttributeBonus", AttributeBonus.class);
 		xstream.alias("CombatSkillBonus", CombatSkillBonus.class);
 		xstream.alias("SecondarySkillBonus", SecondarySkillBonus.class);
+		return xstream;
 	}
 	
-	public FantasyUnlimited getInstance() {
+	public static FantasyUnlimited getInstance() {
 		return INSTANCE;
 	}
 	
@@ -124,6 +115,10 @@ public class FantasyUnlimited extends BaseBot {
                 getAutowireCapableBeanFactory().
                 autowireBean(bean);
 
+	}
+	
+	public void setPlayingText(String text) {
+		client.changePlayingText(text);
 	}
 	
 	public static void sendMessage(IDiscordClient client, IChannel channel, String message) {
@@ -143,4 +138,22 @@ public class FantasyUnlimited extends BaseBot {
 			e.printStackTrace();
 		}
 	}
+
+	public WeaponBag getWeaponBag() {
+		return weaponBag;
+	}
+
+	public EquipmentBag getEquipmentBag() {
+		return equipmentBag;
+	}
+
+	public RaceBag getRaceBag() {
+		return raceBag;
+	}
+
+	public ClassBag getClassBag() {
+		return classBag;
+	}
+	
+	
 }

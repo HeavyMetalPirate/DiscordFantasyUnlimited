@@ -6,4 +6,10 @@ public class WeaponBag extends GenericsBag<Weapon> {
 	public WeaponBag() {
 		super("weapons");
 	}
+
+	@Override
+	public boolean passSanityChecks(Weapon item) {
+		// TODO Auto-generated method stub
+		return true;
+	}
 }

@@ -9,4 +9,10 @@ public class RaceBag extends GenericsBag<Race>{
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
+	public boolean passSanityChecks(Race item) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
 }
