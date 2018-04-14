@@ -1,65 +1,47 @@
 package com.fantasyunlimited.discord;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
-
-import com.fantasyunlimited.discord.commands.CommandHandler;
-import com.fantasyunlimited.discord.commands.PingCommandHandler;
-import com.fantasyunlimited.discord.commands.UnknownCommandHandler;
 
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.EventDispatcher;
-import sx.blah.discord.api.events.IListener;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.IMessage;
+import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.util.DiscordException;
+import sx.blah.discord.util.MessageBuilder;
+import sx.blah.discord.util.MissingPermissionsException;
+import sx.blah.discord.util.RateLimitException;
 
 
-public class FantasyUnlimited extends BaseBot implements IListener<MessageReceivedEvent> {
+public class FantasyUnlimited extends BaseBot {
 	
-	private final Properties properties;
 	public static final String PREFIX_KEY = "prefix";
-	
-	private Map<String, CommandHandler> commands = new HashMap<String, CommandHandler>();
-	private UnknownCommandHandler unknown;
-	
+
+	private final MessageReceivedHandler messageReceivedHandler;
+	private final ReactionAddHandler reactionAddHandler;
 	
 	public FantasyUnlimited(IDiscordClient discordClient, Properties properties) {
-		super(discordClient);
-		this.properties = properties;
+		super(discordClient);		
+		messageReceivedHandler = new MessageReceivedHandler(discordClient, properties);
+		reactionAddHandler = new ReactionAddHandler(discordClient, properties);
 		
 		EventDispatcher dispatcher = discordClient.getDispatcher();
-		dispatcher.registerListener(this);
-		setupCommands();
-	}
-
-	private void setupCommands() {
-		commands.put(PingCommandHandler.CMD, new PingCommandHandler(client, properties)); //ping command
-		
-		//handler for unknown commands
-		unknown = new UnknownCommandHandler(client);
-	}
+		dispatcher.registerListeners(messageReceivedHandler, reactionAddHandler);	
+	}	
 	
-	@Override
-	public void handle(MessageReceivedEvent event) {
-		IMessage message = event.getMessage();
-		if(message.getContent().startsWith(properties.getProperty(PREFIX_KEY)) == false) {
-			return;
-		}	
-		
-		String content = message.getContent().substring(properties.getProperty(PREFIX_KEY).length()); //Strip the prefix
-		if(content.trim().isEmpty()) { return; }
-		
-		String command = content.split(" ")[0];
-		if(command == null || command.isEmpty()) { return; }
-		
-		command = command.toLowerCase();
-		CommandHandler handler = commands.get(command);
-		if(handler != null) {
-			handler.handle(event);
-		}
-		else {
-			unknown.handle(event);
+	public static void sendMessage(IDiscordClient client, IChannel channel, String message) {
+		try {
+			// Builds (sends) and new message in the channel that the original
+			// message was sent with the content of the original message.
+			new MessageBuilder(client).withChannel(channel).withContent(message).build();
+
+		} catch (RateLimitException e) { // RateLimitException thrown. The bot is sending messages too quickly!
+			System.err.print("Sending messages too quickly!");
+			e.printStackTrace();
+		} catch (DiscordException e) { // DiscordException thrown. Many ossibilities. Use getErrorMessage() to see what went wrong.
+			System.err.print(e.getErrorMessage()); // Print the error message sent by Discord
+			e.printStackTrace();
+		} catch (MissingPermissionsException e) { // MissingPermissionsException thrown. The bot doesn't have permission to send the message!
+			System.err.print("Missing permissions for channel!");
+			e.printStackTrace();
 		}
 	}
 }

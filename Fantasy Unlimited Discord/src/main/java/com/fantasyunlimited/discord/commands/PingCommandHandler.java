@@ -2,6 +2,8 @@ package com.fantasyunlimited.discord.commands;
 
 import java.util.Properties;
 
+import com.fantasyunlimited.discord.FantasyUnlimited;
+
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
@@ -14,7 +16,7 @@ public class PingCommandHandler extends CommandHandler {
 
 	@Override
 	public void handle(MessageReceivedEvent event) {
-		sendMessage(event.getChannel(), "Pong!");
+		FantasyUnlimited.sendMessage(client, event.getChannel(), "Pong!");
 	}
 
 }
