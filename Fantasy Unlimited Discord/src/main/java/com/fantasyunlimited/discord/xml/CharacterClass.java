@@ -3,8 +3,8 @@ package com.fantasyunlimited.discord.xml;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CharacterClass {
-	private String id;
+public class CharacterClass extends GenericItem {
+	
 	private String name;
 	private String iconName;
 	private String lore;
@@ -27,12 +27,6 @@ public class CharacterClass {
 	private List<ClassBonus> bonuses = new ArrayList<>();
 	private List<Skill> skills = new ArrayList<>();
 		
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
 	public String getName() {
 		return name;
 	}

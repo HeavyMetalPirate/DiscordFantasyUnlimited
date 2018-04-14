@@ -3,9 +3,8 @@ package com.fantasyunlimited.discord.xml;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Race {
+public class Race extends GenericItem {
 	
-	private String id;
 	private String name;
 	private String iconName;
 	private String lore;
@@ -23,12 +22,6 @@ public class Race {
 	}
 	public void setBonuses(List<RacialBonus> bonuses) {
 		this.bonuses = bonuses;
-	}
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
 	}
 	public String getLore() {
 		return lore;

@@ -6,11 +6,25 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 
+import org.apache.log4j.Logger;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import com.fantasyunlimited.discord.xml.AttributeBonus;
+import com.fantasyunlimited.discord.xml.CharacterClass;
+import com.fantasyunlimited.discord.xml.ClassBonus;
+import com.fantasyunlimited.discord.xml.CombatSkillBonus;
+import com.fantasyunlimited.discord.xml.Equipment;
+import com.fantasyunlimited.discord.xml.Race;
+import com.fantasyunlimited.discord.xml.RacialBonus;
+import com.fantasyunlimited.discord.xml.SecondarySkillBonus;
+import com.fantasyunlimited.discord.xml.Skill;
+import com.fantasyunlimited.discord.xml.Weapon;
+import com.thoughtworks.xstream.XStream;
 
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.EventDispatcher;
 import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MessageBuilder;
 import sx.blah.discord.util.MissingPermissionsException;
@@ -18,19 +32,26 @@ import sx.blah.discord.util.RateLimitException;
 
 
 public class FantasyUnlimited extends BaseBot {
-	
+	private static final Logger logger = Logger.getLogger(FantasyUnlimited.class);
 	public static final String PREFIX_KEY = "prefix";
 	
 	private static FantasyUnlimited INSTANCE;
 	
+	private final IUser owner;
+	
 	private final MessageReceivedHandler messageReceivedHandler;
 	private final ReactionAddHandler reactionAddHandler;
-		
-	private WeaponBag weaponBag;
+	
+	private XStream xstream = new XStream();
+	private WeaponBag weaponBag = new WeaponBag();
+	private EquipmentBag equipmentBag = new EquipmentBag();
+	private RaceBag raceBag = new RaceBag();
+	private ClassBag classBag = new ClassBag();
 	
 	public FantasyUnlimited(IDiscordClient discordClient, Properties properties) {
-		super(discordClient);		
-		client.changePlayingText("SUCK IT SLAYDEN");
+		super(discordClient);
+	
+		owner = client.getUserByID(Long.parseLong(properties.getProperty("owner")));
 		
 		messageReceivedHandler = new MessageReceivedHandler(discordClient, properties);
 		reactionAddHandler = new ReactionAddHandler(discordClient, properties);
@@ -38,8 +59,59 @@ public class FantasyUnlimited extends BaseBot {
 		EventDispatcher dispatcher = discordClient.getDispatcher();
 		dispatcher.registerListeners(messageReceivedHandler, reactionAddHandler);
 		
+		try {
+			initializeXStream();
+			weaponBag.initialize(xstream);
+			equipmentBag.initialize(xstream);
+			raceBag.initialize(xstream);
+			classBag.initialize(xstream);
+		}
+		catch(Exception e) {
+			sendExceptionMessage(e);
+		}
+		
+		logger.debug("Initialized: " + weaponBag.getItems().size() + " Weapons");
+		logger.debug("Initialized: " + equipmentBag.getItems().size() + " Equipments");
+		logger.debug("Initialized: " + raceBag.getItems().size() + " Races");
+		logger.debug("Initialized: " + classBag.getItems().size() + " Classes");
+				
 		INSTANCE = this;
 	}	
+	
+	public void sendExceptionMessage(Throwable e) {
+		logger.error(e);
+		sendMessage(client, owner.getOrCreatePMChannel(), "An error occured.");
+		StringBuilder builder = new StringBuilder();
+		builder.append("```");
+		builder.append(e.getMessage() + "\n");
+		for(StackTraceElement element: e.getStackTrace()) {
+			builder.append("\tat " + element.toString() + "\n");
+		}
+		Throwable next = e.getCause();
+		while(next != null) {
+			builder.append("Cause:\n");
+			builder.append(next.getMessage() + "\n");
+			for(StackTraceElement element: next.getStackTrace()) {
+				builder.append("\tat " + element.toString() + "\n");
+			}
+			next = e.getCause();
+		}
+		builder.append("```");
+		sendMessage(client, owner.getOrCreatePMChannel(), builder.toString());
+	}
+	
+	private void initializeXStream() {
+		xstream.alias("Class", CharacterClass.class);
+		xstream.alias("Race", Race.class);
+		xstream.alias("ClassBonus", ClassBonus.class);
+		xstream.alias("Skill", Skill.class);
+		xstream.alias("RacialBonus", RacialBonus.class);
+		xstream.alias("Weapon", Weapon.class);
+		xstream.alias("Equipment", Equipment.class);
+		xstream.alias("AttributeBonus", AttributeBonus.class);
+		xstream.alias("CombatSkillBonus", CombatSkillBonus.class);
+		xstream.alias("SecondarySkillBonus", SecondarySkillBonus.class);
+	}
 	
 	public FantasyUnlimited getInstance() {
 		return INSTANCE;

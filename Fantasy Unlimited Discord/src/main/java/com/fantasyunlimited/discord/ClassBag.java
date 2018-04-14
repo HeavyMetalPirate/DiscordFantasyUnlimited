@@ -1,5 +1,12 @@
 package com.fantasyunlimited.discord;
 
-public class ClassBag {
+import com.fantasyunlimited.discord.xml.CharacterClass;
+
+public class ClassBag extends GenericsBag<CharacterClass>{
+
+	public ClassBag() {
+		super("classes");
+		// TODO Auto-generated constructor stub
+	}
 
 }

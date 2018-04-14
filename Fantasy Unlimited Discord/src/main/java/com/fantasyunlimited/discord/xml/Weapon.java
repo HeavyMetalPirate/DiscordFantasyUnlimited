@@ -3,9 +3,7 @@ package com.fantasyunlimited.discord.xml;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Weapon {
-	
-	private String id;
+public class Weapon extends GenericItem{
 	private String name;
 	private String description;
 	private String iconName;
@@ -20,14 +18,6 @@ public class Weapon {
 	private List<AttributeBonus> attributeBonuses = new ArrayList<>();
 	private List<SecondarySkillBonus> secondarySkillBonuses = new ArrayList<>();
 	
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
 	public String getName() {
 		return name;
 	}
