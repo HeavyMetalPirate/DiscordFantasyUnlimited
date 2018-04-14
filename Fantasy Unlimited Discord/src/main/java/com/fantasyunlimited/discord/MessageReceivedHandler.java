@@ -6,6 +6,7 @@ import java.util.Properties;
 
 import com.fantasyunlimited.discord.commands.CommandHandler;
 import com.fantasyunlimited.discord.commands.PingCommandHandler;
+import com.fantasyunlimited.discord.commands.RegisterCommandHandler;
 import com.fantasyunlimited.discord.commands.UnknownCommandHandler;
 
 import sx.blah.discord.api.IDiscordClient;
@@ -25,6 +26,7 @@ public class MessageReceivedHandler extends EventHandler implements IListener<Me
 	
 	private void setupCommands() {
 		commands.put(PingCommandHandler.CMD, new PingCommandHandler(client, properties)); //ping command
+		commands.put(RegisterCommandHandler.CMD, new RegisterCommandHandler(client, properties)); //register command
 		
 		//handler for unknown commands
 		unknown = new UnknownCommandHandler(client);

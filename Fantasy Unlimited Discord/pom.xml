@@ -12,10 +12,11 @@
 		<cdi.api.version>1.2</cdi.api.version>
 		<weld.servlet.version>2.3.3.Final</weld.servlet.version>
 		<mojarra.version>2.2.9</mojarra.version>
-		<spring.data.jpa.version>1.10.2.RELEASE</spring.data.jpa.version>
-		<spring.web.version>4.3.1.RELEASE</spring.web.version>
-		<hibernate.version>5.1.0.Final</hibernate.version>
+		<spring.data.jpa.version>2.0.6.RELEASE</spring.data.jpa.version>
+		<spring.version>5.0.5.RELEASE</spring.version>
+		<hibernate.version>5.2.16.Final</hibernate.version>
 		<discord4j.version>2.9.3</discord4j.version>
+		<guava.version>24.1-jre</guava.version>
 		<maven-compiler.version>3.3</maven-compiler.version>
 		<maven-war.version>2.6</maven-war.version>
 	</properties>
@@ -78,18 +79,21 @@
 			<version>${hibernate.version}</version>
 		</dependency>
 
-		<!-- Spring Data JPA -->
+		<!-- Spring Context, Data + Web -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jpa</artifactId>
 			<version>${spring.data.jpa.version}</version>
 		</dependency>
-
-		<!-- Spring Web -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
-			<version>${spring.web.version}</version>
+			<version>${spring.version}</version>
 		</dependency>
 
 		<!-- Discord4J -->
@@ -99,6 +103,14 @@
 			<version>${discord4j.version}</version>
 			<classifier>shaded</classifier>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
+		</dependency>
+
 
 		<!-- H2 internal database for testing -->
 		<dependency>
