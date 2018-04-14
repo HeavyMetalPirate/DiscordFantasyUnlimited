@@ -26,6 +26,8 @@ public class FantasyUnlimited extends BaseBot {
 	
 	public FantasyUnlimited(IDiscordClient discordClient, Properties properties) {
 		super(discordClient);		
+		client.changePlayingText("SUCK IT SLAYDEN");
+		
 		messageReceivedHandler = new MessageReceivedHandler(discordClient, properties);
 		reactionAddHandler = new ReactionAddHandler(discordClient, properties);
 		
