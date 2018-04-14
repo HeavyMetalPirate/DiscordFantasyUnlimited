@@ -20,9 +20,13 @@ import sx.blah.discord.util.RateLimitException;
 public class FantasyUnlimited extends BaseBot {
 	
 	public static final String PREFIX_KEY = "prefix";
-
+	
+	private static FantasyUnlimited INSTANCE;
+	
 	private final MessageReceivedHandler messageReceivedHandler;
 	private final ReactionAddHandler reactionAddHandler;
+		
+	private WeaponBag weaponBag;
 	
 	public FantasyUnlimited(IDiscordClient discordClient, Properties properties) {
 		super(discordClient);		
@@ -32,8 +36,14 @@ public class FantasyUnlimited extends BaseBot {
 		reactionAddHandler = new ReactionAddHandler(discordClient, properties);
 		
 		EventDispatcher dispatcher = discordClient.getDispatcher();
-		dispatcher.registerListeners(messageReceivedHandler, reactionAddHandler);	
+		dispatcher.registerListeners(messageReceivedHandler, reactionAddHandler);
+		
+		INSTANCE = this;
 	}	
+	
+	public FantasyUnlimited getInstance() {
+		return INSTANCE;
+	}
 	
 	public static void autowire(Object bean)  {
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
