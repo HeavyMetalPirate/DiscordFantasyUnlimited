@@ -2,6 +2,12 @@ package com.fantasyunlimited.discord;
 
 import java.util.Properties;
 
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.servlet.ServletContext;
+
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.EventDispatcher;
 import sx.blah.discord.handle.obj.IChannel;
@@ -26,6 +32,15 @@ public class FantasyUnlimited extends BaseBot {
 		EventDispatcher dispatcher = discordClient.getDispatcher();
 		dispatcher.registerListeners(messageReceivedHandler, reactionAddHandler);	
 	}	
+	
+	public static void autowire(Object bean)  {
+		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+        ServletContext servletContext = (ServletContext) externalContext.getContext();
+        WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext).
+                getAutowireCapableBeanFactory().
+                autowireBean(bean);
+
+	}
 	
 	public static void sendMessage(IDiscordClient client, IChannel channel, String message) {
 		try {
