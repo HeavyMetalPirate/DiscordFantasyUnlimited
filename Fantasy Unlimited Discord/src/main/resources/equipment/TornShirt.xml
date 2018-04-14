@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Equipment>
+  <id>1</id>
+  <name>Torn shirt</name>
+  <description>Better than nothing, huh? If you wear it wrong, puts one of your nipples on display.</description>
+  <iconName>trnshrt.png</iconName>
+  <type>CHEST</type>
+  <armor>0</armor>
+  <skillBonuses>
+    <CombatSkillBonus>
+      <skill>DODGE</skill>
+      <bonus>5</bonus>
+    </CombatSkillBonus>
+  </skillBonuses>
+  <attributeBonuses/>
+  <secondarySkillBonuses/>
+</Equipment>

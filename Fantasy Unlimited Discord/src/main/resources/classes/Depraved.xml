@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Class>
+  <id>1</id>
+  <name>Depraved</name>
+  <iconName>depraved.png</iconName>
+  <lore>The depraved is depraved. Depraving, huh?</lore>
+  <attributes>
+    <endurance>1</endurance>
+    <strength>1</strength>
+    <dexterity>1</dexterity>
+    <wisdom>1</wisdom>
+    <intelligence>1</intelligence>
+    <defense>1</defense>
+    <luck>1</luck>
+    <enduranceGrowth>0</enduranceGrowth>
+    <strenghtGrowth>0</strenghtGrowth>
+    <dexterityGrowth>0</dexterityGrowth>
+    <wisdomGrowth>0</wisdomGrowth>
+    <intelligenceGrowth>0</intelligenceGrowth>
+    <defenseGrowth>0</defenseGrowth>
+    <luckGrowth>0</luckGrowth>
+  </attributes>
+  <startingMainhand>1</startingMainhand>
+  <startingOffhand>-1</startingOffhand>
+  <startingHelmet>-1</startingHelmet>
+  <startingChest>-1</startingChest>
+  <startingGloves>-1</startingGloves>
+  <startingPants>-1</startingPants>
+  <startingBoots>-1</startingBoots>
+  <startingRing1>-1</startingRing1>
+  <startingRing2>-1</startingRing2>
+  <startingNeck>-1</startingNeck>
+  <bonuses>
+    <ClassBonus>
+      <id>1</id>
+      <name>Raises strength by 5%. Who knew depraved could bear any strength at all?</name>
+      <iconName>dprStr.png</iconName>
+      <attribute>STRENGHT</attribute>
+      <modifier>5</modifier>
+    </ClassBonus>
+  </bonuses>
+  <skills>
+    <Skill>
+      <id>0</id>
+      <name>Standard Attack</name>
+      <description>Attack with your mainhand weapon equipped.</description>
+      <iconName>stdAtk.png</iconName>
+      <attribute>STRENGHT</attribute>
+      <playerLevelToUnlock>0</playerLevelToUnlock>
+      <skillLevelToUnlock>0</skillLevelToUnlock>
+      <type>OFFENSIVE</type>
+      <minDamage>1</minDamage>
+      <maxDamage>1</maxDamage>
+      <buffModifier>0</buffModifier>
+      <durationInTurns>0</durationInTurns>
+    </Skill>
+  </skills>
+</Class>
