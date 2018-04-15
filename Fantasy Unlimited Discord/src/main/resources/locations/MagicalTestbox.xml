@@ -6,10 +6,10 @@
   <iconName>testbox.png</iconName>
   <marketAccess>false</marketAccess>
   <globalMarketAccess>false</globalMarketAccess>
-  <miningAllowed>false</miningAllowed>
-  <choppingAllowed>false</choppingAllowed>
-  <foragingAllowed>false</foragingAllowed>
-  <fishingAllowed>false</fishingAllowed>
+  <allowedSecondarySkills>
+    <SecondarySkill>MINING</SecondarySkill>
+    <SecondarySkill>FISHING</SecondarySkill>
+  </allowedSecondarySkills>
   <connections>
     <TravelConnection>
       <targetLocationId>1</targetLocationId>
