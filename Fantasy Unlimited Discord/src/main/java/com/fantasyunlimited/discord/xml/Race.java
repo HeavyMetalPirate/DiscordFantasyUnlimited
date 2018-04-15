@@ -5,18 +5,10 @@ import java.util.List;
 
 public class Race extends GenericItem {
 	
-	private String name;
-	private String iconName;
 	private String lore;
 	
 	private List<RacialBonus> bonuses = new ArrayList<>();
 	
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
 	public List<RacialBonus> getBonuses() {
 		return bonuses;
 	}
@@ -28,11 +20,5 @@ public class Race extends GenericItem {
 	}
 	public void setLore(String lore) {
 		this.lore = lore;
-	}
-	public String getIconName() {
-		return iconName;
-	}
-	public void setIconName(String iconName) {
-		this.iconName = iconName;
 	}
 }

@@ -16,10 +16,14 @@ import com.fantasyunlimited.discord.xml.CharacterClass;
 import com.fantasyunlimited.discord.xml.ClassBonus;
 import com.fantasyunlimited.discord.xml.CombatSkillBonus;
 import com.fantasyunlimited.discord.xml.Equipment;
+import com.fantasyunlimited.discord.xml.HostileNPC;
+import com.fantasyunlimited.discord.xml.Location;
+import com.fantasyunlimited.discord.xml.NPC;
 import com.fantasyunlimited.discord.xml.Race;
 import com.fantasyunlimited.discord.xml.RacialBonus;
 import com.fantasyunlimited.discord.xml.SecondarySkillBonus;
 import com.fantasyunlimited.discord.xml.Skill;
+import com.fantasyunlimited.discord.xml.TravelConnection;
 import com.fantasyunlimited.discord.xml.Weapon;
 import com.thoughtworks.xstream.XStream;
 
@@ -69,7 +73,6 @@ public class FantasyUnlimited extends BaseBot {
 	public void sendExceptionMessage(Throwable e) {
 		if(owner == null) {
 			owner = client.getUserByID(Long.parseLong(properties.getProperty("owner")));
-			
 		}
 		
 		logger.error(e);
@@ -106,6 +109,10 @@ public class FantasyUnlimited extends BaseBot {
 		xstream.alias("AttributeBonus", AttributeBonus.class);
 		xstream.alias("CombatSkillBonus", CombatSkillBonus.class);
 		xstream.alias("SecondarySkillBonus", SecondarySkillBonus.class);
+		xstream.alias("Location", Location.class);
+		xstream.alias("TravelConnection", TravelConnection.class);
+		xstream.alias("NPC", NPC.class);
+		xstream.alias("HostileNPC", HostileNPC.class);
 		return xstream;
 	}
 	

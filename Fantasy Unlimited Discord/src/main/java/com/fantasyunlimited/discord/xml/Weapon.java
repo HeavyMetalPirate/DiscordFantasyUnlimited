@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Weapon extends GenericItem{
-	private String name;
-	private String description;
-	private String iconName;
 	
 	private WeaponType type;
 	private Hand hand;
@@ -17,22 +14,6 @@ public class Weapon extends GenericItem{
 	private List<CombatSkillBonus> skillBonuses = new ArrayList<>();
 	private List<AttributeBonus> attributeBonuses = new ArrayList<>();
 	private List<SecondarySkillBonus> secondarySkillBonuses = new ArrayList<>();
-	
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getIconName() {
-		return iconName;
-	}
-
-	public void setIconName(String iconName) {
-		this.iconName = iconName;
-	}
 
 	public WeaponType getType() {
 		return type;
@@ -88,14 +69,6 @@ public class Weapon extends GenericItem{
 
 	public void setSecondarySkillBonuses(List<SecondarySkillBonus> secondarySkillBonuses) {
 		this.secondarySkillBonuses = secondarySkillBonuses;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
 	}
 
 	public enum WeaponType {

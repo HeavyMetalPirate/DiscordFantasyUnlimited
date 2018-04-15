@@ -2,12 +2,8 @@ package com.fantasyunlimited.discord.xml;
 
 import com.fantasyunlimited.discord.xml.Attributes.Attribute;
 
-public class Skill {
+public class Skill extends GenericItem {
 
-	private String id;
-	private String name;
-	private String description;
-	private String iconName;
 	private String iconId;
 	
 	private Attribute attribute;
@@ -24,12 +20,6 @@ public class Skill {
 	private int buffModifier;
 	private int durationInTurns;
 		
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
 	public Attribute getAttribute() {
 		return attribute;
 	}
@@ -53,18 +43,6 @@ public class Skill {
 	}
 	public void setType(SkillType type) {
 		this.type = type;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getIconName() {
-		return iconName;
-	}
-	public void setIconName(String iconName) {
-		this.iconName = iconName;
 	}
 	public TargetType getTargetType() {
 		return targetType;
@@ -108,13 +86,6 @@ public class Skill {
 	}
 	public void setWeaponModifier(SkillWeaponModifier weaponModifier) {
 		this.weaponModifier = weaponModifier;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
 	}
 
 	public String getIconId() {

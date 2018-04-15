@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CharacterClass extends GenericItem {
-	
-	private String name;
-	private String iconName;
+
 	private String lore;
 	
 	private Attributes attributes;
@@ -27,12 +25,6 @@ public class CharacterClass extends GenericItem {
 	private List<ClassBonus> bonuses = new ArrayList<>();
 	private List<Skill> skills = new ArrayList<>();
 		
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
 	public String getLore() {
 		return lore;
 	}
@@ -57,13 +49,6 @@ public class CharacterClass extends GenericItem {
 	public void setAttributes(Attributes attributes) {
 		this.attributes = attributes;
 	}
-	public String getIconName() {
-		return iconName;
-	}
-	public void setIconName(String iconName) {
-		this.iconName = iconName;
-	}
-	
 	public String getStartingMainhand() {
 		return startingMainhand;
 	}
