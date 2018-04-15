@@ -8,10 +8,7 @@ public class Location extends GenericItem {
 	private boolean marketAccess;
 	private boolean globalMarketAccess;
 	
-	private boolean miningAllowed;
-	private boolean choppingAllowed;
-	private boolean foragingAllowed;
-	private boolean fishingAllowed;
+	private List<SecondarySkill> allowedSecondarySkills = new ArrayList<>();
 	
 	private List<TravelConnection> connections = new ArrayList<>();
 	private List<String> npcIds = new ArrayList<>();
@@ -28,30 +25,6 @@ public class Location extends GenericItem {
 	}
 	public void setGlobalMarketAccess(boolean globalMarketAccess) {
 		this.globalMarketAccess = globalMarketAccess;
-	}
-	public boolean isMiningAllowed() {
-		return miningAllowed;
-	}
-	public void setMiningAllowed(boolean miningAllowed) {
-		this.miningAllowed = miningAllowed;
-	}
-	public boolean isChoppingAllowed() {
-		return choppingAllowed;
-	}
-	public void setChoppingAllowed(boolean choppingAllowed) {
-		this.choppingAllowed = choppingAllowed;
-	}
-	public boolean isForagingAllowed() {
-		return foragingAllowed;
-	}
-	public void setForagingAllowed(boolean foragingAllowed) {
-		this.foragingAllowed = foragingAllowed;
-	}
-	public boolean isFishingAllowed() {
-		return fishingAllowed;
-	}
-	public void setFishingAllowed(boolean fishingAllowed) {
-		this.fishingAllowed = fishingAllowed;
 	}
 	public List<TravelConnection> getConnections() {
 		return connections;
@@ -70,5 +43,11 @@ public class Location extends GenericItem {
 	}
 	public void setHostileNPCIds(List<String> hostileNPCIds) {
 		this.hostileNPCIds = hostileNPCIds;
+	}
+	public List<SecondarySkill> getAllowedSecondarySkills() {
+		return allowedSecondarySkills;
+	}
+	public void setAllowedSecondarySkills(List<SecondarySkill> allowedSecondarySkills) {
+		this.allowedSecondarySkills = allowedSecondarySkills;
 	}
 }

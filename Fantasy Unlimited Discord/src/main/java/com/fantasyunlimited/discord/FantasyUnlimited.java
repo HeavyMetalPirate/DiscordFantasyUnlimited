@@ -21,6 +21,7 @@ import com.fantasyunlimited.discord.xml.Location;
 import com.fantasyunlimited.discord.xml.NPC;
 import com.fantasyunlimited.discord.xml.Race;
 import com.fantasyunlimited.discord.xml.RacialBonus;
+import com.fantasyunlimited.discord.xml.SecondarySkill;
 import com.fantasyunlimited.discord.xml.SecondarySkillBonus;
 import com.fantasyunlimited.discord.xml.Skill;
 import com.fantasyunlimited.discord.xml.TravelConnection;
@@ -108,6 +109,7 @@ public class FantasyUnlimited extends BaseBot {
 		xstream.alias("Equipment", Equipment.class);
 		xstream.alias("AttributeBonus", AttributeBonus.class);
 		xstream.alias("CombatSkillBonus", CombatSkillBonus.class);
+		xstream.alias("SecondarySkill", SecondarySkill.class);
 		xstream.alias("SecondarySkillBonus", SecondarySkillBonus.class);
 		xstream.alias("Location", Location.class);
 		xstream.alias("TravelConnection", TravelConnection.class);
