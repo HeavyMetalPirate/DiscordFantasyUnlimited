@@ -24,6 +24,7 @@ import com.thoughtworks.xstream.XStream;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.EventDispatcher;
 import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MessageBuilder;
@@ -121,21 +122,24 @@ public class FantasyUnlimited extends BaseBot {
 		client.changePlayingText(text);
 	}
 	
-	public static void sendMessage(IDiscordClient client, IChannel channel, String message) {
+	public static IMessage sendMessage(IDiscordClient client, IChannel channel, String message) {
 		try {
 			// Builds (sends) and new message in the channel that the original
 			// message was sent with the content of the original message.
-			new MessageBuilder(client).withChannel(channel).withContent(message).build();
+			return new MessageBuilder(client).withChannel(channel).withContent(message).build();
 
 		} catch (RateLimitException e) { // RateLimitException thrown. The bot is sending messages too quickly!
-			System.err.print("Sending messages too quickly!");
-			e.printStackTrace();
+			logger.error("Sending messages too quickly!", e);
+			if(INSTANCE != null) INSTANCE.sendExceptionMessage(e);
+			throw e;
 		} catch (DiscordException e) { // DiscordException thrown. Many ossibilities. Use getErrorMessage() to see what went wrong.
-			System.err.print(e.getErrorMessage()); // Print the error message sent by Discord
-			e.printStackTrace();
+			logger.error(e); // Print the error message sent by Discord
+			if(INSTANCE != null) INSTANCE.sendExceptionMessage(e);
+			throw e;
 		} catch (MissingPermissionsException e) { // MissingPermissionsException thrown. The bot doesn't have permission to send the message!
-			System.err.print("Missing permissions for channel!");
-			e.printStackTrace();
+			logger.error("Missing permissions for channel!", e);
+			if(INSTANCE != null) INSTANCE.sendExceptionMessage(e);
+			throw e;
 		}
 	}
 

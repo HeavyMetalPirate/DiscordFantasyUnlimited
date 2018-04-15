@@ -35,7 +35,7 @@
       <id>1</id>
       <name>Raises strength by 5%. Who knew depraved could bear any strength at all?</name>
       <iconName>dprStr.png</iconName>
-      <attribute>STRENGHT</attribute>
+      <attribute>STRENGTH</attribute>
       <modifier>5</modifier>
     </ClassBonus>
   </bonuses>
@@ -45,7 +45,8 @@
       <name>Standard Attack</name>
       <description>Attack with your mainhand weapon equipped.</description>
       <iconName>stdAtk.png</iconName>
-      <attribute>STRENGHT</attribute>
+      <iconId>435013539535519755</iconId>
+      <attribute>STRENGTH</attribute>
       <playerLevelToUnlock>0</playerLevelToUnlock>
       <skillLevelToUnlock>0</skillLevelToUnlock>
       <type>OFFENSIVE</type>

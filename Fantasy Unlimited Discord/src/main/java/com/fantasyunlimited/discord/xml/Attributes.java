@@ -103,7 +103,7 @@ public class Attributes {
 	}
 	
 	public enum Attribute {
-		STRENGHT,
+		STRENGTH,
 		ENDURANCE,
 		DEXTERITY,
 		WISDOM,

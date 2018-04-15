@@ -5,7 +5,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fantasyunlimited.discord.xml.GenericItem;
 import com.thoughtworks.xstream.InitializationException;
@@ -14,8 +17,7 @@ import com.thoughtworks.xstream.XStream;
 public abstract class GenericsBag<T extends GenericItem> {
 	private final String rootfolder;
 
-	private List<T> items = new ArrayList<>();
-	private List<String> usedIds = new ArrayList<>();
+	private Map<String, T> items = new HashMap<>();
 
 	public GenericsBag(String rootfolder) {
 		this.rootfolder = rootfolder;
@@ -27,7 +29,7 @@ public abstract class GenericsBag<T extends GenericItem> {
 			@SuppressWarnings("unchecked")
 			T item = (T) xstream.fromXML(getResourceAsStream(rootfolder + "/" + filename));
 			
-			if(usedIds.contains(item.getId())) {
+			if(items.containsKey(item.getId())) {
 				throw new InitializationException("Item Id" + item.getId() + " already in use!");
 			}
 			
@@ -35,15 +37,18 @@ public abstract class GenericsBag<T extends GenericItem> {
 				throw new InitializationException("Item Id " + item.getId() + " (" + item.getClass().getName() + ")" + " didn't pass sanity checks.");
 			}
 			
-			items.add(item);
-			usedIds.add(item.getId());
+			items.put(item.getId(), item);
 		}
 	}
 	
 	public abstract boolean passSanityChecks(T item);
 	
-	public List<T> getItems() {
-		return items;
+	public Collection<T> getItems() {
+		return items.values();
+	}
+	
+	public T getItem(String id) {
+		return items.get(id);
 	}
 
 	private List<String> getResourceFiles(String path) throws IOException {

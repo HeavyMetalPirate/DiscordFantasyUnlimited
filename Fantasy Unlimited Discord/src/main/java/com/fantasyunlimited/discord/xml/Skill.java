@@ -8,6 +8,7 @@ public class Skill {
 	private String name;
 	private String description;
 	private String iconName;
+	private String iconId;
 	
 	private Attribute attribute;
 	private int playerLevelToUnlock;
@@ -114,6 +115,13 @@ public class Skill {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getIconId() {
+		return iconId;
+	}
+	public void setIconId(String iconId) {
+		this.iconId = iconId;
 	}
 
 	public enum SkillWeaponModifier {
