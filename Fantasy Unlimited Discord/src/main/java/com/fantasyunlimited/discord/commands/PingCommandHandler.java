@@ -4,19 +4,18 @@ import java.util.Properties;
 
 import com.fantasyunlimited.discord.FantasyUnlimited;
 
-import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 public class PingCommandHandler extends CommandHandler {
 	public static final String CMD = "ping";
 	
-	public PingCommandHandler(IDiscordClient client, Properties properties) {
-		super(client, properties, CMD);
+	public PingCommandHandler(Properties properties) {
+		super(properties, CMD);
 	}
 
 	@Override
 	public void handle(MessageReceivedEvent event) {
-		FantasyUnlimited.sendMessage(client, event.getChannel(), "Pong!");
+		FantasyUnlimited.getInstance().sendMessage(event.getChannel(), "Pong!");
 	}
 
 }

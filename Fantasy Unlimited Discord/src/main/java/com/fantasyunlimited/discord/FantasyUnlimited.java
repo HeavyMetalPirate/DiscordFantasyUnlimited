@@ -1,5 +1,7 @@
 package com.fantasyunlimited.discord;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.faces.context.ExternalContext;
@@ -42,7 +44,7 @@ public class FantasyUnlimited extends BaseBot {
 	
 	private final Properties properties;
 	private final MessageReceivedHandler messageReceivedHandler;
-	private final ReactionAddHandler reactionAddHandler;
+	private final ReactionForSelfAddHandler reactionAddHandler;
 	
 	private XStream xstream = new XStream();
 	private WeaponBag weaponBag = new WeaponBag();
@@ -50,11 +52,13 @@ public class FantasyUnlimited extends BaseBot {
 	private RaceBag raceBag = new RaceBag();
 	private ClassBag classBag = new ClassBag();
 	
+	private Map<Long, MessageInformation> messagesAwaitingReactions = new HashMap<>();
+	
 	public FantasyUnlimited(IDiscordClient discordClient, Properties properties) {
 		super(discordClient);
 		this.properties = properties;
 		messageReceivedHandler = new MessageReceivedHandler(discordClient, properties);
-		reactionAddHandler = new ReactionAddHandler(discordClient, properties);
+		reactionAddHandler = new ReactionForSelfAddHandler(discordClient, properties);
 		
 		EventDispatcher dispatcher = discordClient.getDispatcher();
 		dispatcher.registerListeners(new BotInitializedHandler(), messageReceivedHandler, reactionAddHandler);
@@ -69,7 +73,7 @@ public class FantasyUnlimited extends BaseBot {
 		}
 		
 		logger.error(e);
-		sendMessage(client, owner.getOrCreatePMChannel(), "An error occured.");
+		sendMessage(owner.getOrCreatePMChannel(), "An error occured.");
 		StringBuilder builder = new StringBuilder();
 		builder.append("```");
 		builder.append(e.getClass().getCanonicalName() + ": ");
@@ -88,7 +92,7 @@ public class FantasyUnlimited extends BaseBot {
 			next = e.getCause();
 		}
 		builder.append("```");
-		sendMessage(client, owner.getOrCreatePMChannel(), builder.toString());
+		sendMessage(owner.getOrCreatePMChannel(), builder.toString());
 	}
 	
 	public XStream initializeXStream() {
@@ -122,7 +126,7 @@ public class FantasyUnlimited extends BaseBot {
 		client.changePlayingText(text);
 	}
 	
-	public static IMessage sendMessage(IDiscordClient client, IChannel channel, String message) {
+	public IMessage sendMessage(IChannel channel, String message) {
 		try {
 			// Builds (sends) and new message in the channel that the original
 			// message was sent with the content of the original message.
@@ -158,6 +162,8 @@ public class FantasyUnlimited extends BaseBot {
 	public ClassBag getClassBag() {
 		return classBag;
 	}
-	
-	
+
+	public Map<Long, MessageInformation> getMessagesAwaitingReactions() {
+		return messagesAwaitingReactions;
+	}
 }

@@ -10,7 +10,7 @@ public class Attributes {
 	private int luck;
 	
 	private int enduranceGrowth;
-	private int strenghtGrowth;
+	private int strengthGrowth;
 	private int dexterityGrowth;
 	private int wisdomGrowth;
 	private int intelligenceGrowth;
@@ -65,11 +65,11 @@ public class Attributes {
 	public void setEnduranceGrowth(int enduranceGrowth) {
 		this.enduranceGrowth = enduranceGrowth;
 	}
-	public int getStrenghtGrowth() {
-		return strenghtGrowth;
+	public int getStrengthGrowth() {
+		return strengthGrowth;
 	}
-	public void setStrenghtGrowth(int strenghtGrowth) {
-		this.strenghtGrowth = strenghtGrowth;
+	public void setStrengthGrowth(int strengthGrowth) {
+		this.strengthGrowth = strengthGrowth;
 	}
 	public int getDexterityGrowth() {
 		return dexterityGrowth;

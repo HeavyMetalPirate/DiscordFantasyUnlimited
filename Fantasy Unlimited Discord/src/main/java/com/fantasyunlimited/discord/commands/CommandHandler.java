@@ -4,19 +4,15 @@ import java.util.Properties;
 
 import com.fantasyunlimited.discord.FantasyUnlimited;
 
-import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.IListener;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IMessage;
 
 public abstract class CommandHandler implements IListener<MessageReceivedEvent> {
-	
-	protected final IDiscordClient client;
 	protected final String command;
 	protected final Properties properties;
 	
-	public CommandHandler(IDiscordClient client, Properties properties, String command) {
-		this.client = client;
+	public CommandHandler(Properties properties, String command) {
 		this.command = command;
 		this.properties = properties;
 	}

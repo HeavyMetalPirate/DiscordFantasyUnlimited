@@ -26,12 +26,12 @@ public class MessageReceivedHandler extends EventHandler implements IListener<Me
 	}
 	
 	private void setupCommands() {
-		commands.put(PingCommandHandler.CMD.toLowerCase(), new PingCommandHandler(client, properties)); //ping command
-		commands.put(RegisterCommandHandler.CMD.toLowerCase(), new RegisterCommandHandler(client, properties)); //register command
-		commands.put(ReactionTestHandler.CMD.toLowerCase(), new ReactionTestHandler(client, properties));
+		commands.put(PingCommandHandler.CMD.toLowerCase(), new PingCommandHandler(properties)); //ping command
+		commands.put(RegisterCommandHandler.CMD.toLowerCase(), new RegisterCommandHandler(properties)); //register command
+		commands.put(ReactionTestHandler.CMD.toLowerCase(), new ReactionTestHandler(properties));
 		
 		//handler for unknown commands
-		unknown = new UnknownCommandHandler(client);
+		unknown = new UnknownCommandHandler();
 	}
 	
 	@Override
