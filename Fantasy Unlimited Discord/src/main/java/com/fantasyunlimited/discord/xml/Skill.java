@@ -1,5 +1,8 @@
 package com.fantasyunlimited.discord.xml;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fantasyunlimited.discord.xml.Attributes.Attribute;
 
 public class Skill extends GenericItem {
@@ -7,14 +10,17 @@ public class Skill extends GenericItem {
 	private String iconId;
 	
 	private Attribute attribute;
-	private int playerLevelToUnlock;
-	private int skillLevelToUnlock;
 	private SkillType type;
 	private TargetType targetType;
 	
 	private SkillWeaponModifier weaponModifier;
 	private int minDamage;
 	private int maxDamage;
+	private int costOfExecution;
+	private int preparationRounds;
+	
+	private List<SkillRank> ranks = new ArrayList<>();
+	private List<SkillRequirement> requirements = new ArrayList<>();
 	
 	private Attribute buffModifiesAttribute;
 	private int buffModifier;
@@ -25,18 +31,6 @@ public class Skill extends GenericItem {
 	}
 	public void setAttribute(Attribute attribute) {
 		this.attribute = attribute;
-	}
-	public int getPlayerLevelToUnlock() {
-		return playerLevelToUnlock;
-	}
-	public void setPlayerLevelToUnlock(int playerLevelToUnlock) {
-		this.playerLevelToUnlock = playerLevelToUnlock;
-	}
-	public int getSkillLevelToUnlock() {
-		return skillLevelToUnlock;
-	}
-	public void setSkillLevelToUnlock(int skillLevelToUnlock) {
-		this.skillLevelToUnlock = skillLevelToUnlock;
 	}
 	public SkillType getType() {
 		return type;
@@ -94,6 +88,36 @@ public class Skill extends GenericItem {
 	public void setIconId(String iconId) {
 		this.iconId = iconId;
 	}
+	
+	public int getCostOfExecution() {
+		return costOfExecution;
+	}
+	public void setCostOfExecution(int costOfExecution) {
+		this.costOfExecution = costOfExecution;
+	}
+	public int getPreparationRounds() {
+		return preparationRounds;
+	}
+	public void setPreparationRounds(int preparationRounds) {
+		this.preparationRounds = preparationRounds;
+	}
+	public List<SkillRank> getRanks() {
+		return ranks;
+	}
+	public void setRanks(List<SkillRank> ranks) {
+		this.ranks = ranks;
+	}
+
+
+
+	public List<SkillRequirement> getRequirements() {
+		return requirements;
+	}
+	public void setRequirements(List<SkillRequirement> requirements) {
+		this.requirements = requirements;
+	}
+
+
 
 	public enum SkillWeaponModifier {
 		WEAPON_MAINHAND,

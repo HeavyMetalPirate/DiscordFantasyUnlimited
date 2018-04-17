@@ -45,13 +45,22 @@
       <name>Standard Attack</name>
       <description>Attack with your mainhand weapon equipped.</description>
       <iconName>stdAtk.png</iconName>
-      <iconId>435013539535519755</iconId>
       <attribute>STRENGTH</attribute>
-      <playerLevelToUnlock>0</playerLevelToUnlock>
-      <skillLevelToUnlock>0</skillLevelToUnlock>
       <type>OFFENSIVE</type>
       <minDamage>1</minDamage>
       <maxDamage>1</maxDamage>
+      <costOfExecution>0</costOfExecution>
+      <preparationRounds>0</preparationRounds>
+      <ranks>
+        <SkillRank>
+          <rank>1</rank>
+          <damageModifier>0</damageModifier>
+          <costModifier>0</costModifier>
+          <requiredAttributeValue>1</requiredAttributeValue>
+          <requiredPlayerLevel>1</requiredPlayerLevel>
+        </SkillRank>
+      </ranks>
+      <requirements/>
       <buffModifier>0</buffModifier>
       <durationInTurns>0</durationInTurns>
     </Skill>
