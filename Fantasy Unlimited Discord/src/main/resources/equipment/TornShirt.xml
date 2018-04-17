@@ -4,6 +4,7 @@
   <name>Torn shirt</name>
   <description>Better than nothing, huh? If you wear it wrong, puts one of your nipples on display.</description>
   <iconName>trnshrt.png</iconName>
+  <rarity>ARTIFACT</rarity>
   <type>CHEST</type>
   <armor>0</armor>
   <skillBonuses>

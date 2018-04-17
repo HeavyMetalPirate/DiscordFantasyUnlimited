@@ -1,8 +1,9 @@
 package com.fantasyunlimited.discord.xml;
 
 public enum SecondarySkill {
-	MINING,
+	WOODCUTTING,
 	FISHING,
-	CHOPPING,
-	FORAGING
+	MINING,
+	ALCHEMY,
+	ENCHANTING
 }

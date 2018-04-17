@@ -3,7 +3,7 @@ package com.fantasyunlimited.discord.xml;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Weapon extends GenericItem{
+public class Weapon extends RarityClassifiedItem {
 	
 	private WeaponType type;
 	private Hand hand;
