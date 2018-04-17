@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 @Entity
 public class PlayerCharacter {
@@ -17,6 +18,9 @@ public class PlayerCharacter {
 	
 	@ManyToOne(optional = false)
 	private DiscordPlayer player;
+	
+	@OneToOne
+	private CharacterEquipment equipment;
 	
 	@Column
 	private String name;

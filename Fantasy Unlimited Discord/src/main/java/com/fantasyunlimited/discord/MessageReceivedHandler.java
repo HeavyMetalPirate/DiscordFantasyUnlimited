@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import com.fantasyunlimited.discord.commands.CharacterCommandHandler;
 import com.fantasyunlimited.discord.commands.CommandHandler;
 import com.fantasyunlimited.discord.commands.PingCommandHandler;
 import com.fantasyunlimited.discord.commands.ReactionTestHandler;
@@ -29,7 +30,7 @@ public class MessageReceivedHandler extends EventHandler implements IListener<Me
 		commands.put(PingCommandHandler.CMD.toLowerCase(), new PingCommandHandler(properties)); //ping command
 		commands.put(RegisterCommandHandler.CMD.toLowerCase(), new RegisterCommandHandler(properties)); //register command
 		commands.put(ReactionTestHandler.CMD.toLowerCase(), new ReactionTestHandler(properties));
-		
+		commands.put(CharacterCommandHandler.CMD.toLowerCase(), new CharacterCommandHandler(properties));
 		//handler for unknown commands
 		unknown = new UnknownCommandHandler();
 	}

@@ -21,4 +21,9 @@ public abstract class CommandHandler implements IListener<MessageReceivedEvent> 
 		String content = message.getContent().substring(properties.getProperty(FantasyUnlimited.PREFIX_KEY).length()); //Strip the prefix
 		return content.substring(command.length()).trim(); //Strip the command with leading and trailing whitespace removed
 	}
+	
+	protected String stripOptionFromMessage(String message) {
+		if(message == null) return "";
+		return message.split(" ")[0];
+	}
 }

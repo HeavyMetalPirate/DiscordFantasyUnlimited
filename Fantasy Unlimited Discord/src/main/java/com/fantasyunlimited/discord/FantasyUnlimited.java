@@ -24,6 +24,7 @@ import com.fantasyunlimited.discord.xml.RacialBonus;
 import com.fantasyunlimited.discord.xml.SecondarySkill;
 import com.fantasyunlimited.discord.xml.SecondarySkillBonus;
 import com.fantasyunlimited.discord.xml.Skill;
+import com.fantasyunlimited.discord.xml.SkillRank;
 import com.fantasyunlimited.discord.xml.TravelConnection;
 import com.fantasyunlimited.discord.xml.Weapon;
 import com.thoughtworks.xstream.XStream;
@@ -90,8 +91,11 @@ public class FantasyUnlimited extends BaseBot {
 			builder.append("Cause:\n");
 			builder.append(next.getClass().getCanonicalName() + ": ");
 			builder.append(next.getMessage() + "\n");
+			int stackelements = 0;
 			for(StackTraceElement element: next.getStackTrace()) {
 				builder.append("\tat " + element.toString() + "\n");
+				stackelements++;
+				if(stackelements == 50) { break; }
 			}
 			next = e.getCause();
 		}
@@ -104,6 +108,7 @@ public class FantasyUnlimited extends BaseBot {
 		xstream.alias("Race", Race.class);
 		xstream.alias("ClassBonus", ClassBonus.class);
 		xstream.alias("Skill", Skill.class);
+		xstream.alias("SkillRank", SkillRank.class);
 		xstream.alias("RacialBonus", RacialBonus.class);
 		xstream.alias("Weapon", Weapon.class);
 		xstream.alias("Equipment", Equipment.class);
