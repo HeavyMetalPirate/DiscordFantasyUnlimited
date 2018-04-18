@@ -1,0 +1,1 @@
+Embed stuff: https://discord4j.readthedocs.io/en/latest/Making-embedded-content-using-EmbedBuilder/
