@@ -40,6 +40,8 @@ public class ReactionForSelfAddHandler extends EventHandler implements IListener
 		information.getMessage().edit("You reacted, " + event.getUser().getDisplayName(event.getGuild())
 				+ ", last time on " + new Date().toString());
 		information.setCanBeRemoved(true);
+		
+		logger.debug("Emojis: " + information.getMessage().getReactions());
 
 		/*
 		 * Go on from here: check what the message was about, then pick a

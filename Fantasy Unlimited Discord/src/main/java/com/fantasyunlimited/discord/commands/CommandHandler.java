@@ -7,10 +7,12 @@ import com.fantasyunlimited.discord.FantasyUnlimited;
 import sx.blah.discord.api.events.IListener;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IMessage;
+import sx.blah.discord.util.EmbedBuilder;
 
 public abstract class CommandHandler implements IListener<MessageReceivedEvent> {
 	protected final String command;
 	protected final Properties properties;
+	protected final EmbedBuilder embedBuilder;
 	
 	public abstract String getDescription();
 	public abstract Type getType();
@@ -18,6 +20,7 @@ public abstract class CommandHandler implements IListener<MessageReceivedEvent> 
 	public CommandHandler(Properties properties, String command) {
 		this.command = command;
 		this.properties = properties;
+		embedBuilder = new EmbedBuilder();
 	}
 		
 	protected String stripCommandFromMessage(IMessage message) {

@@ -8,34 +8,59 @@ import com.fantasyunlimited.discord.MessageInformation;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
+import sx.blah.discord.util.RequestBuffer;
 
 /**
- * Command for testing purposes. Puts a message up, places a reaction on it and queues 
- * the message for "awaiting a reaction by the origin user of the command"
+ * Command for testing purposes. Puts a message up, places a reaction on it and
+ * queues the message for "awaiting a reaction by the origin user of the
+ * command"
+ * 
  * @author HeavyMetalPirate
  *
  */
 public class ReactionTestHandler extends CommandHandler {
 	public static final String CMD = "testReaction";
-	
+
 	public ReactionTestHandler(Properties properties) {
 		super(properties, CMD);
 	}
 
 	@Override
 	public void handle(MessageReceivedEvent event) {
-		
-		IMessage message = FantasyUnlimited.getInstance().sendMessage(event.getChannel(), "I should only react to any reaction " + event.getAuthor().getDisplayName(event.getGuild()) + " puts up on this message.");	
+
+		IMessage message = FantasyUnlimited.getInstance().sendMessage(event.getChannel(),
+				"I should only react to any reaction " + event.getAuthor().getDisplayName(event.getGuild())
+						+ " puts up on this message.");
 		ReactionEmoji reaction = ReactionEmoji.of("test", 435013539535519755L);
-		message.addReaction(reaction);
+		RequestBuffer.request(() -> {
+			message.addReaction(reaction);
+		});
 		
+		final String[] numNames = {
+			    "\u0031\u20E3",
+			    "\u0032\u20E3",
+			    "\u0033\u20E3",
+			    "\u0034\u20E3",
+			    "\u0035\u20E3",
+			    "\u0036\u20E3",
+			    "\u0037\u20E3",
+			    "\u0038\u20E3",
+			    "\u0039\u20E3",
+			    "\u0030\u20E3"};
+		for(int i = 0; i < numNames.length; i++) {
+			final int value = i;
+			RequestBuffer.request(() -> {
+				message.addReaction(ReactionEmoji.of(numNames[value]));
+			});
+		}
+
 		MessageInformation information = new MessageInformation();
 		information.setCanBeRemoved(false);
 		information.setOriginDate(event.getMessage().getTimestamp());
 		information.setOriginator(event.getMessage().getAuthor());
 		information.setStatus("test");
 		information.setMessage(message);
-		
+
 		FantasyUnlimited.getInstance().getMessagesAwaitingReactions().put(message.getLongID(), information);
 	}
 
@@ -43,6 +68,7 @@ public class ReactionTestHandler extends CommandHandler {
 	public String getDescription() {
 		return "Fuck off, chicken little!";
 	}
+
 	@Override
 	public Type getType() {
 		return Type.OTHERS;
