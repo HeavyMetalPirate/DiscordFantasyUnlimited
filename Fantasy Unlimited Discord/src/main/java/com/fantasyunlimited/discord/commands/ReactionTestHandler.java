@@ -39,4 +39,13 @@ public class ReactionTestHandler extends CommandHandler {
 		FantasyUnlimited.getInstance().getMessagesAwaitingReactions().put(message.getLongID(), information);
 	}
 
+	@Override
+	public String getDescription() {
+		return "Fuck off, chicken little!";
+	}
+	@Override
+	public Type getType() {
+		return Type.OTHERS;
+	}
+
 }

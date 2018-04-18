@@ -1,11 +1,14 @@
 package com.fantasyunlimited.discord;
 
-import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import com.fantasyunlimited.discord.commands.CharacterCommandHandler;
 import com.fantasyunlimited.discord.commands.CommandHandler;
+import com.fantasyunlimited.discord.commands.HelpCommandHandler;
 import com.fantasyunlimited.discord.commands.PingCommandHandler;
 import com.fantasyunlimited.discord.commands.ReactionTestHandler;
 import com.fantasyunlimited.discord.commands.RegisterCommandHandler;
@@ -18,7 +21,7 @@ import sx.blah.discord.handle.obj.IMessage;
 
 public class MessageReceivedHandler extends EventHandler implements IListener<MessageReceivedEvent> {
 
-	private Map<String, CommandHandler> commands = new HashMap<String, CommandHandler>();
+	private Map<String, CommandHandler> commands = new LinkedHashMap<String, CommandHandler>();
 	private UnknownCommandHandler unknown;
 	
 	public MessageReceivedHandler(IDiscordClient discordClient, Properties properties) {
@@ -26,11 +29,18 @@ public class MessageReceivedHandler extends EventHandler implements IListener<Me
 		setupCommands();
 	}
 	
+	public List<CommandHandler> getCommandHandlers() {
+		return new LinkedList<>(commands.values());
+	}
+	
 	private void setupCommands() {
 		commands.put(PingCommandHandler.CMD.toLowerCase(), new PingCommandHandler(properties)); //ping command
 		commands.put(RegisterCommandHandler.CMD.toLowerCase(), new RegisterCommandHandler(properties)); //register command
 		commands.put(ReactionTestHandler.CMD.toLowerCase(), new ReactionTestHandler(properties));
 		commands.put(CharacterCommandHandler.CMD.toLowerCase(), new CharacterCommandHandler(properties));
+		
+		//Needs to be last always because it loads all previous commands to print
+		commands.put(HelpCommandHandler.CMD.toLowerCase(), new HelpCommandHandler(properties));
 		//handler for unknown commands
 		unknown = new UnknownCommandHandler();
 	}
@@ -38,6 +48,9 @@ public class MessageReceivedHandler extends EventHandler implements IListener<Me
 	@Override
 	public void handle(MessageReceivedEvent event) {
 		IMessage message = event.getMessage();
+		if(message.getAuthor().isBot()) {
+			return;
+		}
 		if(message.getContent().startsWith(properties.getProperty(FantasyUnlimited.PREFIX_KEY)) == false) {
 			return;
 		}	

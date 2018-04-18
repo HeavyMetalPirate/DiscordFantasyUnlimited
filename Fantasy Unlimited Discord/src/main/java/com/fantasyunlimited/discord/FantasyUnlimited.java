@@ -31,6 +31,7 @@ import com.thoughtworks.xstream.XStream;
 
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.EventDispatcher;
+import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
@@ -38,6 +39,7 @@ import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MessageBuilder;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
+import sx.blah.discord.util.RequestBuffer;
 
 
 public class FantasyUnlimited extends BaseBot {
@@ -62,15 +64,18 @@ public class FantasyUnlimited extends BaseBot {
 	
 	public FantasyUnlimited(IDiscordClient discordClient, Properties properties) {
 		super(discordClient);
+		INSTANCE = this;
 		this.properties = properties;
 		messageReceivedHandler = new MessageReceivedHandler(discordClient, properties);
 		reactionAddHandler = new ReactionForSelfAddHandler(discordClient, properties);
 		
 		EventDispatcher dispatcher = discordClient.getDispatcher();
 		dispatcher.registerListeners(new BotInitializedHandler(), messageReceivedHandler, reactionAddHandler);
-				
-		INSTANCE = this;
 	}	
+	
+	public MessageReceivedHandler getMessageReceivedHandler() {
+		return messageReceivedHandler;
+	}
 	
 	public void sendExceptionMessage(Throwable e) {
 		if(owner == null) {
@@ -141,24 +146,15 @@ public class FantasyUnlimited extends BaseBot {
 	}
 	
 	public IMessage sendMessage(IChannel channel, String message) {
-		try {
-			// Builds (sends) and new message in the channel that the original
-			// message was sent with the content of the original message.
-			return new MessageBuilder(client).withChannel(channel).withContent(message).build();
-
-		} catch (RateLimitException e) { // RateLimitException thrown. The bot is sending messages too quickly!
-			logger.error("Sending messages too quickly!", e);
-			if(INSTANCE != null) INSTANCE.sendExceptionMessage(e);
-			throw e;
-		} catch (DiscordException e) { // DiscordException thrown. Many ossibilities. Use getErrorMessage() to see what went wrong.
-			logger.error(e); // Print the error message sent by Discord
-			if(INSTANCE != null) INSTANCE.sendExceptionMessage(e);
-			throw e;
-		} catch (MissingPermissionsException e) { // MissingPermissionsException thrown. The bot doesn't have permission to send the message!
-			logger.error("Missing permissions for channel!", e);
-			if(INSTANCE != null) INSTANCE.sendExceptionMessage(e);
-			throw e;
-		}
+		return RequestBuffer.request(() ->{
+			return new MessageBuilder(client).withChannel(channel).withContent(message).build();	
+		}).get();
+	}
+	
+	public IMessage sendMessage(IChannel channel, EmbedObject message) {
+		return RequestBuffer.request(() ->{
+			return new MessageBuilder(client).withChannel(channel).withEmbed(message).build();	
+		}).get();
 	}
 
 	public WeaponBag getWeaponBag() {

@@ -12,6 +12,9 @@ public abstract class CommandHandler implements IListener<MessageReceivedEvent> 
 	protected final String command;
 	protected final Properties properties;
 	
+	public abstract String getDescription();
+	public abstract Type getType();
+	
 	public CommandHandler(Properties properties, String command) {
 		this.command = command;
 		this.properties = properties;
@@ -25,5 +28,24 @@ public abstract class CommandHandler implements IListener<MessageReceivedEvent> 
 	protected String stripOptionFromMessage(String message) {
 		if(message == null) return "";
 		return message.split(" ")[0];
+	}
+	
+	public enum Type {
+		ACCOUNT("Account"),
+		CHARACTER("Character Management"),
+		COMBAT("Combat & Exploring"),
+		MARKET("Market"),
+		GUILD("Guild"),
+		ADMINISTRATION("Administration"),
+		OTHERS("Others");
+		
+		private String name;
+		private Type(String name) {
+			this.name = name;
+		}
+		
+		public String getName() {
+			return name;
+		}
 	}
 }

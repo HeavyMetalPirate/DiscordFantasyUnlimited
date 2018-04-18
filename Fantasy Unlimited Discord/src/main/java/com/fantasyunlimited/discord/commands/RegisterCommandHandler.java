@@ -38,4 +38,15 @@ public class RegisterCommandHandler extends CommandHandler {
 		FantasyUnlimited.getInstance().sendMessage(event.getChannel(), "Welcome, " + player.getName() + "! Your player ID is: " + player.getId());
 	}
 
+	@Override
+	public String getDescription() {
+		return "Registers your Discord account with the bot. Required before character creation - the game links your characters to your Discord ID.";
+	}
+
+	@Override
+	public Type getType() {
+		return Type.ACCOUNT;
+	}
+	
+	
 }

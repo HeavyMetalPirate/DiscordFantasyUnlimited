@@ -18,4 +18,14 @@ public class PingCommandHandler extends CommandHandler {
 		FantasyUnlimited.getInstance().sendMessage(event.getChannel(), "Pong!");
 	}
 
+	@Override
+	public String getDescription() {
+		return "Simple test command to see if the bot is alive and well.";
+	}
+
+	@Override
+	public Type getType() {
+		return Type.OTHERS;
+	}
+
 }

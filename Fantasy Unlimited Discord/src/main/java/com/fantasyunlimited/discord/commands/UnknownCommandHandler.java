@@ -19,4 +19,14 @@ public class UnknownCommandHandler extends CommandHandler {
 		FantasyUnlimited.getInstance().sendMessage(channel, author.getDisplayName(channel.getGuild()) + ": unknown command.");	
 	}
 
+	@Override
+	public String getDescription() {
+		return null;
+	}
+
+	@Override
+	public Type getType() {
+		return null;
+	}
+
 }
