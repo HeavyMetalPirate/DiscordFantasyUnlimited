@@ -15,7 +15,7 @@ import com.fantasyunlimited.discord.xml.Race;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IMessage;
 
-public class CharacterCommandHandler extends CommandHandler {
+public class CharacterCommandHandler extends CommandRequiresAuthenticationHandler {
 
 	public static final String CMD = "character";
 

@@ -9,6 +9,7 @@ import java.util.Properties;
 import com.fantasyunlimited.discord.FantasyUnlimited;
 import com.fantasyunlimited.discord.commands.CharacterCommandHandler;
 import com.fantasyunlimited.discord.commands.CommandHandler;
+import com.fantasyunlimited.discord.commands.CommandRequiresAuthenticationHandler;
 import com.fantasyunlimited.discord.commands.HelpCommandHandler;
 import com.fantasyunlimited.discord.commands.PingCommandHandler;
 import com.fantasyunlimited.discord.commands.ReactionTestHandler;
@@ -63,6 +64,11 @@ public class MessageReceivedHandler extends EventHandler<MessageReceivedEvent> {
 		command = command.toLowerCase();
 		CommandHandler handler = commands.get(command);
 		if(handler != null) {
+			if(handler instanceof CommandRequiresAuthenticationHandler &&
+					((CommandRequiresAuthenticationHandler)handler).isAuthenticated(event.getAuthor()) == false) {
+				FantasyUnlimited.getInstance().sendMessage(event.getChannel(), "You need to be registered to do that.");
+				return;
+			}
 			handler.handle(event);
 		}
 		else {
