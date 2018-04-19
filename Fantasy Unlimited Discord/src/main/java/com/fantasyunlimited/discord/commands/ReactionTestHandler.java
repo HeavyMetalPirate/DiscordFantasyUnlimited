@@ -2,16 +2,12 @@ package com.fantasyunlimited.discord.commands;
 
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
-
 import com.fantasyunlimited.discord.FantasyUnlimited;
 import com.fantasyunlimited.discord.MessageInformation;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.util.RateLimitException;
-import sx.blah.discord.util.RequestBuffer;
 
 /**
  * Command for testing purposes. Puts a message up, places a reaction on it and

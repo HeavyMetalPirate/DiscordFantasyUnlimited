@@ -10,9 +10,7 @@ import com.fantasyunlimited.discord.FantasyUnlimited;
 import com.fantasyunlimited.discord.xml.Race;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.util.RequestBuffer;
 
 public class CharacterCommandHandler extends CommandHandler {
 
