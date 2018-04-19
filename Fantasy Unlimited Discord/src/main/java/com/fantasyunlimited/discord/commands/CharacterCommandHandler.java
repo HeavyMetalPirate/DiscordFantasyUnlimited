@@ -80,8 +80,15 @@ public class CharacterCommandHandler extends CommandHandler {
 		public void accept(MessageReceivedEvent t) {
 			StringBuilder builder = new StringBuilder();
 			int raceCounter = 0;
+			
+			MessageInformation information = new MessageInformation();
+			information.setCanBeRemoved(false);
+			information.setOriginDate(t.getMessage().getTimestamp());
+			information.setOriginator(t.getMessage().getAuthor());
+				
 			for (Race race : FantasyUnlimited.getInstance().getRaceBag().getItems()) {
-				raceCounter++;
+				information.getVars().put(numNames[raceCounter], race); //add first for correct access
+				raceCounter++; //then increment the counter for display
 				builder.append(raceCounter + ": " + race.getName() + " (ID: " + race.getId() + ")\n");
 			}
 			embedBuilder
@@ -90,15 +97,11 @@ public class CharacterCommandHandler extends CommandHandler {
 					.appendField("Choose your race, " + t.getAuthor().getDisplayName(t.getGuild()), 
 							builder.toString(), false);
 			IMessage message = FantasyUnlimited.getInstance().sendMessage(t.getChannel(), embedBuilder.build());
-			embedBuilder.clearFields();
 			
 			String[] usedNumbers = Arrays.copyOf(numNames, raceCounter);
+			information.getVars().put("usedNumbers", Arrays.asList(usedNumbers));
 			FantasyUnlimited.getInstance().addReactions(message, usedNumbers);
 			
-			MessageInformation information = new MessageInformation();
-			information.setCanBeRemoved(false);
-			information.setOriginDate(t.getMessage().getTimestamp());
-			information.setOriginator(t.getMessage().getAuthor());
 			information.setMessage(message);
 			
 			MessageStatus status = new MessageStatus();

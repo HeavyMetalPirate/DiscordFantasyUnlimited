@@ -1,6 +1,8 @@
 package com.fantasyunlimited.discord;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
@@ -11,6 +13,8 @@ public class MessageInformation {
 	private IMessage message;
 	private MessageStatus status;
 	private boolean canBeRemoved;
+	
+	private Map<Object,Object> vars = new HashMap<Object,Object>();
 	
 	public LocalDateTime getOriginDate() {
 		return originDate;
@@ -41,5 +45,8 @@ public class MessageInformation {
 	}
 	public void setCanBeRemoved(boolean canBeRemoved) {
 		this.canBeRemoved = canBeRemoved;
+	}
+	public Map<Object,Object> getVars() {
+		return vars;
 	}
 }

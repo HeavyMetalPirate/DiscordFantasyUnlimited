@@ -11,9 +11,9 @@ import javax.servlet.ServletContext;
 import org.apache.log4j.Logger;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import com.fantasyunlimited.discord.commands.MessageReceivedHandler;
 import com.fantasyunlimited.discord.event.BotInitializedHandler;
-import com.fantasyunlimited.discord.reactions.ReactionForSelfAddHandler;
+import com.fantasyunlimited.discord.event.MessageReceivedHandler;
+import com.fantasyunlimited.discord.event.ReactionForSelfAddHandler;
 import com.fantasyunlimited.discord.xml.AttributeBonus;
 import com.fantasyunlimited.discord.xml.CharacterClass;
 import com.fantasyunlimited.discord.xml.ClassBonus;
@@ -42,6 +42,7 @@ import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IMessage;
+import sx.blah.discord.handle.obj.IReaction;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.MessageBuilder;
 import sx.blah.discord.util.RequestBuffer;
@@ -161,6 +162,12 @@ public class FantasyUnlimited extends BaseBot {
 		}).get();
 	}
 	
+	public IMessage editMessage(IMessage message, EmbedObject embed) {
+		return RequestBuffer.request(() -> {
+			return message.edit(embed);
+		}).get();
+	}
+	
 	public IMessage addReactions(final IMessage message, ReactionEmoji ... emojis) {
 		new Thread(() -> {
 			for(ReactionEmoji emoji: emojis) {
@@ -190,6 +197,15 @@ public class FantasyUnlimited extends BaseBot {
 					message.addReaction(ReactionEmoji.of(emoji, customEmojis.get(emoji)));
 				}).get();
 			}			
+		}).start();
+		return message;
+	}
+	
+	public IMessage removeReactionForUser(final IMessage message, IReaction reaction, IUser user) {
+		new Thread(() -> {
+			RequestBuffer.request(() -> {
+				message.removeReaction(user, reaction);
+			});
 		}).start();
 		return message;
 	}

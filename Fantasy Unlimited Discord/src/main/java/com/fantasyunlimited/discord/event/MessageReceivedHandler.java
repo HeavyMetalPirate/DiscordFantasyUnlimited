@@ -1,4 +1,4 @@
-package com.fantasyunlimited.discord.commands;
+package com.fantasyunlimited.discord.event;
 
 import java.util.LinkedList;
 import java.util.LinkedHashMap;
@@ -7,7 +7,13 @@ import java.util.Map;
 import java.util.Properties;
 
 import com.fantasyunlimited.discord.FantasyUnlimited;
-import com.fantasyunlimited.discord.event.EventHandler;
+import com.fantasyunlimited.discord.commands.CharacterCommandHandler;
+import com.fantasyunlimited.discord.commands.CommandHandler;
+import com.fantasyunlimited.discord.commands.HelpCommandHandler;
+import com.fantasyunlimited.discord.commands.PingCommandHandler;
+import com.fantasyunlimited.discord.commands.ReactionTestHandler;
+import com.fantasyunlimited.discord.commands.RegisterCommandHandler;
+import com.fantasyunlimited.discord.commands.UnknownCommandHandler;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IMessage;
