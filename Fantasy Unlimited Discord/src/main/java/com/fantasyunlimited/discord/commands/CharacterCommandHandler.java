@@ -1,5 +1,6 @@
 package com.fantasyunlimited.discord.commands;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -83,18 +84,15 @@ public class CharacterCommandHandler extends CommandHandler {
 				builder.append(raceCounter + ": " + race.getName() + " (ID: " + race.getId() + ")\n");
 			}
 			embedBuilder
-					.withFooterText("For a description of races type `"
-							+ properties.getProperty(FantasyUnlimited.PREFIX_KEY) + "race <name/id>`.")
-					.appendField("Choose your race", builder.toString(), false);
+					.withFooterText("For a description of races type '"
+							+ properties.getProperty(FantasyUnlimited.PREFIX_KEY) + "race <name/id>'.")
+					.appendField("Choose your race, " + t.getAuthor().getDisplayName(t.getGuild()), 
+							builder.toString(), false);
 			IMessage message = FantasyUnlimited.getInstance().sendMessage(t.getChannel(), embedBuilder.build());
-
-			for (int i = 0; i < raceCounter; i++) {
-				final int access = i;
-				RequestBuffer.request(() -> {
-					message.addReaction(ReactionEmoji.of(numNames[access]));
-				});
-			}
-
+			embedBuilder.clearFields();
+			
+			String[] usedNumbers = Arrays.copyOf(numNames, raceCounter);
+			FantasyUnlimited.getInstance().addReactions(message, usedNumbers);
 		}
 
 		@Override

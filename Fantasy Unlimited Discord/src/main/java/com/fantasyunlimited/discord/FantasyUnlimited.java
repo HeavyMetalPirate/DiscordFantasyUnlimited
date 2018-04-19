@@ -32,6 +32,7 @@ import com.thoughtworks.xstream.XStream;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.EventDispatcher;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
+import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
@@ -155,6 +156,39 @@ public class FantasyUnlimited extends BaseBot {
 		return RequestBuffer.request(() ->{
 			return new MessageBuilder(client).withChannel(channel).withEmbed(message).build();	
 		}).get();
+	}
+	
+	public IMessage addReactions(final IMessage message, ReactionEmoji ... emojis) {
+		new Thread(() -> {
+			for(ReactionEmoji emoji: emojis) {
+				RequestBuffer.request(() -> {
+					message.addReaction(emoji);
+				}).get();
+			}			
+		}).start();
+		return message;
+	}
+	
+	public IMessage addReactions(final IMessage message, String ... emojiUnicodes) {
+		new Thread(() -> {
+			for(String emoji: emojiUnicodes) {
+				RequestBuffer.request(() -> {
+					message.addReaction(ReactionEmoji.of(emoji));
+				}).get();
+			}			
+		}).start();
+		return message;
+	}
+	
+	public IMessage addCustomReactions(final IMessage message, Map<String,Long> customEmojis) {
+		new Thread(() -> {
+			for(String emoji: customEmojis.keySet()) {
+				RequestBuffer.request(() -> {
+					message.addReaction(ReactionEmoji.of(emoji, customEmojis.get(emoji)));
+				}).get();
+			}			
+		}).start();
+		return message;
 	}
 
 	public WeaponBag getWeaponBag() {

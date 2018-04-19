@@ -2,12 +2,15 @@ package com.fantasyunlimited.discord.commands;
 
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+
 import com.fantasyunlimited.discord.FantasyUnlimited;
 import com.fantasyunlimited.discord.MessageInformation;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
+import sx.blah.discord.util.RateLimitException;
 import sx.blah.discord.util.RequestBuffer;
 
 /**
@@ -32,28 +35,13 @@ public class ReactionTestHandler extends CommandHandler {
 				"I should only react to any reaction " + event.getAuthor().getDisplayName(event.getGuild())
 						+ " puts up on this message.");
 		ReactionEmoji reaction = ReactionEmoji.of("test", 435013539535519755L);
-		RequestBuffer.request(() -> {
-			message.addReaction(reaction);
-		});
-		
-		final String[] numNames = {
-			    "\u0031\u20E3",
-			    "\u0032\u20E3",
-			    "\u0033\u20E3",
-			    "\u0034\u20E3",
-			    "\u0035\u20E3",
-			    "\u0036\u20E3",
-			    "\u0037\u20E3",
-			    "\u0038\u20E3",
-			    "\u0039\u20E3",
-			    "\u0030\u20E3"};
-		for(int i = 0; i < numNames.length; i++) {
-			final int value = i;
-			RequestBuffer.request(() -> {
-				message.addReaction(ReactionEmoji.of(numNames[value]));
-			});
-		}
+		FantasyUnlimited.getInstance().addReactions(message, reaction);
 
+		final String[] numNames = { "\u0031\u20E3", "\u0032\u20E3", "\u0033\u20E3", "\u0034\u20E3", "\u0035\u20E3",
+				"\u0036\u20E3", "\u0037\u20E3", "\u0038\u20E3", "\u0039\u20E3", "\u0030\u20E3" };
+
+		FantasyUnlimited.getInstance().addReactions(message, numNames);
+		
 		MessageInformation information = new MessageInformation();
 		information.setCanBeRemoved(false);
 		information.setOriginDate(event.getMessage().getTimestamp());
