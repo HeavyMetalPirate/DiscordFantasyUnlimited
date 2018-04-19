@@ -3,25 +3,22 @@ package com.fantasyunlimited.discord.commands;
 import java.util.Properties;
 
 import com.fantasyunlimited.discord.FantasyUnlimited;
+import com.fantasyunlimited.discord.event.EventHandler;
 
-import sx.blah.discord.api.events.IListener;
-import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.util.EmbedBuilder;
 
-public abstract class CommandHandler implements IListener<MessageReceivedEvent> {
+public abstract class CommandHandler extends EventHandler<MessageReceivedEvent> {
 	protected final String command;
 	protected final Properties properties;
-	protected final SelfcleaningEmbedBuilder embedBuilder;
 	
 	public abstract String getDescription();
 	public abstract Type getType();
 	
 	public CommandHandler(Properties properties, String command) {
+		super(properties);
 		this.command = command;
 		this.properties = properties;
-		embedBuilder = new SelfcleaningEmbedBuilder();
 	}
 		
 	protected String stripCommandFromMessage(IMessage message) {
@@ -33,16 +30,7 @@ public abstract class CommandHandler implements IListener<MessageReceivedEvent> 
 		if(message == null) return "";
 		return message.split(" ")[0];
 	}
-	
-	protected class SelfcleaningEmbedBuilder extends EmbedBuilder {
-		@Override
-		public EmbedObject build() {
-			EmbedObject retval = super.build();
-			clearFields();
-			return retval;
-		}
-	}
-	
+
 	public enum Type {
 		ACCOUNT("Account"),
 		CHARACTER("Character Management"),

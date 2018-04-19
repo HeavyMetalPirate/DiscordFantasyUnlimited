@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import com.fantasyunlimited.discord.FantasyUnlimited;
 import com.fantasyunlimited.discord.MessageInformation;
+import com.fantasyunlimited.discord.MessageStatus;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
@@ -42,7 +43,7 @@ public class ReactionTestHandler extends CommandHandler {
 		information.setCanBeRemoved(false);
 		information.setOriginDate(event.getMessage().getTimestamp());
 		information.setOriginator(event.getMessage().getAuthor());
-		information.setStatus("test");
+		information.setStatus(new MessageStatus());
 		information.setMessage(message);
 
 		FantasyUnlimited.getInstance().getMessagesAwaitingReactions().put(message.getLongID(), information);

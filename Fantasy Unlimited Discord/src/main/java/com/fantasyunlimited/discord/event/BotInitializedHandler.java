@@ -1,7 +1,8 @@
-package com.fantasyunlimited.discord;
+package com.fantasyunlimited.discord.event;
 
 import org.apache.log4j.Logger;
 
+import com.fantasyunlimited.discord.FantasyUnlimited;
 import com.thoughtworks.xstream.XStream;
 
 import sx.blah.discord.api.events.IListener;

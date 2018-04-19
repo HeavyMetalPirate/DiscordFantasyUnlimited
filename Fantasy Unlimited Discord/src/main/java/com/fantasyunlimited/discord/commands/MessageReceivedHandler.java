@@ -1,4 +1,4 @@
-package com.fantasyunlimited.discord;
+package com.fantasyunlimited.discord.commands;
 
 import java.util.LinkedList;
 import java.util.LinkedHashMap;
@@ -6,26 +6,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import com.fantasyunlimited.discord.commands.CharacterCommandHandler;
-import com.fantasyunlimited.discord.commands.CommandHandler;
-import com.fantasyunlimited.discord.commands.HelpCommandHandler;
-import com.fantasyunlimited.discord.commands.PingCommandHandler;
-import com.fantasyunlimited.discord.commands.ReactionTestHandler;
-import com.fantasyunlimited.discord.commands.RegisterCommandHandler;
-import com.fantasyunlimited.discord.commands.UnknownCommandHandler;
+import com.fantasyunlimited.discord.FantasyUnlimited;
+import com.fantasyunlimited.discord.event.EventHandler;
 
-import sx.blah.discord.api.IDiscordClient;
-import sx.blah.discord.api.events.IListener;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IMessage;
 
-public class MessageReceivedHandler extends EventHandler implements IListener<MessageReceivedEvent> {
+public class MessageReceivedHandler extends EventHandler<MessageReceivedEvent> {
 
 	private Map<String, CommandHandler> commands = new LinkedHashMap<String, CommandHandler>();
 	private UnknownCommandHandler unknown;
 	
-	public MessageReceivedHandler(IDiscordClient discordClient, Properties properties) {
-		super(discordClient, properties);
+	public MessageReceivedHandler(Properties properties) {
+		super(properties);
 		setupCommands();
 	}
 	

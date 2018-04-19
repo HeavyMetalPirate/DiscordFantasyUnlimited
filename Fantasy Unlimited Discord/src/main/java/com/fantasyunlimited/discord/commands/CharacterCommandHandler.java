@@ -7,6 +7,9 @@ import java.util.Properties;
 import java.util.function.Consumer;
 
 import com.fantasyunlimited.discord.FantasyUnlimited;
+import com.fantasyunlimited.discord.MessageInformation;
+import com.fantasyunlimited.discord.MessageStatus;
+import com.fantasyunlimited.discord.MessageStatus.Name;
 import com.fantasyunlimited.discord.xml.Race;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -91,6 +94,22 @@ public class CharacterCommandHandler extends CommandHandler {
 			
 			String[] usedNumbers = Arrays.copyOf(numNames, raceCounter);
 			FantasyUnlimited.getInstance().addReactions(message, usedNumbers);
+			
+			MessageInformation information = new MessageInformation();
+			information.setCanBeRemoved(false);
+			information.setOriginDate(t.getMessage().getTimestamp());
+			information.setOriginator(t.getMessage().getAuthor());
+			information.setMessage(message);
+			
+			MessageStatus status = new MessageStatus();
+			status.setName(Name.CREATE_CHAR_RACE_SELECTION);
+			status.setPaginator(raceCounter > 5);
+			status.setCurrentPage(1);
+			int maxPage = (int)Math.ceil(raceCounter/5);
+			status.setMaxPage(maxPage);
+			information.setStatus(status);
+
+			FantasyUnlimited.getInstance().getMessagesAwaitingReactions().put(message.getLongID(), information);
 		}
 
 		@Override

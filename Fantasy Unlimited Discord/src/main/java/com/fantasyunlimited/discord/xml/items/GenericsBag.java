@@ -1,4 +1,4 @@
-package com.fantasyunlimited.discord;
+package com.fantasyunlimited.discord.xml.items;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -11,6 +11,9 @@ import javax.servlet.ServletContext;
 import org.apache.log4j.Logger;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import com.fantasyunlimited.discord.commands.MessageReceivedHandler;
+import com.fantasyunlimited.discord.event.BotInitializedHandler;
+import com.fantasyunlimited.discord.reactions.ReactionForSelfAddHandler;
 import com.fantasyunlimited.discord.xml.AttributeBonus;
 import com.fantasyunlimited.discord.xml.CharacterClass;
 import com.fantasyunlimited.discord.xml.ClassBonus;
@@ -27,6 +30,10 @@ import com.fantasyunlimited.discord.xml.Skill;
 import com.fantasyunlimited.discord.xml.SkillRank;
 import com.fantasyunlimited.discord.xml.TravelConnection;
 import com.fantasyunlimited.discord.xml.Weapon;
+import com.fantasyunlimited.discord.xml.items.ClassBag;
+import com.fantasyunlimited.discord.xml.items.EquipmentBag;
+import com.fantasyunlimited.discord.xml.items.RaceBag;
+import com.fantasyunlimited.discord.xml.items.WeaponBag;
 import com.thoughtworks.xstream.XStream;
 
 import sx.blah.discord.api.IDiscordClient;
@@ -63,8 +70,8 @@ public class FantasyUnlimited extends BaseBot {
 		super(discordClient);
 		INSTANCE = this;
 		this.properties = properties;
-		messageReceivedHandler = new MessageReceivedHandler(discordClient, properties);
-		reactionAddHandler = new ReactionForSelfAddHandler(discordClient, properties);
+		messageReceivedHandler = new MessageReceivedHandler(properties);
+		reactionAddHandler = new ReactionForSelfAddHandler(properties);
 		
 		EventDispatcher dispatcher = discordClient.getDispatcher();
 		dispatcher.registerListeners(new BotInitializedHandler(), messageReceivedHandler, reactionAddHandler);

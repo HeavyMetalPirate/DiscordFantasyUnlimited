@@ -9,7 +9,7 @@ public class MessageInformation {
 	private LocalDateTime originDate;
 	private IUser originator;
 	private IMessage message;
-	private String status;
+	private MessageStatus status;
 	private boolean canBeRemoved;
 	
 	public LocalDateTime getOriginDate() {
@@ -30,10 +30,10 @@ public class MessageInformation {
 	public void setMessage(IMessage message) {
 		this.message = message;
 	}
-	public String getStatus() {
+	public MessageStatus getStatus() {
 		return status;
 	}
-	public void setStatus(String status) {
+	public void setStatus(MessageStatus status) {
 		this.status = status;
 	}
 	public boolean isCanBeRemoved() {
