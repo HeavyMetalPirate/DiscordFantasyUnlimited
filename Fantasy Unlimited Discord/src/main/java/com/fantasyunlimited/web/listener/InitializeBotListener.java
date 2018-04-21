@@ -8,7 +8,6 @@ import javax.servlet.ServletContextListener;
 
 import org.apache.log4j.Logger;
 
-import com.fantasyunlimited.discord.BaseBot;
 import com.fantasyunlimited.discord.FantasyUnlimited;
 
 import sx.blah.discord.api.ClientBuilder;
@@ -21,7 +20,8 @@ public class InitializeBotListener implements ServletContextListener {
 	
 	@Override
 	public void contextDestroyed(ServletContextEvent event) {
-		BaseBot bot = (BaseBot)(event.getServletContext().getAttribute("DiscordBot"));
+		FantasyUnlimited bot = (FantasyUnlimited)(event.getServletContext().getAttribute("DiscordBot"));
+		bot.getCacheManager().close();
 		bot.logout();
 	}
 
