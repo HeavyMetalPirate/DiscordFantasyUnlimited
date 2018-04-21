@@ -18,6 +18,7 @@
 		<discord4j.version>2.9.3</discord4j.version>
 		<guava.version>24.1-jre</guava.version>
 		<xstream.version>1.4.10</xstream.version>
+		<ehcache.version>3.5.2</ehcache.version>
 		<maven-compiler.version>3.3</maven-compiler.version>
 		<maven-war.version>2.6</maven-war.version>
 	</properties>
@@ -117,6 +118,13 @@
 			<groupId>com.thoughtworks.xstream</groupId>
 			<artifactId>xstream</artifactId>
 			<version>${xstream.version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.ehcache/ehcache -->
+		<dependency>
+			<groupId>org.ehcache</groupId>
+			<artifactId>ehcache</artifactId>
+			<version>${ehcache.version}</version>
 		</dependency>
 
 
