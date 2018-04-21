@@ -20,21 +20,13 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 	public static final String CMD = "character";
 
 	private Map<String, Consumer<MessageReceivedEvent>> options;
-	private static final String[] numNames = {
-		    "\u0031\u20E3",
-		    "\u0032\u20E3",
-		    "\u0033\u20E3",
-		    "\u0034\u20E3",
-		    "\u0035\u20E3",
-		    "\u0036\u20E3",
-		    "\u0037\u20E3",
-		    "\u0038\u20E3",
-		    "\u0039\u20E3"};
+	private static final String[] numNames = { "\u0031\u20E3", "\u0032\u20E3", "\u0033\u20E3", "\u0034\u20E3",
+			"\u0035\u20E3", "\u0036\u20E3", "\u0037\u20E3", "\u0038\u20E3", "\u0039\u20E3" };
 
 	public CharacterCommandHandler(Properties properties) {
 		super(properties, CMD);
 		options = new LinkedHashMap<String, Consumer<MessageReceivedEvent>>();
-		options.put("create", new HandleCreate());
+		options.put(HandleCreate.OPTION, new HandleCreate());
 	}
 
 	@Override
@@ -59,7 +51,8 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 			builder.append("```Options:\n");
 			for (String available : options.keySet()) {
 				OptionDescription desc = (OptionDescription) options.get(available);
-				builder.append("" + available + ":\t" + desc.getDescription());
+				builder.append(available + (desc.getParameter().isEmpty() ? "" : " <" + desc.getParameter()) + ">:\t"
+						+ desc.getDescription());
 			}
 			builder.append("```");
 			FantasyUnlimited.getInstance().sendMessage(event.getChannel(), builder.toString());
@@ -76,39 +69,49 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 	}
 
 	private class HandleCreate implements OptionDescription, Consumer<MessageReceivedEvent> {
+		protected static final String OPTION = "create";
+
 		@Override
 		public void accept(MessageReceivedEvent t) {
+
+			String stripped = stripParameterFromMessage(t.getMessage(), OPTION);
+			if (stripped.trim().isEmpty()) {
+				FantasyUnlimited.getInstance().sendMessage(t.getChannel(), "Usage: " + OPTION + " <" + getParameter() + ">" );
+				return;
+			}
+
 			StringBuilder builder = new StringBuilder();
 			int raceCounter = 0;
-			
+
 			MessageInformation information = new MessageInformation();
+			information.getVars().put("characterName", stripped);
 			information.setCanBeRemoved(false);
 			information.setOriginDate(t.getMessage().getTimestamp());
 			information.setOriginator(t.getMessage().getAuthor());
-				
+
 			for (Race race : FantasyUnlimited.getInstance().getRaceBag().getItems()) {
-				information.getVars().put(numNames[raceCounter], race); //add first for correct access
-				raceCounter++; //then increment the counter for display
+				information.getVars().put(numNames[raceCounter], race); // add first for correct access
+				raceCounter++; // then increment the counter for display
 				builder.append(raceCounter + ": " + race.getName() + " (ID: " + race.getId() + ")\n");
 			}
 			embedBuilder
 					.withFooterText("For a description of races type '"
 							+ properties.getProperty(FantasyUnlimited.PREFIX_KEY) + "race <name/id>'.")
-					.appendField("Choose your race, " + t.getAuthor().getDisplayName(t.getGuild()), 
-							builder.toString(), false);
+					.appendField("Choose a race for " + stripped + ", " + t.getAuthor().getDisplayName(t.getGuild()), builder.toString(),
+							false);
 			IMessage message = FantasyUnlimited.getInstance().sendMessage(t.getChannel(), embedBuilder.build());
-			
+
 			String[] usedNumbers = Arrays.copyOf(numNames, raceCounter);
 			information.getVars().put("usedNumbers", Arrays.asList(usedNumbers));
 			FantasyUnlimited.getInstance().addReactions(message, usedNumbers);
-			
+
 			information.setMessage(message);
-			
+
 			MessageStatus status = new MessageStatus();
 			status.setName(Name.CREATE_CHAR_RACE_SELECTION);
 			status.setPaginator(raceCounter > 5);
 			status.setCurrentPage(1);
-			int maxPage = (int)Math.ceil(raceCounter/5);
+			int maxPage = (int) Math.ceil(raceCounter / 5);
 			status.setMaxPage(maxPage);
 			information.setStatus(status);
 
@@ -118,6 +121,11 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 		@Override
 		public String getDescription() {
 			return "Starts the character creation process.";
+		}
+
+		@Override
+		public String getParameter() {
+			return "name of the character";
 		}
 	}
 }

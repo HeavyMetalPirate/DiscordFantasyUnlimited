@@ -23,12 +23,17 @@ public abstract class CommandHandler extends EventHandler<MessageReceivedEvent> 
 		
 	protected String stripCommandFromMessage(IMessage message) {
 		String content = message.getContent().substring(properties.getProperty(FantasyUnlimited.PREFIX_KEY).length()); //Strip the prefix
-		return content.substring(command.length()).trim(); //Strip the command with leading and trailing whitespace removed
+		return content.startsWith(command) ? content.substring(command.length()).trim() : content; //Strip the command with leading and trailing whitespace removed
 	}
 	
 	protected String stripOptionFromMessage(String message) {
 		if(message == null) return "";
 		return message.split(" ")[0];
+	}
+	
+	protected String stripParameterFromMessage(IMessage message, String optionName) {
+		String content = stripCommandFromMessage(message);
+		return content.startsWith(optionName) ? content.substring(optionName.length()).trim() : content;
 	}
 
 	public enum Type {

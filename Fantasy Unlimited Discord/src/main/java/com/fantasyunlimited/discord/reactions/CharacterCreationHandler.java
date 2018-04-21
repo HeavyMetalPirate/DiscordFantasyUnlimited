@@ -47,13 +47,12 @@ public class CharacterCreationHandler extends ReactionsHandler {
 
 		switch (information.getStatus().getName()) {
 		case CREATE_CHAR_CLASS_SELECTION:
-			handleClassSelected(information);
+			handleClassSelected(information, emojiName);
 			break;
 		case CREATE_CHAR_RACE_SELECTION:
 			handleRaceSelected(information, emojiName);
 			break;
 		default:
-
 			break;
 
 		}
@@ -67,7 +66,11 @@ public class CharacterCreationHandler extends ReactionsHandler {
 		StringBuilder builder = new StringBuilder();
 		int classCounter = 0;
 		for (CharacterClass characterClass : FantasyUnlimited.getInstance().getClassBag().getItems()) {
-			information.getVars().put(numNames[classCounter], characterClass); // add first for correct access
+			information.getVars().put(numNames[classCounter], characterClass); // add
+																				// first
+																				// for
+																				// correct
+																				// access
 			classCounter++; // then increment the counter for display
 			builder.append(classCounter + ": " + characterClass.getName() + " (ID: " + characterClass.getId() + ")\n");
 		}
@@ -75,22 +78,28 @@ public class CharacterCreationHandler extends ReactionsHandler {
 				.withFooterText("For a description of classes type '"
 						+ properties.getProperty(FantasyUnlimited.PREFIX_KEY) + "class <name/id>'.")
 				.appendField(
-						"Choose a class for your " + selectedRace.getName() + ", "
+						"Choose a class for the " + selectedRace.getName() + " " + information.getVars().get("characterName") + ", "
 								+ information.getOriginator().getDisplayName(information.getMessage().getGuild()),
 						builder.toString(), false);
-		
+
 		IMessage message = FantasyUnlimited.getInstance().editMessage(information.getMessage(), embedBuilder.build());
 		information.setMessage(message);
-		
+
 		String[] usedNumbers = Arrays.copyOf(numNames, classCounter);
 		information.getVars().put("usedNumbers", Arrays.asList(usedNumbers));
 		FantasyUnlimited.getInstance().addReactions(information.getMessage(), usedNumbers);
-		
-		//set the status to the new one
+
+		// set the status to the new one
 		information.getStatus().setName(Name.CREATE_CHAR_CLASS_SELECTION);
 	}
 
-	private void handleClassSelected(MessageInformation information) {
-		FantasyUnlimited.getInstance().sendMessage(information.getMessage().getChannel(), "OMG chill I'm not Sonic the motherfucking hedgehog.");
+	private void handleClassSelected(MessageInformation information, String emojiName) {
+		// get the selection first;
+		CharacterClass selectedClass = (CharacterClass) information.getVars().get(emojiName);
+		Race selectedRace = selectionStorage.get(information.getOriginator().getLongID());
+
+		FantasyUnlimited.getInstance().sendMessage(information.getMessage().getChannel(),
+				"So you want to be a " + selectedRace.getName() + " " + selectedClass.getName()
+						+ "? Too bad I'm still lazy as fuck and haven't done this shit yet.");
 	}
 }
