@@ -39,6 +39,7 @@ import com.fantasyunlimited.discord.xml.TravelConnection;
 import com.fantasyunlimited.discord.xml.Weapon;
 import com.fantasyunlimited.discord.xml.items.ClassBag;
 import com.fantasyunlimited.discord.xml.items.EquipmentBag;
+import com.fantasyunlimited.discord.xml.items.LocationBag;
 import com.fantasyunlimited.discord.xml.items.RaceBag;
 import com.fantasyunlimited.discord.xml.items.WeaponBag;
 import com.fantasyunlimited.entity.DiscordPlayer;
@@ -74,6 +75,7 @@ public class FantasyUnlimited extends BaseBot {
 	private EquipmentBag equipmentBag = new EquipmentBag();
 	private RaceBag raceBag = new RaceBag();
 	private ClassBag classBag = new ClassBag();
+	private LocationBag locationsBag = new LocationBag();
 
 	private Map<Long, MessageInformation> messagesAwaitingReactions = new HashMap<>();
 
@@ -188,6 +190,12 @@ public class FantasyUnlimited extends BaseBot {
 		}).get();
 	}
 
+	public IMessage editMessage(IMessage message, String content) {
+		return RequestBuffer.request(() -> {
+			return message.edit(content);
+		}).get();
+	}
+	
 	public IMessage editMessage(IMessage message, EmbedObject embed) {
 		return RequestBuffer.request(() -> {
 			return message.edit(embed);
@@ -258,5 +266,9 @@ public class FantasyUnlimited extends BaseBot {
 
 	public CacheManager getCacheManager() {
 		return cacheManager;
+	}
+
+	public LocationBag getLocationsBag() {
+		return locationsBag;
 	}
 }

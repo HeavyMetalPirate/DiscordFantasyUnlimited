@@ -69,7 +69,12 @@ public class MessageReceivedHandler extends EventHandler<MessageReceivedEvent> {
 				FantasyUnlimited.getInstance().sendMessage(event.getChannel(), "You need to be registered to do that.");
 				return;
 			}
-			handler.handle(event);
+			try {
+				handler.handle(event);
+			}
+			catch(Exception e) {
+				FantasyUnlimited.getInstance().sendExceptionMessage(e);
+			}
 		}
 		else {
 			unknown.handle(event);

@@ -41,6 +41,7 @@ public class MessageStatus {
 	public enum Name {
 		CREATE_CHAR_RACE_SELECTION,
 		CREATE_CHAR_CLASS_SELECTION,
+		CREATE_CHAR_CONFIRMATION,
 		NONE
 	}
 }

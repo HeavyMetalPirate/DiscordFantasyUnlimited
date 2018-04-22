@@ -21,6 +21,7 @@ public class BotInitializedHandler implements IListener<ReadyEvent>{
 			bot.getEquipmentBag().initialize(xstream);
 			bot.getRaceBag().initialize(xstream);
 			bot.getClassBag().initialize(xstream);
+			bot.getLocationsBag().initialize(xstream);
 		}
 		catch(Exception e) {
 			bot.sendExceptionMessage(e);
@@ -30,6 +31,8 @@ public class BotInitializedHandler implements IListener<ReadyEvent>{
 		logger.debug("Initialized: " + bot.getEquipmentBag().getItems().size() + " Equipments");
 		logger.debug("Initialized: " + bot.getRaceBag().getItems().size() + " Races");
 		logger.debug("Initialized: " + bot.getClassBag() .getItems().size() + " Classes");
+		logger.debug("Initialized: " + bot.getLocationsBag() .getItems().size() + " Locations");
+		
 	}
 
 }

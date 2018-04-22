@@ -8,7 +8,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fantasyunlimited.dao.DiscordUserRepository;
+import com.fantasyunlimited.dao.PlayerCharacterRepository;
 import com.fantasyunlimited.entity.DiscordPlayer;
+import com.fantasyunlimited.entity.PlayerCharacter;
 import com.google.common.collect.Lists;
 
 @Component
@@ -17,6 +19,8 @@ public class DiscordPlayerLogicImpl implements DiscordPlayerLogic {
 
 	@Autowired
 	private DiscordUserRepository repository;
+	@Autowired
+	private PlayerCharacterRepository characterRepositry;
 	
 	@Override
 	@Transactional
@@ -43,5 +47,21 @@ public class DiscordPlayerLogicImpl implements DiscordPlayerLogic {
 	@Override
 	public List<DiscordPlayer> getAll() {
 		return Lists.newArrayList(repository.findAll());
+	}
+
+	@Override
+	@Transactional
+	public DiscordPlayer addCharacter(DiscordPlayer player, PlayerCharacter character) {
+		player = getById(player.getId()); //load into transaction
+		player.getCharacters().add(character);
+		character.setPlayer(player);
+		player.setCurrentCharacter(character);
+		return repository.save(player);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<PlayerCharacter> getCharactersForPlayer(DiscordPlayer player) {
+		return Lists.newArrayList(characterRepositry.findAllByPlayer(player));
 	}
 }

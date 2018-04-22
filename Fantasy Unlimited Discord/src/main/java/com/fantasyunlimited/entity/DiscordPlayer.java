@@ -1,14 +1,18 @@
 package com.fantasyunlimited.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -30,8 +34,11 @@ public class DiscordPlayer {
 	@Column
 	private Date joinDate;
 	
-	@OneToMany(mappedBy = "player")
-	private List<PlayerCharacter> characters;
+	@OneToMany(mappedBy = "player", cascade = CascadeType.ALL)
+	private List<PlayerCharacter> characters = new ArrayList<>();
+	
+	@OneToOne(fetch = FetchType.EAGER)
+	private PlayerCharacter currentCharacter;
 	
 	public int getId() {
 		return id;
@@ -59,5 +66,11 @@ public class DiscordPlayer {
 	}
 	public void setCharacters(List<PlayerCharacter> characters) {
 		this.characters = characters;
+	}
+	public PlayerCharacter getCurrentCharacter() {
+		return currentCharacter;
+	}
+	public void setCurrentCharacter(PlayerCharacter currentCharacter) {
+		this.currentCharacter = currentCharacter;
 	}
 }

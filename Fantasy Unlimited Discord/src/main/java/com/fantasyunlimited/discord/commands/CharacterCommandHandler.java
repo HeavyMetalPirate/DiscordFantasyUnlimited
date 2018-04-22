@@ -10,6 +10,7 @@ import com.fantasyunlimited.discord.FantasyUnlimited;
 import com.fantasyunlimited.discord.MessageInformation;
 import com.fantasyunlimited.discord.MessageStatus;
 import com.fantasyunlimited.discord.MessageStatus.Name;
+import com.fantasyunlimited.discord.Unicodes;
 import com.fantasyunlimited.discord.xml.Race;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -20,8 +21,6 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 	public static final String CMD = "character";
 
 	private Map<String, Consumer<MessageReceivedEvent>> options;
-	private static final String[] numNames = { "\u0031\u20E3", "\u0032\u20E3", "\u0033\u20E3", "\u0034\u20E3",
-			"\u0035\u20E3", "\u0036\u20E3", "\u0037\u20E3", "\u0038\u20E3", "\u0039\u20E3" };
 
 	public CharacterCommandHandler(Properties properties) {
 		super(properties, CMD);
@@ -90,7 +89,7 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 			information.setOriginator(t.getMessage().getAuthor());
 
 			for (Race race : FantasyUnlimited.getInstance().getRaceBag().getItems()) {
-				information.getVars().put(numNames[raceCounter], race); // add first for correct access
+				information.getVars().put(Unicodes.numNames[raceCounter], race); // add first for correct access
 				raceCounter++; // then increment the counter for display
 				builder.append(raceCounter + ": " + race.getName() + " (ID: " + race.getId() + ")\n");
 			}
@@ -101,7 +100,7 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 							false);
 			IMessage message = FantasyUnlimited.getInstance().sendMessage(t.getChannel(), embedBuilder.build());
 
-			String[] usedNumbers = Arrays.copyOf(numNames, raceCounter);
+			String[] usedNumbers = Arrays.copyOf(Unicodes.numNames, raceCounter);
 			information.getVars().put("usedNumbers", Arrays.asList(usedNumbers));
 			FantasyUnlimited.getInstance().addReactions(message, usedNumbers);
 

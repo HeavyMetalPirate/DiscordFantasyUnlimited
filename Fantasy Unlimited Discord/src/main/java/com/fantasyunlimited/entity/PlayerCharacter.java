@@ -1,9 +1,11 @@
 package com.fantasyunlimited.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,91 +17,112 @@ public class PlayerCharacter {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	
-	@ManyToOne(optional = false)
+
+	@ManyToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private DiscordPlayer player;
-	
-	@OneToOne
-	private CharacterEquipment equipment;
-	
+
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private CharacterEquipment equipment = new CharacterEquipment();
+
 	@Column
 	private String name;
-	
+
 	@Column
 	private String classId;
-	
+
 	@Column
 	private String raceId;
-	
+
 	@Column
 	private String locationId;
-	
+
 	@Column
 	private int currentLevel;
-	
+
 	@Column
 	private int currentXp;
-	
+
 	@Embedded
 	private Attributes attributes;
-		
+
+	public PlayerCharacter() {
+		attributes = new Attributes();
+	}
+	
 	public long getId() {
 		return id;
 	}
+
 	public void setId(long id) {
 		this.id = id;
 	}
+
 	public DiscordPlayer getPlayer() {
 		return player;
 	}
+
 	public void setPlayer(DiscordPlayer player) {
 		this.player = player;
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	public String getClassId() {
 		return classId;
 	}
+
 	public void setClassId(String classId) {
 		this.classId = classId;
 	}
+
 	public String getRaceId() {
 		return raceId;
 	}
+
 	public void setRaceId(String raceId) {
 		this.raceId = raceId;
 	}
+
 	public String getLocationId() {
 		return locationId;
 	}
+
 	public void setLocationId(String locationId) {
 		this.locationId = locationId;
 	}
+
 	public int getCurrentLevel() {
 		return currentLevel;
 	}
+
 	public void setCurrentLevel(int currentLevel) {
 		this.currentLevel = currentLevel;
 	}
+
 	public int getCurrentXp() {
 		return currentXp;
 	}
+
 	public void setCurrentXp(int currentXp) {
 		this.currentXp = currentXp;
 	}
+
 	public Attributes getAttributes() {
 		return attributes;
 	}
-	public void setAttributes(Attributes attributes) {
-		this.attributes = attributes;
+
+	public CharacterEquipment getEquipment() {
+		return equipment;
 	}
 
 	@Embeddable
-	protected class Attributes {
+	public static class Attributes {
 		private int endurance;
 		private int strength;
 		private int dexterity;
@@ -107,9 +130,13 @@ public class PlayerCharacter {
 		private int intelligence;
 		private int defense;
 		private int luck;
-		
+
 		private int unspent;
 
+		public Attributes() {
+			
+		}
+		
 		public int getEndurance() {
 			return endurance;
 		}
@@ -174,4 +201,11 @@ public class PlayerCharacter {
 			this.unspent = unspent;
 		}
 	}
+
+	@Override
+	public String toString() {
+		return "PlayerCharacter [id=" + id + ", name=" + name + ", classId=" + classId + ", raceId=" + raceId
+				+ ", locationId=" + locationId + ", currentLevel=" + currentLevel + ", currentXp=" + currentXp + "]";
+	}
+	
 }

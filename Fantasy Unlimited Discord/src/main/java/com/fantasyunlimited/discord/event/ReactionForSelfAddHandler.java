@@ -24,6 +24,7 @@ public class ReactionForSelfAddHandler extends EventHandler<ReactionAddEvent> {
 		CharacterCreationHandler characterCreationHandler = new CharacterCreationHandler(properties);
 		reactionHandlers.put(Name.CREATE_CHAR_CLASS_SELECTION, characterCreationHandler);
 		reactionHandlers.put(Name.CREATE_CHAR_RACE_SELECTION, characterCreationHandler);
+		reactionHandlers.put(Name.CREATE_CHAR_CONFIRMATION, characterCreationHandler);
 	}
 
 	@Override
@@ -53,7 +54,12 @@ public class ReactionForSelfAddHandler extends EventHandler<ReactionAddEvent> {
 			FantasyUnlimited.getInstance().sendExceptionMessage(new IllegalStateException(
 					"ReactionHandler for Status name " + information.getStatus().getName() + " is null."));
 		} else {
-			handler.handle(event);
+			try {
+				handler.handle(event);
+			}
+			catch(Exception e) {
+				FantasyUnlimited.getInstance().sendExceptionMessage(e);
+			}
 		}
 	}
 }
