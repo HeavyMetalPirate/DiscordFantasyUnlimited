@@ -140,6 +140,7 @@ public class FantasyUnlimited extends BaseBot {
 		}
 		builder.append("```");
 		sendMessage(owner.getOrCreatePMChannel(), builder.toString());
+		e.printStackTrace();
 	}
 
 	public XStream initializeXStream() {
