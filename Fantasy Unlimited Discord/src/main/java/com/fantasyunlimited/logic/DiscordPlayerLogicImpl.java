@@ -20,7 +20,7 @@ public class DiscordPlayerLogicImpl implements DiscordPlayerLogic {
 	@Autowired
 	private DiscordUserRepository repository;
 	@Autowired
-	private PlayerCharacterRepository characterRepositry;
+	private PlayerCharacterRepository characterRepository;
 	
 	@Override
 	@Transactional
@@ -63,6 +63,11 @@ public class DiscordPlayerLogicImpl implements DiscordPlayerLogic {
 	@Override
 	@Transactional(readOnly = true)
 	public List<PlayerCharacter> getCharactersForPlayer(DiscordPlayer player) {
-		return Lists.newArrayList(characterRepositry.findAllByPlayer(player));
+		return Lists.newArrayList(characterRepository.findAllByPlayer(player));
+	}
+
+	@Override
+	public boolean isNameAvailable(String name) {
+		return characterRepository.findByNameIgnoreCase(name).isPresent() == false;
 	}
 }

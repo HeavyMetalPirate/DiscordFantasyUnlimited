@@ -60,8 +60,8 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 			builder.append("```Options:\n");
 			for (String available : options.keySet()) {
 				OptionDescription desc = (OptionDescription) options.get(available);
-				builder.append(available + (desc.getParameter().isEmpty() ? "" : " [" + desc.getParameter() + "]") + ": "
-						+ desc.getDescription());
+				builder.append(available + (desc.getParameter().isEmpty() ? "" : " [" + desc.getParameter() + "]")
+						+ ": " + desc.getDescription());
 				builder.append("\n");
 			}
 			builder.append("```");
@@ -97,27 +97,31 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 
 			StringBuilder stringBuilder = new StringBuilder();
 			int counter = 0;
-			for(PlayerCharacter character: characters) {
+			for (PlayerCharacter character : characters) {
 				stringBuilder.append(++counter + ":\t");
 				stringBuilder.append(character.getName());
-				
+
 				CharacterClass charClass = FantasyUnlimited.getInstance().getClassBag().getItem(character.getClassId());
 				Race charRace = FantasyUnlimited.getInstance().getRaceBag().getItem(character.getRaceId());
-				Location currentLocation = FantasyUnlimited.getInstance().getLocationsBag().getItem(character.getLocationId());
+				Location currentLocation = FantasyUnlimited.getInstance().getLocationsBag()
+						.getItem(character.getLocationId());
 				stringBuilder.append(" (" + charRace.getName() + " " + charClass.getName() + ") - ");
 				stringBuilder.append("Level: " + character.getCurrentLevel() + " - ");
 				stringBuilder.append("Location: " + currentLocation.getName());
 				stringBuilder.append("\n");
-				if(counter == 10) {break;}
+				if (counter == 10) {
+					break;
+				}
 			}
 			String charactersString = stringBuilder.toString();
-			
+
 			PlayerCharacter current = player.getCurrentCharacter();
-			
+
 			embedBuilder = new EmbedBuilder().withAuthorName(t.getAuthor().getDisplayName(t.getGuild()))
 					.withAuthorIcon(t.getAuthor().getAvatarURL())
-					.withFooterText("Your active character is '" + (current == null? "n/a" : current.getName()) + "'.")
-					.appendField("Characters", charactersString.isEmpty()? "No characters created yet!" : charactersString, true);	
+					.withFooterText("Your active character is '" + (current == null ? "n/a" : current.getName()) + "'.")
+					.appendField("Characters",
+							charactersString.isEmpty() ? "No characters created yet!" : charactersString, true);
 			FantasyUnlimited.getInstance().sendMessage(t.getChannel(), embedBuilder.build());
 		}
 
@@ -136,6 +140,13 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 	private class HandleCreate implements OptionDescription, Consumer<MessageReceivedEvent> {
 		protected static final String OPTION = "create";
 
+		@Autowired
+		private DiscordPlayerLogic playerLogic;
+
+		public HandleCreate() {
+			FantasyUnlimited.autowire(this);
+		}
+
 		@Override
 		public void accept(MessageReceivedEvent t) {
 
@@ -143,6 +154,12 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 			if (stripped.trim().isEmpty()) {
 				FantasyUnlimited.getInstance().sendMessage(t.getChannel(),
 						"Usage: " + OPTION + " <" + getParameter() + ">");
+				return;
+			}
+
+			if (playerLogic.isNameAvailable(stripped) == false) {
+				FantasyUnlimited.getInstance().sendMessage(t.getChannel(),
+						"The name '" + stripped + "' isn't available, " + t.getAuthor().getDisplayName(t.getGuild()) + ".");
 				return;
 			}
 
