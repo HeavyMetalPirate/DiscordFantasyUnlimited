@@ -36,6 +36,7 @@ public class InitializeBotListener implements ServletContextListener {
 			Configuration.LOAD_EXTERNAL_MODULES = false;
 			final String token = properties.getProperty("token"); //Testing token for a Test Bot
 			builder.withToken(token);
+			builder.withRecommendedShardCount(true);
 			
 			logger.debug("Logging Discord bot in...");
 			IDiscordClient client = builder.login(); // Builds the IDiscordClient instance and logs it in
