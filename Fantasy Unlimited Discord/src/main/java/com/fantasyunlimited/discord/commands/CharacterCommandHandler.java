@@ -23,6 +23,7 @@ import com.fantasyunlimited.logic.DiscordPlayerLogic;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IMessage;
+import sx.blah.discord.util.EmbedBuilder;
 
 public class CharacterCommandHandler extends CommandRequiresAuthenticationHandler {
 
@@ -113,7 +114,7 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 			
 			PlayerCharacter current = player.getCurrentCharacter();
 			
-			embedBuilder.withAuthorName(t.getAuthor().getDisplayName(t.getGuild()))
+			embedBuilder = new EmbedBuilder().withAuthorName(t.getAuthor().getDisplayName(t.getGuild()))
 					.withAuthorIcon(t.getAuthor().getAvatarURL())
 					.withFooterText("Your active character is '" + (current == null? "n/a" : current.getName()) + "'.")
 					.appendField("Characters", charactersString.isEmpty()? "No characters created yet!" : charactersString, true);	
@@ -155,15 +156,11 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 			information.setOriginator(t.getMessage().getAuthor());
 
 			for (Race race : FantasyUnlimited.getInstance().getRaceBag().getItems()) {
-				information.getVars().put(Unicodes.numNames[raceCounter], race); // add
-																					// first
-																					// for
-																					// correct
-																					// access
+				information.getVars().put(Unicodes.numNames[raceCounter], race);
 				raceCounter++; // then increment the counter for display
 				builder.append(raceCounter + ": " + race.getName() + " (ID: " + race.getId() + ")\n");
 			}
-			embedBuilder
+			embedBuilder = new EmbedBuilder()
 					.withFooterText("For a description of races type '"
 							+ properties.getProperty(FantasyUnlimited.PREFIX_KEY) + "race <name/id>'.")
 					.appendField("Choose a race for " + stripped + ", " + t.getAuthor().getDisplayName(t.getGuild()),

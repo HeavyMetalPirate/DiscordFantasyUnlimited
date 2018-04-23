@@ -56,7 +56,8 @@ public class DiscordPlayerLogicImpl implements DiscordPlayerLogic {
 		player.getCharacters().add(character);
 		character.setPlayer(player);
 		player.setCurrentCharacter(character);
-		return repository.save(player);
+		player = repository.save(player);
+		return player;
 	}
 
 	@Override

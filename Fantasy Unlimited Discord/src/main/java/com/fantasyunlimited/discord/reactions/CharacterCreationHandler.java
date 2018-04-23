@@ -22,6 +22,7 @@ import com.fantasyunlimited.logic.DiscordPlayerLogic;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.reaction.ReactionAddEvent;
 import sx.blah.discord.handle.obj.IMessage;
+import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
 public class CharacterCreationHandler extends ReactionsHandler {
@@ -101,7 +102,7 @@ public class CharacterCreationHandler extends ReactionsHandler {
 			classCounter++; // then increment the counter for display
 			builder.append(classCounter + ": " + characterClass.getName() + " (ID: " + characterClass.getId() + ")\n");
 		}
-		embedBuilder
+		embedBuilder = new EmbedBuilder()
 				.withFooterText("For a description of classes type '"
 						+ properties.getProperty(FantasyUnlimited.PREFIX_KEY) + "class <name/id>'.")
 				.appendField(
@@ -130,7 +131,7 @@ public class CharacterCreationHandler extends ReactionsHandler {
 		information.getVars().put("selectedClass", selectedClass);
 		information.getVars().put("selectedRace", selectedRace);
 
-		embedBuilder
+		embedBuilder = new EmbedBuilder()
 				.withFooterText("Character creation for "
 						+ information.getOriginator().getDisplayName(information.getMessage().getGuild()))
 				.appendField("Confirmation",
@@ -192,11 +193,12 @@ public class CharacterCreationHandler extends ReactionsHandler {
 		character.setCurrentXp(0);
 
 		player = playerLogic.addCharacter(player, character);
-
+		FantasyUnlimited.getInstance().getRegisteredUserCache().put(information.getOriginator().getLongID(), player);
+		
 		Weapon startingWeapon = FantasyUnlimited.getInstance().getWeaponBag()
 				.getItem(character.getEquipment().getMainhand());
 		Location startingLocation = FantasyUnlimited.getInstance().getLocationsBag().getItem(character.getLocationId());
-		embedBuilder.withFooterText("Your active character is '" + player.getCurrentCharacter().getName() + "'.")
+		embedBuilder = new EmbedBuilder().withFooterText("Your active character is '" + player.getCurrentCharacter().getName() + "'.")
 				.appendField("The journey begins...",
 						"It's finally time for your adventure to begin. You grab your " + startingWeapon.getName()
 								+ " and set off. Like every new adventurer you first have to pass a bunch of tests, before you are legally allowed to roam the lands.",
