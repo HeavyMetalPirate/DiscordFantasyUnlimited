@@ -36,6 +36,15 @@
 
 	<dependencies>
 
+		<!-- https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-servlet-api -->
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-servlet-api</artifactId>
+			<version>8.0.36</version>
+			<scope>provided</scope>
+		</dependency>
+
+
 		<!-- Logging -->
 		<dependency>
 			<groupId>log4j</groupId>
@@ -151,7 +160,7 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<version>${maven-war.version}</version>
 				<configuration>
-					<warSourceDirectory>WebContent</warSourceDirectory>
+					<warSourceDirectory>src/main/webapp/</warSourceDirectory>
 					<failOnMissingWebXml>true</failOnMissingWebXml>
 				</configuration>
 			</plugin>
