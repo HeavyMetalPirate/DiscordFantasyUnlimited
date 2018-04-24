@@ -10,7 +10,7 @@ public class MessageStatus implements Serializable {
 	private Name name;
 	private boolean paginator;
 	private int currentPage;
-	private int maxPage;
+	private int itemsPerPage;
 	
 	public Name getName() {
 		return name;
@@ -36,18 +36,19 @@ public class MessageStatus implements Serializable {
 		this.currentPage = currentPage;
 	}
 
-	public int getMaxPage() {
-		return maxPage;
+	public int getItemsPerPage() {
+		return itemsPerPage;
 	}
 
-	public void setMaxPage(int maxPage) {
-		this.maxPage = maxPage;
+	public void setItemsPerPage(int itemsPerPage) {
+		this.itemsPerPage = itemsPerPage;
 	}
 	
 	public enum Name {
 		CREATE_CHAR_RACE_SELECTION,
 		CREATE_CHAR_CLASS_SELECTION,
 		CREATE_CHAR_CONFIRMATION,
+		PAGINATION_TEST,
 		NONE
 	}
 }

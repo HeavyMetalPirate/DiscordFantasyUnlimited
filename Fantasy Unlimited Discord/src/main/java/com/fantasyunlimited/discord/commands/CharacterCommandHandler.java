@@ -194,8 +194,7 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 			status.setName(Name.CREATE_CHAR_RACE_SELECTION);
 			status.setPaginator(raceCounter > 5);
 			status.setCurrentPage(1);
-			int maxPage = (int) Math.ceil(raceCounter / 5);
-			status.setMaxPage(maxPage);
+			status.setItemsPerPage(5);
 			information.setStatus(status);
 
 			FantasyUnlimited.getInstance().getMessagesAwaitingReactions().put(message.getLongID(), information);

@@ -39,8 +39,7 @@ public class CharacterCreationHandler extends ReactionsHandler {
 
 	@Override
 	public void handle(ReactionAddEvent event) {
-		String emojiName = event.getReaction().getEmoji().getName();
-
+		String emojiName = getEmojiName(event);
 		MessageInformation information = getInformationSecure(event);
 		if (information.isCanBeRemoved()) {
 			return;

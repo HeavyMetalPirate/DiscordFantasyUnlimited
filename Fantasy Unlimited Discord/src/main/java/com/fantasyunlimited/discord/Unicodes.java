@@ -6,5 +6,6 @@ public class Unicodes {
 
 	public static final String checkmark = "\u2705";
 	public static final String crossmark = "\u274C";
-
+	public static final String arrow_backward = "\u25C0";
+	public static final String arrow_forward = "\u25B6";
 }

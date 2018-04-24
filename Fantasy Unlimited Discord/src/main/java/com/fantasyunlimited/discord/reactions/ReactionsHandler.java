@@ -25,4 +25,8 @@ public abstract class ReactionsHandler extends EventHandler<ReactionAddEvent> {
 		}
 		return info;
 	}
+
+	protected String getEmojiName(ReactionAddEvent event) {
+		return event.getReaction().getEmoji().getName();
+	}
 }
