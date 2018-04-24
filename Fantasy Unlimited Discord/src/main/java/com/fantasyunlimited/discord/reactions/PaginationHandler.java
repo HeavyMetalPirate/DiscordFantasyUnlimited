@@ -30,7 +30,8 @@ public class PaginationHandler extends ReactionsHandler {
 
 		@SuppressWarnings("unchecked")
 		List<String> values = (List<String>) information.getVars().get("values");
-		double maxPage = Math.ceil(values.size() / (double)information.getStatus().getItemsPerPage());
+		int itemsPerPage = information.getStatus().getItemsPerPage();
+		double maxPage = Math.ceil(values.size() / (double)itemsPerPage);
 		int currentPage = information.getStatus().getCurrentPage();
 		
 		StringBuilder builder = new StringBuilder();
@@ -44,8 +45,8 @@ public class PaginationHandler extends ReactionsHandler {
 			currentPage -= 1;
 			information.getStatus().setCurrentPage(currentPage);
 			
-			int breakCondition = 10 * currentPage >= values.size()? values.size() : 10 * currentPage;
-			for(int i = 10*currentPage - 10; i < breakCondition; i++) {
+			int breakCondition = itemsPerPage * currentPage >= values.size()? values.size() : itemsPerPage * currentPage;
+			for(int i = itemsPerPage * currentPage - itemsPerPage; i < breakCondition; i++) {
 				builder.append(values.get(i) + "\n");
 			}
 
@@ -57,8 +58,8 @@ public class PaginationHandler extends ReactionsHandler {
 			currentPage += 1;
 			information.getStatus().setCurrentPage(currentPage);
 			
-			int breakCondition = 10 * currentPage >= values.size()? values.size() : 10 * currentPage;
-			for(int i = 10*currentPage - 10; i < breakCondition; i++) {
+			int breakCondition = itemsPerPage * currentPage >= values.size()? values.size() : itemsPerPage * currentPage;
+			for(int i = itemsPerPage * currentPage - itemsPerPage; i < breakCondition; i++) {
 				builder.append(values.get(i) + "\n");
 			}
 			
