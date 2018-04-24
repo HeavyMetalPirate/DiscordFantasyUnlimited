@@ -1,6 +1,12 @@
 package com.fantasyunlimited.discord;
 
-public class MessageStatus {
+import java.io.Serializable;
+
+public class MessageStatus implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 10395390233736410L;
 	private Name name;
 	private boolean paginator;
 	private int currentPage;

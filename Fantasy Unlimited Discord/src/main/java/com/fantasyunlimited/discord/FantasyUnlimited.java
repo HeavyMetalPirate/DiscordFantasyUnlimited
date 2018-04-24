@@ -1,7 +1,7 @@
 package com.fantasyunlimited.discord;
 
 import java.time.Duration;
-import java.util.HashMap;
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.Properties;
 
@@ -16,32 +16,19 @@ import org.ehcache.config.builders.CacheConfigurationBuilder;
 import org.ehcache.config.builders.CacheManagerBuilder;
 import org.ehcache.config.builders.ExpiryPolicyBuilder;
 import org.ehcache.config.builders.ResourcePoolsBuilder;
+import org.ehcache.core.Ehcache;
+import org.ehcache.event.EventFiring;
+import org.ehcache.event.EventOrdering;
+import org.ehcache.event.EventType;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import com.fantasyunlimited.cache.DiscordPlayerLoaderWriter;
+import com.fantasyunlimited.cache.MessageInformationEventHandler;
 import com.fantasyunlimited.discord.event.BotInitializedHandler;
 import com.fantasyunlimited.discord.event.MessageReceivedHandler;
 import com.fantasyunlimited.discord.event.ReactionForSelfAddHandler;
-import com.fantasyunlimited.discord.xml.AttributeBonus;
-import com.fantasyunlimited.discord.xml.CharacterClass;
-import com.fantasyunlimited.discord.xml.ClassBonus;
-import com.fantasyunlimited.discord.xml.CombatSkillBonus;
-import com.fantasyunlimited.discord.xml.Equipment;
-import com.fantasyunlimited.discord.xml.HostileNPC;
-import com.fantasyunlimited.discord.xml.Location;
-import com.fantasyunlimited.discord.xml.NPC;
-import com.fantasyunlimited.discord.xml.Race;
-import com.fantasyunlimited.discord.xml.RacialBonus;
-import com.fantasyunlimited.discord.xml.SecondarySkill;
-import com.fantasyunlimited.discord.xml.SecondarySkillBonus;
-import com.fantasyunlimited.discord.xml.Skill;
-import com.fantasyunlimited.discord.xml.SkillRank;
-import com.fantasyunlimited.discord.xml.TravelConnection;
-import com.fantasyunlimited.discord.xml.Weapon;
-import com.fantasyunlimited.discord.xml.items.ClassBag;
-import com.fantasyunlimited.discord.xml.items.EquipmentBag;
-import com.fantasyunlimited.discord.xml.items.LocationBag;
-import com.fantasyunlimited.discord.xml.items.RaceBag;
-import com.fantasyunlimited.discord.xml.items.WeaponBag;
+import com.fantasyunlimited.discord.xml.*;
+import com.fantasyunlimited.discord.xml.items.*;
 import com.fantasyunlimited.entity.DiscordPlayer;
 import com.thoughtworks.xstream.XStream;
 
@@ -77,34 +64,46 @@ public class FantasyUnlimited extends BaseBot {
 	private ClassBag classBag = new ClassBag();
 	private LocationBag locationsBag = new LocationBag();
 
-	private Map<Long, MessageInformation> messagesAwaitingReactions = new HashMap<>();
-
 	public FantasyUnlimited(IDiscordClient discordClient, Properties properties) {
 		super(discordClient);
 		INSTANCE = this;
 		cacheManager = CacheManagerBuilder.newCacheManagerBuilder()
-				.withCache("registeredUsersPlaying", 
-						CacheConfigurationBuilder.newCacheConfigurationBuilder(Long.class, DiscordPlayer.class, 
-								ResourcePoolsBuilder.heap(10000).build()
-						)
-						.withExpiry(
-								ExpiryPolicyBuilder.timeToIdleExpiration(Duration.ofMinutes(15))
-						).build()
-				).build();
+				.withCache("registeredUsersPlaying",
+						CacheConfigurationBuilder
+								.newCacheConfigurationBuilder(Long.class, DiscordPlayer.class,
+										ResourcePoolsBuilder.heap(10000).build())
+								.withExpiry(ExpiryPolicyBuilder.timeToIdleExpiration(Duration.ofMinutes(15)))
+								.withLoaderWriter(new DiscordPlayerLoaderWriter()).build())
+				.withCache("messagesAwaitingReaction",
+						CacheConfigurationBuilder
+								.newCacheConfigurationBuilder(Long.class, MessageInformation.class,
+										ResourcePoolsBuilder.heap(100000).build())
+								.withExpiry(ExpiryPolicyBuilder.timeToIdleExpiration(Duration.ofSeconds(60))).build())
+				.build();
 		cacheManager.init();
-		
+				
+		MessageInformationEventHandler listener = new MessageInformationEventHandler();
+		cacheManager.getCache("messagesAwaitingReaction", Long.class, MessageInformation.class)
+				.getRuntimeConfiguration().registerCacheEventListener(listener, EventOrdering.UNORDERED,
+						EventFiring.ASYNCHRONOUS, EnumSet.of(EventType.CREATED, EventType.EVICTED, EventType.EXPIRED,
+								EventType.REMOVED, EventType.UPDATED));
+				
 		this.properties = properties;
 		messageReceivedHandler = new MessageReceivedHandler(properties);
 		reactionAddHandler = new ReactionForSelfAddHandler(properties);
-		
+
 		EventDispatcher dispatcher = discordClient.getDispatcher();
 		dispatcher.registerListeners(new BotInitializedHandler(), messageReceivedHandler, reactionAddHandler);
 	}
-
+	
 	public Cache<Long, DiscordPlayer> getRegisteredUserCache() {
 		return cacheManager.getCache("registeredUsersPlaying", Long.class, DiscordPlayer.class);
 	}
-	
+
+	public Cache<Long, MessageInformation> getMessagesAwaitingReactions() {
+		return cacheManager.getCache("messagesAwaitingReaction", Long.class, MessageInformation.class);
+	}
+
 	public MessageReceivedHandler getMessageReceivedHandler() {
 		return messageReceivedHandler;
 	}
@@ -196,7 +195,7 @@ public class FantasyUnlimited extends BaseBot {
 			return message.edit(content);
 		}).get();
 	}
-	
+
 	public IMessage editMessage(IMessage message, EmbedObject embed) {
 		return RequestBuffer.request(() -> {
 			return message.edit(embed);
@@ -259,10 +258,6 @@ public class FantasyUnlimited extends BaseBot {
 
 	public ClassBag getClassBag() {
 		return classBag;
-	}
-
-	public Map<Long, MessageInformation> getMessagesAwaitingReactions() {
-		return messagesAwaitingReactions;
 	}
 
 	public CacheManager getCacheManager() {

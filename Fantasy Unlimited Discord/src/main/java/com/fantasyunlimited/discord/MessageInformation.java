@@ -1,5 +1,6 @@
 package com.fantasyunlimited.discord;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -7,7 +8,11 @@ import java.util.Map;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
 
-public class MessageInformation {
+public class MessageInformation implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2369759146570056441L;
 	private LocalDateTime originDate;
 	private IUser originator;
 	private IMessage message;
