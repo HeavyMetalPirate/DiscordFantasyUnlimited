@@ -25,7 +25,7 @@ import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
-public class CharacterCreationHandler extends ReactionsHandler {
+public class CharacterCreationHandler extends PaginationHandler {
 
 	private Map<Long, Race> selectionStorage = new HashMap<>();
 
@@ -38,7 +38,7 @@ public class CharacterCreationHandler extends ReactionsHandler {
 	}
 
 	@Override
-	public void handle(ReactionAddEvent event) {
+	public void doDelegate(ReactionAddEvent event) {
 		String emojiName = getEmojiName(event);
 		MessageInformation information = getInformationSecure(event);
 		if (information.isCanBeRemoved()) {

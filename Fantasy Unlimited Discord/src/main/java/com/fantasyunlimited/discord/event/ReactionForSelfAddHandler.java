@@ -8,8 +8,8 @@ import com.fantasyunlimited.discord.FantasyUnlimited;
 import com.fantasyunlimited.discord.MessageInformation;
 import com.fantasyunlimited.discord.MessageStatus;
 import com.fantasyunlimited.discord.MessageStatus.Name;
+import com.fantasyunlimited.discord.reactions.BasicPaginationDelegate;
 import com.fantasyunlimited.discord.reactions.CharacterCreationHandler;
-import com.fantasyunlimited.discord.reactions.PaginationHandler;
 import com.fantasyunlimited.discord.reactions.ReactionsHandler;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.reaction.ReactionAddEvent;
@@ -26,9 +26,8 @@ public class ReactionForSelfAddHandler extends EventHandler<ReactionAddEvent> {
 		reactionHandlers.put(Name.CREATE_CHAR_CLASS_SELECTION, characterCreationHandler);
 		reactionHandlers.put(Name.CREATE_CHAR_RACE_SELECTION, characterCreationHandler);
 		reactionHandlers.put(Name.CREATE_CHAR_CONFIRMATION, characterCreationHandler);
-		
-		PaginationHandler paginationHandler = new PaginationHandler(properties);
-		reactionHandlers.put(Name.PAGINATION_TEST, paginationHandler);
+
+		reactionHandlers.put(Name.PAGINATION_TEST, new BasicPaginationDelegate(properties));
 	}
 
 	@Override
