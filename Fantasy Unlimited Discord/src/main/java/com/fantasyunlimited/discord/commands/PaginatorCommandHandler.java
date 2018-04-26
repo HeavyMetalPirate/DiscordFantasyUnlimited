@@ -39,13 +39,11 @@ public class PaginatorCommandHandler extends CommandSupportsPaginatorHandler {
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
 		return "Simple test command for pagination.";
 	}
 
 	@Override
 	public Type getType() {
-		// TODO Auto-generated method stub
 		return Type.OTHERS;
 	}
 }

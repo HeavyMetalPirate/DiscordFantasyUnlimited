@@ -1,11 +1,14 @@
 package com.fantasyunlimited.discord.reactions;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fantasyunlimited.discord.FantasyUnlimited;
@@ -38,11 +41,11 @@ public class CharacterCreationHandler extends PaginationHandler {
 	}
 
 	@Override
-	public void doDelegate(ReactionAddEvent event) {
+	public Triple<Boolean, String[], Boolean> doDelegate(ReactionAddEvent event) {
 		String emojiName = getEmojiName(event);
 		MessageInformation information = getInformationSecure(event);
 		if (information.isCanBeRemoved()) {
-			return;
+			return Triple.of(false, null, false);
 		}
 
 		List<?> usedNumbers = (List<?>) information.getVars().get("usedNumbers");
@@ -53,18 +56,18 @@ public class CharacterCreationHandler extends PaginationHandler {
 			if (usedNumbers.contains(emojiName) == false) {
 				FantasyUnlimited.getInstance().sendMessage(event.getChannel(),
 						"Suck it and stop being stupid, " + event.getUser().getDisplayName(event.getGuild()));
-				return;
+				return Triple.of(false, null, false);
 			}
 			break;
 		case CREATE_CHAR_CONFIRMATION:
 			if (emojiName.equals(Unicodes.checkmark) == false && emojiName.equals(Unicodes.crossmark) == false) {
 				FantasyUnlimited.getInstance().sendMessage(event.getChannel(),
 						"Suck it and stop being stupid, " + event.getUser().getDisplayName(event.getGuild()));
-				return;
+				return Triple.of(false, null, false);
 			}
 			break;
 		default:
-			return;
+			return Triple.of(false, null, false);
 
 		}
 
@@ -75,55 +78,81 @@ public class CharacterCreationHandler extends PaginationHandler {
 
 		switch (information.getStatus().getName()) {
 		case CREATE_CHAR_CLASS_SELECTION:
-			handleClassSelected(information, emojiName);
-			break;
+			return handleClassSelected(information, emojiName);
 		case CREATE_CHAR_RACE_SELECTION:
-			handleRaceSelected(information, emojiName);
-			break;
+			return handleRaceSelected(information, emojiName);
 		case CREATE_CHAR_CONFIRMATION:
-			handleConfirmationSelection(information, emojiName);
-			break;
+			return handleConfirmationSelection(information, emojiName);
 		default:
-			break;
-
+			return Triple.of(null, null, false);
 		}
 	}
 
-	private void handleRaceSelected(MessageInformation information, String emojiName) {
+	@SuppressWarnings("unchecked")
+	private Triple<Boolean, String[], Boolean> handleRaceSelected(MessageInformation information, String emojiName) {
 		// get the selection first;
-		Race selectedRace = (Race) information.getVars().get(emojiName);
+		int usedEmojiIndex = 0;
+		for (String emoji : (List<String>) information.getVars().get("usedNumbers")) {
+			if (emoji.equals(emojiName)) {
+				break;
+			}
+			usedEmojiIndex++;
+		}
+
+		// then add the page factor to it
+		// i.e. if you're on page 2 and used the 4th emoji => add 10
+		int itemsPerPage = information.getStatus().getItemsPerPage();
+		int currentPage = information.getStatus().getCurrentPage();
+
+		usedEmojiIndex = usedEmojiIndex + (itemsPerPage * currentPage - itemsPerPage);
+
+		Race selectedRace = (Race) information.getVars().get("race" + usedEmojiIndex);
 		selectionStorage.put(information.getOriginator().getLongID(), selectedRace);
 		// then edit the message
-		StringBuilder builder = new StringBuilder();
+		List<String> values = new ArrayList<String>();
+
 		int classCounter = 0;
 		for (CharacterClass characterClass : FantasyUnlimited.getInstance().getClassBag().getItems()) {
-			information.getVars().put(Unicodes.numNames[classCounter], characterClass);
+			information.getVars().put("class" + classCounter, characterClass);
 			classCounter++; // then increment the counter for display
-			builder.append(classCounter + ": " + characterClass.getName() + " (ID: " + characterClass.getId() + ")\n");
+			values.add(classCounter + ": " + characterClass.getName() + " (ID: " + characterClass.getId() + ")");
 		}
+		information.getVars().put(PaginationHandler.VARNAME, values);
+
 		embedBuilder = new EmbedBuilder()
 				.withFooterText("For a description of classes type '"
 						+ properties.getProperty(FantasyUnlimited.PREFIX_KEY) + "class <name/id>'.")
-				.appendField(
-						"Choose a class for the " + selectedRace.getName() + " "
-								+ information.getVars().get("characterName") + ", "
-								+ information.getOriginator().getDisplayName(information.getMessage().getGuild()),
-						builder.toString(), false);
+				.withTitle("Choose a class for the " + selectedRace.getName() + " "
+						+ information.getVars().get("characterName") + ", "
+						+ information.getOriginator().getDisplayName(information.getMessage().getGuild()));
 
-		IMessage message = FantasyUnlimited.getInstance().editMessage(information.getMessage(), embedBuilder.build());
-		information.setMessage(message);
-
-		String[] usedNumbers = Arrays.copyOf(Unicodes.numNames, classCounter);
+		String[] usedNumbers = Arrays.copyOf(Unicodes.numNames, classCounter > 10 ? 10 : classCounter);
 		information.getVars().put("usedNumbers", Arrays.asList(usedNumbers));
-		FantasyUnlimited.getInstance().addReactions(information.getMessage(), usedNumbers);
-
 		// set the status to the new one
 		information.getStatus().setName(Name.CREATE_CHAR_CLASS_SELECTION);
+
+		return Triple.of(true, usedNumbers, true);
 	}
 
-	private void handleClassSelected(MessageInformation information, String emojiName) {
+	@SuppressWarnings("unchecked")
+	private Triple<Boolean, String[], Boolean> handleClassSelected(MessageInformation information, String emojiName) {
+
 		// get the selection first;
-		CharacterClass selectedClass = (CharacterClass) information.getVars().get(emojiName);
+		int usedEmojiIndex = 0;
+		for (String emoji : (List<String>) information.getVars().get("usedNumbers")) {
+			if (emoji.equals(emojiName)) {
+				break;
+			}
+			usedEmojiIndex++;
+		}
+
+		// then add the page factor to it
+		// i.e. if you're on page 2 and used the 4th emoji => add 10
+		int itemsPerPage = information.getStatus().getItemsPerPage();
+		int currentPage = information.getStatus().getCurrentPage();
+
+		usedEmojiIndex = usedEmojiIndex + (itemsPerPage * currentPage - itemsPerPage);
+		CharacterClass selectedClass = (CharacterClass) information.getVars().get("class" + usedEmojiIndex);
 		Race selectedRace = selectionStorage.get(information.getOriginator().getLongID());
 		selectionStorage.remove(information.getOriginator().getLongID());
 
@@ -143,15 +172,15 @@ public class CharacterCreationHandler extends PaginationHandler {
 		FantasyUnlimited.getInstance().addReactions(message, Unicodes.checkmark, Unicodes.crossmark);
 
 		information.getStatus().setName(Name.CREATE_CHAR_CONFIRMATION);
-
+		return Triple.of(false, new String[] { Unicodes.checkmark, Unicodes.crossmark }, false);
 	}
 
-	private void handleConfirmationSelection(MessageInformation information, String emojiName) {
+	private Triple<Boolean, String[], Boolean> handleConfirmationSelection(MessageInformation information, String emojiName) {
 		if (emojiName.equals(Unicodes.crossmark)) {
 			information.setCanBeRemoved(true);
 			FantasyUnlimited.getInstance().editMessage(information.getMessage(), "Creation aborted by "
 					+ information.getOriginator().getDisplayName(information.getMessage().getGuild()));
-			return;
+			return Triple.of(false, null, false);
 		}
 		DiscordPlayer player = playerLogic.findByDiscordId(information.getOriginator().getStringID());
 
@@ -193,11 +222,12 @@ public class CharacterCreationHandler extends PaginationHandler {
 
 		player = playerLogic.addCharacter(player, character);
 		FantasyUnlimited.getInstance().getRegisteredUserCache().put(information.getOriginator().getLongID(), player);
-		
+
 		Weapon startingWeapon = FantasyUnlimited.getInstance().getWeaponBag()
 				.getItem(character.getEquipment().getMainhand());
 		Location startingLocation = FantasyUnlimited.getInstance().getLocationsBag().getItem(character.getLocationId());
-		embedBuilder = new EmbedBuilder().withFooterText("Your active character is '" + player.getCurrentCharacter().getName() + "'.")
+		embedBuilder = new EmbedBuilder()
+				.withFooterText("Your active character is '" + player.getCurrentCharacter().getName() + "'.")
 				.appendField("The journey begins...",
 						"It's finally time for your adventure to begin. You grab your " + startingWeapon.getName()
 								+ " and set off. Like every new adventurer you first have to pass a bunch of tests, before you are legally allowed to roam the lands.",
@@ -212,5 +242,7 @@ public class CharacterCreationHandler extends PaginationHandler {
 
 		FantasyUnlimited.getInstance().editMessage(information.getMessage(), embedBuilder.build());
 		information.setCanBeRemoved(true);
+
+		return Triple.of(false, null, false);
 	}
 }

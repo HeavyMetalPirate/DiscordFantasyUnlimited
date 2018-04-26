@@ -3,6 +3,5 @@ Might add REST capabilities or even a full homepage later on, depending on how t
 
 ###########################################################
 
-Discord Bot features:
-
-- Start bot & login
+- Reactions for paginator reaction handler : order of reactions being added needs to be done!
+  Also needs a "no pagination required anymore" flag
