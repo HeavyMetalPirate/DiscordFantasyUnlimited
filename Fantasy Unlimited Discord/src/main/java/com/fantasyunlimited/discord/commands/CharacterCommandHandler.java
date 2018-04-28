@@ -229,6 +229,7 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 			
 			information.getVars().put(ADDITIONAL_REACTIONS_VAR, usedNumbers);
 			information.getVars().put(EMBED_VAR, true);
+			information.getVars().put("embedBuilder", embedBuilder);
 			return Triple.of(itemsPerPage, information, values);
 		}
 

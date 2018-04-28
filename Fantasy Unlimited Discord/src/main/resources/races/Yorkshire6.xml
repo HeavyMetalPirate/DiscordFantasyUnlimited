@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Race>
-  <id>1</id>
-  <name>Pitbull 1</name>
-  <lore>It&apos;s a fucking pitbull, what else do you need to know?</lore>
+  <id>12</id>
+  <name>Yorkshire Terrier 12</name>
+  <lore>Aww, isn't he cute?!</lore>
   <bonuses>
     <RacialBonus>
       <name>Holy Mother of God</name>

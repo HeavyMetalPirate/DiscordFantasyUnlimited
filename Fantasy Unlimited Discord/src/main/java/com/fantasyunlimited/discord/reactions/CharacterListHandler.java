@@ -2,7 +2,7 @@ package com.fantasyunlimited.discord.reactions;
 
 import java.util.Properties;
 
-import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.reaction.ReactionAddEvent;
 
@@ -13,8 +13,8 @@ public class CharacterListHandler extends PaginationHandler {
 	}
 
 	@Override
-	public Pair<Boolean, String[]> doDelegate(ReactionAddEvent event) {
+	public Triple<Boolean, String[], Boolean> doDelegate(ReactionAddEvent event) {
 		// No op
-		return Pair.of(true, null);
+		return Triple.of(true, null, false);
 	}
 }

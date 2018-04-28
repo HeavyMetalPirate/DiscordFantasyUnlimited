@@ -1,6 +1,7 @@
 package com.fantasyunlimited.discord.reactions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -13,6 +14,7 @@ import com.fantasyunlimited.discord.Unicodes;
 import com.fantasyunlimited.discord.commands.CommandSupportsPaginatorHandler;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.reaction.ReactionAddEvent;
+import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
 public abstract class PaginationHandler extends ReactionsHandler {
@@ -110,6 +112,15 @@ public abstract class PaginationHandler extends ReactionsHandler {
 			builder.append("\n" + pagesString);
 			FantasyUnlimited.getInstance().editMessage(information.getMessage(), builder.toString());
 		} else {
+			if(information.getVars().get("embedBuilder") != null) {
+				embedBuilder = 	(EmbedBuilder)information.getVars().get("embedBuilder");
+				information.getVars().remove("embedBuilder"); //use it then remove it for sanity reasons
+				//this forces the developer to take care of which embed builder he uses
+				//else we end up with a stale instance instead
+			}
+			else if(embedBuilder == null) {
+				embedBuilder = new EmbedBuilder();
+			}
 			embedBuilder.clearFields(); // clear first, else we end up with each
 										// page
 			FantasyUnlimited.getInstance().editMessage(information.getMessage(),
@@ -122,8 +133,7 @@ public abstract class PaginationHandler extends ReactionsHandler {
 				event.getMessage().removeAllReactions();
 			}).get();
 			
-			@SuppressWarnings("unchecked")
-			List<String> allowed = new ArrayList<>((List<String>) information.getVars().get("usedNumbers"));
+			List<String> allowed = new ArrayList<>(Arrays.asList(Unicodes.numNames.clone()));
 			allowed.subList(itemCounter, allowed.size()).clear();
 			information.getVars().put("usedNumbers", allowed);
 			

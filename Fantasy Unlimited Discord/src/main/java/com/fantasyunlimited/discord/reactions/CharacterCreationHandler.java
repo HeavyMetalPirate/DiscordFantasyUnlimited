@@ -129,7 +129,8 @@ public class CharacterCreationHandler extends PaginationHandler {
 		information.getVars().put("usedNumbers", Arrays.asList(usedNumbers));
 		// set the status to the new one
 		information.getStatus().setName(Name.CREATE_CHAR_CLASS_SELECTION);
-
+		information.getStatus().setCurrentPage(1);
+		information.getVars().put("embedBuilder", embedBuilder);
 		return Triple.of(true, usedNumbers, true);
 	}
 
@@ -170,6 +171,7 @@ public class CharacterCreationHandler extends PaginationHandler {
 		information.setMessage(message);
 		FantasyUnlimited.getInstance().addReactions(message, Unicodes.checkmark, Unicodes.crossmark);
 
+		information.getVars().put("embedBuilder", embedBuilder);
 		information.getStatus().setName(Name.CREATE_CHAR_CONFIRMATION);
 		return Triple.of(false, new String[] { Unicodes.checkmark, Unicodes.crossmark }, false);
 	}
