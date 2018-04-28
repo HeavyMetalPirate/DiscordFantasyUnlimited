@@ -23,7 +23,7 @@
   <startingMainhand>1</startingMainhand>
   <startingOffhand>-1</startingOffhand>
   <startingHelmet>-1</startingHelmet>
-  <startingChest>-1</startingChest>
+  <startingChest>1</startingChest>
   <startingGloves>-1</startingGloves>
   <startingPants>-1</startingPants>
   <startingBoots>-1</startingBoots>

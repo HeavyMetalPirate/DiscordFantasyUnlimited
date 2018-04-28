@@ -119,11 +119,12 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 			StringBuilder builder = new StringBuilder();
 
 			Location location = FantasyUnlimited.getInstance().getLocationsBag().getItem(character.getLocationId());
-
-			builder.append("Name:\t" + character.getName() + "\n");
+			builder.append("```\n");
+			builder.append("Name: \t" + character.getName() + "\n");
 			builder.append("Level:\t" + character.getCurrentLevel() + "\n");
 			builder.append("Experience: " + character.getCurrentXp() + "\n");
 			builder.append("Current location: " + location.getName());
+			builder.append("```");
 			embedBuilder.appendField("Basic data", builder.toString(), true);
 
 			// Race and class
@@ -131,20 +132,24 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 			CharacterClass charClass = FantasyUnlimited.getInstance().getClassBag().getItem(character.getClassId());
 
 			builder = new StringBuilder();
-			builder.append("Race:\t" + race.getName());
+			builder.append("```\n");
+			builder.append("Race: \t" + race.getName() + "\n");
 			builder.append("Class:\t" + charClass.getName());
+			builder.append("```");
 			embedBuilder.appendField("Race & Class", builder.toString(), true);
 
 			// Stats
 			builder = new StringBuilder();
+			builder.append("```\n");
 			builder.append("STR:\t" + character.getAttributes().getStrength() + "\t");
 			builder.append("DEX:\t" + character.getAttributes().getDexterity() + "\n");
 			builder.append("END:\t" + character.getAttributes().getEndurance() + "\t");
 			builder.append("DEF:\t" + character.getAttributes().getDefense() + "\n");
 			builder.append("WIS:\t" + character.getAttributes().getWisdom() + "\t");
 			builder.append("INT:\t" + character.getAttributes().getIntelligence() + "\n");
-			builder.append("LUCK:\t" + character.getAttributes().getLuck() + "\n");
+			builder.append("LCK:\t" + character.getAttributes().getLuck() + "\n");
 			builder.append("Unspent points: " + character.getAttributes().getUnspent());
+			builder.append("```");
 			embedBuilder.appendField("Stats", builder.toString(), false);
 
 			// Equipment
@@ -155,29 +160,29 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 			Equipment helmet = FantasyUnlimited.getInstance().getEquipmentBag()
 					.getItem(character.getEquipment().getHelmet());
 			Equipment gloves = FantasyUnlimited.getInstance().getEquipmentBag()
-					.getItem(character.getEquipment().getHelmet());
+					.getItem(character.getEquipment().getGloves());
 			Equipment chest = FantasyUnlimited.getInstance().getEquipmentBag()
-					.getItem(character.getEquipment().getHelmet());
+					.getItem(character.getEquipment().getChest());
 			Equipment pants = FantasyUnlimited.getInstance().getEquipmentBag()
-					.getItem(character.getEquipment().getHelmet());
+					.getItem(character.getEquipment().getPants());
 			Equipment boots = FantasyUnlimited.getInstance().getEquipmentBag()
-					.getItem(character.getEquipment().getHelmet());
+					.getItem(character.getEquipment().getBoots());
 			Equipment ring1 = FantasyUnlimited.getInstance().getEquipmentBag()
-					.getItem(character.getEquipment().getHelmet());
+					.getItem(character.getEquipment().getRing1());
 			Equipment ring2 = FantasyUnlimited.getInstance().getEquipmentBag()
-					.getItem(character.getEquipment().getHelmet());
+					.getItem(character.getEquipment().getRing2());
 			Equipment neck = FantasyUnlimited.getInstance().getEquipmentBag()
-					.getItem(character.getEquipment().getHelmet());
+					.getItem(character.getEquipment().getNeck());
 			
-			embedBuilder.appendField("Helmet", getName(helmet), false);
+			embedBuilder.appendField("Helmet", getName(helmet), true);
 			embedBuilder.appendField("Neck", getName(neck), true);
-			embedBuilder.appendField("Chest", getName(chest), false);
+			embedBuilder.appendField("Chest", getName(chest), true);
 			embedBuilder.appendField("Gloves", getName(gloves), true);
-			embedBuilder.appendField("Pants", getName(pants), false);
+			embedBuilder.appendField("Pants", getName(pants), true);
 			embedBuilder.appendField("Boots", getName(boots), true);
-			embedBuilder.appendField("Ring", getName(ring1), false);
+			embedBuilder.appendField("Ring", getName(ring1), true);
 			embedBuilder.appendField("Ring", getName(ring2), true);
-			embedBuilder.appendField("Mainhand", getName(mainHand), false);
+			embedBuilder.appendField("Mainhand", getName(mainHand), true);
 			embedBuilder.appendField("Offhand", getName(offHand), true);
 			
 			// TODO: companion
