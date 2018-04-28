@@ -20,10 +20,10 @@
     <defenseGrowth>0</defenseGrowth>
     <luckGrowth>0</luckGrowth>
   </attributes>
-  <startingMainhand>1</startingMainhand>
+  <startingMainhand>broken-sword</startingMainhand>
   <startingOffhand>-1</startingOffhand>
   <startingHelmet>-1</startingHelmet>
-  <startingChest>-1</startingChest>
+  <startingChest>torn-shirt</startingChest>
   <startingGloves>-1</startingGloves>
   <startingPants>-1</startingPants>
   <startingBoots>-1</startingBoots>

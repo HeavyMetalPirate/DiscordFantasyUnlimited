@@ -1,6 +1,6 @@
 package com.fantasyunlimited.discord.xml;
 
-public class RarityClassifiedItem extends GenericItem {
+public class RarityClassifiedItem extends Dropable {
 	private ItemRarity rarity;
 
 	public ItemRarity getRarity() {

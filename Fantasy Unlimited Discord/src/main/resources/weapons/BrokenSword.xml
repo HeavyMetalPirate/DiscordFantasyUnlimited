@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Weapon>
-  <id>1</id>
+  <id>broken-sword</id>
   <name>Broken Sword</name>
   <description>It has seen better days for sure, but at least it is somewhat pointy and rusty...</description>
   <iconName>brknSwrd.png</iconName>
   <rarity>ARTIFACT</rarity>
+  <value>10</value>
   <type>SWORD</type>
   <hand>RIGHT</hand>
   <minDamage>1</minDamage>

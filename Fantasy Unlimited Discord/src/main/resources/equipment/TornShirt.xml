@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Equipment>
-  <id>1</id>
+  <id>torn-shirt</id>
   <name>Torn shirt</name>
   <description>Better than nothing, huh? If you wear it wrong, puts one of your nipples on display.</description>
   <iconName>trnshrt.png</iconName>
   <rarity>ARTIFACT</rarity>
+  <value>10</value>
   <type>CHEST</type>
   <armor>0</armor>
   <skillBonuses>
