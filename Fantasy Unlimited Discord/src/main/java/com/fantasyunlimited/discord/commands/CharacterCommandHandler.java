@@ -201,7 +201,7 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 			}
 
 			int raceCounter = 0;
-			int itemsPerPage = 10;
+			int itemsPerPage = 5;
 			
 			MessageInformation information = new MessageInformation();
 			information.getVars().put("characterName", stripped);
