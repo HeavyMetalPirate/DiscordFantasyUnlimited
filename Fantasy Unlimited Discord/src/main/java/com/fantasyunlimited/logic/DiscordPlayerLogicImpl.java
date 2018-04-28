@@ -70,4 +70,19 @@ public class DiscordPlayerLogicImpl implements DiscordPlayerLogic {
 	public boolean isNameAvailable(String name) {
 		return characterRepository.findByNameIgnoreCase(name).isPresent() == false;
 	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public PlayerCharacter getCharacterForPlayer(DiscordPlayer player, String name) {
+		return characterRepository.findByPlayerAndName(player, name).orElse(null);
+	}
+
+	@Override
+	@Transactional
+	public DiscordPlayer selectActiveCharacter(DiscordPlayer player, PlayerCharacter character) {
+		player = getById(player.getId()); //load into transaction
+		player.setCurrentCharacter(character);
+		player = repository.save(player);
+		return player;
+	}
 }

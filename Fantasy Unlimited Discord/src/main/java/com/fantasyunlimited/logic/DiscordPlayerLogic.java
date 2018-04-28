@@ -10,5 +10,8 @@ public interface DiscordPlayerLogic extends CrudLogic<DiscordPlayer>{
 	public DiscordPlayer addCharacter(DiscordPlayer player, PlayerCharacter character);
 	
 	public List<PlayerCharacter> getCharactersForPlayer(DiscordPlayer player);
+	public PlayerCharacter getCharacterForPlayer(DiscordPlayer player, String name);
 	public boolean isNameAvailable(String name);
+	
+	public DiscordPlayer selectActiveCharacter(DiscordPlayer player, PlayerCharacter character);
 }

@@ -32,11 +32,17 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 
 	private Map<String, Consumer<MessageReceivedEvent>> options;
 
+	@Autowired
+	private DiscordPlayerLogic playerLogic;
+
 	public CharacterCommandHandler(Properties properties) {
 		super(properties, CMD);
 		options = new LinkedHashMap<String, Consumer<MessageReceivedEvent>>();
 		options.put(HandleCreate.OPTION, new HandleCreate(properties));
 		options.put(HandleList.OPTION, new HandleList());
+		options.put(HandleSelect.OPTION, new HandleSelect());
+
+		FantasyUnlimited.autowire(this);
 	}
 
 	@Override
@@ -79,15 +85,55 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 		}
 	}
 
-	private class HandleList extends CommandSupportsPaginatorHandler implements OptionDescription, Consumer<MessageReceivedEvent> {
-		protected static final String OPTION = "list";
+	private class HandleSelect implements OptionDescription, Consumer<MessageReceivedEvent> {
+		protected static final String OPTION = "select";
 
-		@Autowired
-		private DiscordPlayerLogic playerLogic;
+		@Override
+		public void accept(MessageReceivedEvent t) {
+			String stripped = stripParameterFromMessage(t.getMessage(), OPTION);
+			if (stripped.trim().isEmpty()) {
+				FantasyUnlimited.getInstance().sendMessage(t.getChannel(),
+						"Usage: " + OPTION + " <" + getParameter() + ">");
+				return;
+			}
+			DiscordPlayer player = FantasyUnlimited.getInstance().getRegisteredUserCache()
+					.get(t.getAuthor().getLongID());
+
+			PlayerCharacter character = playerLogic.getCharacterForPlayer(player, stripped);
+			if (character == null) {
+				FantasyUnlimited.getInstance().sendMessage(t.getChannel(), "You don't have a character by the name of '"
+						+ stripped + "', " + t.getAuthor().getDisplayName(t.getGuild()));
+				return;
+			}
+			
+			player = playerLogic.selectActiveCharacter(player, character);
+			FantasyUnlimited.getInstance().getRegisteredUserCache().put(t.getAuthor().getLongID(), player);
+			embedBuilder = new EmbedBuilder().withAuthorName(t.getAuthor().getDisplayName(t.getGuild()))
+					.withAuthorIcon(t.getAuthor().getAvatarURL())
+					.withFooterText("Your active character is '" + character.getName() + "'.")
+					.withTitle("Characters")
+					.appendField("Character selected", "Active character successfully changed.", false);
+			FantasyUnlimited.getInstance().sendMessage(t.getChannel(), embedBuilder.build());
+		}
+
+		@Override
+		public String getDescription() {
+			return "Selects the character as your current character";
+		}
+
+		@Override
+		public String getParameter() {
+			return "name of the character";
+		}
+
+	}
+
+	private class HandleList extends CommandSupportsPaginatorHandler
+			implements OptionDescription, Consumer<MessageReceivedEvent> {
+		protected static final String OPTION = "list";
 
 		public HandleList() {
 			super(null, CMD, false);
-			FantasyUnlimited.autowire(this);
 		}
 
 		@Override
@@ -128,18 +174,17 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 				values.add(stringBuilder.toString());
 			}
 
-			if(values.isEmpty()) {
+			if (values.isEmpty()) {
 				values.add("No characters available!");
 			}
-			
+
 			PlayerCharacter current = player.getCurrentCharacter();
 
 			embedBuilder = new EmbedBuilder().withAuthorName(t.getAuthor().getDisplayName(t.getGuild()))
 					.withAuthorIcon(t.getAuthor().getAvatarURL())
 					.withFooterText("Your active character is '" + (current == null ? "n/a" : current.getName()) + "'.")
 					.withTitle("Characters");
-					
-			
+
 			MessageInformation information = new MessageInformation();
 			information.setCanBeRemoved(false);
 			information.setOriginator(t.getAuthor());
@@ -148,7 +193,7 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 			MessageStatus status = new MessageStatus();
 			status.setName(Name.CHARACTER_LIST);
 			information.setStatus(status);
-			
+
 			return Triple.of(10, information, values);
 		}
 
@@ -159,15 +204,12 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 
 	}
 
-	private class HandleCreate extends CommandSupportsPaginatorHandler implements OptionDescription, Consumer<MessageReceivedEvent> {
+	private class HandleCreate extends CommandSupportsPaginatorHandler
+			implements OptionDescription, Consumer<MessageReceivedEvent> {
 		protected static final String OPTION = "create";
 
-		@Autowired
-		private DiscordPlayerLogic playerLogic;
-
 		public HandleCreate(Properties properties) {
-			super(properties,CMD,false);
-			FantasyUnlimited.autowire(this);
+			super(properties, CMD, false);
 		}
 
 		@Override
@@ -195,14 +237,14 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 			}
 
 			if (playerLogic.isNameAvailable(stripped) == false) {
-				FantasyUnlimited.getInstance().sendMessage(t.getChannel(),
-						"The name '" + stripped + "' isn't available, " + t.getAuthor().getDisplayName(t.getGuild()) + ".");
+				FantasyUnlimited.getInstance().sendMessage(t.getChannel(), "The name '" + stripped
+						+ "' isn't available, " + t.getAuthor().getDisplayName(t.getGuild()) + ".");
 				return Triple.of(null, null, null);
 			}
 
 			int raceCounter = 0;
 			int itemsPerPage = 5;
-			
+
 			MessageInformation information = new MessageInformation();
 			information.getVars().put("characterName", stripped);
 			information.setCanBeRemoved(false);
@@ -210,23 +252,24 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 			information.setOriginator(t.getMessage().getAuthor());
 
 			List<String> values = new ArrayList<String>();
-			for (Race race : FantasyUnlimited.getInstance().getRaceBag().getItems()) {			
+			for (Race race : FantasyUnlimited.getInstance().getRaceBag().getItems()) {
 				information.getVars().put("race" + raceCounter, race);
 				raceCounter++; // then increment the counter for display
-				values.add(raceCounter + ": " + race.getName() + " (ID: " + race.getId() + ")");
+				int displayValue = raceCounter % itemsPerPage == 0? itemsPerPage : raceCounter % itemsPerPage;
+				values.add(displayValue + ": " + race.getName() + " (ID: " + race.getId() + ")");
 			}
 			embedBuilder = new EmbedBuilder()
 					.withFooterText("For a description of races type '"
 							+ properties.getProperty(FantasyUnlimited.PREFIX_KEY) + "race <name/id>'.")
 					.withTitle("Choose a race for " + stripped + ", " + t.getAuthor().getDisplayName(t.getGuild()));
-			
-			String[] usedNumbers = Arrays.copyOf(Unicodes.numNames, raceCounter > 10 ? 10 : raceCounter);
+
+			String[] usedNumbers = Arrays.copyOf(Unicodes.numNames, raceCounter > itemsPerPage ? itemsPerPage : raceCounter);
 			information.getVars().put("usedNumbers", Arrays.asList(usedNumbers));
 
 			MessageStatus status = new MessageStatus();
 			status.setName(Name.CREATE_CHAR_RACE_SELECTION);
 			information.setStatus(status);
-			
+
 			information.getVars().put(ADDITIONAL_REACTIONS_VAR, usedNumbers);
 			information.getVars().put(EMBED_VAR, true);
 			information.getVars().put("embedBuilder", embedBuilder);

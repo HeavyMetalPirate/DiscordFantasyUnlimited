@@ -10,4 +10,5 @@ import com.fantasyunlimited.entity.PlayerCharacter;
 public interface PlayerCharacterRepository extends CrudRepository<PlayerCharacter, Long>{
 	public Optional<PlayerCharacter> findByNameIgnoreCase(String name);
 	public Iterable<PlayerCharacter> findAllByPlayer(DiscordPlayer player);
+	public Optional<PlayerCharacter> findByPlayerAndName(DiscordPlayer player, String name);
 }

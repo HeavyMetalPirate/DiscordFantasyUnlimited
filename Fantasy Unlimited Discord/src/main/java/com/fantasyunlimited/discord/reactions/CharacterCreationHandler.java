@@ -114,7 +114,8 @@ public class CharacterCreationHandler extends PaginationHandler {
 		for (CharacterClass characterClass : FantasyUnlimited.getInstance().getClassBag().getItems()) {
 			information.getVars().put("class" + classCounter, characterClass);
 			classCounter++; // then increment the counter for display
-			values.add(classCounter + ": " + characterClass.getName() + " (ID: " + characterClass.getId() + ")");
+			int displayValue = classCounter % itemsPerPage == 0? itemsPerPage : classCounter % itemsPerPage;
+			values.add(displayValue + ": " + characterClass.getName() + " (ID: " + characterClass.getId() + ")");
 		}
 		information.getVars().put(PaginationHandler.VARNAME, values);
 
