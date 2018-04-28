@@ -144,6 +144,14 @@
 			<version>1.4.197</version>
 		</dependency>
 
+		<!-- MariaDB for testing purposes -->
+		<dependency>
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>
+			<version>2.2.3</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>

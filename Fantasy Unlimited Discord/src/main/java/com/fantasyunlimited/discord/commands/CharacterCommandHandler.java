@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.function.Consumer;
 
+import javax.annotation.processing.Messager;
+
 import org.apache.commons.lang3.tuple.Triple;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,8 +19,11 @@ import com.fantasyunlimited.discord.MessageStatus;
 import com.fantasyunlimited.discord.MessageStatus.Name;
 import com.fantasyunlimited.discord.Unicodes;
 import com.fantasyunlimited.discord.xml.CharacterClass;
+import com.fantasyunlimited.discord.xml.Equipment;
+import com.fantasyunlimited.discord.xml.GenericItem;
 import com.fantasyunlimited.discord.xml.Location;
 import com.fantasyunlimited.discord.xml.Race;
+import com.fantasyunlimited.discord.xml.Weapon;
 import com.fantasyunlimited.entity.DiscordPlayer;
 import com.fantasyunlimited.entity.PlayerCharacter;
 import com.fantasyunlimited.logic.DiscordPlayerLogic;
@@ -41,7 +46,7 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 		options.put(HandleCreate.OPTION, new HandleCreate(properties));
 		options.put(HandleList.OPTION, new HandleList());
 		options.put(HandleSelect.OPTION, new HandleSelect());
-
+		options.put(HandleInfo.OPTION, new HandleInfo());
 		FantasyUnlimited.autowire(this);
 	}
 
@@ -85,6 +90,118 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 		}
 	}
 
+	private class HandleInfo implements OptionDescription, Consumer<MessageReceivedEvent> {
+		protected static final String OPTION = "info";
+
+		@Override
+		public void accept(MessageReceivedEvent t) {
+			String stripped = stripParameterFromMessage(t.getMessage(), OPTION);
+
+			PlayerCharacter character;
+			if (stripped.trim().isEmpty()) {
+				DiscordPlayer player = FantasyUnlimited.getInstance().getRegisteredUserCache()
+						.get(t.getAuthor().getLongID());
+				character = player.getCurrentCharacter();
+			} else {
+				character = playerLogic.getCharacter(stripped);
+			}
+
+			if (character == null) {
+				FantasyUnlimited.getInstance().sendMessage(t.getChannel(), "The character '" + stripped
+						+ "' does not exist, " + t.getAuthor().getDisplayName(t.getGuild()));
+				return;
+			}
+
+			embedBuilder = new EmbedBuilder().withAuthorName(t.getAuthor().getDisplayName(t.getGuild()))
+					.withAuthorIcon(t.getAuthor().getAvatarURL()).withTitle("Character Information");
+
+			// Basic data
+			StringBuilder builder = new StringBuilder();
+
+			Location location = FantasyUnlimited.getInstance().getLocationsBag().getItem(character.getLocationId());
+
+			builder.append("Name:\t" + character.getName() + "\n");
+			builder.append("Level:\t" + character.getCurrentLevel() + "\n");
+			builder.append("Experience: " + character.getCurrentXp() + "\n");
+			builder.append("Current location: " + location.getName());
+			embedBuilder.appendField("Basic data", builder.toString(), true);
+
+			// Race and class
+			Race race = FantasyUnlimited.getInstance().getRaceBag().getItem(character.getRaceId());
+			CharacterClass charClass = FantasyUnlimited.getInstance().getClassBag().getItem(character.getClassId());
+
+			builder = new StringBuilder();
+			builder.append("Race:\t" + race.getName());
+			builder.append("Class:\t" + charClass.getName());
+			embedBuilder.appendField("Race & Class", builder.toString(), true);
+
+			// Stats
+			builder = new StringBuilder();
+			builder.append("STR:\t" + character.getAttributes().getStrength() + "\t");
+			builder.append("DEX:\t" + character.getAttributes().getDexterity() + "\n");
+			builder.append("END:\t" + character.getAttributes().getEndurance() + "\t");
+			builder.append("DEF:\t" + character.getAttributes().getDefense() + "\n");
+			builder.append("WIS:\t" + character.getAttributes().getWisdom() + "\t");
+			builder.append("INT:\t" + character.getAttributes().getIntelligence() + "\n");
+			builder.append("LUCK:\t" + character.getAttributes().getLuck() + "\n");
+			builder.append("Unspent points: " + character.getAttributes().getUnspent());
+			embedBuilder.appendField("Stats", builder.toString(), false);
+
+			// Equipment
+			Weapon mainHand = FantasyUnlimited.getInstance().getWeaponBag()
+					.getItem(character.getEquipment().getMainhand());
+			Weapon offHand = FantasyUnlimited.getInstance().getWeaponBag()
+					.getItem(character.getEquipment().getOffhand());
+			Equipment helmet = FantasyUnlimited.getInstance().getEquipmentBag()
+					.getItem(character.getEquipment().getHelmet());
+			Equipment gloves = FantasyUnlimited.getInstance().getEquipmentBag()
+					.getItem(character.getEquipment().getHelmet());
+			Equipment chest = FantasyUnlimited.getInstance().getEquipmentBag()
+					.getItem(character.getEquipment().getHelmet());
+			Equipment pants = FantasyUnlimited.getInstance().getEquipmentBag()
+					.getItem(character.getEquipment().getHelmet());
+			Equipment boots = FantasyUnlimited.getInstance().getEquipmentBag()
+					.getItem(character.getEquipment().getHelmet());
+			Equipment ring1 = FantasyUnlimited.getInstance().getEquipmentBag()
+					.getItem(character.getEquipment().getHelmet());
+			Equipment ring2 = FantasyUnlimited.getInstance().getEquipmentBag()
+					.getItem(character.getEquipment().getHelmet());
+			Equipment neck = FantasyUnlimited.getInstance().getEquipmentBag()
+					.getItem(character.getEquipment().getHelmet());
+			
+			embedBuilder.appendField("Helmet", getName(helmet), false);
+			embedBuilder.appendField("Neck", getName(neck), true);
+			embedBuilder.appendField("Chest", getName(chest), false);
+			embedBuilder.appendField("Gloves", getName(gloves), true);
+			embedBuilder.appendField("Pants", getName(pants), false);
+			embedBuilder.appendField("Boots", getName(boots), true);
+			embedBuilder.appendField("Ring", getName(ring1), false);
+			embedBuilder.appendField("Ring", getName(ring2), true);
+			embedBuilder.appendField("Mainhand", getName(mainHand), false);
+			embedBuilder.appendField("Offhand", getName(offHand), true);
+			
+			// TODO: companion
+			embedBuilder.appendField("Companion", "none", false);
+			
+			FantasyUnlimited.getInstance().sendMessage(t.getChannel(), embedBuilder.build());
+		}
+
+		private String getName(GenericItem item) {
+			return item == null ? "none" : item.getName();
+		}
+		
+		@Override
+		public String getDescription() {
+			return "displays information about the current character or about the character of the name provided";
+		}
+
+		@Override
+		public String getParameter() {
+			return "name of the character (empty: current own character)";
+		}
+
+	}
+
 	private class HandleSelect implements OptionDescription, Consumer<MessageReceivedEvent> {
 		protected static final String OPTION = "select";
 
@@ -105,13 +222,12 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 						+ stripped + "', " + t.getAuthor().getDisplayName(t.getGuild()));
 				return;
 			}
-			
+
 			player = playerLogic.selectActiveCharacter(player, character);
 			FantasyUnlimited.getInstance().getRegisteredUserCache().put(t.getAuthor().getLongID(), player);
 			embedBuilder = new EmbedBuilder().withAuthorName(t.getAuthor().getDisplayName(t.getGuild()))
 					.withAuthorIcon(t.getAuthor().getAvatarURL())
-					.withFooterText("Your active character is '" + character.getName() + "'.")
-					.withTitle("Characters")
+					.withFooterText("Your active character is '" + character.getName() + "'.").withTitle("Characters")
 					.appendField("Character selected", "Active character successfully changed.", false);
 			FantasyUnlimited.getInstance().sendMessage(t.getChannel(), embedBuilder.build());
 		}
@@ -255,7 +371,7 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 			for (Race race : FantasyUnlimited.getInstance().getRaceBag().getItems()) {
 				information.getVars().put("race" + raceCounter, race);
 				raceCounter++; // then increment the counter for display
-				int displayValue = raceCounter % itemsPerPage == 0? itemsPerPage : raceCounter % itemsPerPage;
+				int displayValue = raceCounter % itemsPerPage == 0 ? itemsPerPage : raceCounter % itemsPerPage;
 				values.add(displayValue + ": " + race.getName() + " (ID: " + race.getId() + ")");
 			}
 			embedBuilder = new EmbedBuilder()
@@ -263,7 +379,8 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 							+ properties.getProperty(FantasyUnlimited.PREFIX_KEY) + "race <name/id>'.")
 					.withTitle("Choose a race for " + stripped + ", " + t.getAuthor().getDisplayName(t.getGuild()));
 
-			String[] usedNumbers = Arrays.copyOf(Unicodes.numNames, raceCounter > itemsPerPage ? itemsPerPage : raceCounter);
+			String[] usedNumbers = Arrays.copyOf(Unicodes.numNames,
+					raceCounter > itemsPerPage ? itemsPerPage : raceCounter);
 			information.getVars().put("usedNumbers", Arrays.asList(usedNumbers));
 
 			MessageStatus status = new MessageStatus();

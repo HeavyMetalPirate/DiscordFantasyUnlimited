@@ -74,7 +74,7 @@ public class DiscordPlayerLogicImpl implements DiscordPlayerLogic {
 	@Override
 	@Transactional(readOnly = true)
 	public PlayerCharacter getCharacterForPlayer(DiscordPlayer player, String name) {
-		return characterRepository.findByPlayerAndName(player, name).orElse(null);
+		return characterRepository.findByPlayerAndNameIgnoreCase(player, name).orElse(null);
 	}
 
 	@Override
@@ -84,5 +84,11 @@ public class DiscordPlayerLogicImpl implements DiscordPlayerLogic {
 		player.setCurrentCharacter(character);
 		player = repository.save(player);
 		return player;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public PlayerCharacter getCharacter(String name) {
+		return characterRepository.findByNameIgnoreCase(name).orElse(null);
 	}
 }
