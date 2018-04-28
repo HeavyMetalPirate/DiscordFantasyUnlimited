@@ -1,6 +1,6 @@
 package com.fantasyunlimited.discord.reactions;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -13,7 +13,6 @@ import com.fantasyunlimited.discord.Unicodes;
 import com.fantasyunlimited.discord.commands.CommandSupportsPaginatorHandler;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.reaction.ReactionAddEvent;
-import sx.blah.discord.handle.obj.IReaction;
 import sx.blah.discord.util.RequestBuffer;
 
 public abstract class PaginationHandler extends ReactionsHandler {
@@ -64,7 +63,6 @@ public abstract class PaginationHandler extends ReactionsHandler {
 			if (resume == null || resume == false) {
 				return;
 			}
-			emojisToUse = emojisToAdd;
 		}
 
 		// Clear user reactions
@@ -77,7 +75,7 @@ public abstract class PaginationHandler extends ReactionsHandler {
 		int itemsPerPage = information.getStatus().getItemsPerPage();
 		double maxPage = Math.ceil(values.size() / (double) itemsPerPage);
 		int currentPage = information.getStatus().getCurrentPage();
-		
+
 		StringBuilder builder = new StringBuilder();
 		builder.append("```\n");
 
@@ -97,16 +95,17 @@ public abstract class PaginationHandler extends ReactionsHandler {
 			currentPage += 1;
 			information.getStatus().setCurrentPage(currentPage);
 		}
-		int breakCondition = itemsPerPage * currentPage >= values.size() ? values.size()
-				: itemsPerPage * currentPage;
+		int breakCondition = itemsPerPage * currentPage >= values.size() ? values.size() : itemsPerPage * currentPage;
+		int itemCounter = 0;
 		for (int i = itemsPerPage * currentPage - itemsPerPage; i < breakCondition; i++) {
 			builder.append(values.get(i) + "\n");
+			itemCounter++;
 		}
 		builder.append("```");
 
 		Boolean useEmbed = (Boolean) information.getVars().get(CommandSupportsPaginatorHandler.EMBED_VAR);
 		String pagesString = "Page " + currentPage + " of " + (int) maxPage;
-		
+
 		if (useEmbed == null || useEmbed == false) {
 			builder.append("\n" + pagesString);
 			FantasyUnlimited.getInstance().editMessage(information.getMessage(), builder.toString());
@@ -117,18 +116,23 @@ public abstract class PaginationHandler extends ReactionsHandler {
 					embedBuilder.appendField(pagesString, builder.toString(), false).build());
 		}
 
+		//Check if we are in a handler using numbers for selection
+		if (information.getVars().get("usedNumbers") != null) {
+			RequestBuffer.request(() -> {
+				event.getMessage().removeAllReactions();
+			}).get();
+			
+			@SuppressWarnings("unchecked")
+			List<String> allowed = new ArrayList<>((List<String>) information.getVars().get("usedNumbers"));
+			allowed.subList(itemCounter, allowed.size()).clear();
+			information.getVars().put("usedNumbers", allowed);
+			
+			String[] usedNumbers = Unicodes.numNames.clone();
+			usedNumbers = ArrayUtils.subarray(usedNumbers, 0, itemCounter);
+			emojisToUse = ArrayUtils.addAll(emojisToUse, usedNumbers);
+
+		}
 		emojisToUse = ArrayUtils.addAll(emojisToUse, Unicodes.arrow_backward, Unicodes.arrow_forward);
-		//TODO somehow I need to manage to add these buttons only when they *should* come
-		//maybe add a flag in messageinfo?
-		List<String> allowed = Arrays.asList(emojisToUse);
-//		for(IReaction emoji : event.getMessage().getReactions()) {
-//			if (allowed.contains(emoji.getEmoji().getName())) {
-//				continue;
-//			}
-//			RequestBuffer.request(() -> {
-//				event.getMessage().removeReaction(information.getMessage().getAuthor(), emoji);
-//			});
-//		}
 		// In case they got lost somewhere
 		FantasyUnlimited.getInstance().addReactions(information.getMessage(), emojisToUse);
 	}
