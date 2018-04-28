@@ -62,6 +62,7 @@ public class FantasyUnlimited extends BaseBot {
 	private RaceBag raceBag = new RaceBag();
 	private ClassBag classBag = new ClassBag();
 	private LocationBag locationsBag = new LocationBag();
+	private HostileNPCBag hostileNPCBag = new HostileNPCBag();
 
 	public FantasyUnlimited(IDiscordClient discordClient, Properties properties) {
 		super(discordClient);
@@ -265,5 +266,13 @@ public class FantasyUnlimited extends BaseBot {
 
 	public LocationBag getLocationsBag() {
 		return locationsBag;
+	}
+
+	public HostileNPCBag getHostileNPCBag() {
+		return hostileNPCBag;
+	}
+
+	public void setHostileNPCBag(HostileNPCBag hostileNPCBag) {
+		this.hostileNPCBag = hostileNPCBag;
 	}
 }

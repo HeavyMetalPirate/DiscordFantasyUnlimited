@@ -1,9 +1,17 @@
 package com.fantasyunlimited.discord.xml.items;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,56 +31,51 @@ public abstract class GenericsBag<T extends GenericItem> {
 		this.rootfolder = rootfolder;
 	}
 
-	public void initialize(XStream xstream) throws InitializationException, IOException {
-		
-		for(String filename: getResourceFiles(rootfolder)) {
-			@SuppressWarnings("unchecked")
-			T item = (T) xstream.fromXML(getResourceAsStream(rootfolder + "/" + filename));
+	public void initialize(XStream xstream) throws InitializationException, IOException, URISyntaxException {
+		URL url = Thread.currentThread().getContextClassLoader().getResource(rootfolder);
+
+		for (Path path: listFiles(Paths.get(url.toURI()))) {
 			
-			if(items.containsKey(item.getId())) {
+			File file = path.toFile();
+			FileInputStream stream = new FileInputStream(file);
+			@SuppressWarnings("unchecked")
+			T item = (T) xstream.fromXML(stream);
+
+			if (items.containsKey(item.getId())) {
 				throw new InitializationException("Item Id" + item.getId() + " already in use!");
 			}
-			
-			if(!passSanityChecks(item)) {
-				throw new InitializationException("Item Id " + item.getId() + " (" + item.getClass().getName() + ")" + " didn't pass sanity checks.");
+
+			if (!passSanityChecks(item)) {
+				throw new InitializationException("Item Id " + item.getId() + " (" + item.getClass().getName() + ")"
+						+ " didn't pass sanity checks.");
 			}
-			
+
 			items.put(item.getId(), item);
 		}
 	}
-	
+
 	public abstract boolean passSanityChecks(T item);
-	
+
 	public Collection<T> getItems() {
 		return items.values();
 	}
-	
+
 	public T getItem(String id) {
 		return items.get(id);
 	}
 
-	private List<String> getResourceFiles(String path) throws IOException {
-		List<String> filenames = new ArrayList<>();
-
-		try (InputStream in = getResourceAsStream(path);
-				BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
-			String resource;
-
-			while ((resource = br.readLine()) != null) {
-				filenames.add(resource);
-			}
-		}
-
-		return filenames;
-	}
-
-	private InputStream getResourceAsStream(String resource) {
-		final InputStream in = getContextClassLoader().getResourceAsStream(resource);
-
-		return in == null ? getClass().getResourceAsStream(resource) : in;
-	}
-
-	private ClassLoader getContextClassLoader() {
-		return Thread.currentThread().getContextClassLoader();
+	private List<Path> listFiles(Path path) throws IOException {
+	    List<Path> all = new ArrayList<>();
+		try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
+	        for (Path entry : stream) {
+	            if (Files.isDirectory(entry)) {
+	                all.addAll(listFiles(entry));
+	            }
+	            else {
+	            	all.add(entry);
+	            }
+	        }
+	    }
+		return all;
 	}
 }
