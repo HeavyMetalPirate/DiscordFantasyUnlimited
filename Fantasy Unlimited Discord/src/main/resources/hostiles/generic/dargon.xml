@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <HostileNPC>
-  <id>1</id>
+  <id>dargon</id>
   <name>Dargon Woraw</name>
   <description>Coming from the very slavic land of Massachusetts, he&apos;s here to kick ass and chew gum... and he&apos;s all out of ass.</description>
   <iconName>dargon.png</iconName>
