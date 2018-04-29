@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Class>
   <id>3</id>
+  <description>Depraved have it hard.</description>
   <name>Three</name>
   <iconName>depraved.png</iconName>
   <lore>The depraved is depraved. Depraving, huh?</lore>

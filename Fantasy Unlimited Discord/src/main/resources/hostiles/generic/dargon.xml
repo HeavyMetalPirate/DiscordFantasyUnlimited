@@ -10,8 +10,8 @@
   <level>1</level>
   <loottable>
     <entry>
-      <double>100.0</double>
       <string>broken-sword</string>
+      <double>100.0</double>
     </entry>
   </loottable>
 </HostileNPC>

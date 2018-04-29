@@ -113,33 +113,32 @@ public class FantasyUnlimited extends BaseBot {
 			owner = client.getUserByID(Long.parseLong(properties.getProperty("owner")));
 		}
 
-		logger.error(e);
+		logger.error("Error occured: ", e);
 		sendMessage(owner.getOrCreatePMChannel(), "An error occured.");
-		StringBuilder builder = new StringBuilder();
-		builder.append("```");
-		builder.append(e.getClass().getCanonicalName() + ": ");
-		builder.append(e.getMessage() + "\n");
+		String builder = "";
+		builder += ("```");
+		builder += (e.getClass().getCanonicalName() + ": ");
+		builder += (e.getMessage() + "\n");
 		for (StackTraceElement element : e.getStackTrace()) {
-			builder.append("\tat " + element.toString() + "\n");
+			builder += ("\tat " + element.toString() + "\n");
 		}
 		Throwable next = e.getCause();
 		while (next != null) {
-			builder.append("Cause:\n");
-			builder.append(next.getClass().getCanonicalName() + ": ");
-			builder.append(next.getMessage() + "\n");
+			builder += ("Cause:\n");
+			builder += (next.getClass().getCanonicalName() + ": ");
+			builder += (next.getMessage() + "\n");
 			int stackelements = 0;
 			for (StackTraceElement element : next.getStackTrace()) {
-				builder.append("\tat " + element.toString() + "\n");
+				builder += ("\tat " + element.toString() + "\n");
 				stackelements++;
-				if (stackelements == 50) {
+				if (stackelements == 15) {
 					break;
 				}
 			}
-			next = e.getCause();
+			next = next.getCause();
 		}
-		builder.append("```");
-		sendMessage(owner.getOrCreatePMChannel(), builder.toString());
-		e.printStackTrace();
+		builder += ("```");
+		sendMessage(owner.getOrCreatePMChannel(), builder);
 	}
 
 	public XStream initializeXStream() {

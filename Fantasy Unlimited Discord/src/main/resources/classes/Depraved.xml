@@ -2,6 +2,7 @@
 <Class>
   <id>1</id>
   <name>Depraved</name>
+  <description>Depraved have it hard.</description>
   <iconName>depraved.png</iconName>
   <lore>The depraved is depraved. Depraving, huh?</lore>
   <attributes>

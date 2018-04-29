@@ -2,6 +2,7 @@
 <Race>
   <id>12</id>
   <name>Yorkshire Terrier 12</name>
+  <description>Yorkie is a yorkie.</description>
   <lore>Aww, isn't he cute?!</lore>
   <bonuses>
     <RacialBonus>

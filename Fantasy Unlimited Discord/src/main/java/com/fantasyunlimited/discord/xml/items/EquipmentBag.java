@@ -9,8 +9,10 @@ public class EquipmentBag extends GenericsBag<Equipment>{
 	}
 
 	@Override
-	public boolean passSanityChecks(Equipment item) {
-		// TODO Auto-generated method stub
+	public boolean passSanityChecks(Equipment item) throws SanityException {
+		if (item.valuesFilled() == false) {
+			throw new SanityException("At least one basic data (id, name, description) is missing!");
+		}
 		return true;
 	}
 }

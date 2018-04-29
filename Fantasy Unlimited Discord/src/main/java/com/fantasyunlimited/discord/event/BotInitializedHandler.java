@@ -21,8 +21,8 @@ public class BotInitializedHandler implements IListener<ReadyEvent>{
 			bot.getEquipmentBag().initialize(xstream);
 			bot.getRaceBag().initialize(xstream);
 			bot.getClassBag().initialize(xstream);
-			bot.getLocationsBag().initialize(xstream);
 			bot.getHostileNPCBag().initialize(xstream);
+			bot.getLocationsBag().initialize(xstream);
 		}
 		catch(Exception e) {
 			bot.sendExceptionMessage(e);

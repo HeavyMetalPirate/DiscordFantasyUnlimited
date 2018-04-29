@@ -2,6 +2,7 @@
 <Race>
   <id>4</id>
   <name>Pitbull 4</name>
+  <description>Pitbull is deadly.</description>
   <lore>It&apos;s a fucking pitbull, what else do you need to know?</lore>
   <bonuses>
     <RacialBonus>

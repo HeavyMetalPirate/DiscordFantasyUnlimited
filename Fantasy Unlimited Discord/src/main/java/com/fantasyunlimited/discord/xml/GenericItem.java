@@ -37,4 +37,9 @@ public abstract class GenericItem {
 	public void setIconName(String iconName) {
 		this.iconName = iconName;
 	}
+
+	public boolean valuesFilled() {
+		return (id != null && id.isEmpty() == false) && (name != null && name.isEmpty() == false)
+				&& (description != null && description.isEmpty() == false);
+	}
 }

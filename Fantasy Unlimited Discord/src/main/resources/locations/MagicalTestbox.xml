@@ -12,7 +12,7 @@
   </allowedSecondarySkills>
   <connections>
     <TravelConnection>
-      <targetLocationId>1</targetLocationId>
+      <targetLocationId>testbox</targetLocationId>
       <duration>100</duration>
       <toll>9001</toll>
     </TravelConnection>

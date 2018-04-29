@@ -9,7 +9,7 @@ public class HostileNPC extends GenericItem {
 	private boolean unique;
 	private int level;
 	
-	private Map<Double, String> loottable = new HashMap<>();
+	private Map<String, Double> loottable = new HashMap<>();
 
 	public String getRaceId() {
 		return raceId;
@@ -43,11 +43,11 @@ public class HostileNPC extends GenericItem {
 		this.level = level;
 	}
 
-	public Map<Double, String> getLoottable() {
+	public Map<String, Double> getLoottable() {
 		return loottable;
 	}
 
-	public void setLoottable(Map<Double, String> loottable) {
+	public void setLoottable(Map<String, Double> loottable) {
 		this.loottable = loottable;
 	}
 }

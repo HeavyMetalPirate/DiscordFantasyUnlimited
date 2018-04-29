@@ -31,8 +31,8 @@ public abstract class GenericsBag<T extends GenericItem> {
 	public void initialize(XStream xstream) throws InitializationException, IOException, URISyntaxException {
 		URL url = Thread.currentThread().getContextClassLoader().getResource(rootfolder);
 
-		for (Path path: listFiles(Paths.get(url.toURI()))) {
-			
+		for (Path path : listFiles(Paths.get(url.toURI()))) {
+
 			File file = path.toFile();
 			FileInputStream stream = new FileInputStream(file);
 			@SuppressWarnings("unchecked")
@@ -42,16 +42,20 @@ public abstract class GenericsBag<T extends GenericItem> {
 				throw new InitializationException("Item Id" + item.getId() + " already in use!");
 			}
 
-			if (!passSanityChecks(item)) {
-				throw new InitializationException("Item Id " + item.getId() + " (" + item.getClass().getName() + ")"
-						+ " didn't pass sanity checks.");
-			}
-
 			items.put(item.getId(), item);
+		}
+		
+		for(T item: items.values()) {
+			try {
+				passSanityChecks(item);
+			} catch (SanityException e) {
+				throw new InitializationException("Item Id " + item.getId() + " (" + item.getClass().getName() + ")"
+						+ " didn't pass sanity checks.", e);
+			}
 		}
 	}
 
-	public abstract boolean passSanityChecks(T item);
+	public abstract boolean passSanityChecks(T item) throws SanityException;
 
 	public Collection<T> getItems() {
 		return items.values();
@@ -62,17 +66,16 @@ public abstract class GenericsBag<T extends GenericItem> {
 	}
 
 	private List<Path> listFiles(Path path) throws IOException {
-	    List<Path> all = new ArrayList<>();
+		List<Path> all = new ArrayList<>();
 		try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
-	        for (Path entry : stream) {
-	            if (Files.isDirectory(entry)) {
-	                all.addAll(listFiles(entry));
-	            }
-	            else {
-	            	all.add(entry);
-	            }
-	        }
-	    }
+			for (Path entry : stream) {
+				if (Files.isDirectory(entry)) {
+					all.addAll(listFiles(entry));
+				} else {
+					all.add(entry);
+				}
+			}
+		}
 		return all;
 	}
 }
