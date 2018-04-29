@@ -139,6 +139,8 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 			// Stats
 			builder = new StringBuilder();
 			builder.append("```\n");
+			builder.append("Health: " + character.getCurrentHealth() + "/" + character.getMaxHealth() + "\n");
+			builder.append("ATKRES(!): " + character.getCurrentAtkResource() + "/" + character.getMaxAtkResource() + "\n");
 			builder.append("STR:\t" + character.getAttributes().getStrength() + "\t");
 			builder.append("DEX:\t" + character.getAttributes().getDexterity() + "\n");
 			builder.append("END:\t" + character.getAttributes().getEndurance() + "\t");

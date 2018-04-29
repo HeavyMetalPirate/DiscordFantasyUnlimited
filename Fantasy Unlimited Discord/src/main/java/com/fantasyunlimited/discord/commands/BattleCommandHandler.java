@@ -9,12 +9,15 @@ import java.util.function.Consumer;
 
 import com.fantasyunlimited.discord.BattleInformation;
 import com.fantasyunlimited.discord.FantasyUnlimited;
+import com.fantasyunlimited.discord.entity.BattleNPC;
 import com.fantasyunlimited.discord.xml.HostileNPC;
 import com.fantasyunlimited.discord.xml.Location;
 import com.fantasyunlimited.entity.DiscordPlayer;
 import com.fantasyunlimited.entity.PlayerCharacter;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.IMessage;
+import sx.blah.discord.util.EmbedBuilder;
 
 public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 	public static final String CMD = "battle";
@@ -78,7 +81,7 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 			information.getPlayers().put(t.getAuthor().getLongID(), character);
 			int enemyCounter = 0;
 			for (HostileNPC hostile : findOpponents(location)) {
-				information.getHostiles().put(++enemyCounter, hostile);
+				information.getHostiles().put(++enemyCounter, new BattleNPC(hostile));
 			}
 			if (enemyCounter == 0) {
 				FantasyUnlimited.getInstance().sendMessage(t.getChannel(),
@@ -86,10 +89,30 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 				return;
 			}
 
-			FantasyUnlimited.getInstance().sendMessage(t.getChannel(),
-					"You would have to face off against " + enemyCounter
-							+ " enemies, but I'm too lazy to implement this so you got away lucky this time, "
-							+ getDisplayNameForAuthor(t));
+			StringBuilder players = new StringBuilder();
+			players.append("```\n");
+			players.append("[" + character.getCurrentLevel() + "] " + character.getName() + "\n");
+			players.append("    Health   : " + character.getCurrentHealth() + "/" + character.getMaxHealth() + "\n");
+			players.append("    ATKRES(!): " + character.getCurrentAtkResource() + "/" + character.getMaxAtkResource() + "\n");
+			players.append("```");		
+			
+			StringBuilder enemies = new StringBuilder();
+			enemies.append("```\n");
+			for(int index: information.getHostiles().keySet()) {
+				BattleNPC npc = information.getHostiles().get(index);
+				enemies.append("(" + index + ") " + npc.getBase().getName() + " [" + npc.getLevel() + "]\n");
+				enemies.append("    Health   : " + npc.getCurrentHealth() + "/" + npc.getMaxHealth() + "\n");
+				enemies.append("    ATKRES(!): " + npc.getCurrentAtkResource() + "/" + npc.getMaxAtkResource() + "\n");
+			}
+			enemies.append("```");	
+			
+			embedBuilder = new EmbedBuilder().withTitle("Battle")
+					.appendField("Players (1)", players.toString(), true)
+					.appendField("Enemies (" + information.getHostiles().size() + ")", enemies.toString(), true);
+			
+			IMessage message = FantasyUnlimited.getInstance().sendMessage(t.getChannel(), embedBuilder.build());
+			information.setMessage(message);
+			information.setFinished(false);
 		}
 
 		@Override
@@ -106,8 +129,6 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 			if (location.getHostileNPCIds().isEmpty()) {
 				return new ArrayList<>();
 			}
-
-			// copy the available list
 
 			float chance = random.nextFloat();
 

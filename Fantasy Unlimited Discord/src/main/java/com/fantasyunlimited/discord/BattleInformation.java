@@ -4,9 +4,11 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fantasyunlimited.discord.xml.HostileNPC;
+import com.fantasyunlimited.discord.entity.BattleNPC;
 import com.fantasyunlimited.discord.xml.Location;
 import com.fantasyunlimited.entity.PlayerCharacter;
+
+import sx.blah.discord.handle.obj.IMessage;
 
 public class BattleInformation {
 	private LocalDateTime begin = LocalDateTime.now();
@@ -14,8 +16,10 @@ public class BattleInformation {
 	
 	private boolean finished;
 	
+	private IMessage message;
+	
 	private Map<Long, PlayerCharacter> players = new HashMap<>();
-	private Map<Integer, HostileNPC> hostiles = new HashMap<>();
+	private Map<Integer, BattleNPC> hostiles = new HashMap<>();
 	
 	public LocalDateTime getBegin() {
 		return begin;
@@ -35,10 +39,10 @@ public class BattleInformation {
 	public void setPlayers(Map<Long, PlayerCharacter> players) {
 		this.players = players;
 	}
-	public Map<Integer, HostileNPC> getHostiles() {
+	public Map<Integer, BattleNPC> getHostiles() {
 		return hostiles;
 	}
-	public void setHostiles(Map<Integer, HostileNPC> hostiles) {
+	public void setHostiles(Map<Integer, BattleNPC> hostiles) {
 		this.hostiles = hostiles;
 	}
 	public boolean isFinished() {
@@ -46,5 +50,11 @@ public class BattleInformation {
 	}
 	public void setFinished(boolean finished) {
 		this.finished = finished;
+	}
+	public IMessage getMessage() {
+		return message;
+	}
+	public void setMessage(IMessage message) {
+		this.message = message;
 	}
 }

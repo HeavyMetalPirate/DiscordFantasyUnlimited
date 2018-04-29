@@ -41,6 +41,12 @@ public class PlayerCharacter {
 
 	@Column
 	private int currentXp;
+	
+	@Column
+	private int currentHealth;
+	
+	@Column
+	private int currentAtkResource;
 
 	@Embedded
 	private Attributes attributes;
@@ -119,6 +125,16 @@ public class PlayerCharacter {
 
 	public CharacterEquipment getEquipment() {
 		return equipment;
+	}
+	
+	public int getMaxHealth() {
+		//TODO equipment bonus
+		return attributes.getEndurance() * 10 + currentLevel * 15;
+	}
+	public int getMaxAtkResource() {
+		//TODO class marker to return a fixated value for rage / focus
+		//TODO equipment bonus
+		return attributes.getWisdom() * 15 + currentLevel * 20;
 	}
 
 	@Embeddable
@@ -206,6 +222,22 @@ public class PlayerCharacter {
 	public String toString() {
 		return "PlayerCharacter [id=" + id + ", name=" + name + ", classId=" + classId + ", raceId=" + raceId
 				+ ", locationId=" + locationId + ", currentLevel=" + currentLevel + ", currentXp=" + currentXp + "]";
+	}
+
+	public int getCurrentHealth() {
+		return currentHealth;
+	}
+
+	public void setCurrentHealth(int currentHealth) {
+		this.currentHealth = currentHealth;
+	}
+
+	public int getCurrentAtkResource() {
+		return currentAtkResource;
+	}
+
+	public void setCurrentAtkResource(int currentAtkResource) {
+		this.currentAtkResource = currentAtkResource;
 	}
 	
 }

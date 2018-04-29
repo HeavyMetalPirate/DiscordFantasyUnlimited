@@ -221,6 +221,8 @@ public class CharacterCreationHandler extends PaginationHandler {
 
 		character.setCurrentLevel(1);
 		character.setCurrentXp(0);
+		character.setCurrentHealth(selectedClass.getAttributes().getEndurance() * 10 + 15);
+		character.setCurrentAtkResource(selectedClass.getAttributes().getWisdom() * 15 + 20);
 
 		player = playerLogic.addCharacter(player, character);
 		FantasyUnlimited.getInstance().getRegisteredUserCache().put(information.getOriginator().getLongID(), player);
