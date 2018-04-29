@@ -35,6 +35,10 @@ public abstract class CommandHandler extends EventHandler<MessageReceivedEvent> 
 		String content = stripCommandFromMessage(message);
 		return content.startsWith(optionName) ? content.substring(optionName.length()).trim() : content;
 	}
+	
+	protected String getDisplayNameForAuthor(MessageReceivedEvent event) {
+		return event.getAuthor().getDisplayName(event.getGuild());
+	}
 
 	public enum Type {
 		ACCOUNT("Account"),

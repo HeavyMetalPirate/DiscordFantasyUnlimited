@@ -29,6 +29,7 @@ import com.fantasyunlimited.discord.event.ReactionForSelfAddHandler;
 import com.fantasyunlimited.discord.xml.*;
 import com.fantasyunlimited.discord.xml.items.*;
 import com.fantasyunlimited.entity.DiscordPlayer;
+import com.fantasyunlimited.entity.PlayerCharacter;
 import com.thoughtworks.xstream.XStream;
 
 import sx.blah.discord.api.IDiscordClient;
@@ -79,15 +80,20 @@ public class FantasyUnlimited extends BaseBot {
 								.newCacheConfigurationBuilder(Long.class, MessageInformation.class,
 										ResourcePoolsBuilder.heap(100000).build())
 								.withExpiry(ExpiryPolicyBuilder.timeToIdleExpiration(Duration.ofSeconds(60))).build())
+				.withCache("battles",
+						CacheConfigurationBuilder
+								.newCacheConfigurationBuilder(PlayerCharacter.class, BattleInformation.class,
+										ResourcePoolsBuilder.heap(100000).build())
+								.withExpiry(ExpiryPolicyBuilder.noExpiration()).build())
 				.build();
 		cacheManager.init();
-				
+
 		MessageInformationEventHandler listener = new MessageInformationEventHandler();
 		cacheManager.getCache("messagesAwaitingReaction", Long.class, MessageInformation.class)
 				.getRuntimeConfiguration().registerCacheEventListener(listener, EventOrdering.UNORDERED,
 						EventFiring.ASYNCHRONOUS, EnumSet.of(EventType.CREATED, EventType.EVICTED, EventType.EXPIRED,
 								EventType.REMOVED, EventType.UPDATED));
-				
+
 		this.properties = properties;
 		messageReceivedHandler = new MessageReceivedHandler(properties);
 		reactionAddHandler = new ReactionForSelfAddHandler(properties);
@@ -95,13 +101,17 @@ public class FantasyUnlimited extends BaseBot {
 		EventDispatcher dispatcher = discordClient.getDispatcher();
 		dispatcher.registerListeners(new BotInitializedHandler(), messageReceivedHandler, reactionAddHandler);
 	}
-	
+
 	public Cache<Long, DiscordPlayer> getRegisteredUserCache() {
 		return cacheManager.getCache("registeredUsersPlaying", Long.class, DiscordPlayer.class);
 	}
 
 	public Cache<Long, MessageInformation> getMessagesAwaitingReactions() {
 		return cacheManager.getCache("messagesAwaitingReaction", Long.class, MessageInformation.class);
+	}
+	
+	public Cache<PlayerCharacter, BattleInformation> getBattles() {
+		return cacheManager.getCache("battles", PlayerCharacter.class, BattleInformation.class);
 	}
 
 	public MessageReceivedHandler getMessageReceivedHandler() {
