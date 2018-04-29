@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Location>
-  <id>1</id>
+  <id>testbox</id>
   <name>Magical Testbox</name>
   <description>A small, yet simple box to test stuff.</description>
   <iconName>testbox.png</iconName>
@@ -18,5 +18,7 @@
     </TravelConnection>
   </connections>
   <npcIds/>
-  <hostileNPCIds/>
+  <hostileNPCIds>
+    <string>dargon</string>
+  </hostileNPCIds>
 </Location>

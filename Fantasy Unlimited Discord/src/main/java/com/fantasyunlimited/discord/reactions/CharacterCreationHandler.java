@@ -217,7 +217,7 @@ public class CharacterCreationHandler extends PaginationHandler {
 		character.getEquipment().setRing2(selectedClass.getStartingRing2());
 		character.getEquipment().setNeck(selectedClass.getStartingNeck());
 
-		character.setLocationId("1"); // TODO
+		character.setLocationId("testbox"); // TODO
 
 		character.setCurrentLevel(1);
 		character.setCurrentXp(0);
