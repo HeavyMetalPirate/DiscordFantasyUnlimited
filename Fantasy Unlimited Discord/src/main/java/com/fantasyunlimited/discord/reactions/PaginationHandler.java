@@ -10,6 +10,7 @@ import org.apache.commons.lang3.tuple.Triple;
 
 import com.fantasyunlimited.discord.FantasyUnlimited;
 import com.fantasyunlimited.discord.MessageInformation;
+import com.fantasyunlimited.discord.SerializableEmbedBuilder;
 import com.fantasyunlimited.discord.Unicodes;
 import com.fantasyunlimited.discord.commands.CommandSupportsPaginatorHandler;
 
@@ -113,13 +114,13 @@ public abstract class PaginationHandler extends ReactionsHandler {
 			FantasyUnlimited.getInstance().editMessage(information.getMessage(), builder.toString());
 		} else {
 			if(information.getVars().get("embedBuilder") != null) {
-				embedBuilder = 	(EmbedBuilder)information.getVars().get("embedBuilder");
+				embedBuilder = 	(SerializableEmbedBuilder)information.getVars().get("embedBuilder");
 				information.getVars().remove("embedBuilder"); //use it then remove it for sanity reasons
 				//this forces the developer to take care of which embed builder he uses
 				//else we end up with a stale instance instead
 			}
 			else if(embedBuilder == null) {
-				embedBuilder = new EmbedBuilder();
+				embedBuilder = new SerializableEmbedBuilder();
 			}
 			embedBuilder.clearFields(); // clear first, else we end up with each
 										// page

@@ -1,6 +1,12 @@
 package com.fantasyunlimited.discord.xml;
 
-public class TravelConnection {
+import java.io.Serializable;
+
+public class TravelConnection implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -896987314491601642L;
 	private String targetLocationId;
 	private int duration;
 	private int toll;

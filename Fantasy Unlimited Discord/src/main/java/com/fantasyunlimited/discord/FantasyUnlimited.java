@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.EnumSet;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -12,17 +13,23 @@ import javax.servlet.ServletContext;
 import org.apache.log4j.Logger;
 import org.ehcache.Cache;
 import org.ehcache.CacheManager;
+import org.ehcache.PersistentCacheManager;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
 import org.ehcache.config.builders.CacheManagerBuilder;
 import org.ehcache.config.builders.ExpiryPolicyBuilder;
 import org.ehcache.config.builders.ResourcePoolsBuilder;
+import org.ehcache.config.builders.WriteBehindConfigurationBuilder;
+import org.ehcache.config.units.EntryUnit;
+import org.ehcache.config.units.MemoryUnit;
 import org.ehcache.event.EventFiring;
 import org.ehcache.event.EventOrdering;
 import org.ehcache.event.EventType;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.fantasyunlimited.cache.DiscordPlayerLoaderWriter;
+import com.fantasyunlimited.cache.KryoSerializer;
 import com.fantasyunlimited.cache.MessageInformationEventHandler;
+import com.fantasyunlimited.discord.entity.BattlePlayer;
 import com.fantasyunlimited.discord.event.BotInitializedHandler;
 import com.fantasyunlimited.discord.event.MessageReceivedHandler;
 import com.fantasyunlimited.discord.event.ReactionForSelfAddHandler;
@@ -37,6 +44,7 @@ import sx.blah.discord.api.events.EventDispatcher;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IReaction;
 import sx.blah.discord.handle.obj.IUser;
@@ -49,7 +57,7 @@ public class FantasyUnlimited extends BaseBot {
 
 	private static FantasyUnlimited INSTANCE;
 
-	private final CacheManager cacheManager;
+	private final PersistentCacheManager cacheManager;
 
 	private IUser owner;
 
@@ -67,23 +75,38 @@ public class FantasyUnlimited extends BaseBot {
 
 	public FantasyUnlimited(IDiscordClient discordClient, Properties properties) {
 		super(discordClient);
+		this.properties = properties;
+		messageReceivedHandler = new MessageReceivedHandler(properties);
+		reactionAddHandler = new ReactionForSelfAddHandler(properties);
+
+		EventDispatcher dispatcher = discordClient.getDispatcher();
+		dispatcher.registerListeners(new BotInitializedHandler(), messageReceivedHandler, reactionAddHandler);
+		
 		INSTANCE = this;
 		cacheManager = CacheManagerBuilder.newCacheManagerBuilder()
-				.withCache("registeredUsersPlaying",
-						CacheConfigurationBuilder
-								.newCacheConfigurationBuilder(Long.class, DiscordPlayer.class,
-										ResourcePoolsBuilder.heap(10000).build())
-								.withExpiry(ExpiryPolicyBuilder.timeToIdleExpiration(Duration.ofMinutes(15)))
-								.withLoaderWriter(new DiscordPlayerLoaderWriter()).build())
+				.with(CacheManagerBuilder.persistence("F:\\Java\\cache"))
+				.withCache("registeredUsersPlaying", CacheConfigurationBuilder
+						.newCacheConfigurationBuilder(Long.class, DiscordPlayer.class,
+								ResourcePoolsBuilder.newResourcePoolsBuilder().heap(1000, EntryUnit.ENTRIES)
+										.offheap(5, MemoryUnit.MB).disk(50, MemoryUnit.MB, true).build())
+						.withExpiry(ExpiryPolicyBuilder.timeToIdleExpiration(Duration.ofMinutes(15)))
+						.withLoaderWriter(new DiscordPlayerLoaderWriter())
+						.add(WriteBehindConfigurationBuilder.newBatchedWriteBehindConfiguration(1, TimeUnit.SECONDS, 3)
+								.queueSize(3).concurrencyLevel(1).enableCoalescing())
+						.build())
 				.withCache("messagesAwaitingReaction",
 						CacheConfigurationBuilder
 								.newCacheConfigurationBuilder(Long.class, MessageInformation.class,
-										ResourcePoolsBuilder.heap(100000).build())
+										ResourcePoolsBuilder.newResourcePoolsBuilder().heap(1000, EntryUnit.ENTRIES)
+												.offheap(5, MemoryUnit.MB).disk(50, MemoryUnit.MB, true).build())
 								.withExpiry(ExpiryPolicyBuilder.timeToIdleExpiration(Duration.ofSeconds(60))).build())
 				.withCache("battles",
 						CacheConfigurationBuilder
-								.newCacheConfigurationBuilder(PlayerCharacter.class, BattleInformation.class,
-										ResourcePoolsBuilder.heap(100000).build())
+								.newCacheConfigurationBuilder(Long.class, BattlePlayerInformation.class,
+										ResourcePoolsBuilder.newResourcePoolsBuilder().heap(1000, EntryUnit.ENTRIES)
+												.offheap(5, MemoryUnit.MB).disk(50, MemoryUnit.MB, true).build())
+								.withValueSerializer(new KryoSerializer<>(null))
+								.withKeySerializer(new KryoSerializer<>(null))
 								.withExpiry(ExpiryPolicyBuilder.noExpiration()).build())
 				.build();
 		cacheManager.init();
@@ -94,12 +117,6 @@ public class FantasyUnlimited extends BaseBot {
 						EventFiring.ASYNCHRONOUS, EnumSet.of(EventType.CREATED, EventType.EVICTED, EventType.EXPIRED,
 								EventType.REMOVED, EventType.UPDATED));
 
-		this.properties = properties;
-		messageReceivedHandler = new MessageReceivedHandler(properties);
-		reactionAddHandler = new ReactionForSelfAddHandler(properties);
-
-		EventDispatcher dispatcher = discordClient.getDispatcher();
-		dispatcher.registerListeners(new BotInitializedHandler(), messageReceivedHandler, reactionAddHandler);
 	}
 
 	public Cache<Long, DiscordPlayer> getRegisteredUserCache() {
@@ -109,9 +126,9 @@ public class FantasyUnlimited extends BaseBot {
 	public Cache<Long, MessageInformation> getMessagesAwaitingReactions() {
 		return cacheManager.getCache("messagesAwaitingReaction", Long.class, MessageInformation.class);
 	}
-	
-	public Cache<PlayerCharacter, BattleInformation> getBattles() {
-		return cacheManager.getCache("battles", PlayerCharacter.class, BattleInformation.class);
+
+	public Cache<Long, BattlePlayerInformation> getBattles() {
+		return cacheManager.getCache("battles", Long.class, BattlePlayerInformation.class);
 	}
 
 	public MessageReceivedHandler getMessageReceivedHandler() {
@@ -180,11 +197,30 @@ public class FantasyUnlimited extends BaseBot {
 		ServletContext servletContext = (ServletContext) externalContext.getContext();
 		WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext).getAutowireCapableBeanFactory()
 				.autowireBean(bean);
-
 	}
 
 	public void setPlayingText(String text) {
 		client.changePlayingText(text);
+	}
+
+	public IUser fetchUser(long id) {
+		return RequestBuffer.request(() -> {
+			return client.fetchUser(id);
+		}).get();
+	}
+
+	public IMessage fetchMessage(long guildId, long channelId, long messageId) {
+		IGuild guild = RequestBuffer.request(() -> {
+			return client.getGuildByID(guildId);
+		}).get();
+
+		IChannel channel = RequestBuffer.request(() -> {
+			return guild.getChannelByID(channelId);
+		}).get();
+
+		return RequestBuffer.request(() -> {
+			return channel.getMessageByID(messageId);
+		}).get();
 	}
 
 	public IMessage sendMessage(IChannel channel, String message) {

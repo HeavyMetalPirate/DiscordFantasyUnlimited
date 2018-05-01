@@ -1,6 +1,12 @@
 package com.fantasyunlimited.discord.xml;
 
-public abstract class GenericItem {
+import java.io.Serializable;
+
+public abstract class GenericItem implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2981498309896173220L;
 	private String id;
 	private String name;
 	private String description;

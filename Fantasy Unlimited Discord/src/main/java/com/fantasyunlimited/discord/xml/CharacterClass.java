@@ -5,7 +5,14 @@ import java.util.List;
 
 public class CharacterClass extends GenericItem {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4076926648887811462L;
+
 	private String lore;
+	
+	private EnergyType energyType;
 	
 	private Attributes attributes;
 	
@@ -108,5 +115,28 @@ public class CharacterClass extends GenericItem {
 	}
 	public void setStartingNeck(String startingNeck) {
 		this.startingNeck = startingNeck;
+	}
+	
+	public EnergyType getEnergyType() {
+		return energyType;
+	}
+	public void setEnergyType(EnergyType energyType) {
+		this.energyType = energyType;
+	}
+
+	public enum EnergyType {
+		RAGE("Rage"),
+		FOCUS("Focus"),
+		MANA("Mana");
+		
+		private String label;
+		private EnergyType(String label) {
+			this.label = label;
+		}
+		
+		 @Override
+		public String toString() {
+			return label;
+		}
 	}
 }

@@ -5,6 +5,10 @@ import java.util.List;
 
 public class Location extends GenericItem {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6683436248656781739L;
 	private boolean marketAccess;
 	private boolean globalMarketAccess;
 	

@@ -1,6 +1,12 @@
 package com.fantasyunlimited.discord.xml;
 
-public class Attributes {
+import java.io.Serializable;
+
+public class Attributes implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2234432628177766249L;
 	private int endurance;
 	private int strength;
 	private int dexterity;

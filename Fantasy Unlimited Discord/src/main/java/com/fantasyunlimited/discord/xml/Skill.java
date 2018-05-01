@@ -7,6 +7,11 @@ import com.fantasyunlimited.discord.xml.Attributes.Attribute;
 
 public class Skill extends GenericItem {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5492717811895811050L;
+
 	private String iconId;
 	
 	private Attribute attribute;

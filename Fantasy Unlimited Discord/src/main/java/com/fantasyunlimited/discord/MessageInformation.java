@@ -14,8 +14,14 @@ public class MessageInformation implements Serializable {
 	 */
 	private static final long serialVersionUID = 2369759146570056441L;
 	private LocalDateTime originDate;
-	private IUser originator;
-	private IMessage message;
+	private transient IUser originator;
+	private transient IMessage message;
+	
+	private long guildId;
+	private long channelId;
+	private long messageId;
+	private long originatorId;
+	
 	private MessageStatus status;
 	private boolean canBeRemoved;
 	
@@ -28,16 +34,26 @@ public class MessageInformation implements Serializable {
 		this.originDate = originDate;
 	}
 	public IUser getOriginator() {
+		if(originator == null) {
+			originator = FantasyUnlimited.getInstance().fetchUser(originatorId);
+		}
 		return originator;
 	}
 	public void setOriginator(IUser originator) {
 		this.originator = originator;
+		this.originatorId = originator.getLongID();
 	}
 	public IMessage getMessage() {
+		if(message == null) {
+			message = FantasyUnlimited.getInstance().fetchMessage(guildId, channelId, messageId);
+		}
 		return message;
 	}
 	public void setMessage(IMessage message) {
 		this.message = message;
+		this.guildId = message.getGuild().getLongID();
+		this.channelId = message.getChannel().getLongID();
+		this.messageId = message.getLongID();
 	}
 	public MessageStatus getStatus() {
 		return status;

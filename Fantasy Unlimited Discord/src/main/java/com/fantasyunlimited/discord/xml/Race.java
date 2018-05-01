@@ -5,6 +5,11 @@ import java.util.List;
 
 public class Race extends GenericItem {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -173288658621969325L;
+
 	private String lore;
 	
 	private List<RacialBonus> bonuses = new ArrayList<>();

@@ -1,6 +1,8 @@
 package com.fantasyunlimited.discord.xml;
 
-public enum SecondarySkill {
+import java.io.Serializable;
+
+public enum SecondarySkill implements Serializable {
 	WOODCUTTING,
 	FISHING,
 	MINING,

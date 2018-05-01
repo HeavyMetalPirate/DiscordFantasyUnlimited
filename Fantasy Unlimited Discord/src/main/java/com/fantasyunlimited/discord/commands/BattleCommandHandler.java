@@ -1,15 +1,19 @@
 package com.fantasyunlimited.discord.commands;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 import java.util.function.Consumer;
 
+import org.apache.log4j.Logger;
+
 import com.fantasyunlimited.discord.BattleInformation;
+import com.fantasyunlimited.discord.BattlePlayerInformation;
 import com.fantasyunlimited.discord.FantasyUnlimited;
+import com.fantasyunlimited.discord.SerializableEmbedBuilder;
 import com.fantasyunlimited.discord.entity.BattleNPC;
+import com.fantasyunlimited.discord.entity.BattlePlayer;
 import com.fantasyunlimited.discord.xml.HostileNPC;
 import com.fantasyunlimited.discord.xml.Location;
 import com.fantasyunlimited.entity.DiscordPlayer;
@@ -17,10 +21,10 @@ import com.fantasyunlimited.entity.PlayerCharacter;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.util.EmbedBuilder;
 
 public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 	public static final String CMD = "battle";
+	protected static final Logger logger = Logger.getLogger(BattleCommandHandler.class);
 
 	public BattleCommandHandler(Properties properties) {
 		super(properties, CMD);
@@ -76,43 +80,79 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 
 		@Override
 		public void accept(MessageReceivedEvent t) {
-			BattleInformation information = new BattleInformation();
-			information.setLocation(location);
-			information.getPlayers().put(t.getAuthor().getLongID(), character);
-			int enemyCounter = 0;
-			for (HostileNPC hostile : findOpponents(location)) {
-				information.getHostiles().put(++enemyCounter, new BattleNPC(hostile));
-			}
-			if (enemyCounter == 0) {
-				FantasyUnlimited.getInstance().sendMessage(t.getChannel(),
-						"You didn't find an opportunity to battle, " + getDisplayNameForAuthor(t));
-				return;
+			BattlePlayerInformation existing = FantasyUnlimited.getInstance().getBattles().get(character.getId());
+			BattleInformation information;
+
+			List<BattlePlayer> playerList = new ArrayList<>();
+
+			if (existing != null && existing.getBattle().isFinished() == false) {
+				information = existing.getBattle();
+				logger.debug("Found existing battle for playerCharacter " + character.getName());
+				for (Long id : information.getPlayers().keySet()) {
+					playerList.add(information.getPlayers().get(id).getCharacter());
+				}
+			} else {
+				information = new BattleInformation();
+				information.setLocation(location);
+				int enemyCounter = 0;
+				for (HostileNPC hostile : findOpponents(location)) {
+					information.getHostiles().put(++enemyCounter, new BattleNPC(hostile));
+				}
+				if (enemyCounter == 0) {
+					FantasyUnlimited.getInstance().sendMessage(t.getChannel(),
+							"You didn't find an opportunity to battle, " + getDisplayNameForAuthor(t));
+					return;
+				}
+				BattlePlayer player = new BattlePlayer(character);
+				playerList.add(player);
+
+				BattlePlayerInformation playerBattleInfo = new BattlePlayerInformation();
+				playerBattleInfo.setBattle(information);
+				playerBattleInfo.setCharacter(player);
+
+				information.getPlayers().put(t.getAuthor().getLongID(), playerBattleInfo);
 			}
 
 			StringBuilder players = new StringBuilder();
-			players.append("```\n");
-			players.append("[" + character.getCurrentLevel() + "] " + character.getName() + "\n");
-			players.append("    Health   : " + character.getCurrentHealth() + "/" + character.getMaxHealth() + "\n");
-			players.append("    ATKRES(!): " + character.getCurrentAtkResource() + "/" + character.getMaxAtkResource() + "\n");
-			players.append("```");		
-			
-			StringBuilder enemies = new StringBuilder();
-			enemies.append("```\n");
-			for(int index: information.getHostiles().keySet()) {
-				BattleNPC npc = information.getHostiles().get(index);
-				enemies.append("(" + index + ") " + npc.getBase().getName() + " [" + npc.getLevel() + "]\n");
-				enemies.append("    Health   : " + npc.getCurrentHealth() + "/" + npc.getMaxHealth() + "\n");
-				enemies.append("    ATKRES(!): " + npc.getCurrentAtkResource() + "/" + npc.getMaxAtkResource() + "\n");
+			for (BattlePlayer character : playerList) {
+				players.append("```md\n");
+				players.append("[" + character.getLevel() + "][" + character.getName() + "]\n");
+				players.append(
+						"<    Health   : " + character.getCurrentHealth() + "/" + character.getMaxHealth() + ">\n");
+				players.append("#    " + character.getCharClass().getEnergyType().toString() + ": "
+						+ character.getCurrentAtkResource() + "/" + character.getMaxAtkResource() + "#\n");
+				players.append("```");
 			}
-			enemies.append("```");	
-			
-			embedBuilder = new EmbedBuilder().withTitle("Battle")
+
+			StringBuilder enemies = new StringBuilder();
+			enemies.append("```md\n");
+			for (int index : information.getHostiles().keySet()) {
+				BattleNPC npc = information.getHostiles().get(index);
+				enemies.append("(" + index + ") [" + npc.getLevel() + "][" + npc.getBase().getName() + "]\n");
+				enemies.append("<    Health   : " + npc.getCurrentHealth() + "/" + npc.getMaxHealth() + ">\n");
+				enemies.append("#    " + npc.getCharClass().getEnergyType().toString() + ": "
+						+ npc.getCurrentAtkResource() + "/" + npc.getMaxAtkResource() + "#\n");
+			}
+			enemies.append("```");
+
+			embedBuilder = new SerializableEmbedBuilder().withTitle("Battle")
 					.appendField("Players (1)", players.toString(), true)
 					.appendField("Enemies (" + information.getHostiles().size() + ")", enemies.toString(), true);
-			
+
 			IMessage message = FantasyUnlimited.getInstance().sendMessage(t.getChannel(), embedBuilder.build());
 			information.setMessage(message);
 			information.setFinished(false);
+
+			for (BattlePlayer character : playerList) {
+				IMessage actionbar = FantasyUnlimited.getInstance().sendMessage(t.getChannel(),
+						"Here would be your actionbar, <@" + character.getDiscordId() + ">");
+
+				// TODO message information
+				BattlePlayerInformation battlePlayerInfo = information.getPlayers().get(character.getDiscordId());
+				battlePlayerInfo.setMessage(actionbar);
+				FantasyUnlimited.getInstance().getBattles().put(character.getCharacterId(), battlePlayerInfo);
+			}
+
 		}
 
 		@Override

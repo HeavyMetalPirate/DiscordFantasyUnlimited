@@ -5,6 +5,10 @@ import com.fantasyunlimited.discord.xml.Weapon.WeaponType;
 
 public class ClassBonus extends GenericItem {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6099927061029996883L;
 	private Attribute attribute;
 	private WeaponType weaponType;
 	private CombatSkill combatSkill;

@@ -14,6 +14,7 @@ import com.fantasyunlimited.discord.FantasyUnlimited;
 import com.fantasyunlimited.discord.MessageInformation;
 import com.fantasyunlimited.discord.Unicodes;
 import com.fantasyunlimited.discord.MessageStatus.Name;
+import com.fantasyunlimited.discord.SerializableEmbedBuilder;
 import com.fantasyunlimited.discord.xml.CharacterClass;
 import com.fantasyunlimited.discord.xml.Location;
 import com.fantasyunlimited.discord.xml.Race;
@@ -119,7 +120,7 @@ public class CharacterCreationHandler extends PaginationHandler {
 		}
 		information.getVars().put(PaginationHandler.VARNAME, values);
 
-		embedBuilder = new EmbedBuilder()
+		embedBuilder = new SerializableEmbedBuilder()
 				.withFooterText("For a description of classes type '"
 						+ properties.getProperty(FantasyUnlimited.PREFIX_KEY) + "class <name/id>'.")
 				.withTitle("Choose a class for the " + selectedRace.getName() + " "
@@ -160,7 +161,7 @@ public class CharacterCreationHandler extends PaginationHandler {
 		information.getVars().put("selectedClass", selectedClass);
 		information.getVars().put("selectedRace", selectedRace);
 
-		embedBuilder = new EmbedBuilder()
+		embedBuilder = new SerializableEmbedBuilder()
 				.withFooterText("Character creation for "
 						+ information.getOriginator().getDisplayName(information.getMessage().getGuild()))
 				.appendField("Confirmation",
@@ -230,7 +231,7 @@ public class CharacterCreationHandler extends PaginationHandler {
 		Weapon startingWeapon = FantasyUnlimited.getInstance().getWeaponBag()
 				.getItem(character.getEquipment().getMainhand());
 		Location startingLocation = FantasyUnlimited.getInstance().getLocationsBag().getItem(character.getLocationId());
-		embedBuilder = new EmbedBuilder()
+		embedBuilder = new SerializableEmbedBuilder()
 				.withFooterText("Your active character is '" + player.getCurrentCharacter().getName() + "'.")
 				.appendField("The journey begins...",
 						"It's finally time for your adventure to begin. You grab your " + startingWeapon.getName()

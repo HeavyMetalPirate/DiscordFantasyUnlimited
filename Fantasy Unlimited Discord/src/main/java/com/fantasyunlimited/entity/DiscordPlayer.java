@@ -1,5 +1,6 @@
 package com.fantasyunlimited.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,7 +20,12 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
-public class DiscordPlayer {
+public class DiscordPlayer implements Serializable  {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4348607811654981419L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
@@ -34,7 +40,7 @@ public class DiscordPlayer {
 	@Column
 	private Date joinDate;
 	
-	@OneToMany(mappedBy = "player", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<PlayerCharacter> characters = new ArrayList<>();
 	
 	@OneToOne(fetch = FetchType.EAGER)

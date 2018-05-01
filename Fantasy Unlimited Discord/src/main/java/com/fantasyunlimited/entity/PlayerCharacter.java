@@ -1,8 +1,9 @@
 package com.fantasyunlimited.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,7 +14,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 @Entity
-public class PlayerCharacter {
+public class PlayerCharacter implements Serializable  {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2618920221246608898L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
@@ -135,87 +141,6 @@ public class PlayerCharacter {
 		//TODO class marker to return a fixated value for rage / focus
 		//TODO equipment bonus
 		return attributes.getWisdom() * 15 + currentLevel * 20;
-	}
-
-	@Embeddable
-	public static class Attributes {
-		private int endurance;
-		private int strength;
-		private int dexterity;
-		private int wisdom;
-		private int intelligence;
-		private int defense;
-		private int luck;
-
-		private int unspent;
-
-		public Attributes() {
-			
-		}
-		
-		public int getEndurance() {
-			return endurance;
-		}
-
-		public void setEndurance(int endurance) {
-			this.endurance = endurance;
-		}
-
-		public int getStrength() {
-			return strength;
-		}
-
-		public void setStrength(int strength) {
-			this.strength = strength;
-		}
-
-		public int getDexterity() {
-			return dexterity;
-		}
-
-		public void setDexterity(int dexterity) {
-			this.dexterity = dexterity;
-		}
-
-		public int getWisdom() {
-			return wisdom;
-		}
-
-		public void setWisdom(int wisdom) {
-			this.wisdom = wisdom;
-		}
-
-		public int getIntelligence() {
-			return intelligence;
-		}
-
-		public void setIntelligence(int intelligence) {
-			this.intelligence = intelligence;
-		}
-
-		public int getDefense() {
-			return defense;
-		}
-
-		public void setDefense(int defense) {
-			this.defense = defense;
-		}
-
-		public int getLuck() {
-			return luck;
-		}
-
-		public void setLuck(int luck) {
-			this.luck = luck;
-		}
-
-		public int getUnspent() {
-			return unspent;
-		}
-
-		public void setUnspent(int unspent) {
-			this.unspent = unspent;
-		}
 	}
 
 	@Override

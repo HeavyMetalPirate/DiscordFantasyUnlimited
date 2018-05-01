@@ -1,6 +1,7 @@
 package com.fantasyunlimited.web.listener;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Properties;
 
 import javax.servlet.ServletContextEvent;
@@ -10,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import com.fantasyunlimited.discord.FantasyUnlimited;
 
+import foo.Foo;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.modules.Configuration;
@@ -46,5 +48,4 @@ public class InitializeBotListener implements ServletContextListener {
 			logger.error(e);
 		}
 	}
-
 }

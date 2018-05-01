@@ -5,6 +5,10 @@ import java.util.List;
 
 public class Weapon extends RarityClassifiedItem {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6658084902076289428L;
 	private WeaponType type;
 	private Hand hand;
 	

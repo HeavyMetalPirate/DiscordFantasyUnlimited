@@ -1,5 +1,7 @@
 package com.fantasyunlimited.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +11,12 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
 @Entity
-public class CharacterEquipment {
+public class CharacterEquipment implements Serializable  {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5618236600523177160L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;

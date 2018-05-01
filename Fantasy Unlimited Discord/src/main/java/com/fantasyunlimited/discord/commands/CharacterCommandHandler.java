@@ -15,6 +15,7 @@ import com.fantasyunlimited.discord.FantasyUnlimited;
 import com.fantasyunlimited.discord.MessageInformation;
 import com.fantasyunlimited.discord.MessageStatus;
 import com.fantasyunlimited.discord.MessageStatus.Name;
+import com.fantasyunlimited.discord.SerializableEmbedBuilder;
 import com.fantasyunlimited.discord.Unicodes;
 import com.fantasyunlimited.discord.xml.CharacterClass;
 import com.fantasyunlimited.discord.xml.Equipment;
@@ -110,7 +111,7 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 				return;
 			}
 
-			embedBuilder = new EmbedBuilder().withAuthorName(t.getAuthor().getDisplayName(t.getGuild()))
+			embedBuilder = new SerializableEmbedBuilder().withAuthorName(t.getAuthor().getDisplayName(t.getGuild()))
 					.withAuthorIcon(t.getAuthor().getAvatarURL()).withTitle("Character Information");
 
 			// Basic data
@@ -230,7 +231,7 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 
 			player = playerLogic.selectActiveCharacter(player, character);
 			FantasyUnlimited.getInstance().getRegisteredUserCache().put(t.getAuthor().getLongID(), player);
-			embedBuilder = new EmbedBuilder().withAuthorName(t.getAuthor().getDisplayName(t.getGuild()))
+			embedBuilder = new SerializableEmbedBuilder().withAuthorName(t.getAuthor().getDisplayName(t.getGuild()))
 					.withAuthorIcon(t.getAuthor().getAvatarURL())
 					.withFooterText("Your active character is '" + character.getName() + "'.").withTitle("Characters")
 					.appendField("Character selected", "Active character successfully changed.", false);
@@ -301,7 +302,7 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 
 			PlayerCharacter current = player.getCurrentCharacter();
 
-			embedBuilder = new EmbedBuilder().withAuthorName(t.getAuthor().getDisplayName(t.getGuild()))
+			embedBuilder = new SerializableEmbedBuilder().withAuthorName(t.getAuthor().getDisplayName(t.getGuild()))
 					.withAuthorIcon(t.getAuthor().getAvatarURL())
 					.withFooterText("Your active character is '" + (current == null ? "n/a" : current.getName()) + "'.")
 					.withTitle("Characters");
@@ -379,7 +380,7 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 				int displayValue = raceCounter % itemsPerPage == 0 ? itemsPerPage : raceCounter % itemsPerPage;
 				values.add(displayValue + ": " + race.getName() + " (ID: " + race.getId() + ")");
 			}
-			embedBuilder = new EmbedBuilder()
+			embedBuilder = new SerializableEmbedBuilder()
 					.withFooterText("For a description of races type '"
 							+ properties.getProperty(FantasyUnlimited.PREFIX_KEY) + "race <name/id>'.")
 					.withTitle("Choose a race for " + stripped + ", " + t.getAuthor().getDisplayName(t.getGuild()));

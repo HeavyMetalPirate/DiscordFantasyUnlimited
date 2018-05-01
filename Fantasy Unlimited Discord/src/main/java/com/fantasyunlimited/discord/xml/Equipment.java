@@ -5,6 +5,11 @@ import java.util.List;
 
 public class Equipment extends RarityClassifiedItem {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1702797342795811772L;
+
 	private EquipmentType type;
 	
 	private int armor;

@@ -5,6 +5,7 @@
   <description>Depraved have it hard.</description>
   <iconName>depraved.png</iconName>
   <lore>The depraved is depraved. Depraving, huh?</lore>
+  <energyType>RAGE</energyType>
   <attributes>
     <endurance>1</endurance>
     <strength>1</strength>

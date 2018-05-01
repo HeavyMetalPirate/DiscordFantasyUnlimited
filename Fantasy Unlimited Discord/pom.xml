@@ -11,7 +11,7 @@
 		<log4j.version>1.2.17</log4j.version>
 		<cdi.api.version>1.2</cdi.api.version>
 		<weld.servlet.version>2.3.3.Final</weld.servlet.version>
-		<mojarra.version>2.2.9</mojarra.version>
+		<mojarra.version>2.2.15</mojarra.version>
 		<spring.data.jpa.version>2.0.6.RELEASE</spring.data.jpa.version>
 		<spring.version>5.0.5.RELEASE</spring.version>
 		<hibernate.version>5.2.16.Final</hibernate.version>
@@ -19,6 +19,7 @@
 		<guava.version>24.1-jre</guava.version>
 		<xstream.version>1.4.10</xstream.version>
 		<ehcache.version>3.5.2</ehcache.version>
+		<kryo.version>4.0.2</kryo.version>
 		<maven-compiler.version>3.3</maven-compiler.version>
 		<maven-war.version>2.6</maven-war.version>
 	</properties>
@@ -136,6 +137,12 @@
 			<version>${ehcache.version}</version>
 		</dependency>
 
+		<!-- Kryo for Easy Serialization -->
+		<dependency>
+			<groupId>com.esotericsoftware</groupId>
+			<artifactId>kryo</artifactId>
+			<version>${kryo.version}</version>
+		</dependency>
 
 		<!-- H2 internal database for testing -->
 		<dependency>

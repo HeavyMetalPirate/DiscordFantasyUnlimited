@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HostileNPC extends GenericItem {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3184442803761033166L;
 	private String raceId;
 	private String classId;
 	private boolean unique;
