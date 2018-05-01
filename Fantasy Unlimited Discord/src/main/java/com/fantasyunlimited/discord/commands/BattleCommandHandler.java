@@ -14,8 +14,12 @@ import com.fantasyunlimited.discord.FantasyUnlimited;
 import com.fantasyunlimited.discord.SerializableEmbedBuilder;
 import com.fantasyunlimited.discord.entity.BattleNPC;
 import com.fantasyunlimited.discord.entity.BattlePlayer;
+import com.fantasyunlimited.discord.xml.CharacterClass;
 import com.fantasyunlimited.discord.xml.HostileNPC;
 import com.fantasyunlimited.discord.xml.Location;
+import com.fantasyunlimited.discord.xml.Race;
+import com.fantasyunlimited.discord.xml.Skill;
+import com.fantasyunlimited.entity.Attributes;
 import com.fantasyunlimited.entity.DiscordPlayer;
 import com.fantasyunlimited.entity.PlayerCharacter;
 
@@ -89,7 +93,13 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 				information = existing.getBattle();
 				logger.debug("Found existing battle for playerCharacter " + character.getName());
 				for (Long id : information.getPlayers().keySet()) {
-					playerList.add(information.getPlayers().get(id).getCharacter());
+					BattlePlayer player = information.getPlayers().get(id).getCharacter();
+					//fill with new race and class data because that might have changed since the battle has started
+					Race race = FantasyUnlimited.getInstance().getRaceBag().getItem(player.getRace().getId());
+					CharacterClass charClass = FantasyUnlimited.getInstance().getClassBag().getItem(player.getCharClass().getId());
+					player.setRace(race);
+					player.setCharClass(charClass);
+					playerList.add(player);
 				}
 			} else {
 				information = new BattleInformation();
@@ -144,8 +154,19 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 			information.setFinished(false);
 
 			for (BattlePlayer character : playerList) {
+				int level = character.getLevel();
+				Attributes attributes = character.getAttributes();
+				
+				//For now, this way - later on the player has to choose a preset for his action bar
+				List<Skill> skills = character.getCharClass().getAvailableSkills(level, attributes);
+				
+				StringBuilder skillBuilder = new StringBuilder();
+				for(Skill skill: skills) {
+					skillBuilder.append("<:" + skill.getIconName() + ":" + skill.getIconId() +"> " + skill.getName() + " (Rank " + skill.getHighestAvailable(level, attributes).getRank() + ")\n");
+				}
+				
 				IMessage actionbar = FantasyUnlimited.getInstance().sendMessage(t.getChannel(),
-						"Here would be your actionbar, <@" + character.getDiscordId() + ">");
+						"<@" + character.getDiscordId() + "> - Action Bar\n" + skillBuilder.toString());
 
 				// TODO message information
 				BattlePlayerInformation battlePlayerInfo = information.getPlayers().get(character.getDiscordId());

@@ -3,9 +3,9 @@ package com.fantasyunlimited.discord.entity;
 import java.io.Serializable;
 
 import com.fantasyunlimited.discord.FantasyUnlimited;
-import com.fantasyunlimited.discord.xml.Attributes;
 import com.fantasyunlimited.discord.xml.CharacterClass;
 import com.fantasyunlimited.discord.xml.Race;
+import com.fantasyunlimited.entity.Attributes;
 import com.fantasyunlimited.entity.PlayerCharacter;
 
 public class BattlePlayer implements Serializable {
@@ -40,34 +40,12 @@ public class BattlePlayer implements Serializable {
 
 		this.name = base.getName();
 		this.level = base.getCurrentLevel();
-		this.attributes = new Attributes();
+		this.attributes = base.getAttributes();
 
-		int defense = charClass.getAttributes().getDefense() + (charClass.getAttributes().getDefenseGrowth() * level);
-		int dexterity = charClass.getAttributes().getDexterity()
-				+ (charClass.getAttributes().getDexterityGrowth() * level);
-		int endurance = charClass.getAttributes().getEndurance()
-				+ (charClass.getAttributes().getEnduranceGrowth() * level);
-		int luck = charClass.getAttributes().getLuck() + (charClass.getAttributes().getLuckGrowth() * level);
-		int strength = charClass.getAttributes().getStrength()
-				+ (charClass.getAttributes().getStrengthGrowth() * level);
-		int intelligence = charClass.getAttributes().getIntelligence()
-				+ (charClass.getAttributes().getIntelligenceGrowth() * level);
-		int wisdom = charClass.getAttributes().getWisdom() + (charClass.getAttributes().getWisdomGrowth() * level);
-
-		attributes.setDefense(defense);
-		attributes.setDexterity(dexterity);
-		attributes.setIntelligence(intelligence);
-		attributes.setLuck(luck);
-		attributes.setStrength(strength);
-		attributes.setWisdom(wisdom);
-		attributes.setEndurance(endurance);
-
-		// TODO equipment bonus
-		// TODO max atk resource tied to maximum if rage/focus class
-		this.maxHealth = endurance * 10 + level * 15;
-		this.maxAtkResource = wisdom * 15 + level * 20;
-		this.currentHealth = maxHealth;
-		this.currentAtkResource = maxAtkResource;
+		this.maxHealth = base.getMaxHealth();
+		this.maxAtkResource = base.getMaxAtkResource();
+		this.currentHealth = base.getCurrentHealth();
+		this.currentAtkResource = base.getCurrentAtkResource();
 	}
 
 	public Race getRace() {

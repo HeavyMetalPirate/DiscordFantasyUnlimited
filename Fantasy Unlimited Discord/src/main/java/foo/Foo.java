@@ -65,9 +65,9 @@ public class Foo {
 //		
 //		URL url = Foo.class.getClassLoader().getResource("hostiles");
 //		listFiles(Paths.get(url.toURI()));
-//		elementGeneration();
+		elementGeneration();
 		
-		cacheTest();
+//		cacheTest();
 	}
 
 	static void listFiles(Path path) throws IOException {
@@ -228,6 +228,22 @@ public class Foo {
 		rank.setRequiredAttributeValue(1);
 		rank.setRequiredPlayerLevel(1);
 		standardAttack.getRanks().add(rank);
+		
+		SkillRank rank2 = new SkillRank();
+		rank2.setRank(2);
+		rank2.setCostModifier(0);
+		rank2.setDamageModifier(0);
+		rank2.setRequiredAttributeValue(2);
+		rank2.setRequiredPlayerLevel(1);
+		standardAttack.getRanks().add(rank2);
+		
+		SkillRank rank3 = new SkillRank();
+		rank3.setRank(3);
+		rank3.setCostModifier(0);
+		rank3.setDamageModifier(0);
+		rank3.setRequiredAttributeValue(1);
+		rank3.setRequiredPlayerLevel(2);
+		standardAttack.getRanks().add(rank3);
 
 		standardAttack.setType(SkillType.OFFENSIVE);
 		standardAttack.setMinDamage(1);

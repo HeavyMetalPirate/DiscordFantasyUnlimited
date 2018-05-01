@@ -31,7 +31,20 @@ public class CharacterClass extends GenericItem {
 	
 	private List<ClassBonus> bonuses = new ArrayList<>();
 	private List<Skill> skills = new ArrayList<>();
+	
+	public List<Skill> getAvailableSkills(int level, com.fantasyunlimited.entity.Attributes attributes) {
+		List<Skill> available = new ArrayList<>();
 		
+		for(Skill skill: skills) {
+			if(skill.getHighestAvailable(level, attributes) == null) {
+				continue;
+			}
+			available.add(skill);
+		}
+		
+		return available;
+	}
+	
 	public String getLore() {
 		return lore;
 	}
