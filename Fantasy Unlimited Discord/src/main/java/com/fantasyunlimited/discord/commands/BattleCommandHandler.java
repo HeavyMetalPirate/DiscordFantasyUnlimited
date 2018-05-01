@@ -1,7 +1,9 @@
 package com.fantasyunlimited.discord.commands;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import java.util.function.Consumer;
@@ -11,6 +13,9 @@ import org.apache.log4j.Logger;
 import com.fantasyunlimited.discord.BattleInformation;
 import com.fantasyunlimited.discord.BattlePlayerInformation;
 import com.fantasyunlimited.discord.FantasyUnlimited;
+import com.fantasyunlimited.discord.MessageInformation;
+import com.fantasyunlimited.discord.MessageStatus;
+import com.fantasyunlimited.discord.MessageStatus.Name;
 import com.fantasyunlimited.discord.SerializableEmbedBuilder;
 import com.fantasyunlimited.discord.entity.BattleNPC;
 import com.fantasyunlimited.discord.entity.BattlePlayer;
@@ -24,6 +29,7 @@ import com.fantasyunlimited.entity.DiscordPlayer;
 import com.fantasyunlimited.entity.PlayerCharacter;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
 
 public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
@@ -94,9 +100,11 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 				logger.debug("Found existing battle for playerCharacter " + character.getName());
 				for (Long id : information.getPlayers().keySet()) {
 					BattlePlayer player = information.getPlayers().get(id).getCharacter();
-					//fill with new race and class data because that might have changed since the battle has started
+					// fill with new race and class data because that might have
+					// changed since the battle has started
 					Race race = FantasyUnlimited.getInstance().getRaceBag().getItem(player.getRace().getId());
-					CharacterClass charClass = FantasyUnlimited.getInstance().getClassBag().getItem(player.getCharClass().getId());
+					CharacterClass charClass = FantasyUnlimited.getInstance().getClassBag()
+							.getItem(player.getCharClass().getId());
 					player.setRace(race);
 					player.setCharClass(charClass);
 					playerList.add(player);
@@ -156,19 +164,34 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 			for (BattlePlayer character : playerList) {
 				int level = character.getLevel();
 				Attributes attributes = character.getAttributes();
-				
-				//For now, this way - later on the player has to choose a preset for his action bar
+
+				// For now, this way - later on the player has to choose a
+				// preset for his action bar
 				List<Skill> skills = character.getCharClass().getAvailableSkills(level, attributes);
-				
+
 				StringBuilder skillBuilder = new StringBuilder();
-				for(Skill skill: skills) {
-					skillBuilder.append("<:" + skill.getIconName() + ":" + skill.getIconId() +"> " + skill.getName() + " (Rank " + skill.getHighestAvailable(level, attributes).getRank() + ")\n");
+				Map<String, Long> skillIcons = new LinkedHashMap<>();
+				for (Skill skill : skills) {
+					skillBuilder.append("<:" + skill.getIconName() + ":" + skill.getIconId() + "> " + skill.getName()
+							+ " (Rank " + skill.getHighestAvailable(level, attributes).getRank() + ")\n");
+					skillIcons.put(skill.getIconName(), Long.parseLong(skill.getIconId()));
 				}
-				
+
 				IMessage actionbar = FantasyUnlimited.getInstance().sendMessage(t.getChannel(),
 						"<@" + character.getDiscordId() + "> - Action Bar\n" + skillBuilder.toString());
+				FantasyUnlimited.getInstance().addCustomReactions(actionbar, skillIcons);
 
-				// TODO message information
+				MessageInformation msgInfo = new MessageInformation();
+				msgInfo.setCanBeRemoved(false);
+				msgInfo.setMessage(actionbar);
+				msgInfo.setOriginator(FantasyUnlimited.getInstance().fetchUser(character.getDiscordId()));
+				MessageStatus status = new MessageStatus();
+				status.setPaginator(false);
+				status.setName(Name.BATTLE_ACTIONBAR);
+				msgInfo.setStatus(status);
+				
+				FantasyUnlimited.getInstance().getMessagesAwaitingReactions().put(actionbar.getLongID(), msgInfo);
+				
 				BattlePlayerInformation battlePlayerInfo = information.getPlayers().get(character.getDiscordId());
 				battlePlayerInfo.setMessage(actionbar);
 				FantasyUnlimited.getInstance().getBattles().put(character.getCharacterId(), battlePlayerInfo);

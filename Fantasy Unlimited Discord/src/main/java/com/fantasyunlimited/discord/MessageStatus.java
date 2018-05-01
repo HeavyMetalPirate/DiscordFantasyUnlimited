@@ -50,6 +50,7 @@ public class MessageStatus implements Serializable {
 		CREATE_CHAR_CONFIRMATION,
 		CHARACTER_LIST,
 		PAGINATION_TEST,
+		BATTLE_ACTIONBAR,
 		NONE
 	}
 }

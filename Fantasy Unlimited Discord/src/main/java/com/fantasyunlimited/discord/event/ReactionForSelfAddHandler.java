@@ -9,6 +9,7 @@ import com.fantasyunlimited.discord.MessageInformation;
 import com.fantasyunlimited.discord.MessageStatus;
 import com.fantasyunlimited.discord.MessageStatus.Name;
 import com.fantasyunlimited.discord.reactions.BasicPaginationDelegate;
+import com.fantasyunlimited.discord.reactions.BattleHandler;
 import com.fantasyunlimited.discord.reactions.CharacterCreationHandler;
 import com.fantasyunlimited.discord.reactions.ReactionsHandler;
 
@@ -25,11 +26,14 @@ public class ReactionForSelfAddHandler extends EventHandler<ReactionAddEvent> {
 		BasicPaginationDelegate basicPaginator = new BasicPaginationDelegate(properties);
 		
 		CharacterCreationHandler characterCreationHandler = new CharacterCreationHandler(properties);
+		BattleHandler battleHandler = new BattleHandler(properties);
+		
 		reactionHandlers.put(Name.CREATE_CHAR_CLASS_SELECTION, characterCreationHandler);
 		reactionHandlers.put(Name.CREATE_CHAR_RACE_SELECTION, characterCreationHandler);
 		reactionHandlers.put(Name.CREATE_CHAR_CONFIRMATION, characterCreationHandler);
 		reactionHandlers.put(Name.CHARACTER_LIST, basicPaginator);
 		reactionHandlers.put(Name.PAGINATION_TEST, basicPaginator);
+		reactionHandlers.put(Name.BATTLE_ACTIONBAR, battleHandler);
 	}
 
 	@Override
