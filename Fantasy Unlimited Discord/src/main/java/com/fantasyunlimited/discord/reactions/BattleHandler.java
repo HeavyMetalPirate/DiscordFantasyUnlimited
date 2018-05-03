@@ -9,6 +9,7 @@ import com.fantasyunlimited.discord.MessageInformation;
 import com.fantasyunlimited.entity.PlayerCharacter;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.reaction.ReactionAddEvent;
+import sx.blah.discord.handle.obj.IMessage;
 
 public class BattleHandler extends ReactionsHandler {
 
@@ -28,8 +29,10 @@ public class BattleHandler extends ReactionsHandler {
 		}
 		BattleInformation battleInfo = battlePlayerInfo.getBattle();
 
-		FantasyUnlimited.getInstance().sendMessage(event.getChannel(),
-				"Found your battle! Hah! Also: \n" + battleInfo.getMessage().getEmbeds().toString());
+		IMessage battleMessage = battleInfo.getMessage();
+		IMessage actionbar = msgInfo.getMessage();
+		
+		FantasyUnlimited.getInstance().editMessage(battleInfo.getMessage(), "This should have edited the main battle message, hopefully");
 	}
 
 }

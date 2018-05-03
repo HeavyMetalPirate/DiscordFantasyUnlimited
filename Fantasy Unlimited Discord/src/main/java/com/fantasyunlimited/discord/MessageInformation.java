@@ -13,6 +13,7 @@ public class MessageInformation implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 2369759146570056441L;
+	
 	private LocalDateTime originDate;
 	private transient IUser originator;
 	private transient IMessage message;
@@ -26,7 +27,7 @@ public class MessageInformation implements Serializable {
 	private boolean canBeRemoved;
 	
 	private Map<Object,Object> vars = new HashMap<Object,Object>();
-	
+
 	public LocalDateTime getOriginDate() {
 		return originDate;
 	}
@@ -35,6 +36,7 @@ public class MessageInformation implements Serializable {
 	}
 	public IUser getOriginator() {
 		if(originator == null) {
+			System.out.println("\nNow I'm fetching the author...");
 			originator = FantasyUnlimited.getInstance().fetchUser(originatorId);
 		}
 		return originator;
@@ -45,6 +47,7 @@ public class MessageInformation implements Serializable {
 	}
 	public IMessage getMessage() {
 		if(message == null) {
+			System.out.println("\nNow I'm fetching the message...");
 			message = FantasyUnlimited.getInstance().fetchMessage(guildId, channelId, messageId);
 		}
 		return message;

@@ -84,7 +84,7 @@ public class FantasyUnlimited extends BaseBot {
 		
 		INSTANCE = this;
 		cacheManager = CacheManagerBuilder.newCacheManagerBuilder()
-				.with(CacheManagerBuilder.persistence("F:\\Java\\cache"))
+				.with(CacheManagerBuilder.persistence(properties.getProperty("cache.location")))
 				.withCache("registeredUsersPlaying", CacheConfigurationBuilder
 						.newCacheConfigurationBuilder(Long.class, DiscordPlayer.class,
 								ResourcePoolsBuilder.newResourcePoolsBuilder().heap(1000, EntryUnit.ENTRIES)
@@ -146,19 +146,24 @@ public class FantasyUnlimited extends BaseBot {
 		builder += ("```");
 		builder += (e.getClass().getCanonicalName() + ": ");
 		builder += (e.getMessage() + "\n");
+		int stackelements = 0;
 		for (StackTraceElement element : e.getStackTrace()) {
 			builder += ("\tat " + element.toString() + "\n");
+			stackelements++;
+			if (stackelements == 5) {
+				break;
+			}
 		}
 		Throwable next = e.getCause();
 		while (next != null) {
 			builder += ("Cause:\n");
 			builder += (next.getClass().getCanonicalName() + ": ");
 			builder += (next.getMessage() + "\n");
-			int stackelements = 0;
+			stackelements = 0;
 			for (StackTraceElement element : next.getStackTrace()) {
 				builder += ("\tat " + element.toString() + "\n");
 				stackelements++;
-				if (stackelements == 15) {
+				if (stackelements == 5) {
 					break;
 				}
 			}
