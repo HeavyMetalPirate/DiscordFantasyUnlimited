@@ -10,8 +10,6 @@ import com.fantasyunlimited.discord.MessageInformation;
 import com.fantasyunlimited.discord.MessageStatus;
 import com.fantasyunlimited.discord.MessageStatus.Name;
 
-import sx.blah.discord.handle.impl.obj.Message;
-
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 public class PaginatorCommandHandler extends CommandSupportsPaginatorHandler {

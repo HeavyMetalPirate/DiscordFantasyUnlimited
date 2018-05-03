@@ -29,7 +29,6 @@ import com.fantasyunlimited.entity.DiscordPlayer;
 import com.fantasyunlimited.entity.PlayerCharacter;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
 
 public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
@@ -155,7 +154,8 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 
 			embedBuilder = new SerializableEmbedBuilder().withTitle("Battle")
 					.appendField("Players (1)", players.toString(), true)
-					.appendField("Enemies (" + information.getHostiles().size() + ")", enemies.toString(), true);
+					.appendField("Enemies (" + information.getHostiles().size() + ")", enemies.toString(), true)
+					.appendField("Battle Log", "```\nNo actions have been taken.```", false);
 
 			IMessage message = FantasyUnlimited.getInstance().sendMessage(t.getChannel(), embedBuilder.build());
 			information.setMessage(message);

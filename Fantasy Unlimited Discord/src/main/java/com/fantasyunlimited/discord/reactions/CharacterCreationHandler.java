@@ -25,7 +25,6 @@ import com.fantasyunlimited.logic.DiscordPlayerLogic;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.reaction.ReactionAddEvent;
 import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
 public class CharacterCreationHandler extends PaginationHandler {
