@@ -194,7 +194,6 @@ public class Skill extends GenericItem {
 		ENEMY, // only opponents
 		FRIEND, // only friends plus self
 		OWN, // only self
-		ANY, // anyone
 		AREA // area of effect, all opponents at the same time
 	}
 }

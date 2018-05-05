@@ -51,6 +51,7 @@ public class MessageStatus implements Serializable {
 		CHARACTER_LIST,
 		PAGINATION_TEST,
 		BATTLE_ACTIONBAR,
+		BATTLE_TARGETSELECTION,
 		NONE
 	}
 }

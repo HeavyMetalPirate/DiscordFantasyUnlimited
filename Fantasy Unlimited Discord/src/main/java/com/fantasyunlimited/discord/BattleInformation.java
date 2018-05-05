@@ -3,6 +3,7 @@ package com.fantasyunlimited.discord;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.fantasyunlimited.discord.entity.BattleNPC;
@@ -32,6 +33,27 @@ public class BattleInformation implements Serializable {
 	private Map<Long, BattlePlayerInformation> players = new HashMap<>();
 	private Map<Integer, BattleNPC> hostiles = new HashMap<>();
 
+	private int currentRound = 1;
+	private Map<Integer, List<BattleAction>> rounds = new HashMap<>();
+	
+	public int getAliveEnemyCount() {
+		int count = 0;
+		for(BattleNPC hostile: hostiles.values()) {
+			if(hostile.getCurrentHealth() > 0) 
+				count++;
+		}
+		return count;
+	}
+	
+	public int getAlivePlayerCount() {
+		int count = 0;
+		for(BattlePlayerInformation playerinfo: players.values()) {
+			if(playerinfo.getCharacter().getCurrentHealth() > 0) 
+				count++;
+		}
+		return count;
+	}
+	
 	public LocalDateTime getBegin() {
 		return begin;
 	}
@@ -102,5 +124,21 @@ public class BattleInformation implements Serializable {
 
 	public void setBattlelog(IEmbedField battlelog) {
 		this.battlelog = battlelog;
+	}
+
+	public int getCurrentRound() {
+		return currentRound;
+	}
+
+	public void setCurrentRound(int currentRound) {
+		this.currentRound = currentRound;
+	}
+
+	public Map<Integer, List<BattleAction>> getRounds() {
+		return rounds;
+	}
+
+	public void setRounds(Map<Integer, List<BattleAction>> rounds) {
+		this.rounds = rounds;
 	}
 }

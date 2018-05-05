@@ -127,7 +127,7 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 				playerBattleInfo.setBattle(information);
 				playerBattleInfo.setCharacter(player);
 
-				information.getPlayers().put(t.getAuthor().getLongID(), playerBattleInfo);
+				information.getPlayers().put(character.getId(), playerBattleInfo);
 			}
 
 			StringBuilder players = new StringBuilder();
@@ -153,7 +153,7 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 			enemies.append("```");
 
 			embedBuilder = new SerializableEmbedBuilder().withTitle("Battle")
-					.appendField("Players (1)", players.toString(), true)
+					.appendField("Players (" + information.getPlayers().size() + ")", players.toString(), true)
 					.appendField("Enemies (" + information.getHostiles().size() + ")", enemies.toString(), true)
 					.appendField("Battle Log", "```\nNo actions have been taken.```", false);
 
@@ -192,7 +192,7 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 				
 				FantasyUnlimited.getInstance().getMessagesAwaitingReactions().put(actionbar.getLongID(), msgInfo);
 				
-				BattlePlayerInformation battlePlayerInfo = information.getPlayers().get(character.getDiscordId());
+				BattlePlayerInformation battlePlayerInfo = information.getPlayers().get(character.getCharacterId());
 				battlePlayerInfo.setMessage(actionbar);
 				FantasyUnlimited.getInstance().getBattles().put(character.getCharacterId(), battlePlayerInfo);
 			}

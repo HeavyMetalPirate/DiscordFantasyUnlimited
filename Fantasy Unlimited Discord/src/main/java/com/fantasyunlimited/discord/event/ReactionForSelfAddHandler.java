@@ -34,6 +34,8 @@ public class ReactionForSelfAddHandler extends EventHandler<ReactionAddEvent> {
 		reactionHandlers.put(Name.CHARACTER_LIST, basicPaginator);
 		reactionHandlers.put(Name.PAGINATION_TEST, basicPaginator);
 		reactionHandlers.put(Name.BATTLE_ACTIONBAR, battleHandler);
+		reactionHandlers.put(Name.BATTLE_TARGETSELECTION, battleHandler);
+		
 	}
 
 	@Override
