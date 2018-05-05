@@ -12,11 +12,13 @@ import org.apache.log4j.Logger;
 
 import com.fantasyunlimited.discord.BattleInformation;
 import com.fantasyunlimited.discord.BattlePlayerInformation;
+import com.fantasyunlimited.discord.BattleUtils;
 import com.fantasyunlimited.discord.FantasyUnlimited;
 import com.fantasyunlimited.discord.MessageInformation;
 import com.fantasyunlimited.discord.MessageStatus;
 import com.fantasyunlimited.discord.MessageStatus.Name;
 import com.fantasyunlimited.discord.SerializableEmbedBuilder;
+import com.fantasyunlimited.discord.Unicodes;
 import com.fantasyunlimited.discord.entity.BattleNPC;
 import com.fantasyunlimited.discord.entity.BattlePlayer;
 import com.fantasyunlimited.discord.xml.CharacterClass;
@@ -24,6 +26,7 @@ import com.fantasyunlimited.discord.xml.HostileNPC;
 import com.fantasyunlimited.discord.xml.Location;
 import com.fantasyunlimited.discord.xml.Race;
 import com.fantasyunlimited.discord.xml.Skill;
+import com.fantasyunlimited.discord.xml.SkillRank;
 import com.fantasyunlimited.entity.Attributes;
 import com.fantasyunlimited.entity.DiscordPlayer;
 import com.fantasyunlimited.entity.PlayerCharacter;
@@ -94,9 +97,15 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 
 			List<BattlePlayer> playerList = new ArrayList<>();
 
+			if (existing != null && existing.getBattle().isFinished()) {
+				FantasyUnlimited.getInstance().getBattles().remove(character.getId());
+				existing = null;
+			}
+
 			if (existing != null && existing.getBattle().isFinished() == false) {
 				information = existing.getBattle();
 				logger.debug("Found existing battle for playerCharacter " + character.getName());
+
 				for (Long id : information.getPlayers().keySet()) {
 					BattlePlayer player = information.getPlayers().get(id).getCharacter();
 					// fill with new race and class data because that might have
@@ -142,6 +151,7 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 			}
 
 			StringBuilder enemies = new StringBuilder();
+
 			enemies.append("```md\n");
 			for (int index : information.getHostiles().keySet()) {
 				BattleNPC npc = information.getHostiles().get(index);
@@ -152,10 +162,7 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 			}
 			enemies.append("```");
 
-			embedBuilder = new SerializableEmbedBuilder().withTitle("Battle")
-					.appendField("Players (" + information.getPlayers().size() + ")", players.toString(), true)
-					.appendField("Enemies (" + information.getHostiles().size() + ")", enemies.toString(), true)
-					.appendField("Battle Log", "```\nNo actions have been taken.```", false);
+			embedBuilder = BattleUtils.createBattleOutputEmbeds(information);
 
 			IMessage message = FantasyUnlimited.getInstance().sendMessage(t.getChannel(), embedBuilder.build());
 			information.setMessage(message);
@@ -172,15 +179,27 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 				StringBuilder skillBuilder = new StringBuilder();
 				Map<String, Long> skillIcons = new LinkedHashMap<>();
 				for (Skill skill : skills) {
+
+					SkillRank rank = skill.getHighestAvailable(level, attributes);
+					int skillCost = skill.getCostOfExecution();
+					skillCost += rank.getCostModifier();
+					if (character.getCurrentAtkResource() < skillCost) {
+						continue;
+					}
+
 					skillBuilder.append("<:" + skill.getIconName() + ":" + skill.getIconId() + "> " + skill.getName()
-							+ " (Rank " + skill.getHighestAvailable(level, attributes).getRank() + ")\n");
+							+ " (Rank " + rank.getRank() + ") - " + skillCost + " "
+							+ character.getCharClass().getEnergyType().toString() + "\n");
 					skillIcons.put(skill.getIconName(), Long.parseLong(skill.getIconId()));
 				}
 
 				IMessage actionbar = FantasyUnlimited.getInstance().sendMessage(t.getChannel(),
 						"<@" + character.getDiscordId() + "> - Action Bar\n" + skillBuilder.toString());
-				FantasyUnlimited.getInstance().addCustomReactions(actionbar, skillIcons);
-
+				if (skillIcons.size() == 0) {
+					FantasyUnlimited.getInstance().addReactions(actionbar, Unicodes.crossmark);
+				} else {
+					FantasyUnlimited.getInstance().addCustomReactions(actionbar, skillIcons);
+				}
 				MessageInformation msgInfo = new MessageInformation();
 				msgInfo.setCanBeRemoved(false);
 				msgInfo.setMessage(actionbar);
@@ -189,9 +208,9 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 				status.setPaginator(false);
 				status.setName(Name.BATTLE_ACTIONBAR);
 				msgInfo.setStatus(status);
-				
+
 				FantasyUnlimited.getInstance().getMessagesAwaitingReactions().put(actionbar.getLongID(), msgInfo);
-				
+
 				BattlePlayerInformation battlePlayerInfo = information.getPlayers().get(character.getCharacterId());
 				battlePlayerInfo.setMessage(actionbar);
 				FantasyUnlimited.getInstance().getBattles().put(character.getCharacterId(), battlePlayerInfo);

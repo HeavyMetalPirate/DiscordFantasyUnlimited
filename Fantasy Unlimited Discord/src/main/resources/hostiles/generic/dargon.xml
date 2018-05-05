@@ -6,7 +6,7 @@
   <iconName>dargon.png</iconName>
   <raceId>1</raceId>
   <classId>1</classId>
-  <unique>false</unique>
+  <unique>true</unique>
   <level>1</level>
   <loottable>
     <entry>

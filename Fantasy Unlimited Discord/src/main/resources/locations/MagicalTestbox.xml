@@ -20,5 +20,6 @@
   <npcIds/>
   <hostileNPCIds>
     <string>dargon</string>
+    <string>werewolf</string>
   </hostileNPCIds>
 </Location>

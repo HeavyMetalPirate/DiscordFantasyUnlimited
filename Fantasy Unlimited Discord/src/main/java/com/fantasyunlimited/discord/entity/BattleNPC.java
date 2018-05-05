@@ -1,12 +1,14 @@
 package com.fantasyunlimited.discord.entity;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.fantasyunlimited.discord.FantasyUnlimited;
-import com.fantasyunlimited.discord.xml.Attributes;
 import com.fantasyunlimited.discord.xml.CharacterClass;
 import com.fantasyunlimited.discord.xml.HostileNPC;
 import com.fantasyunlimited.discord.xml.Race;
+import com.fantasyunlimited.entity.Attributes;
 
 public class BattleNPC implements Serializable {
 	/**
@@ -24,6 +26,8 @@ public class BattleNPC implements Serializable {
 	
 	private HostileNPC base;
 	private Attributes attributes;
+	
+	private Map<BattlePlayer, Integer> aggroMap = new HashMap<>();
 
 	public BattleNPC() {
 		
@@ -128,5 +132,13 @@ public class BattleNPC implements Serializable {
 
 	public void setAttributes(Attributes attributes) {
 		this.attributes = attributes;
+	}
+
+	public Map<BattlePlayer, Integer> getAggroMap() {
+		return aggroMap;
+	}
+
+	public void setAggroMap(Map<BattlePlayer, Integer> aggroMap) {
+		this.aggroMap = aggroMap;
 	}
 }

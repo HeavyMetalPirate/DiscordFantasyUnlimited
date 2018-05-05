@@ -24,7 +24,7 @@ public class KryoSerializer<T> implements Serializer<T> {
 	@Override
 	public ByteBuffer serialize(final T object) throws SerializerException {
 		try {
-			Output output = new Output(4096);
+			Output output = new Output(4096 * 128);
 			kryo.writeClassAndObject(output, object);
 			return ByteBuffer.wrap(output.getBuffer());
 		} catch (Exception e) {

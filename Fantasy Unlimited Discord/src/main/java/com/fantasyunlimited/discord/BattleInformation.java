@@ -87,7 +87,7 @@ public class BattleInformation implements Serializable {
 	}
 
 	public boolean isFinished() {
-		return finished;
+		return getAliveEnemyCount() == 0 || getAlivePlayerCount() == 0;
 	}
 
 	public void setFinished(boolean finished) {

@@ -12,11 +12,24 @@ public class BattleAction implements Serializable {
 	 */
 	private static final long serialVersionUID = -1864422563335663870L;
 	private boolean isArea;
+	private boolean isPass;
+	
 	private BattlePlayer playerTarget;
 	private BattleNPC hostileTarget;
 	
 	private Skill usedSkill;
 	private BattlePlayer executingPlayer;
+	private BattleNPC executingHostile;
+	
+	public void executeAction() {
+		//TODO actual battle, lmao
+		if(playerTarget != null) {
+			playerTarget.setCurrentHealth(playerTarget.getCurrentHealth() - 1);
+		}
+		if(hostileTarget != null) {
+			hostileTarget.setCurrentHealth(hostileTarget.getCurrentHealth() - 15);
+		}
+	}
 	
 	public boolean isArea() {
 		return isArea;
@@ -47,5 +60,17 @@ public class BattleAction implements Serializable {
 	}
 	public void setExecutingPlayer(BattlePlayer executingPlayer) {
 		this.executingPlayer = executingPlayer;
+	}
+	public BattleNPC getExecutingHostile() {
+		return executingHostile;
+	}
+	public void setExecutingHostile(BattleNPC executingHostile) {
+		this.executingHostile = executingHostile;
+	}
+	public boolean isPass() {
+		return isPass;
+	}
+	public void setPass(boolean isPass) {
+		this.isPass = isPass;
 	}
 }
