@@ -13,7 +13,7 @@ public class BattlePlayerInformation implements Serializable  {
 	 * 
 	 */
 	private static final long serialVersionUID = 5898708685904083520L;
-	private BattleInformation battle;
+
 	private BattlePlayer character;
 	
 	private Skill skillUsed;
@@ -25,12 +25,6 @@ public class BattlePlayerInformation implements Serializable  {
 	private long channelId;
 	private long messageId;
 	
-	public BattleInformation getBattle() {
-		return battle;
-	}
-	public void setBattle(BattleInformation battle) {
-		this.battle = battle;
-	}
 	public BattlePlayer getCharacter() {
 		return character;
 	}

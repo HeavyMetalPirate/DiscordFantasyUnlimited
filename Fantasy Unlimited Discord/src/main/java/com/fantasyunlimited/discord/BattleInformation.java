@@ -21,7 +21,7 @@ public class BattleInformation implements Serializable {
 	private LocalDateTime begin = LocalDateTime.now();
 	private Location location;
 
-	private boolean finished;
+//	private boolean finished;
 
 	private transient IMessage message;
 	private long guildId;
@@ -88,10 +88,6 @@ public class BattleInformation implements Serializable {
 
 	public boolean isFinished() {
 		return getAliveEnemyCount() == 0 || getAlivePlayerCount() == 0;
-	}
-
-	public void setFinished(boolean finished) {
-		this.finished = finished;
 	}
 
 	public IMessage getMessage() {

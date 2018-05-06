@@ -13,8 +13,12 @@ public class BattlePlayer implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 2758409358975067328L;
-	private Race race;
-	private CharacterClass charClass;
+//	private Race race;
+//	private CharacterClass charClass;
+	
+	private String raceId;
+	private String charClassId;
+	
 	private int level;
 	private int currentHealth;
 	private int maxHealth;
@@ -35,8 +39,10 @@ public class BattlePlayer implements Serializable {
 		this.discordId = Long.parseLong(base.getPlayer().getDiscordId());
 		this.characterId = base.getId();
 
-		this.race = FantasyUnlimited.getInstance().getRaceBag().getItem(base.getRaceId());
-		this.charClass = FantasyUnlimited.getInstance().getClassBag().getItem(base.getClassId());
+		this.raceId = base.getRaceId();
+		this.charClassId = base.getClassId();
+//		this.race = FantasyUnlimited.getInstance().getRaceBag().getItem(base.getRaceId());
+//		this.charClass = FantasyUnlimited.getInstance().getClassBag().getItem(base.getClassId());
 
 		this.name = base.getName();
 		this.level = base.getCurrentLevel();
@@ -49,11 +55,11 @@ public class BattlePlayer implements Serializable {
 	}
 
 	public Race getRace() {
-		return race;
+		return FantasyUnlimited.getInstance().getRaceBag().getItem(raceId);
 	}
 
 	public CharacterClass getCharClass() {
-		return charClass;
+		return FantasyUnlimited.getInstance().getClassBag().getItem(charClassId);
 	}
 
 	public int getLevel() {
@@ -102,14 +108,6 @@ public class BattlePlayer implements Serializable {
 
 	public Long getCharacterId() {
 		return characterId;
-	}
-
-	public void setRace(Race race) {
-		this.race = race;
-	}
-
-	public void setCharClass(CharacterClass charClass) {
-		this.charClass = charClass;
 	}
 
 	public void setLevel(int level) {

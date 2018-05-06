@@ -17,14 +17,11 @@ import com.fantasyunlimited.discord.FantasyUnlimited;
 import com.fantasyunlimited.discord.MessageInformation;
 import com.fantasyunlimited.discord.MessageStatus;
 import com.fantasyunlimited.discord.MessageStatus.Name;
-import com.fantasyunlimited.discord.SerializableEmbedBuilder;
 import com.fantasyunlimited.discord.Unicodes;
 import com.fantasyunlimited.discord.entity.BattleNPC;
 import com.fantasyunlimited.discord.entity.BattlePlayer;
-import com.fantasyunlimited.discord.xml.CharacterClass;
 import com.fantasyunlimited.discord.xml.HostileNPC;
 import com.fantasyunlimited.discord.xml.Location;
-import com.fantasyunlimited.discord.xml.Race;
 import com.fantasyunlimited.discord.xml.Skill;
 import com.fantasyunlimited.discord.xml.SkillRank;
 import com.fantasyunlimited.entity.Attributes;
@@ -90,6 +87,10 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 			this.random = new Random();
 		}
 
+		private BattleInformation fetchBattleInformation(BattlePlayer character) {
+			return FantasyUnlimited.getInstance().getBattleMap().get(character.getCharacterId());
+		}
+		
 		@Override
 		public void accept(MessageReceivedEvent t) {
 			BattlePlayerInformation existing = FantasyUnlimited.getInstance().getBattles().get(character.getId());
@@ -97,24 +98,17 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 
 			List<BattlePlayer> playerList = new ArrayList<>();
 
-			if (existing != null && existing.getBattle().isFinished()) {
+			if (existing != null && fetchBattleInformation(existing.getCharacter()).isFinished()) {
 				FantasyUnlimited.getInstance().getBattles().remove(character.getId());
 				existing = null;
 			}
 
-			if (existing != null && existing.getBattle().isFinished() == false) {
-				information = existing.getBattle();
+			if (existing != null && fetchBattleInformation(existing.getCharacter()).isFinished() == false) {
+				information = fetchBattleInformation(existing.getCharacter());
 				logger.debug("Found existing battle for playerCharacter " + character.getName());
 
 				for (Long id : information.getPlayers().keySet()) {
 					BattlePlayer player = information.getPlayers().get(id).getCharacter();
-					// fill with new race and class data because that might have
-					// changed since the battle has started
-					Race race = FantasyUnlimited.getInstance().getRaceBag().getItem(player.getRace().getId());
-					CharacterClass charClass = FantasyUnlimited.getInstance().getClassBag()
-							.getItem(player.getCharClass().getId());
-					player.setRace(race);
-					player.setCharClass(charClass);
 					playerList.add(player);
 				}
 			} else {
@@ -133,10 +127,10 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 				playerList.add(player);
 
 				BattlePlayerInformation playerBattleInfo = new BattlePlayerInformation();
-				playerBattleInfo.setBattle(information);
+				
 				playerBattleInfo.setCharacter(player);
-
 				information.getPlayers().put(character.getId(), playerBattleInfo);
+				FantasyUnlimited.getInstance().getBattleMap().put(player.getCharacterId(), information);
 			}
 
 			StringBuilder players = new StringBuilder();
@@ -166,7 +160,6 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 
 			IMessage message = FantasyUnlimited.getInstance().sendMessage(t.getChannel(), embedBuilder.build());
 			information.setMessage(message);
-			information.setFinished(false);
 
 			for (BattlePlayer character : playerList) {
 				int level = character.getLevel();
@@ -215,7 +208,6 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 				battlePlayerInfo.setMessage(actionbar);
 				FantasyUnlimited.getInstance().getBattles().put(character.getCharacterId(), battlePlayerInfo);
 			}
-
 		}
 
 		@Override

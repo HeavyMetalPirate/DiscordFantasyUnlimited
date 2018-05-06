@@ -27,16 +27,14 @@ import org.ehcache.event.EventType;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.fantasyunlimited.cache.DiscordPlayerLoaderWriter;
-import com.fantasyunlimited.cache.KryoSerializer;
+import com.fantasyunlimited.cache.JSONSerializer;
 import com.fantasyunlimited.cache.MessageInformationEventHandler;
-import com.fantasyunlimited.discord.entity.BattlePlayer;
 import com.fantasyunlimited.discord.event.BotInitializedHandler;
 import com.fantasyunlimited.discord.event.MessageReceivedHandler;
 import com.fantasyunlimited.discord.event.ReactionForSelfAddHandler;
 import com.fantasyunlimited.discord.xml.*;
 import com.fantasyunlimited.discord.xml.items.*;
 import com.fantasyunlimited.entity.DiscordPlayer;
-import com.fantasyunlimited.entity.PlayerCharacter;
 import com.thoughtworks.xstream.XStream;
 
 import sx.blah.discord.api.IDiscordClient;
@@ -103,11 +101,26 @@ public class FantasyUnlimited extends BaseBot {
 				.withCache("battles",
 						CacheConfigurationBuilder
 								.newCacheConfigurationBuilder(Long.class, BattlePlayerInformation.class,
-										ResourcePoolsBuilder.newResourcePoolsBuilder().heap(1000, EntryUnit.ENTRIES)
-												.offheap(5, MemoryUnit.MB).disk(50, MemoryUnit.MB, true).build())
-								.withValueSerializer(new KryoSerializer<>(null))
-								.withKeySerializer(new KryoSerializer<>(null))
+										ResourcePoolsBuilder.newResourcePoolsBuilder()
+											.heap(1000, EntryUnit.ENTRIES)
+											.offheap(5, MemoryUnit.MB)
+											.disk(50, MemoryUnit.MB, true)
+											.build())
+								.withValueSerializer(new JSONSerializer<>(BattlePlayerInformation.class))
+								.withKeySerializer(new JSONSerializer<>(Long.class))
 								.withExpiry(ExpiryPolicyBuilder.noExpiration()).build())
+				.withCache("battleMap",
+						CacheConfigurationBuilder
+								.newCacheConfigurationBuilder(Long.class, BattleInformation.class,
+										ResourcePoolsBuilder.newResourcePoolsBuilder()
+											.heap(5000, EntryUnit.ENTRIES)
+											.offheap(5, MemoryUnit.MB)
+											.disk(50, MemoryUnit.MB, true)
+											.build())
+								.withValueSerializer(new JSONSerializer<>(BattleInformation.class))
+								.withKeySerializer(new JSONSerializer<>(Long.class))
+								.withExpiry(ExpiryPolicyBuilder.noExpiration()).build())
+								
 				.build();
 		cacheManager.init();
 
@@ -118,7 +131,7 @@ public class FantasyUnlimited extends BaseBot {
 								EventType.REMOVED, EventType.UPDATED));
 
 	}
-
+	
 	public Cache<Long, DiscordPlayer> getRegisteredUserCache() {
 		return cacheManager.getCache("registeredUsersPlaying", Long.class, DiscordPlayer.class);
 	}
@@ -129,6 +142,10 @@ public class FantasyUnlimited extends BaseBot {
 
 	public Cache<Long, BattlePlayerInformation> getBattles() {
 		return cacheManager.getCache("battles", Long.class, BattlePlayerInformation.class);
+	}
+	
+	public Cache<Long, BattleInformation> getBattleMap() {
+		return cacheManager.getCache("battleMap", Long.class, BattleInformation.class);
 	}
 
 	public MessageReceivedHandler getMessageReceivedHandler() {

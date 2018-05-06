@@ -23,6 +23,15 @@ public class BattleAction implements Serializable {
 	
 	public void executeAction() {
 		//TODO actual battle, lmao
+		
+		//if you die in that round, don't do actions because u ded
+		if(executingPlayer != null && executingPlayer.isDefeated()) {
+			return;
+		}
+		if(executingHostile != null && executingHostile.isDefeated()) {
+			return;
+		}
+		
 		if(playerTarget != null) {
 			playerTarget.setCurrentHealth(playerTarget.getCurrentHealth() - 1);
 		}

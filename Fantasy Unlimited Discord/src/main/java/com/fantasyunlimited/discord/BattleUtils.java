@@ -7,8 +7,6 @@ import java.util.Map;
 import com.fantasyunlimited.discord.MessageStatus.Name;
 import com.fantasyunlimited.discord.entity.BattleNPC;
 import com.fantasyunlimited.discord.entity.BattlePlayer;
-import com.fantasyunlimited.discord.xml.CharacterClass;
-import com.fantasyunlimited.discord.xml.Race;
 import com.fantasyunlimited.discord.xml.Skill;
 import com.fantasyunlimited.discord.xml.SkillRank;
 import com.fantasyunlimited.entity.Attributes;
@@ -40,13 +38,6 @@ public class BattleUtils {
 				continue;
 			}
 
-			// fill with new race and class data because that might have
-			// changed since the battle has started
-			Race race = FantasyUnlimited.getInstance().getRaceBag().getItem(character.getRace().getId());
-			CharacterClass charClass = FantasyUnlimited.getInstance().getClassBag()
-					.getItem(character.getCharClass().getId());
-			character.setRace(race);
-			character.setCharClass(charClass);
 			int level = character.getLevel();
 			Attributes attributes = character.getAttributes();
 
@@ -174,11 +165,9 @@ public class BattleUtils {
 	private static final void checkBattleFinished(BattleInformation battle, StringBuilder builder) {
 		if (battle.getAliveEnemyCount() == 0) {
 			builder.append("All enemies have perished!\n");
-			battle.setFinished(true);
 		}
 		if (battle.getAlivePlayerCount() == 0) {
 			builder.append("All players have perished!\n");
-			battle.setFinished(true);
 		}
 		builder.append("```");
 	}

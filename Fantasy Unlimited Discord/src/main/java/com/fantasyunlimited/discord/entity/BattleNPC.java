@@ -15,8 +15,10 @@ public class BattleNPC implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 2758409358975067328L;
-	private Race race;
-	private CharacterClass charClass;
+	private String raceId;
+	private String charClassId;
+//	private Race race;
+//	private CharacterClass charClass;
 	private int level;
 	private int currentHealth;
 	private int maxHealth;
@@ -24,7 +26,8 @@ public class BattleNPC implements Serializable {
 	private int currentAtkResource;
 	private int maxAtkResource;
 	
-	private HostileNPC base;
+	private String baseId;
+//	private HostileNPC base;
 	private Attributes attributes;
 	
 	private Map<BattlePlayer, Integer> aggroMap = new HashMap<>();
@@ -34,12 +37,14 @@ public class BattleNPC implements Serializable {
 	}
 	
 	public BattleNPC(HostileNPC base) {
-		this.base = base;
-		this.race = FantasyUnlimited.getInstance().getRaceBag().getItem(base.getRaceId());
-		this.charClass = FantasyUnlimited.getInstance().getClassBag().getItem(base.getClassId());
+		this.baseId = base.getId();
+		this.raceId = base.getRaceId();
+		this.charClassId = base.getClassId();
 		
 		this.level = base.getLevel();
 		this.attributes = new Attributes();
+		
+		CharacterClass charClass = FantasyUnlimited.getInstance().getClassBag().getItem(charClassId);
 		
 		int defense = charClass.getAttributes().getDefense() + (charClass.getAttributes().getDefenseGrowth() * level);
 		int dexterity = charClass.getAttributes().getDexterity() + (charClass.getAttributes().getDexterityGrowth() * level);
@@ -66,10 +71,10 @@ public class BattleNPC implements Serializable {
 	}
 	
 	public Race getRace() {
-		return race;
+		return FantasyUnlimited.getInstance().getRaceBag().getItem(raceId);
 	}
 	public CharacterClass getCharClass() {
-		return charClass;
+		return FantasyUnlimited.getInstance().getClassBag().getItem(charClassId);
 	}
 	public int getLevel() {
 		return level;
@@ -84,7 +89,7 @@ public class BattleNPC implements Serializable {
 		return maxHealth;
 	}
 	public HostileNPC getBase() {
-		return base;
+		return FantasyUnlimited.getInstance().getHostileNPCBag().getItem(baseId);
 	}
 	public boolean isDefeated() {
 		return currentHealth <= 0;
@@ -106,14 +111,6 @@ public class BattleNPC implements Serializable {
 		return maxAtkResource;
 	}
 
-	public void setRace(Race race) {
-		this.race = race;
-	}
-
-	public void setCharClass(CharacterClass charClass) {
-		this.charClass = charClass;
-	}
-
 	public void setLevel(int level) {
 		this.level = level;
 	}
@@ -124,10 +121,6 @@ public class BattleNPC implements Serializable {
 
 	public void setMaxAtkResource(int maxAtkResource) {
 		this.maxAtkResource = maxAtkResource;
-	}
-
-	public void setBase(HostileNPC base) {
-		this.base = base;
 	}
 
 	public void setAttributes(Attributes attributes) {

@@ -71,7 +71,7 @@ public class BattleHandler extends ReactionsHandler {
 
 		BattlePlayerInformation battlePlayerInfo = FantasyUnlimited.getInstance().getBattles()
 				.get(playerCharacter.getId());
-		BattleInformation battleInfo = battlePlayerInfo.getBattle();
+		BattleInformation battleInfo = fetchBattleInformation(battlePlayerInfo.getCharacter());;
 		if (battleInfo.isFinished()) {
 			return;
 		}
@@ -124,7 +124,7 @@ public class BattleHandler extends ReactionsHandler {
 		if (battlePlayerInfo == null) {
 			throw new IllegalStateException("Battle Information lost for character " + playerCharacter.getName());
 		}
-		BattleInformation battleInfo = battlePlayerInfo.getBattle();
+		BattleInformation battleInfo = fetchBattleInformation(battlePlayerInfo.getCharacter());;
 		if (battleInfo.isFinished()) {
 			return;
 		}
@@ -233,7 +233,11 @@ public class BattleHandler extends ReactionsHandler {
 		msgInfo.getStatus().setName(Name.BATTLE_TARGETSELECTION);
 
 	}
-
+	
+	private BattleInformation fetchBattleInformation(BattlePlayer character) {
+		return FantasyUnlimited.getInstance().getBattleMap().get(character.getCharacterId());
+	}
+	
 	private void queueAction(BattlePlayerInformation playerInfo) {
 		Skill usedSkill = playerInfo.getSkillUsed();
 
@@ -251,7 +255,7 @@ public class BattleHandler extends ReactionsHandler {
 			action.setPlayerTarget(playerInfo.getFriendlyTarget());
 		}
 
-		BattleInformation battle = playerInfo.getBattle();
+		BattleInformation battle = fetchBattleInformation(playerInfo.getCharacter());
 		if (battle.getRounds().get(battle.getCurrentRound()) == null) {
 			battle.getRounds().put(battle.getCurrentRound(), new ArrayList<>());
 		}
