@@ -91,6 +91,7 @@
 			<iconId>442281913860882436</iconId>
 			<attribute>STRENGTH</attribute>
 			<type>OFFENSIVE</type>
+			<weaponModifier>WEAPON_MAINHAND</weaponModifier>
 			<minDamage>100</minDamage>
 			<maxDamage>100</maxDamage>
 			<costOfExecution>35</costOfExecution>

@@ -2,7 +2,7 @@ package com.fantasyunlimited.discord;
 
 import java.io.Serializable;
 
-import com.fantasyunlimited.discord.entity.BattleNPC;
+import com.fantasyunlimited.discord.entity.BattleParticipant;
 import com.fantasyunlimited.discord.entity.BattlePlayer;
 import com.fantasyunlimited.discord.xml.Skill;
 
@@ -17,8 +17,7 @@ public class BattlePlayerInformation implements Serializable  {
 	private BattlePlayer character;
 	
 	private Skill skillUsed;
-	private BattlePlayer friendlyTarget;
-	private BattleNPC hostileTarget;
+	private BattleParticipant target;
 	
 	private transient IMessage message;
 	private long guildId;
@@ -49,16 +48,10 @@ public class BattlePlayerInformation implements Serializable  {
 	public void setSkillUsed(Skill skillUsed) {
 		this.skillUsed = skillUsed;
 	}
-	public BattleNPC getHostileTarget() {
-		return hostileTarget;
+	public BattleParticipant getTarget() {
+		return target;
 	}
-	public void setHostileTarget(BattleNPC hostileTarget) {
-		this.hostileTarget = hostileTarget;
-	}
-	public BattlePlayer getFriendlyTarget() {
-		return friendlyTarget;
-	}
-	public void setFriendlyTarget(BattlePlayer friendlyTarget) {
-		this.friendlyTarget = friendlyTarget;
+	public void setTarget(BattleParticipant target) {
+		this.target = target;
 	}
 }

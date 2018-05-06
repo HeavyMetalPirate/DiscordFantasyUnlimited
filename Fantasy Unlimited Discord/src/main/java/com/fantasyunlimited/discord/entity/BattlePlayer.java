@@ -1,33 +1,14 @@
 package com.fantasyunlimited.discord.entity;
 
-import java.io.Serializable;
-
-import com.fantasyunlimited.discord.FantasyUnlimited;
-import com.fantasyunlimited.discord.xml.CharacterClass;
-import com.fantasyunlimited.discord.xml.Race;
-import com.fantasyunlimited.entity.Attributes;
 import com.fantasyunlimited.entity.PlayerCharacter;
 
-public class BattlePlayer implements Serializable {
+public class BattlePlayer extends BattleParticipant {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2758409358975067328L;
-//	private Race race;
-//	private CharacterClass charClass;
-	
-	private String raceId;
-	private String charClassId;
-	
-	private int level;
-	private int currentHealth;
-	private int maxHealth;
-
-	private int currentAtkResource;
-	private int maxAtkResource;
 
 	private String name;
-	private Attributes attributes;
 	private Long discordId;
 	private Long characterId;
 
@@ -41,8 +22,6 @@ public class BattlePlayer implements Serializable {
 
 		this.raceId = base.getRaceId();
 		this.charClassId = base.getClassId();
-//		this.race = FantasyUnlimited.getInstance().getRaceBag().getItem(base.getRaceId());
-//		this.charClass = FantasyUnlimited.getInstance().getClassBag().getItem(base.getClassId());
 
 		this.name = base.getName();
 		this.level = base.getCurrentLevel();
@@ -52,50 +31,6 @@ public class BattlePlayer implements Serializable {
 		this.maxAtkResource = base.getMaxAtkResource();
 		this.currentHealth = base.getCurrentHealth();
 		this.currentAtkResource = base.getCurrentAtkResource();
-	}
-
-	public Race getRace() {
-		return FantasyUnlimited.getInstance().getRaceBag().getItem(raceId);
-	}
-
-	public CharacterClass getCharClass() {
-		return FantasyUnlimited.getInstance().getClassBag().getItem(charClassId);
-	}
-
-	public int getLevel() {
-		return level;
-	}
-
-	public int getCurrentHealth() {
-		return currentHealth;
-	}
-
-	public void setCurrentHealth(int currentHealth) {
-		this.currentHealth = currentHealth;
-	}
-
-	public int getMaxHealth() {
-		return maxHealth;
-	}
-
-	public boolean isDefeated() {
-		return currentHealth <= 0;
-	}
-
-	public Attributes getAttributes() {
-		return attributes;
-	}
-
-	public int getCurrentAtkResource() {
-		return currentAtkResource;
-	}
-
-	public void setCurrentAtkResource(int currentAtkResource) {
-		this.currentAtkResource = currentAtkResource;
-	}
-
-	public int getMaxAtkResource() {
-		return maxAtkResource;
 	}
 
 	public String getName() {
@@ -110,24 +45,8 @@ public class BattlePlayer implements Serializable {
 		return characterId;
 	}
 
-	public void setLevel(int level) {
-		this.level = level;
-	}
-
-	public void setMaxHealth(int maxHealth) {
-		this.maxHealth = maxHealth;
-	}
-
-	public void setMaxAtkResource(int maxAtkResource) {
-		this.maxAtkResource = maxAtkResource;
-	}
-
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public void setAttributes(Attributes attributes) {
-		this.attributes = attributes;
 	}
 
 	public void setDiscordId(Long discordId) {

@@ -98,7 +98,7 @@ public class BattleHandler extends ReactionsHandler {
 			if (hostile.isDefeated()) {
 				return;
 			}
-			battlePlayerInfo.setHostileTarget(hostile);
+			battlePlayerInfo.setTarget(hostile);
 		} else {
 			if (index >= battleInfo.getPlayers().size()) {
 				return;
@@ -110,7 +110,7 @@ public class BattleHandler extends ReactionsHandler {
 			if (player.isDefeated()) {
 				return;
 			}
-			battlePlayerInfo.setFriendlyTarget(player);
+			battlePlayerInfo.setTarget(player);
 		}
 		queueAction(battlePlayerInfo);
 	}
@@ -176,14 +176,14 @@ public class BattleHandler extends ReactionsHandler {
 			// queue the action
 			if (battlePlayerInfo.getSkillUsed().getTargetType() == TargetType.FRIEND
 					|| battlePlayerInfo.getSkillUsed().getTargetType() == TargetType.OWN) {
-				battlePlayerInfo.setFriendlyTarget(character);
+				battlePlayerInfo.setTarget(character);
 			} else if (battlePlayerInfo.getSkillUsed().getTargetType() == TargetType.ENEMY) {
 				for (int hostileId : battleInfo.getHostiles().keySet()) {
 					BattleNPC hostile = battleInfo.getHostiles().get(hostileId);
 					if (hostile.isDefeated()) {
 						continue;
 					}
-					battlePlayerInfo.setHostileTarget(hostile);
+					battlePlayerInfo.setTarget(hostile);
 					break;
 				}
 			}
@@ -242,17 +242,16 @@ public class BattleHandler extends ReactionsHandler {
 		Skill usedSkill = playerInfo.getSkillUsed();
 
 		BattleAction action = new BattleAction();
-		action.setExecutingPlayer(playerInfo.getCharacter());
+		action.setExecuting(playerInfo.getCharacter());
 		action.setUsedSkill(usedSkill);
 		action.setArea(false);
 
 		if (usedSkill.getTargetType() == TargetType.OWN) {
-			action.setPlayerTarget(playerInfo.getCharacter());
+			action.setTarget(playerInfo.getCharacter());
 		} else if (usedSkill.getTargetType() == TargetType.AREA) {
 			action.setArea(true);
 		} else {
-			action.setHostileTarget(playerInfo.getHostileTarget());
-			action.setPlayerTarget(playerInfo.getFriendlyTarget());
+			action.setTarget(playerInfo.getTarget());
 		}
 
 		BattleInformation battle = fetchBattleInformation(playerInfo.getCharacter());
@@ -271,10 +270,8 @@ public class BattleHandler extends ReactionsHandler {
 		@Override
 		public int compare(BattleAction o1, BattleAction o2) {
 			Integer dex1, dex2;
-			dex1 = o1.getExecutingPlayer() == null ? o1.getExecutingHostile().getAttributes().getDexterity()
-					: o1.getExecutingPlayer().getAttributes().getDexterity();
-			dex2 = o2.getExecutingPlayer() == null ? o2.getExecutingHostile().getAttributes().getDexterity()
-					: o2.getExecutingPlayer().getAttributes().getDexterity();
+			dex1 = o1.getExecuting().getAttributes().getDexterity();
+			dex2 = o2.getExecuting().getAttributes().getDexterity();
 
 			return dex1.compareTo(dex2);
 		}
@@ -307,7 +304,7 @@ public class BattleHandler extends ReactionsHandler {
 				continue;
 			}
 			BattleAction action = new BattleAction();
-			action.setExecutingHostile(hostile);
+			action.setExecuting(hostile);
 
 			// select skill
 			List<Skill> executableSkills = new ArrayList<>();
@@ -351,7 +348,8 @@ public class BattleHandler extends ReactionsHandler {
 					}
 					availableTargets.add(player);
 				}
-				action.setPlayerTarget(availableTargets.get(randomGenerator.nextInt(availableTargets.size())));
+				//TODO aggro table!
+				action.setTarget(availableTargets.get(randomGenerator.nextInt(availableTargets.size())));
 				break;
 			case FRIEND:
 				List<BattleNPC> availableFriends = new ArrayList<>();
@@ -362,10 +360,10 @@ public class BattleHandler extends ReactionsHandler {
 					}
 					availableFriends.add(h);
 				}
-				action.setHostileTarget(availableFriends.get(randomGenerator.nextInt(availableFriends.size())));
+				action.setTarget(availableFriends.get(randomGenerator.nextInt(availableFriends.size())));
 				break;
 			case OWN:
-				action.setHostileTarget(hostile);
+				action.setTarget(hostile);
 			}
 			battle.getRounds().get(battle.getCurrentRound()).add(action);
 		}

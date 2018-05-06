@@ -124,15 +124,15 @@ public class BattleUtils {
 			builder.append("No actions have been taken yet.");
 		} else {
 			List<BattleAction> round = battle.getRounds().get(battle.getCurrentRound());
-			if(round == null) {
-				//redisplay previous one
-				round = battle.getRounds().get(battle.getCurrentRound() -1);
+			if (round == null) {
+				// redisplay previous one
+				round = battle.getRounds().get(battle.getCurrentRound() - 1);
 			}
 			for (BattleAction action : round) {
-				if (action.getExecutingPlayer() != null) {
-					builder.append(action.getExecutingPlayer().getName() + " -> ");
+				if (action.getExecuting() instanceof BattlePlayer) {
+					builder.append(((BattlePlayer) action.getExecuting()).getName() + " -> ");
 				} else {
-					builder.append(action.getExecutingHostile().getBase().getName() + " -> ");
+					builder.append(((BattleNPC) action.getExecuting()).getBase().getName() + " -> ");
 				}
 
 				if (action.isPass()) {
@@ -142,14 +142,14 @@ public class BattleUtils {
 
 				action.executeAction();
 
-				builder.append(action.getUsedSkill().getName() + " -> ");
+				builder.append(action.getUsedSkill().getName() + " for " + action.getActionAmount() + " -> ");
 
 				if (action.isArea()) {
 					builder.append("Area attack");
-				} else if (action.getHostileTarget() != null) {
-					builder.append(action.getHostileTarget().getBase().getName());
-				} else if (action.getPlayerTarget() != null) {
-					builder.append(action.getPlayerTarget().getName());
+				} else if (action.getTarget() instanceof BattlePlayer) {
+					builder.append(((BattlePlayer) action.getTarget()).getName());
+				} else if (action.getTarget() instanceof BattleNPC) {
+					builder.append(((BattleNPC) action.getTarget()).getBase().getName());
 				} else {
 					builder.append("65wat.jpg");
 				}
