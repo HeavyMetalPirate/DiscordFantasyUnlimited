@@ -13,7 +13,7 @@ public class BattlePlayer extends BattleParticipant {
 	private Long characterId;
 
 	public BattlePlayer() {
-		// No op
+		super();
 	}
 
 	public BattlePlayer(PlayerCharacter base) {

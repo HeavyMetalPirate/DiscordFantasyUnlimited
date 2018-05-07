@@ -71,16 +71,24 @@ public class BattleHandler extends ReactionsHandler {
 
 		BattlePlayerInformation battlePlayerInfo = FantasyUnlimited.getInstance().getBattles()
 				.get(playerCharacter.getId());
-		BattleInformation battleInfo = fetchBattleInformation(battlePlayerInfo.getCharacter());;
+		BattleInformation battleInfo = fetchBattleInformation(battlePlayerInfo.getCharacter());
+
 		if (battleInfo.isFinished()) {
 			return;
 		}
+
 		ReactionEmoji usedEmoji = event.getReaction().getEmoji();
 
 		// Clear user reactions
 		RequestBuffer.request(() -> {
 			event.getMessage().removeReaction(event.getUser(), event.getReaction());
 		});
+
+		BattlePlayer character = battlePlayerInfo.getCharacter();
+
+		if (character.isDefeated()) {
+			return;
+		}
 
 		boolean enemy = (boolean) msgInfo.getVars().get("enemy");
 
@@ -124,7 +132,8 @@ public class BattleHandler extends ReactionsHandler {
 		if (battlePlayerInfo == null) {
 			throw new IllegalStateException("Battle Information lost for character " + playerCharacter.getName());
 		}
-		BattleInformation battleInfo = fetchBattleInformation(battlePlayerInfo.getCharacter());;
+		BattleInformation battleInfo = fetchBattleInformation(battlePlayerInfo.getCharacter());
+		;
 		if (battleInfo.isFinished()) {
 			return;
 		}
@@ -154,6 +163,14 @@ public class BattleHandler extends ReactionsHandler {
 			return;
 		}
 
+		int totalcost = battlePlayerInfo.getSkillUsed().getCostOfExecution();
+		totalcost += battlePlayerInfo.getSkillUsed()
+				.getHighestAvailable(character.getLevel(), character.getAttributes()).getCostModifier();
+
+		if(totalcost > character.getCurrentAtkResource()) {
+			return;
+		}
+		
 		if (battlePlayerInfo.getSkillUsed().getTargetType() == null
 				&& (battlePlayerInfo.getSkillUsed().getType() == SkillType.OFFENSIVE
 						|| battlePlayerInfo.getSkillUsed().getType() == SkillType.DEBUFF)) {
@@ -233,11 +250,11 @@ public class BattleHandler extends ReactionsHandler {
 		msgInfo.getStatus().setName(Name.BATTLE_TARGETSELECTION);
 
 	}
-	
+
 	private BattleInformation fetchBattleInformation(BattlePlayer character) {
 		return FantasyUnlimited.getInstance().getBattleMap().get(character.getCharacterId());
 	}
-	
+
 	private void queueAction(BattlePlayerInformation playerInfo) {
 		Skill usedSkill = playerInfo.getSkillUsed();
 
@@ -255,6 +272,8 @@ public class BattleHandler extends ReactionsHandler {
 		}
 
 		BattleInformation battle = fetchBattleInformation(playerInfo.getCharacter());
+		// add the player info anew to avoid stale message data!
+		battle.getPlayers().put(playerInfo.getCharacter().getCharacterId(), playerInfo);
 		if (battle.getRounds().get(battle.getCurrentRound()) == null) {
 			battle.getRounds().put(battle.getCurrentRound(), new ArrayList<>());
 		}
@@ -286,7 +305,7 @@ public class BattleHandler extends ReactionsHandler {
 
 		embedBuilder = BattleUtils.createBattleOutputEmbeds(battle);
 		FantasyUnlimited.getInstance().editMessage(battle.getMessage(), embedBuilder.build());
-		
+
 		battle.setCurrentRound(battle.getCurrentRound() + 1);
 		BattleUtils.prepareNextroundActionbars(battle);
 
@@ -348,7 +367,7 @@ public class BattleHandler extends ReactionsHandler {
 					}
 					availableTargets.add(player);
 				}
-				//TODO aggro table!
+				// TODO aggro table!
 				action.setTarget(availableTargets.get(randomGenerator.nextInt(availableTargets.size())));
 				break;
 			case FRIEND:
@@ -368,7 +387,5 @@ public class BattleHandler extends ReactionsHandler {
 			battle.getRounds().get(battle.getCurrentRound()).add(action);
 		}
 	}
-
-	
 
 }

@@ -26,6 +26,8 @@ public abstract class BattleParticipant implements Serializable {
 
 	protected Attributes attributes;
 
+	public BattleParticipant() {}
+	
 	public void applyDamage(int damage) {
 		this.currentHealth -= damage;
 		if(this.currentHealth < 0) {
@@ -56,7 +58,7 @@ public abstract class BattleParticipant implements Serializable {
 	}
 	public void generateRage(int damage) {
 		//lmao formula TODO I totally made this up
-		this.currentAtkResource += damage * 2 / level;
+		this.currentAtkResource += 20;
 		if(this.currentAtkResource > this.maxAtkResource) {
 			this.currentAtkResource = this.maxAtkResource;
 		}

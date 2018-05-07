@@ -19,7 +19,7 @@ public class BattleNPC extends BattleParticipant {
 	private Map<BattlePlayer, Integer> aggroMap = new HashMap<>();
 
 	public BattleNPC() {
-
+		super();
 	}
 
 	public BattleNPC(HostileNPC base) {

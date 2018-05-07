@@ -61,7 +61,7 @@ public class BattleUtils {
 						+ character.getCharClass().getEnergyType().toString() + "\n");
 				skillIcons.put(skill.getIconName(), Long.parseLong(skill.getIconId()));
 			}
-
+			
 			IMessage actionbar = FantasyUnlimited.getInstance().editMessage(playerInfo.getMessage(),
 					"<@" + character.getDiscordId() + "> - Action Bar\n" + skillBuilder.toString());
 			if (skillIcons.size() == 0) {
@@ -136,12 +136,16 @@ public class BattleUtils {
 				}
 
 				if (action.isPass()) {
-					builder.append("Passed");
+					builder.append("Passed\n");
 					continue;
 				}
-
+				if (action.getExecuting().isDefeated()) {
+					builder.append("Died before they could make a move!\n");
+					continue;
+				}
+				
 				action.executeAction();
-
+				
 				builder.append(action.getUsedSkill().getName() + " for " + action.getActionAmount() + " -> ");
 
 				if (action.isArea()) {

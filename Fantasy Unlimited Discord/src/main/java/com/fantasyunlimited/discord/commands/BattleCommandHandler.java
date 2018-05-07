@@ -160,7 +160,7 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 
 			IMessage message = FantasyUnlimited.getInstance().sendMessage(t.getChannel(), embedBuilder.build());
 			information.setMessage(message);
-
+			
 			for (BattlePlayer character : playerList) {
 				int level = character.getLevel();
 				Attributes attributes = character.getAttributes();
@@ -207,6 +207,7 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 				BattlePlayerInformation battlePlayerInfo = information.getPlayers().get(character.getCharacterId());
 				battlePlayerInfo.setMessage(actionbar);
 				FantasyUnlimited.getInstance().getBattles().put(character.getCharacterId(), battlePlayerInfo);
+				FantasyUnlimited.getInstance().getBattleMap().put(character.getCharacterId(), information);
 			}
 		}
 

@@ -13,7 +13,8 @@ Might add REST capabilities or even a full homepage later on, depending on how t
 	- Implement area effects
 	- Persist value changes to health/atkres(?)
 	- Hand out XP and loot
-	- (!) fix that weird bug with message coming back null at BattleUtils.java:65
+	- Implement "waiting for others" for playing in a party
+	- (!) fix that weird bug with message coming back null at BattleUtils.java:65 - Fixed: the cache sometimes had stale data
 [06-05-2018 22:15:01]-[Event Dispatcher Handler]-[]-[ERROR]-[com.fantasyunlimited.discord.FantasyUnlimited.sendExceptionMessage(FantasyUnlimited.java:160)]: Error occured:                                                                                                                                                                                          
 java.lang.NullPointerException
 	at com.fantasyunlimited.discord.MessageInformation.setMessage(MessageInformation.java:57)
@@ -32,5 +33,5 @@ java.lang.NullPointerException
 	at java.lang.Thread.run(Thread.java:745)
 	
 - Serializer
-	- Observe Shutdown behavior more closely
+	- Observe Shutdown behavior more closely - Fixed: there was an issue with the bytebuffer
 	
