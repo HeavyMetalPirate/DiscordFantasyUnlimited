@@ -57,13 +57,20 @@ public class BattleNPC extends BattleParticipant {
 		this.maxHealth = endurance * 10 + level * 15;
 		
 		if (charClass.getEnergyType() == EnergyType.MANA) {
-			this.maxAtkResource = wisdom * 15 + level * 20;
+			this.maxAtkResource = intelligence * 15 + level * 20;
 		} else {
 			this.maxAtkResource = 100;
 		}
 		
 		this.currentHealth = maxHealth;
-		this.currentAtkResource = maxAtkResource;
+		if(charClass.getEnergyType() == EnergyType.RAGE) {
+			this.currentAtkResource = 0;
+		}
+		else {
+			this.currentAtkResource = maxAtkResource;
+		}
+		
+		calculateRegeneration();
 	}
 
 	public HostileNPC getBase() {

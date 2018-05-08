@@ -8,6 +8,7 @@
 
 	<properties>
 		<java.version>1.8</java.version>
+		<tomcat.version>8.5.31</tomcat.version>
 		<log4j.version>1.2.17</log4j.version>
 		<cdi.api.version>1.2</cdi.api.version>
 		<weld.servlet.version>2.3.3.Final</weld.servlet.version>
@@ -42,7 +43,7 @@
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-servlet-api</artifactId>
-			<version>8.0.36</version>
+			<version>${tomcat.version}</version>
 			<scope>provided</scope>
 		</dependency>
 

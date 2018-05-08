@@ -174,6 +174,8 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 				for (Skill skill : skills) {
 
 					SkillRank rank = skill.getHighestAvailable(level, attributes);
+					//put the icon to the bar regardless, to keep it in order
+					skillIcons.put(skill.getIconName(), Long.parseLong(skill.getIconId()));
 					int skillCost = skill.getCostOfExecution();
 					skillCost += rank.getCostModifier();
 					if (character.getCurrentAtkResource() < skillCost) {
@@ -183,7 +185,11 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 					skillBuilder.append("<:" + skill.getIconName() + ":" + skill.getIconId() + "> " + skill.getName()
 							+ " (Rank " + rank.getRank() + ") - " + skillCost + " "
 							+ character.getCharClass().getEnergyType().toString() + "\n");
-					skillIcons.put(skill.getIconName(), Long.parseLong(skill.getIconId()));
+					
+					if(skillIcons.size() == 5) {
+						//max 5 items on the actionbar
+						break;
+					}
 				}
 
 				IMessage actionbar = FantasyUnlimited.getInstance().sendMessage(t.getChannel(),

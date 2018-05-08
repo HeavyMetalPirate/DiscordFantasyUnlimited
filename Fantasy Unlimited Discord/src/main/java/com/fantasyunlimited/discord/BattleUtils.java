@@ -50,18 +50,25 @@ public class BattleUtils {
 			for (Skill skill : skills) {
 
 				SkillRank rank = skill.getHighestAvailable(level, attributes);
+				//put the icon to the bar regardless
+				skillIcons.put(skill.getIconName(), Long.parseLong(skill.getIconId()));
+				
 				int skillCost = skill.getCostOfExecution();
 				skillCost += rank.getCostModifier();
 				if (character.getCurrentAtkResource() < skillCost) {
 					continue;
 				}
 
-				skillBuilder.append("<:" + skill.getIconName() + ":" + skill.getIconId() + "> " + skill.getName()
+				skillBuilder.append("<:" + skill.getIconName() + ":" + skill.getIconId() + "> `" + skill.getName()
 						+ " (Rank " + rank.getRank() + ") - " + skillCost + " "
-						+ character.getCharClass().getEnergyType().toString() + "\n");
-				skillIcons.put(skill.getIconName(), Long.parseLong(skill.getIconId()));
+						+ character.getCharClass().getEnergyType().toString() + "`\n");
+				
+				if(skillIcons.size() == 5) {
+					//max 5 items on the actionbar
+					break;
+				}
 			}
-			
+
 			IMessage actionbar = FantasyUnlimited.getInstance().editMessage(playerInfo.getMessage(),
 					"<@" + character.getDiscordId() + "> - Action Bar\n" + skillBuilder.toString());
 			if (skillIcons.size() == 0) {
@@ -90,28 +97,73 @@ public class BattleUtils {
 		StringBuilder battlelog = createBattleLog(information);
 
 		StringBuilder players = new StringBuilder();
+		players.append("```md\n");
 		for (Long id : information.getPlayers().keySet()) {
 			BattlePlayer character = information.getPlayers().get(id).getCharacter();
 
-			players.append("```md\n");
-			players.append("[" + character.getLevel() + "][" + character.getName() + "]\n");
-			players.append("<    Health   : " + character.getCurrentHealth() + "/" + character.getMaxHealth() + ">\n");
-			players.append("#    " + character.getCharClass().getEnergyType().toString() + ": "
-					+ character.getCurrentAtkResource() + "/" + character.getMaxAtkResource() + "#\n");
-			players.append("```");
+			String level = MessageFormatUtils.fillStringPrefix("" + character.getLevel(), 3);
+			String characterName = character.getName();
+			if (characterName.length() > 20) {
+				characterName = characterName.substring(0, 17) + "...";
+			}
+			String leveldisplay = "[" + level + "][" + MessageFormatUtils.fillStringSuffix(characterName, 20) + "]";
+
+			String healthdisplay = "<" + MessageFormatUtils.fillStringPrefix("Health", 11);
+			healthdisplay += " : ";
+			healthdisplay += MessageFormatUtils.fillStringPrefix("" + character.getCurrentHealth(), 5);
+			healthdisplay += "/" + character.getMaxHealth();
+			healthdisplay = MessageFormatUtils.fillStringSuffix(healthdisplay, 26);
+			healthdisplay += ">";
+
+			String energytype = character.getCharClass().getEnergyType().toString();
+			String resourcedisplay = "#" + MessageFormatUtils.fillStringPrefix(energytype, 11);
+			resourcedisplay += " : ";
+			resourcedisplay += MessageFormatUtils.fillStringPrefix("" + character.getCurrentAtkResource(), 5);
+			resourcedisplay += "/" + character.getMaxAtkResource();
+			resourcedisplay = MessageFormatUtils.fillStringSuffix(resourcedisplay, 26);
+			resourcedisplay += "#";
+
+			players.append(leveldisplay + "\n");
+			players.append(healthdisplay + "\n");
+			players.append(resourcedisplay + "\n");
+
 		}
+		players.append("```\n");
 
 		StringBuilder enemies = new StringBuilder();
 		enemies.append("```md\n");
 		for (int index : information.getHostiles().keySet()) {
 			BattleNPC npc = information.getHostiles().get(index);
-			enemies.append("(" + index + ") [" + npc.getLevel() + "][" + npc.getBase().getName() + "]\n");
-			enemies.append("<    Health   : " + npc.getCurrentHealth() + "/" + npc.getMaxHealth() + ">\n");
-			enemies.append("#    " + npc.getCharClass().getEnergyType().toString() + ": " + npc.getCurrentAtkResource()
-					+ "/" + npc.getMaxAtkResource() + "#\n");
-		}
-		enemies.append("```");
 
+			String level = MessageFormatUtils.fillStringPrefix("" + npc.getLevel(), 3);
+			String characterName = npc.getBase().getName();
+			if (characterName.length() > 20) {
+				characterName = characterName.substring(0, 17) + "...";
+			}
+			String leveldisplay = "[" + level + "][" + MessageFormatUtils.fillStringSuffix(characterName, 20) + "]";
+
+			String healthdisplay = "<" + MessageFormatUtils.fillStringPrefix("Health", 11);
+			healthdisplay += " : ";
+			healthdisplay += MessageFormatUtils.fillStringPrefix("" + npc.getCurrentHealth(), 5);
+			healthdisplay += "/" + npc.getMaxHealth();
+			healthdisplay = MessageFormatUtils.fillStringSuffix(healthdisplay, 26);
+			healthdisplay += ">";
+
+			String energytype = npc.getCharClass().getEnergyType().toString();
+			String resourcedisplay = "#" + MessageFormatUtils.fillStringPrefix(energytype, 11);
+			resourcedisplay += " : ";
+			resourcedisplay += MessageFormatUtils.fillStringPrefix("" + npc.getCurrentAtkResource(), 5);
+			resourcedisplay += "/" + npc.getMaxAtkResource();
+			resourcedisplay = MessageFormatUtils.fillStringSuffix(resourcedisplay, 26);
+			resourcedisplay += "#";
+
+			enemies.append(leveldisplay + "\n");
+			enemies.append(healthdisplay + "\n");
+			enemies.append(resourcedisplay + "\n");
+
+		}
+		enemies.append("```\n");
+		
 		return new SerializableEmbedBuilder().withTitle("Battle").appendField("Players (1)", players.toString(), true)
 				.appendField("Enemies (" + information.getHostiles().size() + ")", enemies.toString(), true)
 				.appendField("Battle Log - Round " + information.getCurrentRound(), battlelog.toString(), false);
@@ -143,9 +195,9 @@ public class BattleUtils {
 					builder.append("Died before they could make a move!\n");
 					continue;
 				}
-				
+
 				action.executeAction();
-				
+
 				builder.append(action.getUsedSkill().getName() + " for " + action.getActionAmount() + " -> ");
 
 				if (action.isArea()) {

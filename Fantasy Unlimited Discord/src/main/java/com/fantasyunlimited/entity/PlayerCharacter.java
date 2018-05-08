@@ -144,7 +144,7 @@ public class PlayerCharacter implements Serializable {
 	public int getMaxAtkResource() {
 		// TODO equipment bonus
 		if (FantasyUnlimited.getInstance().getClassBag().getItem(classId).getEnergyType() == EnergyType.MANA) {
-			return attributes.getWisdom() * 15 + currentLevel * 20;
+			return attributes.getIntelligence() * 15 + currentLevel * 20;
 		} else {
 			return 100;
 		}

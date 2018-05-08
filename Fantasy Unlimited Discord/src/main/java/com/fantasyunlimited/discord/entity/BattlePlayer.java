@@ -1,5 +1,6 @@
 package com.fantasyunlimited.discord.entity;
 
+import com.fantasyunlimited.discord.xml.CharacterClass.EnergyType;
 import com.fantasyunlimited.entity.PlayerCharacter;
 
 public class BattlePlayer extends BattleParticipant {
@@ -30,7 +31,16 @@ public class BattlePlayer extends BattleParticipant {
 		this.maxHealth = base.getMaxHealth();
 		this.maxAtkResource = base.getMaxAtkResource();
 		this.currentHealth = base.getCurrentHealth();
-		this.currentAtkResource = base.getCurrentAtkResource();
+		
+		if(getCharClass().getEnergyType() == EnergyType.RAGE) {
+			this.currentAtkResource = 0;
+		}
+		else {
+			this.currentAtkResource = maxAtkResource;
+		}
+		//this.currentAtkResource = base.getCurrentAtkResource();
+		
+		calculateRegeneration();
 	}
 
 	public String getName() {

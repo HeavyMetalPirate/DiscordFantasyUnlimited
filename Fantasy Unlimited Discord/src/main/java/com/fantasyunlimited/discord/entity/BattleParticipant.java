@@ -24,53 +24,86 @@ public abstract class BattleParticipant implements Serializable {
 	protected int currentAtkResource;
 	protected int maxAtkResource;
 
+	protected float regenPercentage;
+
 	protected Attributes attributes;
 
-	public BattleParticipant() {}
-	
+	public BattleParticipant() {
+	}
+
+	protected void calculateRegeneration() {
+		// Level bonus (y=(5*2^-x/15) * 2)
+		// Y = X ^(1/4) + level bonus
+
+		float levelbonus = (float) (5 * Math.pow(2, (level / 15)) * 2);
+		float regen = (float) Math.pow(attributes.getWisdom(), 0.25);
+		regenPercentage = regen + levelbonus;
+	}
+
 	public void applyDamage(int damage) {
 		this.currentHealth -= damage;
-		if(this.currentHealth < 0) {
+		if (this.currentHealth < 0) {
 			this.currentHealth = 0;
 		}
 	}
-	
+
 	public void applyHeal(int amount) {
 		this.currentHealth += amount;
-		if(this.currentHealth > this.maxHealth) {
+		if (this.currentHealth > this.maxHealth) {
 			this.currentHealth = this.maxHealth;
 		}
 	}
-	
+
 	public void consumeAtkResource(int amount) {
 		this.currentAtkResource -= amount;
-		if(this.currentAtkResource < 0) {
+		if (this.currentAtkResource < 0) {
 			this.currentAtkResource = 0;
 		}
 	}
-	
-	public void regenAtkResource() {
-		//TODO based off wisdom
-		this.currentAtkResource += 20;
-		if(this.currentAtkResource > this.maxAtkResource) {
+
+	public void regenAtkResource() {		
+		switch(getCharClass().getEnergyType()) {
+		case FOCUS:
+			//TODO equipment bonus
+			this.currentAtkResource += 20;
+			break;
+		case MANA:
+			double regenamount = regenPercentage * getMaxAtkResource() / 100;
+			this.currentAtkResource += (int)Math.ceil(regenamount);
+			break;
+		case RAGE:
+			//should not use this method
+			throw new UnsupportedOperationException("Rage users should use generateRage(int) instead!");
+		}
+		
+		if (this.currentAtkResource > this.maxAtkResource) {
 			this.currentAtkResource = this.maxAtkResource;
 		}
 	}
+
 	public void generateRage(int damage) {
-		//lmao formula TODO I totally made this up
+		switch(getCharClass().getEnergyType()) {
+		case FOCUS:
+		case MANA:
+			throw new UnsupportedOperationException("Mana/Focus users should use regenAtkResource() instead!");
+		case RAGE:
+			break;
+		}
+		// lmao formula TODO I totally made this up
 		this.currentAtkResource += 20;
-		if(this.currentAtkResource > this.maxAtkResource) {
+		if (this.currentAtkResource > this.maxAtkResource) {
 			this.currentAtkResource = this.maxAtkResource;
 		}
 	}
-	
+
 	public Race getRace() {
 		return FantasyUnlimited.getInstance().getRaceBag().getItem(raceId);
 	}
+
 	public CharacterClass getCharClass() {
 		return FantasyUnlimited.getInstance().getClassBag().getItem(charClassId);
 	}
-	
+
 	public int getLevel() {
 		return level;
 	}
@@ -121,5 +154,9 @@ public abstract class BattleParticipant implements Serializable {
 
 	public void setAttributes(Attributes attributes) {
 		this.attributes = attributes;
+	}
+
+	public float getRegenPercentage() {
+		return regenPercentage;
 	}
 }
