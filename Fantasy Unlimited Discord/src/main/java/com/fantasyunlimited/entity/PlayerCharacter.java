@@ -13,8 +13,11 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+import com.fantasyunlimited.discord.FantasyUnlimited;
+import com.fantasyunlimited.discord.xml.CharacterClass.EnergyType;
+
 @Entity
-public class PlayerCharacter implements Serializable  {
+public class PlayerCharacter implements Serializable {
 	/**
 	 * 
 	 */
@@ -47,10 +50,10 @@ public class PlayerCharacter implements Serializable  {
 
 	@Column
 	private int currentXp;
-	
+
 	@Column
 	private int currentHealth;
-	
+
 	@Column
 	private int currentAtkResource;
 
@@ -60,7 +63,7 @@ public class PlayerCharacter implements Serializable  {
 	public PlayerCharacter() {
 		attributes = new Attributes();
 	}
-	
+
 	public long getId() {
 		return id;
 	}
@@ -132,15 +135,19 @@ public class PlayerCharacter implements Serializable  {
 	public CharacterEquipment getEquipment() {
 		return equipment;
 	}
-	
+
 	public int getMaxHealth() {
-		//TODO equipment bonus
+		// TODO equipment bonus
 		return attributes.getEndurance() * 10 + currentLevel * 15;
 	}
+
 	public int getMaxAtkResource() {
-		//TODO class marker to return a fixated value for rage / focus
-		//TODO equipment bonus
-		return attributes.getWisdom() * 15 + currentLevel * 20;
+		// TODO equipment bonus
+		if (FantasyUnlimited.getInstance().getClassBag().getItem(classId).getEnergyType() == EnergyType.MANA) {
+			return attributes.getWisdom() * 15 + currentLevel * 20;
+		} else {
+			return 100;
+		}
 	}
 
 	@Override
@@ -164,5 +171,5 @@ public class PlayerCharacter implements Serializable  {
 	public void setCurrentAtkResource(int currentAtkResource) {
 		this.currentAtkResource = currentAtkResource;
 	}
-	
+
 }

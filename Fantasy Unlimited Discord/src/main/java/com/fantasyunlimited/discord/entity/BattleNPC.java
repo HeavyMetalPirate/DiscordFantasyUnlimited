@@ -6,6 +6,7 @@ import java.util.Map;
 import com.fantasyunlimited.discord.FantasyUnlimited;
 import com.fantasyunlimited.discord.xml.CharacterClass;
 import com.fantasyunlimited.discord.xml.HostileNPC;
+import com.fantasyunlimited.discord.xml.CharacterClass.EnergyType;
 import com.fantasyunlimited.entity.Attributes;
 
 public class BattleNPC extends BattleParticipant {
@@ -53,9 +54,14 @@ public class BattleNPC extends BattleParticipant {
 		attributes.setEndurance(endurance);
 
 		// TODO equipment bonus
-		// TODO max atk resource tied to maximum if rage/focus class
 		this.maxHealth = endurance * 10 + level * 15;
-		this.maxAtkResource = wisdom * 15 + level * 20;
+		
+		if (charClass.getEnergyType() == EnergyType.MANA) {
+			this.maxAtkResource = wisdom * 15 + level * 20;
+		} else {
+			this.maxAtkResource = 100;
+		}
+		
 		this.currentHealth = maxHealth;
 		this.currentAtkResource = maxAtkResource;
 	}
