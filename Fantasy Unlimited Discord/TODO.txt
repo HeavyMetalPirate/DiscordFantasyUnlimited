@@ -12,6 +12,8 @@ Might add REST capabilities or even a full homepage later on, depending on how t
 	- Think about a way to apply buffs/debuffs
 	- Implement area effects
 	- Persist value changes to health/atkres(?)
+	- Flee button !
+	- Put data to cache after each action(?) (at least after each round has been calculated because else the cache will have stale data after restarts, duh)
 	- Hand out XP and loot
 	- Implement "waiting for others" for playing in a party
 	- (!) fix that weird bug with message coming back null at BattleUtils.java:65 - Fixed: the cache sometimes had stale data

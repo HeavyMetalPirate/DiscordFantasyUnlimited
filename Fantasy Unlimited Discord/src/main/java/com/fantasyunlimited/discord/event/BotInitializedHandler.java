@@ -34,8 +34,5 @@ public class BotInitializedHandler implements IListener<ReadyEvent>{
 		logger.debug("Initialized: " + bot.getClassBag() .getItems().size() + " Classes");
 		logger.debug("Initialized: " + bot.getLocationsBag() .getItems().size() + " Locations");
 		logger.debug("Initialized: " + bot.getHostileNPCBag() .getItems().size() + " Hostile NPCs");
-		
-		
 	}
-
 }

@@ -25,19 +25,23 @@ public abstract class BattleParticipant implements Serializable {
 	protected int maxAtkResource;
 
 	protected float regenPercentage;
-
+	protected float regenLevelBonus;
+	
 	protected Attributes attributes;
+	protected BattleEquipment equipment;
 
 	public BattleParticipant() {
 	}
 
-	protected void calculateRegeneration() {
+	protected void calculateLevelBonus() {
 		// Level bonus (y=(5*2^-x/15) * 2)
+		regenLevelBonus = (float) (5 * Math.pow(2, (level / 15)) * 2);
+	}
+	protected void calculateRegeneration() {
 		// Y = X ^(1/4) + level bonus
-
-		float levelbonus = (float) (5 * Math.pow(2, (level / 15)) * 2);
+		calculateLevelBonus();
 		float regen = (float) Math.pow(attributes.getWisdom(), 0.25);
-		regenPercentage = regen + levelbonus;
+		regenPercentage = regen + regenLevelBonus;
 	}
 
 	public void applyDamage(int damage) {
@@ -89,8 +93,9 @@ public abstract class BattleParticipant implements Serializable {
 		case RAGE:
 			break;
 		}
-		// lmao formula TODO I totally made this up
-		this.currentAtkResource += 20;
+		
+		double regen = damage / level + regenLevelBonus;
+		this.currentAtkResource += Math.ceil(regen);
 		if (this.currentAtkResource > this.maxAtkResource) {
 			this.currentAtkResource = this.maxAtkResource;
 		}
@@ -154,6 +159,14 @@ public abstract class BattleParticipant implements Serializable {
 
 	public void setAttributes(Attributes attributes) {
 		this.attributes = attributes;
+	}
+	
+	public BattleEquipment getEquipment() {
+		return equipment;
+	}
+
+	public void setEquipment(BattleEquipment equipment) {
+		this.equipment = equipment;
 	}
 
 	public float getRegenPercentage() {

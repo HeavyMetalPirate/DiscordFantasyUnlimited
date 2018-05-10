@@ -3,12 +3,17 @@ package com.fantasyunlimited.discord;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
+import com.fantasyunlimited.discord.entity.BattleNPC;
 import com.fantasyunlimited.discord.entity.BattleParticipant;
 import com.fantasyunlimited.discord.xml.CharacterClass.EnergyType;
 import com.fantasyunlimited.discord.xml.Skill;
 import com.fantasyunlimited.discord.xml.Skill.SkillType;
 import com.fantasyunlimited.discord.xml.Skill.TargetType;
+import com.fantasyunlimited.discord.xml.SkillRank;
+import com.fantasyunlimited.discord.xml.Weapon;
 
 public class BattleAction implements Serializable {
 	/**
@@ -40,10 +45,38 @@ public class BattleAction implements Serializable {
 			return;
 		}
 
-		// TODO
-		actionAmount = usedSkill.getMaxDamage();
-		actionAmount += usedSkill.getHighestAvailable(executing.getLevel(), executing.getAttributes())
-				.getDamageModifier();
+		// plus one to get to the actual max
+		SkillRank rank = usedSkill.getHighestAvailable(executing.getLevel(), executing.getAttributes());
+		actionAmount = ThreadLocalRandom.current().nextInt(usedSkill.getMinDamage(), usedSkill.getMaxDamage() + 1);
+		actionAmount += rank.getDamageModifier();
+
+		String weaponId = null;
+		if (usedSkill.getWeaponModifier() != null) {
+			switch (usedSkill.getWeaponModifier()) {
+			case WEAPON_MAINHAND:
+				weaponId = executing.getEquipment().getMainhand();
+				if (weaponId == null) {
+					break;
+				}
+				break;
+			case WEAPON_OFFHAND:
+				weaponId = executing.getEquipment().getMainhand();
+
+			case NONE:
+			default:
+				weaponId = null;
+				break;
+			}
+		}
+
+		if (weaponId != null) {
+			Weapon weapon = FantasyUnlimited.getInstance().getWeaponBag().getItem(weaponId);
+			actionAmount += ThreadLocalRandom.current().nextInt(weapon.getMinDamage(), weapon.getMaxDamage() + 1);
+		}
+
+		// TODO stats multiplier
+		// TODO def reducer
+		// TODO level multiplier
 
 		if (usedSkill.getTargetType() == null
 				&& (usedSkill.getType() == SkillType.OFFENSIVE || usedSkill.getType() == SkillType.DEBUFF)) {
@@ -66,9 +99,8 @@ public class BattleAction implements Serializable {
 			break;
 		}
 		int totalcost = usedSkill.getCostOfExecution();
-		totalcost += usedSkill.getHighestAvailable(executing.getLevel(), executing.getAttributes())
-				.getCostModifier();
-		
+		totalcost += rank.getCostModifier();
+
 		if (executing.getCharClass().getEnergyType() == EnergyType.RAGE) {
 			executing.consumeAtkResource(totalcost);
 			executing.generateRage(actionAmount);

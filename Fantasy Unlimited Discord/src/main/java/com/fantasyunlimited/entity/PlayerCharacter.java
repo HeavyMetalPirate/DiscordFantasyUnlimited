@@ -1,9 +1,13 @@
 package com.fantasyunlimited.entity;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -56,12 +60,17 @@ public class PlayerCharacter implements Serializable {
 
 	@Column
 	private int currentAtkResource;
+	
+	@ElementCollection
+	@CollectionTable(name = "Inventories")
+	private Map<String, Integer> inventory;
 
 	@Embedded
 	private Attributes attributes;
 
 	public PlayerCharacter() {
 		attributes = new Attributes();
+		setInventory(new HashMap<String, Integer>());
 	}
 
 	public long getId() {
@@ -170,6 +179,14 @@ public class PlayerCharacter implements Serializable {
 
 	public void setCurrentAtkResource(int currentAtkResource) {
 		this.currentAtkResource = currentAtkResource;
+	}
+
+	public Map<String, Integer> getInventory() {
+		return inventory;
+	}
+
+	public void setInventory(Map<String, Integer> inventory) {
+		this.inventory = inventory;
 	}
 
 }

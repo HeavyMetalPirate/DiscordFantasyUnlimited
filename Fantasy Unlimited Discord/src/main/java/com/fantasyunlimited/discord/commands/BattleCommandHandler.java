@@ -9,6 +9,7 @@ import java.util.Random;
 import java.util.function.Consumer;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fantasyunlimited.discord.BattleInformation;
 import com.fantasyunlimited.discord.BattlePlayerInformation;
@@ -27,6 +28,7 @@ import com.fantasyunlimited.discord.xml.SkillRank;
 import com.fantasyunlimited.entity.Attributes;
 import com.fantasyunlimited.entity.DiscordPlayer;
 import com.fantasyunlimited.entity.PlayerCharacter;
+import com.fantasyunlimited.logic.DiscordPlayerLogic;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IMessage;
@@ -34,7 +36,10 @@ import sx.blah.discord.handle.obj.IMessage;
 public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 	public static final String CMD = "battle";
 	protected static final Logger logger = Logger.getLogger(BattleCommandHandler.class);
-
+	
+	@Autowired
+	private DiscordPlayerLogic playerLogic;
+	
 	public BattleCommandHandler(Properties properties) {
 		super(properties, CMD);
 	}
@@ -43,7 +48,7 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 	public void handle(MessageReceivedEvent event) {
 		DiscordPlayer player = FantasyUnlimited.getInstance().getRegisteredUserCache()
 				.get(event.getAuthor().getLongID());
-		PlayerCharacter character = player.getCurrentCharacter();
+		PlayerCharacter character = playerLogic.getCharacter(player.getCurrentCharacter().getName());
 
 		if (character == null) {
 			FantasyUnlimited.getInstance().sendMessage(event.getChannel(),
@@ -69,7 +74,6 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 		if (option.isEmpty() || option.equals(HandleInit.option)) {
 			new HandleInit(location, character).accept(event);
 		}
-
 	}
 
 	private class HandleInit implements OptionDescription, Consumer<MessageReceivedEvent> {
@@ -182,9 +186,9 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 						continue;
 					}
 
-					skillBuilder.append("<:" + skill.getIconName() + ":" + skill.getIconId() + "> " + skill.getName()
+					skillBuilder.append("<:" + skill.getIconName() + ":" + skill.getIconId() + "> `" + skill.getName()
 							+ " (Rank " + rank.getRank() + ") - " + skillCost + " "
-							+ character.getCharClass().getEnergyType().toString() + "\n");
+							+ character.getCharClass().getEnergyType().toString() + "`\n");
 					
 					if(skillIcons.size() == 5) {
 						//max 5 items on the actionbar

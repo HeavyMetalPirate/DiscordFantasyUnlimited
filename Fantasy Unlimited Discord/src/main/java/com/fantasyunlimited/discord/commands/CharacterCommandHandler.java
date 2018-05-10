@@ -28,7 +28,6 @@ import com.fantasyunlimited.entity.PlayerCharacter;
 import com.fantasyunlimited.logic.DiscordPlayerLogic;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.util.EmbedBuilder;
 
 public class CharacterCommandHandler extends CommandRequiresAuthenticationHandler {
 
@@ -100,7 +99,7 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 			if (stripped.trim().isEmpty()) {
 				DiscordPlayer player = FantasyUnlimited.getInstance().getRegisteredUserCache()
 						.get(t.getAuthor().getLongID());
-				character = player.getCurrentCharacter();
+				character = playerLogic.getCharacter(player.getCurrentCharacter().getName());
 			} else {
 				character = playerLogic.getCharacter(stripped);
 			}
@@ -141,7 +140,8 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 			builder = new StringBuilder();
 			builder.append("```\n");
 			builder.append("Health: " + character.getCurrentHealth() + "/" + character.getMaxHealth() + "\n");
-			builder.append("ATKRES(!): " + character.getCurrentAtkResource() + "/" + character.getMaxAtkResource() + "\n");
+			builder.append(
+					"ATKRES(!): " + character.getCurrentAtkResource() + "/" + character.getMaxAtkResource() + "\n");
 			builder.append("STR:\t" + character.getAttributes().getStrength() + "\t");
 			builder.append("DEX:\t" + character.getAttributes().getDexterity() + "\n");
 			builder.append("END:\t" + character.getAttributes().getEndurance() + "\t");
@@ -174,7 +174,7 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 					.getItem(character.getEquipment().getRing2());
 			Equipment neck = FantasyUnlimited.getInstance().getEquipmentBag()
 					.getItem(character.getEquipment().getNeck());
-			
+
 			embedBuilder.appendField("Helmet", getName(helmet), true);
 			embedBuilder.appendField("Neck", getName(neck), true);
 			embedBuilder.appendField("Chest", getName(chest), true);
@@ -185,17 +185,17 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 			embedBuilder.appendField("Ring", getName(ring2), true);
 			embedBuilder.appendField("Mainhand", getName(mainHand), true);
 			embedBuilder.appendField("Offhand", getName(offHand), true);
-			
+
 			// TODO: companion
 			embedBuilder.appendField("Companion", "none", false);
-			
+
 			FantasyUnlimited.getInstance().sendMessage(t.getChannel(), embedBuilder.build());
 		}
 
 		private String getName(GenericItem item) {
 			return item == null ? "none" : item.getName();
 		}
-		
+
 		@Override
 		public String getDescription() {
 			return "displays information about the current character or about the character of the name provided";

@@ -11,6 +11,8 @@ import java.util.Properties;
 import java.util.Random;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fantasyunlimited.discord.BattleAction;
 import com.fantasyunlimited.discord.BattleInformation;
@@ -26,6 +28,7 @@ import com.fantasyunlimited.discord.xml.Skill;
 import com.fantasyunlimited.discord.xml.Skill.SkillType;
 import com.fantasyunlimited.discord.xml.Skill.TargetType;
 import com.fantasyunlimited.entity.PlayerCharacter;
+import com.fantasyunlimited.logic.DiscordPlayerLogic;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.reaction.ReactionAddEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
@@ -35,9 +38,11 @@ import sx.blah.discord.handle.obj.IMessage;
 public class BattleHandler extends ReactionsHandler {
 
 	private Random randomGenerator = new Random();
-
+	private final BattleResultsHandler resultsHandler;
+	
 	public BattleHandler(Properties properties) {
 		super(properties);
+		this.resultsHandler = new BattleResultsHandler();
 	}
 
 	@Override
@@ -167,10 +172,10 @@ public class BattleHandler extends ReactionsHandler {
 		totalcost += battlePlayerInfo.getSkillUsed()
 				.getHighestAvailable(character.getLevel(), character.getAttributes()).getCostModifier();
 
-		if(totalcost > character.getCurrentAtkResource()) {
+		if (totalcost > character.getCurrentAtkResource()) {
 			return;
 		}
-		
+
 		if (battlePlayerInfo.getSkillUsed().getTargetType() == null
 				&& (battlePlayerInfo.getSkillUsed().getType() == SkillType.OFFENSIVE
 						|| battlePlayerInfo.getSkillUsed().getType() == SkillType.DEBUFF)) {
@@ -218,10 +223,10 @@ public class BattleHandler extends ReactionsHandler {
 		if (enemy) {
 			for (int hostileId : battleInfo.getHostiles().keySet()) {
 				BattleNPC hostile = battleInfo.getHostiles().get(hostileId);
-				usedNumbers = ArrayUtils.add(usedNumbers, Unicodes.numNames[hostileId - 1]);
 				if (hostile.isDefeated()) {
 					continue;
 				}
+				usedNumbers = ArrayUtils.add(usedNumbers, Unicodes.numNames[hostileId - 1]);
 				builder.append(
 						"(" + hostileId + ") [" + hostile.getLevel() + "][" + hostile.getBase().getName() + "]\n");
 			}
@@ -230,10 +235,10 @@ public class BattleHandler extends ReactionsHandler {
 			int counter = 0;
 			for (long characterId : battleInfo.getPlayers().keySet()) {
 				BattlePlayer player = battleInfo.getPlayers().get(characterId).getCharacter();
-				usedNumbers = ArrayUtils.add(usedNumbers, Unicodes.numNames[counter]);
 				if (player.isDefeated()) {
 					continue;
 				}
+				usedNumbers = ArrayUtils.add(usedNumbers, Unicodes.numNames[counter]);
 				numberPlayerMap.put(counter, player);
 				counter++;
 				builder.append("(" + counter + ") [" + player.getLevel() + "][" + player.getName() + "]\n");
@@ -312,6 +317,16 @@ public class BattleHandler extends ReactionsHandler {
 		if (battle.isFinished()) {
 			for (long characterId : battle.getPlayers().keySet()) {
 				FantasyUnlimited.getInstance().getBattles().remove(characterId);
+				FantasyUnlimited.getInstance().getBattleMap().remove(characterId);
+			}
+			resultsHandler.handle(battle);
+			
+		} else {
+			// put current data after execution so it sticks through a restart
+			for (long characterId : battle.getPlayers().keySet()) {
+				BattlePlayerInformation info = battle.getPlayers().get(characterId);
+				FantasyUnlimited.getInstance().getBattles().put(characterId, info);
+				FantasyUnlimited.getInstance().getBattleMap().put(characterId, battle);
 			}
 		}
 	}
@@ -387,5 +402,23 @@ public class BattleHandler extends ReactionsHandler {
 			battle.getRounds().get(battle.getCurrentRound()).add(action);
 		}
 	}
-
+	
+	private class BattleResultsHandler {
+		@Autowired
+		private DiscordPlayerLogic playerLogic;
+		
+		public BattleResultsHandler() {
+			FantasyUnlimited.autowire(this);
+		}
+		
+		@SuppressWarnings("unchecked")
+		public void handle(BattleInformation battle) {
+			// first step: check if the logic behaves as expected
+			for(BattlePlayerInformation playerInfo: battle.getPlayers().values()) {
+				playerLogic.addExperience(playerInfo.getCharacter().getCharacterId(), 10 * battle.getHostiles().size());
+				playerLogic.addItemsToInventory(playerInfo.getCharacter().getCharacterId(), Pair.of("broken-sword", 1));
+			}
+		}
+	}
+	
 }

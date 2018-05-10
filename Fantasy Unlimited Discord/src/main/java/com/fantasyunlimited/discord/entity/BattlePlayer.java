@@ -27,6 +27,7 @@ public class BattlePlayer extends BattleParticipant {
 		this.name = base.getName();
 		this.level = base.getCurrentLevel();
 		this.attributes = base.getAttributes();
+		this.equipment = new BattleEquipment(base.getEquipment());
 
 		this.maxHealth = base.getMaxHealth();
 		this.maxAtkResource = base.getMaxAtkResource();

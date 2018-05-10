@@ -16,7 +16,7 @@ import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
 public class BattleUtils {
-
+	
 	public static final void prepareNextroundActionbars(BattleInformation information) {
 
 		for (Long id : information.getPlayers().keySet()) {

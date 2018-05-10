@@ -53,6 +53,18 @@ public class BattleNPC extends BattleParticipant {
 		attributes.setWisdom(wisdom);
 		attributes.setEndurance(endurance);
 
+		equipment = new BattleEquipment();
+		equipment.setMainhand(base.getMainhand());
+		equipment.setOffhand(base.getOffhand());
+		equipment.setHelmet(base.getHelmet());
+		equipment.setChest(base.getChest());
+		equipment.setGloves(base.getGloves());
+		equipment.setPants(base.getPants());
+		equipment.setBoots(base.getBoots());
+		equipment.setRing1(base.getRing1());
+		equipment.setRing2(base.getRing2());
+		equipment.setNeck(base.getNeck());
+		
 		// TODO equipment bonus
 		this.maxHealth = endurance * 10 + level * 15;
 		

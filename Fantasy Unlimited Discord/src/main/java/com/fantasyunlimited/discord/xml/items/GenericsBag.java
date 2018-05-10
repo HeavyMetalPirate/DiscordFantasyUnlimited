@@ -23,6 +23,7 @@ public abstract class GenericsBag<T extends GenericItem> {
 	private final String rootfolder;
 
 	private Map<String, T> items = new HashMap<>();
+	private Map<String, T> itemsByName = new HashMap<>();
 
 	public GenericsBag(String rootfolder) {
 		this.rootfolder = rootfolder;
@@ -43,6 +44,7 @@ public abstract class GenericsBag<T extends GenericItem> {
 			}
 
 			items.put(item.getId(), item);
+			itemsByName.put(item.getName(), item);
 		}
 		
 		for(T item: items.values()) {
@@ -77,5 +79,13 @@ public abstract class GenericsBag<T extends GenericItem> {
 			}
 		}
 		return all;
+	}
+
+	public Map<String, T> getItemsByName() {
+		return itemsByName;
+	}
+
+	public void setItemsByName(Map<String, T> itemsByName) {
+		this.itemsByName = itemsByName;
 	}
 }

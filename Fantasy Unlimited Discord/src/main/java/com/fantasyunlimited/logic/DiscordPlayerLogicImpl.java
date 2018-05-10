@@ -2,6 +2,7 @@ package com.fantasyunlimited.logic;
 
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -21,7 +22,7 @@ public class DiscordPlayerLogicImpl implements DiscordPlayerLogic {
 	private DiscordUserRepository repository;
 	@Autowired
 	private PlayerCharacterRepository characterRepository;
-	
+
 	@Override
 	@Transactional
 	public DiscordPlayer save(DiscordPlayer entity) {
@@ -38,7 +39,7 @@ public class DiscordPlayerLogicImpl implements DiscordPlayerLogic {
 	public DiscordPlayer getById(Integer id) {
 		return repository.findById(id).orElse(null);
 	}
-	
+
 	@Override
 	public DiscordPlayer findByDiscordId(String discordId) {
 		return repository.findByDiscordId(discordId).orElse(null);
@@ -52,7 +53,7 @@ public class DiscordPlayerLogicImpl implements DiscordPlayerLogic {
 	@Override
 	@Transactional
 	public DiscordPlayer addCharacter(DiscordPlayer player, PlayerCharacter character) {
-		player = getById(player.getId()); //load into transaction
+		player = getById(player.getId()); // load into transaction
 		player.getCharacters().add(character);
 		character.setPlayer(player);
 		player.setCurrentCharacter(character);
@@ -80,7 +81,7 @@ public class DiscordPlayerLogicImpl implements DiscordPlayerLogic {
 	@Override
 	@Transactional
 	public DiscordPlayer selectActiveCharacter(DiscordPlayer player, PlayerCharacter character) {
-		player = getById(player.getId()); //load into transaction
+		player = getById(player.getId()); // load into transaction
 		player.setCurrentCharacter(character);
 		player = repository.save(player);
 		return player;
@@ -90,5 +91,50 @@ public class DiscordPlayerLogicImpl implements DiscordPlayerLogic {
 	@Transactional(readOnly = true)
 	public PlayerCharacter getCharacter(String name) {
 		return characterRepository.findByNameIgnoreCase(name).orElse(null);
+	}
+
+	@Override
+	@Transactional(rollbackFor = IllegalStateException.class)
+	public void addExperience(PlayerCharacter character, int amount) {
+		addExperience(character.getId(), amount);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional(rollbackFor = IllegalStateException.class)
+	public void addItemsToInventory(PlayerCharacter character, Pair<String, Integer>... itemAndAmount) {
+		addItemsToInventory(character.getId(), itemAndAmount);
+	}
+
+	@Override
+	@Transactional(rollbackFor = IllegalStateException.class)
+	public void addExperience(Long characterId, int amount) {
+		// load into session
+		PlayerCharacter character = characterRepository.findById(characterId).orElse(null);
+		if (character == null) {
+			throw new IllegalStateException("Provided character not in database!");
+		}
+		character.setCurrentXp(character.getCurrentXp() + amount);
+		characterRepository.save(character);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional(rollbackFor = IllegalStateException.class)
+	public void addItemsToInventory(Long characterId, Pair<String, Integer>... itemAndAmount) {
+		// load into session
+		PlayerCharacter character = characterRepository.findById(characterId).orElse(null);
+		if (character == null) {
+			throw new IllegalStateException("Provided character not in database!");
+		}
+		for (Pair<String, Integer> item : itemAndAmount) {
+			if (character.getInventory().containsKey(item.getLeft())) {
+				int currentAmount = character.getInventory().get(item.getLeft());
+				character.getInventory().put(item.getLeft(), currentAmount + item.getRight());
+			} else {
+				character.getInventory().put(item.getLeft(), item.getRight());
+			}
+		}
+		characterRepository.save(character);
 	}
 }

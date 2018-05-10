@@ -58,6 +58,7 @@ public class FantasyUnlimited extends BaseBot {
 	private final PersistentCacheManager cacheManager;
 
 	private IUser owner;
+	private IUser botUser;
 
 	private final Properties properties;
 	private final MessageReceivedHandler messageReceivedHandler;
@@ -73,6 +74,8 @@ public class FantasyUnlimited extends BaseBot {
 
 	public FantasyUnlimited(IDiscordClient discordClient, Properties properties) {
 		super(discordClient);
+		
+		this.botUser = discordClient.getOurUser();
 		this.properties = properties;
 		messageReceivedHandler = new MessageReceivedHandler(properties);
 		reactionAddHandler = new ReactionForSelfAddHandler(properties);
@@ -283,7 +286,7 @@ public class FantasyUnlimited extends BaseBot {
 	public IMessage addReactions(final IMessage message, String... emojiUnicodes) {
 		new Thread(() -> {
 			for (String emoji : emojiUnicodes) {
-				RequestBuffer.request(() -> {
+					RequestBuffer.request(() -> {
 					message.addReaction(ReactionEmoji.of(emoji));
 				}).get();
 			}
@@ -341,5 +344,13 @@ public class FantasyUnlimited extends BaseBot {
 
 	public void setHostileNPCBag(HostileNPCBag hostileNPCBag) {
 		this.hostileNPCBag = hostileNPCBag;
+	}
+
+	public IUser getBotUser() {
+		return botUser;
+	}
+
+	public void setBotUser(IUser botUser) {
+		this.botUser = botUser;
 	}
 }
