@@ -2,6 +2,7 @@ package com.fantasyunlimited.discord;
 
 import java.time.Duration;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
@@ -72,9 +73,11 @@ public class FantasyUnlimited extends BaseBot {
 	private LocationBag locationsBag = new LocationBag();
 	private HostileNPCBag hostileNPCBag = new HostileNPCBag();
 
+	private Map<Integer, Long> experienceTable;
+
 	public FantasyUnlimited(IDiscordClient discordClient, Properties properties) {
 		super(discordClient);
-		
+
 		this.botUser = discordClient.getOurUser();
 		this.properties = properties;
 		messageReceivedHandler = new MessageReceivedHandler(properties);
@@ -82,7 +85,7 @@ public class FantasyUnlimited extends BaseBot {
 
 		EventDispatcher dispatcher = discordClient.getDispatcher();
 		dispatcher.registerListeners(new BotInitializedHandler(), messageReceivedHandler, reactionAddHandler);
-		
+
 		INSTANCE = this;
 		cacheManager = CacheManagerBuilder.newCacheManagerBuilder()
 				.with(CacheManagerBuilder.persistence(properties.getProperty("cache.location")))
@@ -104,26 +107,20 @@ public class FantasyUnlimited extends BaseBot {
 				.withCache("battles",
 						CacheConfigurationBuilder
 								.newCacheConfigurationBuilder(Long.class, BattlePlayerInformation.class,
-										ResourcePoolsBuilder.newResourcePoolsBuilder()
-											.heap(1000, EntryUnit.ENTRIES)
-											.offheap(5, MemoryUnit.MB)
-											.disk(50, MemoryUnit.MB, true)
-											.build())
+										ResourcePoolsBuilder.newResourcePoolsBuilder().heap(1000, EntryUnit.ENTRIES)
+												.offheap(5, MemoryUnit.MB).disk(50, MemoryUnit.MB, true).build())
 								.withValueSerializer(new JSONSerializer<>(BattlePlayerInformation.class))
 								.withKeySerializer(new JSONSerializer<>(Long.class))
 								.withExpiry(ExpiryPolicyBuilder.noExpiration()).build())
 				.withCache("battleMap",
 						CacheConfigurationBuilder
 								.newCacheConfigurationBuilder(Long.class, BattleInformation.class,
-										ResourcePoolsBuilder.newResourcePoolsBuilder()
-											.heap(5000, EntryUnit.ENTRIES)
-											.offheap(5, MemoryUnit.MB)
-											.disk(50, MemoryUnit.MB, true)
-											.build())
+										ResourcePoolsBuilder.newResourcePoolsBuilder().heap(5000, EntryUnit.ENTRIES)
+												.offheap(5, MemoryUnit.MB).disk(50, MemoryUnit.MB, true).build())
 								.withValueSerializer(new JSONSerializer<>(BattleInformation.class))
 								.withKeySerializer(new JSONSerializer<>(Long.class))
 								.withExpiry(ExpiryPolicyBuilder.noExpiration()).build())
-								
+
 				.build();
 		cacheManager.init();
 
@@ -133,6 +130,24 @@ public class FantasyUnlimited extends BaseBot {
 						EventFiring.ASYNCHRONOUS, EnumSet.of(EventType.CREATED, EventType.EVICTED, EventType.EXPIRED,
 								EventType.REMOVED, EventType.UPDATED));
 
+		experienceTable = new HashMap<>();
+		for (int i = 1; i < 100; i++) {
+			double log = (Math.log(i) / Math.log(2));
+			long experience = (long) Math.floor(Math.pow(i, 2) * 100 * log);
+			experienceTable.put(i, experience);
+			logger.trace("Level " + i + ": " + experienceTable.get(i));
+		}
+	}
+
+	public Long getNextLevelExperience(int currentLevel) {
+		if(currentLevel == 100) {
+			return 0L;
+		}
+		int nextLevel = currentLevel + 1;
+		return experienceTable.get(nextLevel);
+	}
+	public Long getCurrentXpForLevel(int level, int totalxp) {
+		return totalxp - experienceTable.get(level);
 	}
 	
 	public Cache<Long, DiscordPlayer> getRegisteredUserCache() {
@@ -146,7 +161,7 @@ public class FantasyUnlimited extends BaseBot {
 	public Cache<Long, BattlePlayerInformation> getBattles() {
 		return cacheManager.getCache("battles", Long.class, BattlePlayerInformation.class);
 	}
-	
+
 	public Cache<Long, BattleInformation> getBattleMap() {
 		return cacheManager.getCache("battleMap", Long.class, BattleInformation.class);
 	}
@@ -286,7 +301,7 @@ public class FantasyUnlimited extends BaseBot {
 	public IMessage addReactions(final IMessage message, String... emojiUnicodes) {
 		new Thread(() -> {
 			for (String emoji : emojiUnicodes) {
-					RequestBuffer.request(() -> {
+				RequestBuffer.request(() -> {
 					message.addReaction(ReactionEmoji.of(emoji));
 				}).get();
 			}

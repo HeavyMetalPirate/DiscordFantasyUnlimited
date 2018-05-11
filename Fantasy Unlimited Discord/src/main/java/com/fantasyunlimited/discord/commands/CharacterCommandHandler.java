@@ -120,7 +120,11 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 			builder.append("```\n");
 			builder.append("Name: \t" + character.getName() + "\n");
 			builder.append("Level:\t" + character.getCurrentLevel() + "\n");
-			builder.append("Experience: " + character.getCurrentXp() + "\n");
+			builder.append("Experience: "
+					+ FantasyUnlimited.getInstance().getCurrentXpForLevel(character.getCurrentLevel(),
+							character.getCurrentXp())
+					+ " / " + FantasyUnlimited.getInstance().getNextLevelExperience(character.getCurrentLevel())
+					+ "\n");
 			builder.append("Current location: " + location.getName());
 			builder.append("```");
 			embedBuilder.appendField("Basic data", builder.toString(), true);
@@ -140,8 +144,8 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 			builder = new StringBuilder();
 			builder.append("```\n");
 			builder.append("Health: " + character.getCurrentHealth() + "/" + character.getMaxHealth() + "\n");
-			builder.append(
-					"ATKRES(!): " + character.getCurrentAtkResource() + "/" + character.getMaxAtkResource() + "\n");
+			builder.append(charClass.getEnergyType().toString() + ": " + character.getCurrentAtkResource() + "/"
+					+ character.getMaxAtkResource() + "\n");
 			builder.append("STR:\t" + character.getAttributes().getStrength() + "\t");
 			builder.append("DEX:\t" + character.getAttributes().getDexterity() + "\n");
 			builder.append("END:\t" + character.getAttributes().getEndurance() + "\t");
