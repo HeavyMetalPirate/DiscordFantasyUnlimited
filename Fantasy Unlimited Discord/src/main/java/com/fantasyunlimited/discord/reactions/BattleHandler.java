@@ -9,9 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fantasyunlimited.discord.BattleAction;
@@ -39,7 +41,7 @@ public class BattleHandler extends ReactionsHandler {
 
 	private Random randomGenerator = new Random();
 	private final BattleResultsHandler resultsHandler;
-	
+
 	public BattleHandler(Properties properties) {
 		super(properties);
 		this.resultsHandler = new BattleResultsHandler();
@@ -320,7 +322,7 @@ public class BattleHandler extends ReactionsHandler {
 				FantasyUnlimited.getInstance().getBattleMap().remove(characterId);
 			}
 			resultsHandler.handle(battle);
-			
+
 		} else {
 			// put current data after execution so it sticks through a restart
 			for (long characterId : battle.getPlayers().keySet()) {
@@ -402,23 +404,57 @@ public class BattleHandler extends ReactionsHandler {
 			battle.getRounds().get(battle.getCurrentRound()).add(action);
 		}
 	}
-	
+
 	private class BattleResultsHandler {
+		private final Logger logger = Logger.getLogger(BattleResultsHandler.class);
 		@Autowired
 		private DiscordPlayerLogic playerLogic;
-		
+
 		public BattleResultsHandler() {
 			FantasyUnlimited.autowire(this);
 		}
-		
+
 		@SuppressWarnings("unchecked")
 		public void handle(BattleInformation battle) {
-			// first step: check if the logic behaves as expected
-			for(BattlePlayerInformation playerInfo: battle.getPlayers().values()) {
-				playerLogic.addExperience(playerInfo.getCharacter().getCharacterId(), 10 * battle.getHostiles().size());
+			if (battle.isFinished() == false) {
+				return;
+			}
+
+			int xppool = 0;
+			int averagelevel = 0;
+			for (BattleNPC npc : battle.getHostiles().values()) {
+				double level = npc.getLevel();
+				xppool += (int) Math.ceil(Math.log10(level) * level + (10 + level)
+						+ ThreadLocalRandom.current().nextDouble(level * 2 / 3));
+				averagelevel += npc.getLevel();
+
+			}
+			averagelevel = Math.floorDiv(averagelevel, battle.getHostiles().size());
+			logger.trace("Average level: " + averagelevel);
+			logger.trace("XP pool: " + xppool);
+
+			for (BattlePlayerInformation playerInfo : battle.getPlayers().values()) {
+				int yield = Math.floorDiv(xppool, battle.getPlayers().size());
+				logger.trace("XP for player " + playerInfo.getCharacter().getName() + " before level bonus: " + yield);
+				int level = playerInfo.getCharacter().getLevel();
+				double multiplier = Math.sqrt(Math.abs(level - averagelevel));
+				if (level > averagelevel) {
+					multiplier = multiplier * -1;
+				}
+				if(multiplier == 0) {
+					multiplier = 1;
+				}
+				yield = (int) Math.ceil(yield * multiplier);
+				logger.trace("Character level: " + playerInfo.getCharacter().getLevel());
+				logger.trace("XP for player " + playerInfo.getCharacter().getName() + " after level bonus: " + yield);
+
+				playerLogic.addExperience(playerInfo.getCharacter().getCharacterId(), yield);
 				playerLogic.addItemsToInventory(playerInfo.getCharacter().getCharacterId(), Pair.of("broken-sword", 1));
 			}
+			// TODO actual exp calculations = Log(x)*x + Random(0, x/3) + x^-1
+			// TODO actual loot calculations (with party distribution / rolling?)
+			// TODO print exp and loot gained per player
 		}
 	}
-	
+
 }
