@@ -1,10 +1,19 @@
 package com.fantasyunlimited.discord.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import com.fantasyunlimited.discord.FantasyUnlimited;
 import com.fantasyunlimited.discord.xml.CharacterClass;
+import com.fantasyunlimited.discord.xml.CombatSkill;
+import com.fantasyunlimited.discord.xml.CombatSkillBonus;
+import com.fantasyunlimited.discord.xml.Equipment;
 import com.fantasyunlimited.discord.xml.Race;
+import com.fantasyunlimited.discord.xml.Weapon;
+import com.fantasyunlimited.discord.xml.Weapon.WeaponType;
 import com.fantasyunlimited.entity.Attributes;
 
 public abstract class BattleParticipant implements Serializable {
@@ -25,8 +34,8 @@ public abstract class BattleParticipant implements Serializable {
 	protected int maxAtkResource;
 
 	protected float regenPercentage;
-	protected float regenLevelBonus;
-	
+	protected float levelBonus;
+
 	protected Attributes attributes;
 	protected BattleEquipment equipment;
 
@@ -35,13 +44,14 @@ public abstract class BattleParticipant implements Serializable {
 
 	protected void calculateLevelBonus() {
 		// Level bonus (y=(5*2^-x/15) * 2)
-		regenLevelBonus = (float) (5 * Math.pow(2, (level / 15)) * 2);
+		levelBonus = (float) (5 * Math.pow(2, (level / 15)) * 2);
 	}
+
 	protected void calculateRegeneration() {
 		// Y = X ^(1/4) + level bonus
 		calculateLevelBonus();
 		float regen = (float) Math.pow(attributes.getWisdom(), 0.25);
-		regenPercentage = regen + regenLevelBonus;
+		regenPercentage = regen + levelBonus;
 	}
 
 	public void applyDamage(int damage) {
@@ -65,40 +75,112 @@ public abstract class BattleParticipant implements Serializable {
 		}
 	}
 
-	public void regenAtkResource() {		
-		switch(getCharClass().getEnergyType()) {
+	public void regenAtkResource() {
+		switch (getCharClass().getEnergyType()) {
 		case FOCUS:
-			//TODO equipment bonus
+			// TODO equipment bonus
 			this.currentAtkResource += 20;
 			break;
 		case MANA:
 			double regenamount = regenPercentage * getMaxAtkResource() / 100;
-			this.currentAtkResource += (int)Math.ceil(regenamount);
+			this.currentAtkResource += (int) Math.ceil(regenamount);
 			break;
 		case RAGE:
-			//should not use this method
+			// should not use this method
 			throw new UnsupportedOperationException("Rage users should use generateRage(int) instead!");
 		}
-		
+
 		if (this.currentAtkResource > this.maxAtkResource) {
 			this.currentAtkResource = this.maxAtkResource;
 		}
 	}
 
 	public void generateRage(int damage) {
-		switch(getCharClass().getEnergyType()) {
+		switch (getCharClass().getEnergyType()) {
 		case FOCUS:
 		case MANA:
 			throw new UnsupportedOperationException("Mana/Focus users should use regenAtkResource() instead!");
 		case RAGE:
 			break;
 		}
-		
-		double regen = damage / level + regenLevelBonus;
+
+		double regen = damage / level + levelBonus;
 		this.currentAtkResource += Math.ceil(regen);
 		if (this.currentAtkResource > this.maxAtkResource) {
 			this.currentAtkResource = this.maxAtkResource;
 		}
+	}
+
+	public List<Equipment> getCurrentEquipment() {
+		List<Equipment> equip = new ArrayList<>(
+				Arrays.asList(FantasyUnlimited.getInstance().getEquipmentBag().getItem(equipment.getHelmet()),
+						FantasyUnlimited.getInstance().getEquipmentBag().getItem(equipment.getChest()),
+						FantasyUnlimited.getInstance().getEquipmentBag().getItem(equipment.getGloves()),
+						FantasyUnlimited.getInstance().getEquipmentBag().getItem(equipment.getBoots()),
+						FantasyUnlimited.getInstance().getEquipmentBag().getItem(equipment.getPants()),
+						FantasyUnlimited.getInstance().getEquipmentBag().getItem(equipment.getRing1()),
+						FantasyUnlimited.getInstance().getEquipmentBag().getItem(equipment.getRing2()),
+						FantasyUnlimited.getInstance().getEquipmentBag().getItem(equipment.getNeck())));
+		equip.removeAll(Collections.singleton(null));
+		return equip;
+	}
+
+	public float calculateDodgeChance() {
+		float chance = levelBonus; // base
+		for (Equipment equipment : getCurrentEquipment()) {
+			for (CombatSkillBonus bonus : equipment.getSkillBonuses()) {
+				if (bonus.getSkill() == CombatSkill.DODGE) {
+					chance += bonus.getBonus();
+				}
+			}
+		}
+		// TODO stats modifier
+		return chance;
+	}
+
+	public float calculateCritChance() {
+		float chance = levelBonus; // base
+		for (Equipment equipment : getCurrentEquipment()) {
+			for (CombatSkillBonus bonus : equipment.getSkillBonuses()) {
+				if (bonus.getSkill() == CombatSkill.CRITICAL) {
+					chance += bonus.getBonus();
+				}
+			}
+		}
+		// TODO stats modifier
+		return chance;
+	}
+
+	public float calculateBlockChance() {
+		Weapon weapon = FantasyUnlimited.getInstance().getWeaponBag().getItem(equipment.getOffhand());
+		if (weapon != null && weapon.getType() != null && weapon.getType() != WeaponType.SHIELD) {
+			// no block if no shield in offhand!
+			return 0f;
+		}
+
+		float chance = levelBonus; // base
+		for (Equipment equipment : getCurrentEquipment()) {
+			for (CombatSkillBonus bonus : equipment.getSkillBonuses()) {
+				if (bonus.getSkill() == CombatSkill.BLOCK) {
+					chance += bonus.getBonus();
+				}
+			}
+		}
+		// TODO stats modifier
+		return chance;
+	}
+
+	public float calculateParryChance() {
+		float chance = levelBonus; // base
+		for (Equipment equipment : getCurrentEquipment()) {
+			for (CombatSkillBonus bonus : equipment.getSkillBonuses()) {
+				if (bonus.getSkill() == CombatSkill.PARRY) {
+					chance += bonus.getBonus();
+				}
+			}
+		}
+		// TODO stats modifier
+		return chance;
 	}
 
 	public Race getRace() {
@@ -160,7 +242,7 @@ public abstract class BattleParticipant implements Serializable {
 	public void setAttributes(Attributes attributes) {
 		this.attributes = attributes;
 	}
-	
+
 	public BattleEquipment getEquipment() {
 		return equipment;
 	}

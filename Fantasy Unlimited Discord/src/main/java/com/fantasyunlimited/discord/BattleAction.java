@@ -22,6 +22,11 @@ public class BattleAction implements Serializable {
 	private boolean isPass;
 	private boolean executed;
 
+	private boolean dodged;
+	private boolean blocked;
+	private boolean critical;
+	private boolean parried;
+
 	private BattleParticipant executing;
 	private BattleParticipant target;
 
@@ -75,6 +80,13 @@ public class BattleAction implements Serializable {
 			actionAmount += ThreadLocalRandom.current().nextInt(weapon.getMinDamage(), weapon.getMaxDamage() + 1);
 		}
 
+		float chance = ThreadLocalRandom.current().nextFloat();
+		float crit = target.calculateCritChance() / 100;
+		if (chance < crit) {
+			critical = true;
+			actionAmount *= 2;
+		}
+
 		// TODO stats multiplier
 		// TODO def reducer
 		// TODO level multiplier
@@ -103,10 +115,13 @@ public class BattleAction implements Serializable {
 		totalcost += rank.getCostModifier();
 		performAtkUsageAndRegen(totalcost);
 	}
-	
+
 	private void performAtkUsageAndRegen(int totalcost) {
 		if (executing.getCharClass().getEnergyType() == EnergyType.RAGE) {
 			executing.consumeAtkResource(totalcost);
+			if (dodged || parried || blocked) {
+				return;
+			}
 			executing.generateRage(actionAmount);
 		} else {
 			executing.regenAtkResource();
@@ -119,6 +134,41 @@ public class BattleAction implements Serializable {
 	}
 
 	private void executeHealthChanging() {
+		switch (usedSkill.getTargetType()) {
+		case AREA:
+		case ENEMY:
+			float chance = ThreadLocalRandom.current().nextFloat();
+			float dodge = target.calculateDodgeChance() / 100;
+
+			if (chance < dodge) {
+				dodged = true;
+				actionAmount = 0;
+				return;
+			}
+
+			chance = ThreadLocalRandom.current().nextFloat();
+			float block = target.calculateBlockChance() / 100;
+			if (chance < block) {
+				blocked = true;
+				actionAmount = 0;
+				return;
+			}
+
+			chance = ThreadLocalRandom.current().nextFloat();
+			float parry = target.calculateParryChance() / 100;
+			if (chance < parry) {
+				parried = true;
+				actionAmount = 0;
+				return;
+			}
+			break;
+		case FRIEND:
+		case OWN:
+		default:
+			break;
+
+		}
+
 		switch (usedSkill.getTargetType()) {
 		case AREA:
 			for (BattleParticipant target : areaTargets) {
@@ -195,5 +245,21 @@ public class BattleAction implements Serializable {
 
 	public void setAreaTargets(List<BattleParticipant> areaTargets) {
 		this.areaTargets = areaTargets;
+	}
+
+	public boolean isDodged() {
+		return dodged;
+	}
+
+	public boolean isBlocked() {
+		return blocked;
+	}
+
+	public boolean isCritical() {
+		return critical;
+	}
+
+	public boolean isParried() {
+		return parried;
 	}
 }

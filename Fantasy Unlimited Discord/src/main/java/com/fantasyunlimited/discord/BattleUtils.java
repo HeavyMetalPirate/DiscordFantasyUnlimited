@@ -201,7 +201,17 @@ public class BattleUtils {
 				}
 
 				action.executeAction();
-
+				
+				if( action.isBlocked() ) {
+					builder.append("(Blocked) ");
+				} else if (action.isDodged()) {
+					builder.append("(Dodged) ");
+				} else if (action.isParried()) {
+					builder.append("(Parried) ");
+				} else if (action.isCritical()) {
+					builder.append("(Critical) ");
+				}
+				
 				builder.append(action.getUsedSkill().getName() + " for " + action.getActionAmount() + " -> ");
 
 				if (action.isArea()) {

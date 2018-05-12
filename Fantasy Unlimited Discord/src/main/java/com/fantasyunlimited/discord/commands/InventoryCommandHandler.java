@@ -74,6 +74,7 @@ public class InventoryCommandHandler extends CommandSupportsPaginatorHandler {
 		MessageStatus status = new MessageStatus();
 		status.setName(Name.PAGINATION_TEST);
 		information.setStatus(status);
+		information.getVars().put("pageHeader", "Inventory of " + character.getName() + " (" + getDisplayNameForAuthor(event) + ")");
 
 		return Triple.of(15, information, inventory);
 	}

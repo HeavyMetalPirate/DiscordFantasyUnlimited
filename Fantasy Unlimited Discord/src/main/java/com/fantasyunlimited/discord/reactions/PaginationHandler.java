@@ -81,7 +81,9 @@ public abstract class PaginationHandler extends ReactionsHandler {
 
 		StringBuilder builder = new StringBuilder();
 		builder.append("```\n");
-
+		if (information.getVars().get("pageHeader") != null) {
+			builder.append((String) information.getVars().get("pageHeader") + "\n");
+		}
 		if (emojiName.equals(Unicodes.arrow_backward)) {
 			// backwards operation
 			if (currentPage == 1) {
@@ -113,13 +115,12 @@ public abstract class PaginationHandler extends ReactionsHandler {
 			builder.append("\n" + pagesString);
 			FantasyUnlimited.getInstance().editMessage(information.getMessage(), builder.toString());
 		} else {
-			if(information.getVars().get("embedBuilder") != null) {
-				embedBuilder = 	(SerializableEmbedBuilder)information.getVars().get("embedBuilder");
-				information.getVars().remove("embedBuilder"); //use it then remove it for sanity reasons
-				//this forces the developer to take care of which embed builder he uses
-				//else we end up with a stale instance instead
-			}
-			else if(embedBuilder == null) {
+			if (information.getVars().get("embedBuilder") != null) {
+				embedBuilder = (SerializableEmbedBuilder) information.getVars().get("embedBuilder");
+				information.getVars().remove("embedBuilder"); // use it then remove it for sanity reasons
+				// this forces the developer to take care of which embed builder he uses
+				// else we end up with a stale instance instead
+			} else if (embedBuilder == null) {
 				embedBuilder = new SerializableEmbedBuilder();
 			}
 			embedBuilder.clearFields(); // clear first, else we end up with each
@@ -128,16 +129,16 @@ public abstract class PaginationHandler extends ReactionsHandler {
 					embedBuilder.appendField(pagesString, builder.toString(), false).build());
 		}
 
-		//Check if we are in a handler using numbers for selection
+		// Check if we are in a handler using numbers for selection
 		if (information.getVars().get("usedNumbers") != null) {
 			RequestBuffer.request(() -> {
 				event.getMessage().removeAllReactions();
 			}).get();
-			
+
 			List<String> allowed = new ArrayList<>(Arrays.asList(Unicodes.numNames.clone()));
 			allowed.subList(itemCounter, allowed.size()).clear();
 			information.getVars().put("usedNumbers", allowed);
-			
+
 			String[] usedNumbers = Unicodes.numNames.clone();
 			usedNumbers = ArrayUtils.subarray(usedNumbers, 0, itemCounter);
 			emojisToUse = ArrayUtils.addAll(emojisToUse, usedNumbers);

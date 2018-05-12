@@ -54,8 +54,8 @@ public abstract class CommandSupportsPaginatorHandler extends CommandRequiresAut
 	 * </ul>
 	 * 
 	 * The delegating class will then build the message based on the values and
-	 * items per page and adds relevant additional information about paging to
-	 * the configuration.
+	 * items per page and adds relevant additional information about paging to the
+	 * configuration.
 	 * 
 	 * @param event
 	 *            The event which will be passed from the bot
@@ -77,6 +77,10 @@ public abstract class CommandSupportsPaginatorHandler extends CommandRequiresAut
 
 		StringBuilder builder = new StringBuilder();
 		builder.append("```md\n");
+
+		if (information.getVars().get("pageHeader") != null) {
+			builder.append((String) information.getVars().get("pageHeader") + "\n");
+		}
 
 		int breakCondition = itemsPerPage >= values.size() ? values.size() : itemsPerPage;
 		for (int i = 0; i < breakCondition; i++) {

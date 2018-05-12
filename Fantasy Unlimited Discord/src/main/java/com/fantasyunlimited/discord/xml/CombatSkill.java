@@ -4,6 +4,7 @@ public enum CombatSkill {
 	DODGE,
 	CRITICAL,
 	BLOCK,
+	PARRY,
 	SPELLPOWER,
 	HEALPOWER
 }
