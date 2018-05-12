@@ -204,7 +204,7 @@ public class BattleHandler extends ReactionsHandler {
 		RequestBuffer.request(() -> {
 			event.getMessage().removeReaction(event.getUser(), event.getReaction());
 		});
-		
+
 		if (usedEmoji.getName().equals(Unicodes.crossmark)) {
 			queueAction(battlePlayerInfo);
 			return;
@@ -342,6 +342,13 @@ public class BattleHandler extends ReactionsHandler {
 			battle.getRounds().put(battle.getCurrentRound(), new ArrayList<>());
 		}
 		battle.getRounds().get(battle.getCurrentRound()).add(action);
+
+		MessageInformation information = FantasyUnlimited.getInstance().getMessagesAwaitingReactions()
+				.get(playerInfo.getMessage().getLongID());
+		information.getStatus().setName(Name.BATTLE_WAITING);
+		FantasyUnlimited.getInstance().getMessagesAwaitingReactions().put(playerInfo.getMessage().getLongID(),
+				information);
+		FantasyUnlimited.getInstance().editMessage(playerInfo.getMessage(), "`Please wait while the others pick their actions.`");
 
 		if (battle.getRounds().get(battle.getCurrentRound()).size() == battle.getAlivePlayerCount()) {
 			calculateAndPrintResults(battle);
@@ -501,48 +508,52 @@ public class BattleHandler extends ReactionsHandler {
 				logger.trace("XP for player " + playerInfo.getCharacter().getName() + " before level bonus: " + yield);
 				int level = playerInfo.getCharacter().getLevel();
 				double multiplier = Math.sqrt(Math.abs(level - averagelevel));
-				if (level > averagelevel) {
-					multiplier = multiplier * -1;
-				}
 				if (multiplier == 0) {
 					multiplier = 1;
+				}
+				if (level > averagelevel) {
+					multiplier = 1 / multiplier;
+					if (level > averagelevel + 10) {
+						multiplier = 0;
+					}
 				}
 				yield = (int) Math.ceil(yield * multiplier);
 				logger.trace("Character level: " + playerInfo.getCharacter().getLevel());
 				logger.trace("XP for player " + playerInfo.getCharacter().getName() + " after level bonus: " + yield);
 
 				builder.append(playerInfo.getCharacter().getName() + " received " + yield + " experience.\n");
-				if(playerLogic.addExperience(playerInfo.getCharacter().getCharacterId(), yield)) {
-					builder.append(playerInfo.getCharacter().getName() + " leveled up! They receive 5 status points for distribution.\n");
+				if (playerLogic.addExperience(playerInfo.getCharacter().getCharacterId(), yield)) {
+					builder.append(playerInfo.getCharacter().getName()
+							+ " leveled up! They receive 5 status points for distribution.\n");
 					CharacterClass charClass = playerInfo.getCharacter().getCharClass();
 					builder.append("They also gain: \n");
-					if(charClass.getAttributes().getEnduranceGrowth() > 0) {
+					if (charClass.getAttributes().getEnduranceGrowth() > 0) {
 						builder.append("- " + charClass.getAttributes().getEnduranceGrowth() + " Endurance\n");
 					}
-					if(charClass.getAttributes().getStrengthGrowth() > 0) {
+					if (charClass.getAttributes().getStrengthGrowth() > 0) {
 						builder.append("- " + charClass.getAttributes().getStrengthGrowth() + " Strength\n");
 					}
-					if(charClass.getAttributes().getDexterityGrowth() > 0) {
+					if (charClass.getAttributes().getDexterityGrowth() > 0) {
 						builder.append("- " + charClass.getAttributes().getDexterityGrowth() + " Dexterity\n");
 					}
-					if(charClass.getAttributes().getWisdomGrowth() > 0) {
+					if (charClass.getAttributes().getWisdomGrowth() > 0) {
 						builder.append("- " + charClass.getAttributes().getWisdomGrowth() + " Wisdom\n");
 					}
-					if(charClass.getAttributes().getIntelligenceGrowth() > 0) {
+					if (charClass.getAttributes().getIntelligenceGrowth() > 0) {
 						builder.append("- " + charClass.getAttributes().getIntelligenceGrowth() + " Intelligence\n");
 					}
-					if(charClass.getAttributes().getDefenseGrowth() > 0) {
+					if (charClass.getAttributes().getDefenseGrowth() > 0) {
 						builder.append("- " + charClass.getAttributes().getDefenseGrowth() + " Defense\n");
 					}
-					if(charClass.getAttributes().getLuckGrowth() > 0) {
+					if (charClass.getAttributes().getLuckGrowth() > 0) {
 						builder.append("- " + charClass.getAttributes().getLuckGrowth() + " Luck\n");
 					}
 				}
-				//TODO loot calc and print
+				// TODO loot calc and print
 				playerLogic.addItemsToInventory(playerInfo.getCharacter().getCharacterId(), Pair.of("broken-sword", 1));
 			}
 			builder.append("```");
-			
+
 			embedBuilder = BattleUtils.createBattleOutputEmbeds(battle);
 			embedBuilder.appendField("Results", builder.toString(), false);
 			FantasyUnlimited.getInstance().editMessage(battle.getMessage(), embedBuilder.build());

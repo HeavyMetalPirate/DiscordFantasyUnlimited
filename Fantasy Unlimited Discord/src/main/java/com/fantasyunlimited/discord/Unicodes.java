@@ -9,4 +9,5 @@ public class Unicodes {
 	public static final String arrow_backward = "\u25C0";
 	public static final String arrow_forward = "\u25B6";
 	public static final String end = "\uD83D\uDD1A";
+	public static final String die = "\uD83C\uDFB2";
 }
