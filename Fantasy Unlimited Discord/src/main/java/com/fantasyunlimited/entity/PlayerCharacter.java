@@ -61,7 +61,7 @@ public class PlayerCharacter implements Serializable {
 	@Column
 	private int currentAtkResource;
 	
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "Inventories")
 	private Map<String, Integer> inventory;
 

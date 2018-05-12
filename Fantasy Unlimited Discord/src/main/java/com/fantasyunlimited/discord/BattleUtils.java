@@ -46,7 +46,11 @@ public class BattleUtils {
 			List<Skill> skills = character.getCharClass().getAvailableSkills(level, attributes);
 
 			StringBuilder skillBuilder = new StringBuilder();
+			skillBuilder.append(":end: `Run from battle` - ");
+			skillBuilder.append(":x: `Pass this round`\n");
 			Map<String, Long> skillIcons = new LinkedHashMap<>();
+			skillIcons.put(Unicodes.end, 0L);
+			skillIcons.put(Unicodes.crossmark, 0L);
 			for (Skill skill : skills) {
 
 				SkillRank rank = skill.getHighestAvailable(level, attributes);

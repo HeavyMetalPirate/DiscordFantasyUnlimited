@@ -76,7 +76,7 @@ public abstract class CommandSupportsPaginatorHandler extends CommandRequiresAut
 		}
 
 		StringBuilder builder = new StringBuilder();
-		builder.append("```\n");
+		builder.append("```md\n");
 
 		int breakCondition = itemsPerPage >= values.size() ? values.size() : itemsPerPage;
 		for (int i = 0; i < breakCondition; i++) {

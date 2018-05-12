@@ -21,8 +21,6 @@ public class BattleInformation implements Serializable {
 	private LocalDateTime begin = LocalDateTime.now();
 	private Location location;
 
-//	private boolean finished;
-
 	private transient IMessage message;
 	private long guildId;
 	private long channelId;
@@ -35,6 +33,11 @@ public class BattleInformation implements Serializable {
 
 	private int currentRound = 1;
 	private Map<Integer, List<BattleAction>> rounds = new HashMap<>();
+	
+	public void flee() {
+		players.clear();
+		hostiles.clear();
+	}
 	
 	public int getAliveEnemyCount() {
 		int count = 0;

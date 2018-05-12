@@ -22,9 +22,21 @@ public interface DiscordPlayerLogic extends CrudLogic<DiscordPlayer> {
 
 	public DiscordPlayer selectActiveCharacter(DiscordPlayer player, PlayerCharacter character);
 
-	public void addExperience(Long characterId, int amount);
+	/**
+	 * returns true if the character leveled up
+	 * @param characterId
+	 * @param amount
+	 * @return
+	 */
+	public boolean addExperience(Long characterId, int amount);
 
-	public void addExperience(PlayerCharacter character, int amount);
+	/**
+	 * returns true if the character leveled up
+	 * @param character
+	 * @param amount
+	 * @return
+	 */
+	public boolean addExperience(PlayerCharacter character, int amount);
 
 	public void addItemsToInventory(Long characterId,
 			@SuppressWarnings("unchecked") Pair<String, Integer>... itemAndAmount);

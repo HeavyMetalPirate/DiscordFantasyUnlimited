@@ -135,21 +135,21 @@ public class FantasyUnlimited extends BaseBot {
 			double log = (Math.log(i) / Math.log(2));
 			long experience = (long) Math.floor(Math.pow(i, 2) * 100 * log);
 			experienceTable.put(i, experience);
-			logger.trace("Level " + i + ": " + experienceTable.get(i));
 		}
 	}
 
 	public Long getNextLevelExperience(int currentLevel) {
-		if(currentLevel == 100) {
+		if (currentLevel == 100) {
 			return 0L;
 		}
 		int nextLevel = currentLevel + 1;
 		return experienceTable.get(nextLevel);
 	}
+
 	public Long getCurrentXpForLevel(int level, int totalxp) {
 		return totalxp - experienceTable.get(level);
 	}
-	
+
 	public Cache<Long, DiscordPlayer> getRegisteredUserCache() {
 		return cacheManager.getCache("registeredUsersPlaying", Long.class, DiscordPlayer.class);
 	}
@@ -313,7 +313,12 @@ public class FantasyUnlimited extends BaseBot {
 		new Thread(() -> {
 			for (String emoji : customEmojis.keySet()) {
 				RequestBuffer.request(() -> {
-					message.addReaction(ReactionEmoji.of(emoji, customEmojis.get(emoji)));
+					//0L = marker for unicodes
+					if (customEmojis.get(emoji) == 0L) {
+						message.addReaction(ReactionEmoji.of(emoji));
+					} else {
+						message.addReaction(ReactionEmoji.of(emoji, customEmojis.get(emoji)));
+					}
 				}).get();
 			}
 		}).start();

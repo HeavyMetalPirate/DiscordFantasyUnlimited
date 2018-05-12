@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fantasyunlimited.dao.DiscordUserRepository;
 import com.fantasyunlimited.dao.PlayerCharacterRepository;
+import com.fantasyunlimited.discord.FantasyUnlimited;
+import com.fantasyunlimited.discord.xml.CharacterClass;
 import com.fantasyunlimited.entity.DiscordPlayer;
 import com.fantasyunlimited.entity.PlayerCharacter;
 import com.google.common.collect.Lists;
@@ -95,8 +97,8 @@ public class DiscordPlayerLogicImpl implements DiscordPlayerLogic {
 
 	@Override
 	@Transactional(rollbackFor = IllegalStateException.class)
-	public void addExperience(PlayerCharacter character, int amount) {
-		addExperience(character.getId(), amount);
+	public boolean addExperience(PlayerCharacter character, int amount) {
+		return addExperience(character.getId(), amount);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -108,14 +110,38 @@ public class DiscordPlayerLogicImpl implements DiscordPlayerLogic {
 
 	@Override
 	@Transactional(rollbackFor = IllegalStateException.class)
-	public void addExperience(Long characterId, int amount) {
+	public boolean addExperience(Long characterId, int amount) {
 		// load into session
 		PlayerCharacter character = characterRepository.findById(characterId).orElse(null);
 		if (character == null) {
 			throw new IllegalStateException("Provided character not in database!");
 		}
+		if (character.getCurrentLevel() == 100) {
+			return false;
+		}
 		character.setCurrentXp(character.getCurrentXp() + amount);
+
+		boolean ret = false;
+		long xpForNextLevel = FantasyUnlimited.getInstance().getNextLevelExperience(character.getCurrentLevel());
+		if (character.getCurrentXp() >= xpForNextLevel & character.getCurrentLevel() < 100) {
+			character.setCurrentLevel(character.getCurrentLevel() + 1);
+			character.getAttributes().raiseUnspent(5);
+			
+			//do class attribute raise
+			CharacterClass charClass = FantasyUnlimited.getInstance().getClassBag().getItem(character.getClassId());
+			character.getAttributes().raiseEndurance(charClass.getAttributes().getEnduranceGrowth());
+			character.getAttributes().raiseStrength(charClass.getAttributes().getStrengthGrowth());
+			character.getAttributes().raiseDexterity(charClass.getAttributes().getDexterityGrowth());
+			character.getAttributes().raiseWisdom(charClass.getAttributes().getWisdomGrowth());
+			character.getAttributes().raiseIntelligence(charClass.getAttributes().getIntelligenceGrowth());
+			character.getAttributes().raiseDefense(charClass.getAttributes().getDefenseGrowth());
+			character.getAttributes().raiseLuck(charClass.getAttributes().getLuckGrowth());
+			
+			ret = true;
+		}
+
 		characterRepository.save(character);
+		return ret;
 	}
 
 	@SuppressWarnings("unchecked")

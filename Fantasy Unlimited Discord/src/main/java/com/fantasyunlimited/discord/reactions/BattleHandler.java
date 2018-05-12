@@ -26,6 +26,7 @@ import com.fantasyunlimited.discord.MessageStatus.Name;
 import com.fantasyunlimited.discord.Unicodes;
 import com.fantasyunlimited.discord.entity.BattleNPC;
 import com.fantasyunlimited.discord.entity.BattlePlayer;
+import com.fantasyunlimited.discord.xml.CharacterClass;
 import com.fantasyunlimited.discord.xml.Skill;
 import com.fantasyunlimited.discord.xml.Skill.SkillType;
 import com.fantasyunlimited.discord.xml.Skill.TargetType;
@@ -54,6 +55,15 @@ public class BattleHandler extends ReactionsHandler {
 
 		MessageInformation msgInfo = getInformationSecure(event);
 
+		if (event.getReaction().getEmoji().getName().equals(Unicodes.end)) {
+			fleeFromBattle(event, msgInfo);
+			// Clear user reactions
+			RequestBuffer.request(() -> {
+				event.getMessage().removeReaction(event.getUser(), event.getReaction());
+			});
+			return;
+		}
+
 		switch (msgInfo.getStatus().getName()) {
 		case BATTLE_ACTIONBAR:
 			handleActionBarStatus(event, msgInfo);
@@ -70,6 +80,45 @@ public class BattleHandler extends ReactionsHandler {
 		default:
 			throw new IllegalStateException();
 		}
+	}
+
+	private void fleeFromBattle(ReactionAddEvent event, MessageInformation msgInfo) {
+		PlayerCharacter playerCharacter = FantasyUnlimited.getInstance().getRegisteredUserCache()
+				.get(msgInfo.getOriginator().getLongID()).getCurrentCharacter();
+
+		BattlePlayerInformation battlePlayerInfo = FantasyUnlimited.getInstance().getBattles()
+				.get(playerCharacter.getId());
+		BattleInformation battleInfo = fetchBattleInformation(battlePlayerInfo.getCharacter());
+
+		if (battleInfo.isFinished()) {
+			return;
+		}
+
+		if (battleInfo.getAlivePlayerCount() > 1) {
+			// you cannot flee if you're in a party with more than one player alive!
+			// TODO maybe let the single player run from this battle and abandon the party
+			FantasyUnlimited.getInstance().sendMessage(event.getChannel(), "You can't run away right now!");
+			return;
+		}
+
+		for (Long id : battleInfo.getPlayers().keySet()) {
+			BattlePlayerInformation playerInfo = battleInfo.getPlayers().get(id);
+
+			IMessage message = playerInfo.getMessage();
+			RequestBuffer.request(() -> {
+				message.delete();
+			});
+		}
+
+		for (BattlePlayerInformation playerInfo : battleInfo.getPlayers().values()) {
+			FantasyUnlimited.getInstance().getBattles().remove(playerInfo.getCharacter().getCharacterId());
+			FantasyUnlimited.getInstance().getBattleMap().remove(playerInfo.getCharacter().getCharacterId());
+		}
+
+		embedBuilder = BattleUtils.createBattleOutputEmbeds(battleInfo);
+		embedBuilder.appendField("You managed to get away", "You got away - this time.", false);
+		FantasyUnlimited.getInstance().editMessage(battleInfo.getMessage(), embedBuilder.build());
+		battleInfo.flee();
 	}
 
 	private void handleTargetSelectionStatus(ReactionAddEvent event, MessageInformation msgInfo) {
@@ -151,6 +200,15 @@ public class BattleHandler extends ReactionsHandler {
 		}
 
 		ReactionEmoji usedEmoji = event.getReaction().getEmoji();
+		// Clear user reactions
+		RequestBuffer.request(() -> {
+			event.getMessage().removeReaction(event.getUser(), event.getReaction());
+		});
+		
+		if (usedEmoji.getName().equals(Unicodes.crossmark)) {
+			queueAction(battlePlayerInfo);
+			return;
+		}
 
 		for (Skill skill : character.getCharClass().getAvailableSkills(character.getLevel(),
 				character.getAttributes())) {
@@ -160,11 +218,6 @@ public class BattleHandler extends ReactionsHandler {
 				break;
 			}
 		}
-
-		// Clear user reactions
-		RequestBuffer.request(() -> {
-			event.getMessage().removeReaction(event.getUser(), event.getReaction());
-		});
 
 		if (battlePlayerInfo.getSkillUsed() == null) {
 			return;
@@ -270,12 +323,16 @@ public class BattleHandler extends ReactionsHandler {
 		action.setUsedSkill(usedSkill);
 		action.setArea(false);
 
-		if (usedSkill.getTargetType() == TargetType.OWN) {
-			action.setTarget(playerInfo.getCharacter());
-		} else if (usedSkill.getTargetType() == TargetType.AREA) {
-			action.setArea(true);
+		if (usedSkill == null) {
+			action.setPass(true);
 		} else {
-			action.setTarget(playerInfo.getTarget());
+			if (usedSkill.getTargetType() == TargetType.OWN) {
+				action.setTarget(playerInfo.getCharacter());
+			} else if (usedSkill.getTargetType() == TargetType.AREA) {
+				action.setArea(true);
+			} else {
+				action.setTarget(playerInfo.getTarget());
+			}
 		}
 
 		BattleInformation battle = fetchBattleInformation(playerInfo.getCharacter());
@@ -420,6 +477,10 @@ public class BattleHandler extends ReactionsHandler {
 				return;
 			}
 
+			if (battle.getAliveEnemyCount() > 0) {
+				return;
+			}
+
 			int xppool = 0;
 			int averagelevel = 0;
 			for (BattleNPC npc : battle.getHostiles().values()) {
@@ -433,6 +494,8 @@ public class BattleHandler extends ReactionsHandler {
 			logger.trace("Average level: " + averagelevel);
 			logger.trace("XP pool: " + xppool);
 
+			StringBuilder builder = new StringBuilder();
+			builder.append("```md\n");
 			for (BattlePlayerInformation playerInfo : battle.getPlayers().values()) {
 				int yield = Math.floorDiv(xppool, battle.getPlayers().size());
 				logger.trace("XP for player " + playerInfo.getCharacter().getName() + " before level bonus: " + yield);
@@ -441,20 +504,48 @@ public class BattleHandler extends ReactionsHandler {
 				if (level > averagelevel) {
 					multiplier = multiplier * -1;
 				}
-				if(multiplier == 0) {
+				if (multiplier == 0) {
 					multiplier = 1;
 				}
 				yield = (int) Math.ceil(yield * multiplier);
 				logger.trace("Character level: " + playerInfo.getCharacter().getLevel());
 				logger.trace("XP for player " + playerInfo.getCharacter().getName() + " after level bonus: " + yield);
 
-				playerLogic.addExperience(playerInfo.getCharacter().getCharacterId(), yield);
+				builder.append(playerInfo.getCharacter().getName() + " received " + yield + " experience.\n");
+				if(playerLogic.addExperience(playerInfo.getCharacter().getCharacterId(), yield)) {
+					builder.append(playerInfo.getCharacter().getName() + " leveled up! They receive 5 status points for distribution.\n");
+					CharacterClass charClass = playerInfo.getCharacter().getCharClass();
+					builder.append("They also gain: \n");
+					if(charClass.getAttributes().getEnduranceGrowth() > 0) {
+						builder.append("- " + charClass.getAttributes().getEnduranceGrowth() + " Endurance\n");
+					}
+					if(charClass.getAttributes().getStrengthGrowth() > 0) {
+						builder.append("- " + charClass.getAttributes().getStrengthGrowth() + " Strength\n");
+					}
+					if(charClass.getAttributes().getDexterityGrowth() > 0) {
+						builder.append("- " + charClass.getAttributes().getDexterityGrowth() + " Dexterity\n");
+					}
+					if(charClass.getAttributes().getWisdomGrowth() > 0) {
+						builder.append("- " + charClass.getAttributes().getWisdomGrowth() + " Wisdom\n");
+					}
+					if(charClass.getAttributes().getIntelligenceGrowth() > 0) {
+						builder.append("- " + charClass.getAttributes().getIntelligenceGrowth() + " Intelligence\n");
+					}
+					if(charClass.getAttributes().getDefenseGrowth() > 0) {
+						builder.append("- " + charClass.getAttributes().getDefenseGrowth() + " Defense\n");
+					}
+					if(charClass.getAttributes().getLuckGrowth() > 0) {
+						builder.append("- " + charClass.getAttributes().getLuckGrowth() + " Luck\n");
+					}
+				}
+				//TODO loot calc and print
 				playerLogic.addItemsToInventory(playerInfo.getCharacter().getCharacterId(), Pair.of("broken-sword", 1));
 			}
-			// TODO actual exp calculations = Log(x)*x + Random(0, x/3) + x^-1
-			// TODO actual loot calculations (with party distribution / rolling?)
-			// TODO print exp and loot gained per player
+			builder.append("```");
+			
+			embedBuilder = BattleUtils.createBattleOutputEmbeds(battle);
+			embedBuilder.appendField("Results", builder.toString(), false);
+			FantasyUnlimited.getInstance().editMessage(battle.getMessage(), embedBuilder.build());
 		}
 	}
-
 }

@@ -3,10 +3,8 @@ package com.fantasyunlimited.discord;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.fantasyunlimited.discord.entity.BattleNPC;
 import com.fantasyunlimited.discord.entity.BattleParticipant;
 import com.fantasyunlimited.discord.xml.CharacterClass.EnergyType;
 import com.fantasyunlimited.discord.xml.Skill;
@@ -34,12 +32,15 @@ public class BattleAction implements Serializable {
 	private int actionAmount;
 
 	public void executeAction() {
-		// TODO actual battle, lmao
 		if (executed) {
 			return;
 		}
 		executed = true;
 		actionAmount = 0;
+		if (isPass) {
+			performAtkUsageAndRegen(0);
+			return;
+		}
 		// if you die in that round, don't do actions because u ded
 		if (executing.isDefeated()) {
 			return;
@@ -100,7 +101,10 @@ public class BattleAction implements Serializable {
 		}
 		int totalcost = usedSkill.getCostOfExecution();
 		totalcost += rank.getCostModifier();
-
+		performAtkUsageAndRegen(totalcost);
+	}
+	
+	private void performAtkUsageAndRegen(int totalcost) {
 		if (executing.getCharClass().getEnergyType() == EnergyType.RAGE) {
 			executing.consumeAtkResource(totalcost);
 			executing.generateRage(actionAmount);

@@ -36,10 +36,10 @@ import sx.blah.discord.handle.obj.IMessage;
 public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 	public static final String CMD = "battle";
 	protected static final Logger logger = Logger.getLogger(BattleCommandHandler.class);
-	
+
 	@Autowired
 	private DiscordPlayerLogic playerLogic;
-	
+
 	public BattleCommandHandler(Properties properties) {
 		super(properties, CMD);
 	}
@@ -94,7 +94,7 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 		private BattleInformation fetchBattleInformation(BattlePlayer character) {
 			return FantasyUnlimited.getInstance().getBattleMap().get(character.getCharacterId());
 		}
-		
+
 		@Override
 		public void accept(MessageReceivedEvent t) {
 			BattlePlayerInformation existing = FantasyUnlimited.getInstance().getBattles().get(character.getId());
@@ -131,7 +131,7 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 				playerList.add(player);
 
 				BattlePlayerInformation playerBattleInfo = new BattlePlayerInformation();
-				
+
 				playerBattleInfo.setCharacter(player);
 				information.getPlayers().put(character.getId(), playerBattleInfo);
 				FantasyUnlimited.getInstance().getBattleMap().put(player.getCharacterId(), information);
@@ -164,7 +164,7 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 
 			IMessage message = FantasyUnlimited.getInstance().sendMessage(t.getChannel(), embedBuilder.build());
 			information.setMessage(message);
-			
+
 			for (BattlePlayer character : playerList) {
 				int level = character.getLevel();
 				Attributes attributes = character.getAttributes();
@@ -174,11 +174,17 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 				List<Skill> skills = character.getCharClass().getAvailableSkills(level, attributes);
 
 				StringBuilder skillBuilder = new StringBuilder();
+
+				skillBuilder.append(":end: `Run from battle` - ");
+				skillBuilder.append(":x: `Pass this round`\n");
+
 				Map<String, Long> skillIcons = new LinkedHashMap<>();
+				skillIcons.put(Unicodes.end, 0L);
+				skillIcons.put(Unicodes.crossmark, 0L);
 				for (Skill skill : skills) {
 
 					SkillRank rank = skill.getHighestAvailable(level, attributes);
-					//put the icon to the bar regardless, to keep it in order
+					// put the icon to the bar regardless, to keep it in order
 					skillIcons.put(skill.getIconName(), Long.parseLong(skill.getIconId()));
 					int skillCost = skill.getCostOfExecution();
 					skillCost += rank.getCostModifier();
@@ -189,20 +195,17 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 					skillBuilder.append("<:" + skill.getIconName() + ":" + skill.getIconId() + "> `" + skill.getName()
 							+ " (Rank " + rank.getRank() + ") - " + skillCost + " "
 							+ character.getCharClass().getEnergyType().toString() + "`\n");
-					
-					if(skillIcons.size() == 5) {
-						//max 5 items on the actionbar
+
+					if (skillIcons.size() == 5) {
+						// max 5 items on the actionbar
 						break;
 					}
 				}
 
 				IMessage actionbar = FantasyUnlimited.getInstance().sendMessage(t.getChannel(),
 						"<@" + character.getDiscordId() + "> - Action Bar\n" + skillBuilder.toString());
-				if (skillIcons.size() == 0) {
-					FantasyUnlimited.getInstance().addReactions(actionbar, Unicodes.crossmark);
-				} else {
-					FantasyUnlimited.getInstance().addCustomReactions(actionbar, skillIcons);
-				}
+				FantasyUnlimited.getInstance().addCustomReactions(actionbar, skillIcons);
+				
 				MessageInformation msgInfo = new MessageInformation();
 				msgInfo.setCanBeRemoved(false);
 				msgInfo.setMessage(actionbar);

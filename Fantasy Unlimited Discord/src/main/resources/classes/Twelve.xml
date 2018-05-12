@@ -15,13 +15,13 @@
 		<intelligence>1</intelligence>
 		<defense>1</defense>
 		<luck>1</luck>
-		<enduranceGrowth>0</enduranceGrowth>
-		<strengthGrowth>0</strengthGrowth>
+		<enduranceGrowth>1</enduranceGrowth>
+		<strengthGrowth>2</strengthGrowth>
 		<dexterityGrowth>0</dexterityGrowth>
 		<wisdomGrowth>0</wisdomGrowth>
 		<intelligenceGrowth>0</intelligenceGrowth>
-		<defenseGrowth>0</defenseGrowth>
-		<luckGrowth>0</luckGrowth>
+		<defenseGrowth>1</defenseGrowth>
+		<luckGrowth>1</luckGrowth>
 	</attributes>
 	<startingMainhand>broken-sword</startingMainhand>
 	<startingOffhand>-1</startingOffhand>
