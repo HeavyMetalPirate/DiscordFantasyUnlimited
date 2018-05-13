@@ -16,7 +16,7 @@ import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
 public class BattleUtils {
-	
+
 	public static final void prepareNextroundActionbars(BattleInformation information) {
 
 		for (Long id : information.getPlayers().keySet()) {
@@ -54,9 +54,9 @@ public class BattleUtils {
 			for (Skill skill : skills) {
 
 				SkillRank rank = skill.getHighestAvailable(level, attributes);
-				//put the icon to the bar regardless
+				// put the icon to the bar regardless
 				skillIcons.put(skill.getIconName(), Long.parseLong(skill.getIconId()));
-				
+
 				int skillCost = skill.getCostOfExecution();
 				skillCost += rank.getCostModifier();
 				if (character.getCurrentAtkResource() < skillCost) {
@@ -66,9 +66,9 @@ public class BattleUtils {
 				skillBuilder.append("<:" + skill.getIconName() + ":" + skill.getIconId() + "> `" + skill.getName()
 						+ " (Rank " + rank.getRank() + ") - " + skillCost + " "
 						+ character.getCharClass().getEnergyType().toString() + "`\n");
-				
-				if(skillIcons.size() == 5) {
-					//max 5 items on the actionbar
+
+				if (skillIcons.size() == 7) {
+					// max 5 items on the actionbar, plus flee/pass buttons
 					break;
 				}
 			}
@@ -94,6 +94,7 @@ public class BattleUtils {
 			BattlePlayerInformation battlePlayerInfo = information.getPlayers().get(character.getCharacterId());
 			battlePlayerInfo.setMessage(actionbar);
 			FantasyUnlimited.getInstance().getBattles().put(character.getCharacterId(), battlePlayerInfo);
+			FantasyUnlimited.getInstance().getBattleMap().put(character.getCharacterId(), information);
 		}
 	}
 
@@ -167,7 +168,7 @@ public class BattleUtils {
 
 		}
 		enemies.append("```\n");
-		
+
 		return new SerializableEmbedBuilder().withTitle("Battle").appendField("Players (1)", players.toString(), true)
 				.appendField("Enemies (" + information.getHostiles().size() + ")", enemies.toString(), true)
 				.appendField("Battle Log - Round " + information.getCurrentRound(), battlelog.toString(), false);
@@ -201,8 +202,8 @@ public class BattleUtils {
 				}
 
 				action.executeAction();
-				
-				if( action.isBlocked() ) {
+
+				if (action.isBlocked()) {
 					builder.append("(Blocked) ");
 				} else if (action.isDodged()) {
 					builder.append("(Dodged) ");
@@ -211,11 +212,12 @@ public class BattleUtils {
 				} else if (action.isCritical()) {
 					builder.append("(Critical) ");
 				}
-				
+
 				builder.append(action.getUsedSkill().getName() + " for " + action.getActionAmount() + " -> ");
 
 				if (action.isArea()) {
 					builder.append("Area attack");
+					//TODO needs a way to print the whole damage
 				} else if (action.getTarget() instanceof BattlePlayer) {
 					builder.append(((BattlePlayer) action.getTarget()).getName());
 				} else if (action.getTarget() instanceof BattleNPC) {

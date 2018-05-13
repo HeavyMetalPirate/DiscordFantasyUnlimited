@@ -81,7 +81,7 @@ public class BattleAction implements Serializable {
 		}
 
 		float chance = ThreadLocalRandom.current().nextFloat();
-		float crit = target.calculateCritChance() / 100;
+		float crit = executing.calculateCritChance() / 100;
 		if (chance < crit) {
 			critical = true;
 			actionAmount *= 2;
@@ -120,11 +120,11 @@ public class BattleAction implements Serializable {
 		if (executing.getCharClass().getEnergyType() == EnergyType.RAGE) {
 			executing.consumeAtkResource(totalcost);
 			if (dodged || parried || blocked) {
-				//no rage gain for attacks evaded
+				// no rage gain for attacks evaded
 				return;
 			}
 			if (usedSkill.getTargetType() == TargetType.OWN || usedSkill.getTargetType() == TargetType.FRIEND) {
-				//no rage gain for supportive attacks
+				// no rage gain for supportive attacks
 				return;
 			}
 			executing.generateRage(actionAmount);
@@ -138,31 +138,38 @@ public class BattleAction implements Serializable {
 		// TODO how to deal with buffs
 	}
 
+	private boolean hasEvadedAttack(BattleParticipant target) {
+		float chance = ThreadLocalRandom.current().nextFloat();
+		float dodge = target.calculateDodgeChance() / 100;
+
+		if (chance < dodge) {
+			dodged = true;
+			return true;
+		}
+
+		chance = ThreadLocalRandom.current().nextFloat();
+		float block = target.calculateBlockChance() / 100;
+		if (chance < block) {
+			blocked = true;
+			return true;
+		}
+
+		chance = ThreadLocalRandom.current().nextFloat();
+		float parry = target.calculateParryChance() / 100;
+		if (chance < parry) {
+			parried = true;
+			return true;
+		}
+		return false;
+	}
+
 	private void executeHealthChanging() {
 		switch (usedSkill.getTargetType()) {
 		case AREA:
+
+			break;
 		case ENEMY:
-			float chance = ThreadLocalRandom.current().nextFloat();
-			float dodge = target.calculateDodgeChance() / 100;
-
-			if (chance < dodge) {
-				dodged = true;
-				actionAmount = 0;
-				return;
-			}
-
-			chance = ThreadLocalRandom.current().nextFloat();
-			float block = target.calculateBlockChance() / 100;
-			if (chance < block) {
-				blocked = true;
-				actionAmount = 0;
-				return;
-			}
-
-			chance = ThreadLocalRandom.current().nextFloat();
-			float parry = target.calculateParryChance() / 100;
-			if (chance < parry) {
-				parried = true;
+			if (hasEvadedAttack(target)) {
 				actionAmount = 0;
 				return;
 			}
@@ -177,6 +184,10 @@ public class BattleAction implements Serializable {
 		switch (usedSkill.getTargetType()) {
 		case AREA:
 			for (BattleParticipant target : areaTargets) {
+				if (hasEvadedAttack(target)) {
+					continue;
+				}
+				//damage doesn't get applied this way, TODO FIXME
 				target.applyDamage(actionAmount);
 			}
 			break;

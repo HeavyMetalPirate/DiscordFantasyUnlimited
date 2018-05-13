@@ -323,6 +323,8 @@ public class BattleHandler extends ReactionsHandler {
 		action.setUsedSkill(usedSkill);
 		action.setArea(false);
 
+		BattleInformation battle = fetchBattleInformation(playerInfo.getCharacter());
+		
 		if (usedSkill == null) {
 			action.setPass(true);
 		} else {
@@ -330,12 +332,12 @@ public class BattleHandler extends ReactionsHandler {
 				action.setTarget(playerInfo.getCharacter());
 			} else if (usedSkill.getTargetType() == TargetType.AREA) {
 				action.setArea(true);
+				action.getAreaTargets().addAll(battle.getHostiles().values());
 			} else {
 				action.setTarget(playerInfo.getTarget());
 			}
 		}
-
-		BattleInformation battle = fetchBattleInformation(playerInfo.getCharacter());
+		
 		// add the player info anew to avoid stale message data!
 		battle.getPlayers().put(playerInfo.getCharacter().getCharacterId(), playerInfo);
 		if (battle.getRounds().get(battle.getCurrentRound()) == null) {

@@ -196,8 +196,8 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 							+ " (Rank " + rank.getRank() + ") - " + skillCost + " "
 							+ character.getCharClass().getEnergyType().toString() + "`\n");
 
-					if (skillIcons.size() == 5) {
-						// max 5 items on the actionbar
+					if (skillIcons.size() == 7) {
+						// max 5 items on the actionbar, plus flee/pass buttons
 						break;
 					}
 				}
