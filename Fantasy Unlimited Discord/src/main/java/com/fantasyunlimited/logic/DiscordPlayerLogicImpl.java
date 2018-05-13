@@ -137,6 +137,8 @@ public class DiscordPlayerLogicImpl implements DiscordPlayerLogic {
 			character.getAttributes().raiseDefense(charClass.getAttributes().getDefenseGrowth());
 			character.getAttributes().raiseLuck(charClass.getAttributes().getLuckGrowth());
 			
+			character.setCurrentHealth(character.getMaxHealth());
+			
 			ret = true;
 		}
 
