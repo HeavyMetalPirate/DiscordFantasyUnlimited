@@ -120,6 +120,11 @@ public class BattleAction implements Serializable {
 		if (executing.getCharClass().getEnergyType() == EnergyType.RAGE) {
 			executing.consumeAtkResource(totalcost);
 			if (dodged || parried || blocked) {
+				//no rage gain for attacks evaded
+				return;
+			}
+			if (usedSkill.getTargetType() == TargetType.OWN || usedSkill.getTargetType() == TargetType.FRIEND) {
+				//no rage gain for supportive attacks
 				return;
 			}
 			executing.generateRage(actionAmount);
