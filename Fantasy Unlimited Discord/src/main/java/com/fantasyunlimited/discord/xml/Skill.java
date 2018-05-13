@@ -62,7 +62,7 @@ public class Skill extends GenericItem {
 		
 		for (SkillRank rank : ranks) {
 			if (level >= rank.getRequiredPlayerLevel() && attributeInQuestion >= rank.getRequiredAttributeValue()
-					&& (highest == null || highest.getRank() > rank.getRank())) {
+					&& (highest == null || highest.getRank() < rank.getRank())) {
 				highest = rank;
 			}
 		}
