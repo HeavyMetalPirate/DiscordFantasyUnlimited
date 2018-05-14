@@ -7,15 +7,15 @@ Might add REST capabilities or even a full homepage later on, depending on how t
   Also needs a "no pagination required anymore" flag
   
 - Battle:
-	- Tweak formulas in BattleParticipant.class
-	- Tweak damage formula in BattleAction.class
+	- Tweak formulas in BattleParticipant.class - at least partially done
+	- Tweak damage formula in BattleAction.class - at least partially done
 	- Think about a way to apply buffs/debuffs
-	- Implement area effects
+	- Implement area effects - done; now needs to be printed in a more sophisticated way (showing damage/effect values for each target seperately)
 	- Persist value changes to health/atkres(?)
-	- Flee button !
-	- Put data to cache after each action(?) (at least after each round has been calculated because else the cache will have stale data after restarts, duh)
-	- Hand out XP and loot
-	- Implement "waiting for others" for playing in a party
+	- Flee button - done;
+	- Put data to cache after each round - done; no more stale caches!
+	- Hand out XP and loot - XP done, loot static for now, also needs a way of printing all loot and possibly rolling for rarer items in a party
+	- Implement "waiting for others" for playing in a party - done
 	- (!) fix that weird bug with message coming back null at BattleUtils.java:65 - Fixed: the cache sometimes had stale data
 [06-05-2018 22:15:01]-[Event Dispatcher Handler]-[]-[ERROR]-[com.fantasyunlimited.discord.FantasyUnlimited.sendExceptionMessage(FantasyUnlimited.java:160)]: Error occured:                                                                                                                                                                                          
 java.lang.NullPointerException
