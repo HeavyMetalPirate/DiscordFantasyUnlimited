@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.fantasyunlimited.discord.MessageStatus.Name;
 import com.fantasyunlimited.discord.entity.BattleNPC;
+import com.fantasyunlimited.discord.entity.BattleParticipant;
 import com.fantasyunlimited.discord.entity.BattlePlayer;
 import com.fantasyunlimited.discord.xml.Skill;
 import com.fantasyunlimited.discord.xml.SkillRank;
@@ -176,7 +177,7 @@ public class BattleUtils {
 
 	private static final StringBuilder createBattleLog(BattleInformation battle) {
 		StringBuilder builder = new StringBuilder();
-		builder.append("```\n");
+		builder.append("```diff\n");
 		if (battle.getRounds().size() == 0) {
 			builder.append("No actions have been taken yet.");
 		} else {
@@ -186,11 +187,21 @@ public class BattleUtils {
 				round = battle.getRounds().get(battle.getCurrentRound() - 1);
 			}
 			for (BattleAction action : round) {
+				String name = "";
+				String prefix = "";
 				if (action.getExecuting() instanceof BattlePlayer) {
-					builder.append(((BattlePlayer) action.getExecuting()).getName() + " -> ");
+					prefix = "+ ";
+					name = ((BattlePlayer) action.getExecuting()).getName();
 				} else {
-					builder.append(((BattleNPC) action.getExecuting()).getBase().getName() + " -> ");
+					prefix = "- ";
+					name = ((BattleNPC) action.getExecuting()).getBase().getName();
 				}
+
+				if (name.length() > 25) {
+					name = name.substring(0, 22) + "...";
+				}
+
+				builder.append(prefix + MessageFormatUtils.fillStringSuffix(name, 16) + " -> ");
 
 				if (action.isPass()) {
 					builder.append("Passed\n");
@@ -203,30 +214,54 @@ public class BattleUtils {
 
 				action.executeAction();
 
-				if (action.isBlocked()) {
-					builder.append("(Blocked) ");
-				} else if (action.isDodged()) {
-					builder.append("(Dodged) ");
-				} else if (action.isParried()) {
-					builder.append("(Parried) ");
-				} else if (action.isCritical()) {
-					builder.append("(Critical) ");
-				}
-
-				builder.append(action.getUsedSkill().getName() + " for " + action.getActionAmount() + " -> ");
-
 				if (action.isArea()) {
-					builder.append("Area attack");
-					//TODO needs a way to print the whole damage
-				} else if (action.getTarget() instanceof BattlePlayer) {
-					builder.append(((BattlePlayer) action.getTarget()).getName());
-				} else if (action.getTarget() instanceof BattleNPC) {
-					builder.append(((BattleNPC) action.getTarget()).getBase().getName());
-				} else {
-					builder.append("65wat.jpg");
-				}
+					builder.append(action.getUsedSkill().getName() + " (Area)\n");
+					for (String target : action.getAreaDamage().keySet()) {
+												
+						if(target.length() > 25) {
+							target = target.substring(0, 22) + "...";
+						}
+						
+						builder.append(prefix + " -> " + MessageFormatUtils.fillStringSuffix(target, 16) + " -> ");
+						Integer damage = action.getAreaDamage().get(target);
 
-				builder.append("\n");
+						if (damage == BattleAction.PARRIED) {
+							builder.append("Parried");
+						} else if (damage == BattleAction.DODGED) {
+							builder.append("Dodged");
+						} else if (damage == BattleAction.BLOCKED) {
+							builder.append("Blocked");
+						} else {
+							builder.append(damage);
+						}
+						builder.append("\n");
+					}
+				} else {
+
+					if (action.isBlocked()) {
+						builder.append("(Blocked) ");
+					} else if (action.isDodged()) {
+						builder.append("(Dodged) ");
+					} else if (action.isParried()) {
+						builder.append("(Parried) ");
+					} else if (action.isCritical()) {
+						builder.append("(Critical) ");
+					}
+
+					builder.append(action.getUsedSkill().getName() + " for " + action.getActionAmount() + " -> ");
+
+					if (action.isArea()) {
+						builder.append("Area attack");
+						// TODO needs a way to print the whole damage
+					} else if (action.getTarget() instanceof BattlePlayer) {
+						builder.append(((BattlePlayer) action.getTarget()).getName());
+					} else if (action.getTarget() instanceof BattleNPC) {
+						builder.append(((BattleNPC) action.getTarget()).getBase().getName());
+					} else {
+						builder.append("65wat.jpg");
+					}
+					builder.append("\n");
+				}
 			}
 		}
 		checkBattleFinished(battle, builder);

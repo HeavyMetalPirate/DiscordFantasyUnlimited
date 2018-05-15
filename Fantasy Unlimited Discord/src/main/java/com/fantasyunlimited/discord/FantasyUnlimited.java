@@ -47,6 +47,7 @@ import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IReaction;
 import sx.blah.discord.handle.obj.IUser;
+import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.MessageBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
@@ -174,23 +175,29 @@ public class FantasyUnlimited extends BaseBot {
 		if (owner == null) {
 			owner = client.getUserByID(Long.parseLong(properties.getProperty("owner")));
 		}
-
+		EmbedBuilder embedBuilder = new EmbedBuilder();
 		logger.error("Error occured: ", e);
 		sendMessage(owner.getOrCreatePMChannel(), "An error occured.");
 		String builder = "";
-		builder += ("```");
+		builder += ("```\n");
 		builder += (e.getClass().getCanonicalName() + ": ");
 		builder += (e.getMessage() + "\n");
 		int stackelements = 0;
 		for (StackTraceElement element : e.getStackTrace()) {
 			builder += ("\tat " + element.toString() + "\n");
 			stackelements++;
-			if (stackelements == 5) {
+			if (stackelements == 15) {
 				break;
 			}
 		}
+		builder += "```";
+		embedBuilder.appendField("Exception", builder, false);
+		builder = "";
 		Throwable next = e.getCause();
+		int cause = 0;
 		while (next != null) {
+			cause++;
+			builder += ("```\n");
 			builder += ("Cause:\n");
 			builder += (next.getClass().getCanonicalName() + ": ");
 			builder += (next.getMessage() + "\n");
@@ -198,14 +205,15 @@ public class FantasyUnlimited extends BaseBot {
 			for (StackTraceElement element : next.getStackTrace()) {
 				builder += ("\tat " + element.toString() + "\n");
 				stackelements++;
-				if (stackelements == 5) {
+				if (stackelements == 15) {
 					break;
 				}
 			}
+			builder += ("```");
+			embedBuilder.appendField("Cause " + cause, builder, false);
 			next = next.getCause();
 		}
-		builder += ("```");
-		sendMessage(owner.getOrCreatePMChannel(), builder);
+		sendMessage(owner.getOrCreatePMChannel(), embedBuilder.build());
 	}
 
 	public XStream initializeXStream() {
