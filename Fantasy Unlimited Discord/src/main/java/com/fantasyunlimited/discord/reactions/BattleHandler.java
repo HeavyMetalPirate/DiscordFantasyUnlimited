@@ -14,6 +14,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
+import org.jboss.weld.bootstrap.FastProcessAnnotatedTypeResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fantasyunlimited.discord.BattleAction;
@@ -27,6 +28,7 @@ import com.fantasyunlimited.discord.Unicodes;
 import com.fantasyunlimited.discord.entity.BattleNPC;
 import com.fantasyunlimited.discord.entity.BattlePlayer;
 import com.fantasyunlimited.discord.xml.CharacterClass;
+import com.fantasyunlimited.discord.xml.Dropable;
 import com.fantasyunlimited.discord.xml.Skill;
 import com.fantasyunlimited.discord.xml.Skill.SkillType;
 import com.fantasyunlimited.discord.xml.Skill.TargetType;
@@ -490,6 +492,8 @@ public class BattleHandler extends ReactionsHandler {
 				return;
 			}
 
+			Map<Dropable, Integer> loot = new HashMap<>();
+			
 			int xppool = 0;
 			int averagelevel = 0;
 			for (BattleNPC npc : battle.getHostiles().values()) {
@@ -497,7 +501,19 @@ public class BattleHandler extends ReactionsHandler {
 				xppool += (int) Math.ceil(Math.log10(level) * level + (10 + level)
 						+ ThreadLocalRandom.current().nextDouble(level * 2 / 3));
 				averagelevel += npc.getLevel();
-
+				
+				for(String itemId: npc.getBase().getLoottable().keySet()) {
+					float chance = ThreadLocalRandom.current().nextFloat() * 100;
+					if(chance < npc.getBase().getLoottable().get(itemId)) {
+						Dropable item = FantasyUnlimited.getInstance().getDropableItem(itemId);
+						if(loot.containsKey(item)) {
+							loot.put(item, loot.get(item) + 1);
+						}
+						else {
+							loot.put(item, 1);
+						}
+					}
+				}
 			}
 			averagelevel = Math.floorDiv(averagelevel, battle.getHostiles().size());
 			logger.trace("Average level: " + averagelevel);
@@ -551,9 +567,31 @@ public class BattleHandler extends ReactionsHandler {
 						builder.append("- " + charClass.getAttributes().getLuckGrowth() + " Luck\n");
 					}
 				}
-				// TODO loot calc and print
+				// TODO loot calc and print				
 				playerLogic.addItemsToInventory(playerInfo.getCharacter().getCharacterId(), Pair.of("broken-sword", 1));
 			}
+			
+			if(battle.getPlayers().size() == 1) {
+				BattlePlayerInformation playerInfo = battle.getPlayers().values().iterator().next();
+				builder.append(playerInfo.getCharacter().getName() + " found the following items:\n");
+				List<Pair<String,Integer>> items = new ArrayList<>();
+				for(Dropable item: loot.keySet()) {
+					items.add(Pair.of(item.getId(), loot.get(item)));
+					builder.append(loot.get(item) + "x " + item.getName());
+				}
+				Pair<String,Integer>[] itemArray = new Pair[items.size()];
+				itemArray = items.toArray(itemArray);
+				playerLogic.addItemsToInventory(playerInfo.getCharacter().getCharacterId(), itemArray);
+			}
+			else {
+				//round robbin!
+				//TODO 
+				//plan: 
+				//every common item that matches number of players: everyone gets one
+				//every common item that doesn't match (= itemCount % playerCount != 0) => random chance
+				//every item rarer than common => roll for it
+			}
+			
 			builder.append("```");
 
 			embedBuilder = BattleUtils.createBattleOutputEmbeds(battle);

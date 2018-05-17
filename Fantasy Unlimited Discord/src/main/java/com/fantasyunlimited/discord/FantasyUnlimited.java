@@ -151,6 +151,22 @@ public class FantasyUnlimited extends BaseBot {
 		return totalxp - experienceTable.get(level);
 	}
 
+	public Dropable getDropableItem(String id) {
+		Dropable dropable = null;
+		
+		dropable = equipmentBag.getItem(id);
+		if(dropable != null) {
+			return dropable;
+		}
+		dropable = weaponBag.getItem(id);
+		if(dropable != null) {
+			return dropable;
+		}
+		//TODO others
+		
+		return dropable;
+	}
+	
 	public Cache<Long, DiscordPlayer> getRegisteredUserCache() {
 		return cacheManager.getCache("registeredUsersPlaying", Long.class, DiscordPlayer.class);
 	}
