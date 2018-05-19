@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.fantasyunlimited.discord.BattleStatus;
 import com.fantasyunlimited.discord.FantasyUnlimited;
 import com.fantasyunlimited.discord.xml.CharacterClass;
 import com.fantasyunlimited.discord.xml.CombatSkill;
@@ -39,6 +40,8 @@ public abstract class BattleParticipant implements Serializable {
 	protected Attributes attributes;
 	protected BattleEquipment equipment;
 
+	private List<BattleStatus> statusModifiers = new ArrayList<>();
+	
 	public BattleParticipant() {
 	}
 
@@ -253,5 +256,13 @@ public abstract class BattleParticipant implements Serializable {
 
 	public float getRegenPercentage() {
 		return regenPercentage;
+	}
+
+	public List<BattleStatus> getStatusModifiers() {
+		return statusModifiers;
+	}
+
+	public void setStatusModifiers(List<BattleStatus> statusModifiers) {
+		this.statusModifiers = statusModifiers;
 	}
 }

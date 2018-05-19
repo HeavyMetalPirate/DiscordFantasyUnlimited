@@ -1,9 +1,7 @@
 package com.fantasyunlimited.discord;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -34,8 +32,8 @@ public class BattleAction implements Serializable {
 	private BattleParticipant executing;
 	private BattleParticipant target;
 
-	private List<BattleParticipant> areaTargets = new ArrayList<>();
-	private Map<String, Integer> areaDamage = new HashMap<>();
+	private Map<Long, BattleParticipant> areaTargets = new HashMap<>();
+	private Map<Long, Integer> areaDamage = new HashMap<>();
 
 	public static final Integer DODGED = -2^22;
 	public static final Integer BLOCKED = -2^23;
@@ -149,13 +147,13 @@ public class BattleAction implements Serializable {
 		// TODO how to deal with buffs
 	}
 
-	private boolean hasEvadedAttack(BattleParticipant target) {
+	private boolean hasEvadedAttack(Long targetId, BattleParticipant target) {
 		float chance = ThreadLocalRandom.current().nextFloat();
 		float dodge = target.calculateDodgeChance() / 100;
 
 		if (chance < dodge) {
 			dodged = true;
-			areaDamage.put(getNameOfParticipant(target), DODGED);
+			areaDamage.put(targetId, DODGED);
 			return true;
 		}
 
@@ -164,7 +162,7 @@ public class BattleAction implements Serializable {
 		if (chance < block) {
 			blocked = true;
 
-			areaDamage.put(getNameOfParticipant(target), BLOCKED);
+			areaDamage.put(targetId, BLOCKED);
 			return true;
 		}
 
@@ -172,13 +170,13 @@ public class BattleAction implements Serializable {
 		float parry = target.calculateParryChance() / 100;
 		if (chance < parry) {
 			parried = true;
-			areaDamage.put(getNameOfParticipant(target), PARRIED);
+			areaDamage.put(targetId, PARRIED);
 			return true;
 		}
 		return false;
 	}
 	
-	private String getNameOfParticipant(BattleParticipant participant) {
+	public String getNameOfParticipant(BattleParticipant participant) {
 		String name = "";
 		if(participant instanceof BattleNPC) {
 			name = ((BattleNPC)participant).getBase().getName();
@@ -195,7 +193,7 @@ public class BattleAction implements Serializable {
 
 			break;
 		case ENEMY:
-			if (hasEvadedAttack(target)) {
+			if (hasEvadedAttack(1L,target)) {
 				actionAmount = 0;
 				return;
 			}
@@ -209,13 +207,15 @@ public class BattleAction implements Serializable {
 
 		switch (usedSkill.getTargetType()) {
 		case AREA:
-			for (BattleParticipant target : areaTargets) {
-				if (hasEvadedAttack(target)) {
+			for (Long targetId : areaTargets.keySet()) {
+				BattleParticipant target = areaTargets.get(targetId);
+				if (hasEvadedAttack(targetId, target)) {
 					continue;
 				}
 				//TODO target defensive calulations
 				applyDefensiveModifiers(target);
-				areaDamage.put(getNameOfParticipant(target), actionAmount);
+				//TODO name is not good if there's several
+				areaDamage.put(targetId, actionAmount);
 				target.applyDamage(actionAmount);
 			}
 			break;
@@ -288,11 +288,11 @@ public class BattleAction implements Serializable {
 		return executed;
 	}
 
-	public List<BattleParticipant> getAreaTargets() {
+	public Map<Long, BattleParticipant> getAreaTargets() {
 		return areaTargets;
 	}
 
-	public void setAreaTargets(List<BattleParticipant> areaTargets) {
+	public void setAreaTargets(Map<Long, BattleParticipant> areaTargets) {
 		this.areaTargets = areaTargets;
 	}
 
@@ -312,11 +312,11 @@ public class BattleAction implements Serializable {
 		return parried;
 	}
 
-	public void setAreaDamage(Map<String, Integer> areaDamage) {
+	public void setAreaDamage(Map<Long, Integer> areaDamage) {
 		this.areaDamage = areaDamage;
 	}
 
-	public Map<String, Integer> getAreaDamage() {
+	public Map<Long, Integer> getAreaDamage() {
 		return areaDamage;
 	}
 }

@@ -47,8 +47,11 @@ public class BattleUtils {
 			List<Skill> skills = character.getCharClass().getAvailableSkills(level, attributes);
 
 			StringBuilder skillBuilder = new StringBuilder();
-			skillBuilder.append(":end: `Run from battle` - ");
-			skillBuilder.append(":x: `Pass this round`\n");
+			StringBuilder generalActions = new StringBuilder();
+
+			generalActions.append(":end: `Run from battle`\n");
+			generalActions.append(":x: `Pass this round`\n");
+
 			Map<String, Long> skillIcons = new LinkedHashMap<>();
 			skillIcons.put(Unicodes.end, 0L);
 			skillIcons.put(Unicodes.crossmark, 0L);
@@ -75,7 +78,10 @@ public class BattleUtils {
 			}
 
 			IMessage actionbar = FantasyUnlimited.getInstance().editMessage(playerInfo.getMessage(),
-					"<@" + character.getDiscordId() + "> - Action Bar\n" + skillBuilder.toString());
+					new SerializableEmbedBuilder()
+							.appendField("Action Bar", "<@" + character.getDiscordId() + ">", false)
+							.appendField("Skills", skillBuilder.toString(), true)
+							.appendField("General actions", generalActions.toString(), true).build());
 			if (skillIcons.size() == 0) {
 				FantasyUnlimited.getInstance().addReactions(actionbar, Unicodes.crossmark);
 			} else {
@@ -99,8 +105,14 @@ public class BattleUtils {
 		}
 	}
 
-	public static final EmbedBuilder createBattleOutputEmbeds(BattleInformation information) {
-		StringBuilder battlelog = createBattleLog(information);
+	/**
+	 * Creates the Battle Output Embed including the Battle Log based on the last round found
+	 * @param information
+	 * @param newRoundExecuted
+	 * @return
+	 */
+	public static final EmbedBuilder createBattleOutputEmbeds(BattleInformation information, boolean newRoundExecuted) {
+		StringBuilder battlelog = createBattleLog(information, newRoundExecuted);
 
 		StringBuilder players = new StringBuilder();
 		players.append("```md\n");
@@ -175,7 +187,7 @@ public class BattleUtils {
 				.appendField("Battle Log - Round " + information.getCurrentRound(), battlelog.toString(), false);
 	}
 
-	private static final StringBuilder createBattleLog(BattleInformation battle) {
+	private static final StringBuilder createBattleLog(BattleInformation battle, boolean newRound) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("```diff\n");
 		if (battle.getRounds().size() == 0) {
@@ -216,14 +228,23 @@ public class BattleUtils {
 
 				if (action.isArea()) {
 					builder.append(action.getUsedSkill().getName() + " (Area)\n");
-					for (String target : action.getAreaDamage().keySet()) {
-												
-						if(target.length() > 25) {
+					for (Long targetId : action.getAreaDamage().keySet()) {
+
+						BattleParticipant targetParticipant;
+						if (action.getExecuting() instanceof BattlePlayer) {
+							targetParticipant = battle.getHostiles().get(targetId.intValue());
+						} else {
+							targetParticipant = battle.getPlayers().get(targetId).getCharacter();
+						}
+
+						String target = action.getNameOfParticipant(targetParticipant);
+
+						if (target.length() > 25) {
 							target = target.substring(0, 22) + "...";
 						}
-						
+
 						builder.append(prefix + " -> " + MessageFormatUtils.fillStringSuffix(target, 16) + " -> ");
-						Integer damage = action.getAreaDamage().get(target);
+						Integer damage = action.getAreaDamage().get(targetId);
 
 						if (damage == BattleAction.PARRIED) {
 							builder.append("Parried");
@@ -250,10 +271,7 @@ public class BattleUtils {
 
 					builder.append(action.getUsedSkill().getName() + " for " + action.getActionAmount() + " -> ");
 
-					if (action.isArea()) {
-						builder.append("Area attack");
-						// TODO needs a way to print the whole damage
-					} else if (action.getTarget() instanceof BattlePlayer) {
+					if (action.getTarget() instanceof BattlePlayer) {
 						builder.append(((BattlePlayer) action.getTarget()).getName());
 					} else if (action.getTarget() instanceof BattleNPC) {
 						builder.append(((BattleNPC) action.getTarget()).getBase().getName());
@@ -261,6 +279,20 @@ public class BattleUtils {
 						builder.append("65wat.jpg");
 					}
 					builder.append("\n");
+				}
+			}
+			if(newRound) {
+				//walk through status effects of each participant
+				//in favor of the players, the NPCs will be handled first
+				for(BattleNPC hostile: battle.getHostiles().values()) {
+					for(BattleStatus status: hostile.getStatusModifiers()) {
+						//TODO
+					}
+				}
+				for(BattlePlayerInformation playerInfo: battle.getPlayers().values()) {
+					for(BattleStatus status: playerInfo.getCharacter().getStatusModifiers()) {
+						//TODO
+					}
 				}
 			}
 		}

@@ -17,6 +17,7 @@ import com.fantasyunlimited.discord.BattleUtils;
 import com.fantasyunlimited.discord.FantasyUnlimited;
 import com.fantasyunlimited.discord.MessageInformation;
 import com.fantasyunlimited.discord.MessageStatus;
+import com.fantasyunlimited.discord.SerializableEmbedBuilder;
 import com.fantasyunlimited.discord.MessageStatus.Name;
 import com.fantasyunlimited.discord.Unicodes;
 import com.fantasyunlimited.discord.entity.BattleNPC;
@@ -137,30 +138,7 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 				FantasyUnlimited.getInstance().getBattleMap().put(player.getCharacterId(), information);
 			}
 
-			StringBuilder players = new StringBuilder();
-			for (BattlePlayer character : playerList) {
-				players.append("```md\n");
-				players.append("[" + character.getLevel() + "][" + character.getName() + "]\n");
-				players.append(
-						"<    Health   : " + character.getCurrentHealth() + "/" + character.getMaxHealth() + ">\n");
-				players.append("#    " + character.getCharClass().getEnergyType().toString() + ": "
-						+ character.getCurrentAtkResource() + "/" + character.getMaxAtkResource() + "#\n");
-				players.append("```");
-			}
-
-			StringBuilder enemies = new StringBuilder();
-
-			enemies.append("```md\n");
-			for (int index : information.getHostiles().keySet()) {
-				BattleNPC npc = information.getHostiles().get(index);
-				enemies.append("(" + index + ") [" + npc.getLevel() + "][" + npc.getBase().getName() + "]\n");
-				enemies.append("<    Health   : " + npc.getCurrentHealth() + "/" + npc.getMaxHealth() + ">\n");
-				enemies.append("#    " + npc.getCharClass().getEnergyType().toString() + ": "
-						+ npc.getCurrentAtkResource() + "/" + npc.getMaxAtkResource() + "#\n");
-			}
-			enemies.append("```");
-
-			embedBuilder = BattleUtils.createBattleOutputEmbeds(information);
+			embedBuilder = BattleUtils.createBattleOutputEmbeds(information, false);
 
 			IMessage message = FantasyUnlimited.getInstance().sendMessage(t.getChannel(), embedBuilder.build());
 			information.setMessage(message);
@@ -174,9 +152,10 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 				List<Skill> skills = character.getCharClass().getAvailableSkills(level, attributes);
 
 				StringBuilder skillBuilder = new StringBuilder();
+				StringBuilder generalActions = new StringBuilder();
 
-				skillBuilder.append(":end: `Run from battle` - ");
-				skillBuilder.append(":x: `Pass this round`\n");
+				generalActions.append(":end: `Run from battle`\n");
+				generalActions.append(":x: `Pass this round`\n");
 
 				Map<String, Long> skillIcons = new LinkedHashMap<>();
 				skillIcons.put(Unicodes.end, 0L);
@@ -202,8 +181,12 @@ public class BattleCommandHandler extends CommandRequiresAuthenticationHandler {
 					}
 				}
 
-				IMessage actionbar = FantasyUnlimited.getInstance().sendMessage(t.getChannel(),
-						"<@" + character.getDiscordId() + "> - Action Bar\n" + skillBuilder.toString());
+				embedBuilder = new SerializableEmbedBuilder()
+						.appendField("Action Bar", "<@" + character.getDiscordId() + ">", false)
+						.appendField("Skills", skillBuilder.toString(), true)
+						.appendField("General actions", generalActions.toString(), true);
+				
+				IMessage actionbar = FantasyUnlimited.getInstance().sendMessage(t.getChannel(), embedBuilder.build());
 				FantasyUnlimited.getInstance().addCustomReactions(actionbar, skillIcons);
 				
 				MessageInformation msgInfo = new MessageInformation();

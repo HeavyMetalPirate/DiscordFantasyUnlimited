@@ -14,7 +14,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
-import org.jboss.weld.bootstrap.FastProcessAnnotatedTypeResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fantasyunlimited.discord.BattleAction;
@@ -117,7 +116,7 @@ public class BattleHandler extends ReactionsHandler {
 			FantasyUnlimited.getInstance().getBattleMap().remove(playerInfo.getCharacter().getCharacterId());
 		}
 
-		embedBuilder = BattleUtils.createBattleOutputEmbeds(battleInfo);
+		embedBuilder = BattleUtils.createBattleOutputEmbeds(battleInfo, false);
 		embedBuilder.appendField("You managed to get away", "You got away - this time.", false);
 		FantasyUnlimited.getInstance().editMessage(battleInfo.getMessage(), embedBuilder.build());
 		battleInfo.flee();
@@ -334,7 +333,9 @@ public class BattleHandler extends ReactionsHandler {
 				action.setTarget(playerInfo.getCharacter());
 			} else if (usedSkill.getTargetType() == TargetType.AREA) {
 				action.setArea(true);
-				action.getAreaTargets().addAll(battle.getHostiles().values());
+				for(Integer id: battle.getHostiles().keySet()) {
+					action.getAreaTargets().put(Integer.toUnsignedLong(id), battle.getHostiles().get(id));
+				}
 			} else {
 				action.setTarget(playerInfo.getTarget());
 			}
@@ -378,7 +379,7 @@ public class BattleHandler extends ReactionsHandler {
 		Collections.sort(actions, new BattleActionComparator());
 		// actions sorted by dexterity
 
-		embedBuilder = BattleUtils.createBattleOutputEmbeds(battle);
+		embedBuilder = BattleUtils.createBattleOutputEmbeds(battle, true);
 		FantasyUnlimited.getInstance().editMessage(battle.getMessage(), embedBuilder.build());
 
 		battle.setCurrentRound(battle.getCurrentRound() + 1);
@@ -441,6 +442,9 @@ public class BattleHandler extends ReactionsHandler {
 
 			switch (usedSkill.getTargetType()) {
 			case AREA:
+				for(Long id: battle.getPlayers().keySet()) {
+					action.getAreaTargets().put(id, battle.getPlayers().get(id).getCharacter());
+				}
 				action.setArea(true);
 				break;
 			case ENEMY:
@@ -594,7 +598,7 @@ public class BattleHandler extends ReactionsHandler {
 			
 			builder.append("```");
 
-			embedBuilder = BattleUtils.createBattleOutputEmbeds(battle);
+			embedBuilder = BattleUtils.createBattleOutputEmbeds(battle, false);
 			embedBuilder.appendField("Results", builder.toString(), false);
 			FantasyUnlimited.getInstance().editMessage(battle.getMessage(), embedBuilder.build());
 		}
