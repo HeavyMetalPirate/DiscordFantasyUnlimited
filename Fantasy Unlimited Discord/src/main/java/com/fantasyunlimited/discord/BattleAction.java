@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.fantasyunlimited.discord.BattleStatus.ModifierType;
 import com.fantasyunlimited.discord.entity.BattleNPC;
 import com.fantasyunlimited.discord.entity.BattleParticipant;
 import com.fantasyunlimited.discord.entity.BattlePlayer;
@@ -53,7 +54,7 @@ public class BattleAction implements Serializable {
 		if (isPass) {
 			performAtkUsageAndRegen(0);
 			return;
-		}
+		}		
 		// if you die in that round, don't do actions because u ded
 		if (executing.isDefeated()) {
 			return;
@@ -145,6 +146,39 @@ public class BattleAction implements Serializable {
 
 	private void executeStatusChanging() {
 		// TODO how to deal with buffs
+		BattleStatus status = new BattleStatus();
+		status.setStatusName(usedSkill.getName());
+		if(usedSkill.getType() == SkillType.BUFF) {
+			status.setModifierType(ModifierType.RAISE);
+		}
+		else {
+			status.setModifierType(ModifierType.LOWER);
+		}
+		if(usedSkill.getPreparationRounds() > 0) {
+			//wind up attack
+			status.setAmountModifier(0);
+			status.setHealthchangePerRound(0);
+			status.setHealthchangeOnEnd(actionAmount);
+			status.setRoundsRemaining(usedSkill.getPreparationRounds());
+		}
+		else {
+			if(usedSkill.getBuffModifiesAttribute() != null){
+				//stat modifier
+				status.setModifiedAttribute(usedSkill.getBuffModifiesAttribute());
+			}
+			else if(usedSkill.getBuffModifiesCombatSkill() != null) {
+				//combat skill mod
+				status.setModifiedSkill(usedSkill.getBuffModifiesCombatSkill());
+			}
+			else {
+				//damage / heal over time
+				//nothing because all other things are added anyways
+			}
+			status.setAmountModifier(usedSkill.getBuffModifier());
+			status.setRoundsRemaining(usedSkill.getDurationInTurns());
+			status.setHealthchangePerRound(actionAmount);
+		}
+		target.getStatusModifiers().add(status);
 	}
 
 	private boolean hasEvadedAttack(Long targetId, BattleParticipant target) {

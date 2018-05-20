@@ -4,6 +4,8 @@ import com.fantasyunlimited.discord.xml.Attributes.Attribute;
 import com.fantasyunlimited.discord.xml.CombatSkill;
 
 public class BattleStatus {
+	
+	private String statusName;
 	private int roundsRemaining;
 	private int healthchangePerRound;
 	
@@ -68,6 +70,14 @@ public class BattleStatus {
 
 	public void setHealthchangeOnEnd(int healthchangeOnEnd) {
 		this.healthchangeOnEnd = healthchangeOnEnd;
+	}
+
+	public String getStatusName() {
+		return statusName;
+	}
+
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
 	}
 
 	public enum ModifierType {

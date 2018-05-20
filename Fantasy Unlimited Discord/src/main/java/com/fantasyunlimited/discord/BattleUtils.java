@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fantasyunlimited.discord.BattleStatus.ModifierType;
 import com.fantasyunlimited.discord.MessageStatus.Name;
 import com.fantasyunlimited.discord.entity.BattleNPC;
 import com.fantasyunlimited.discord.entity.BattleParticipant;
@@ -106,7 +107,9 @@ public class BattleUtils {
 	}
 
 	/**
-	 * Creates the Battle Output Embed including the Battle Log based on the last round found
+	 * Creates the Battle Output Embed including the Battle Log based on the last
+	 * round found
+	 * 
 	 * @param information
 	 * @param newRoundExecuted
 	 * @return
@@ -281,17 +284,20 @@ public class BattleUtils {
 					builder.append("\n");
 				}
 			}
-			if(newRound) {
-				//walk through status effects of each participant
-				//in favor of the players, the NPCs will be handled first
-				for(BattleNPC hostile: battle.getHostiles().values()) {
-					for(BattleStatus status: hostile.getStatusModifiers()) {
-						//TODO
+			if (newRound) {
+				// walk through status effects of each participant
+				// to calculate damage and also decrease each counter
+				// in favor of the players, the NPCs will be handled first
+				for (BattleNPC hostile : battle.getHostiles().values()) {
+					hostile.getStatusModifiers().removeIf(status -> status.getRoundsRemaining() == 0);
+					for (BattleStatus status : hostile.getStatusModifiers()) {
+						handleBattleStatus(status, hostile, builder);
 					}
 				}
-				for(BattlePlayerInformation playerInfo: battle.getPlayers().values()) {
-					for(BattleStatus status: playerInfo.getCharacter().getStatusModifiers()) {
-						//TODO
+				for (BattlePlayerInformation playerInfo : battle.getPlayers().values()) {
+					playerInfo.getCharacter().getStatusModifiers().removeIf(status -> status.getRoundsRemaining() == 0);
+					for (BattleStatus status : playerInfo.getCharacter().getStatusModifiers()) {
+						handleBattleStatus(status, playerInfo.getCharacter(), builder);
 					}
 				}
 			}
@@ -299,6 +305,40 @@ public class BattleUtils {
 		checkBattleFinished(battle, builder);
 
 		return builder;
+	}
+
+	private static void handleBattleStatus(BattleStatus status, BattleParticipant participant, StringBuilder log) {
+		if (status.getRoundsRemaining() == 0) {
+			return;// sanity check
+		}
+
+		int healthModified = status.getHealthchangePerRound();
+		if (status.getModifierType() == ModifierType.RAISE) {
+			participant.applyHeal(healthModified);
+			log.append(participant.getName() + " -> Healed " + healthModified + " by " + status.getStatusName() + "\n");
+		} else {
+			participant.applyDamage(healthModified);
+			log.append(
+					participant.getName() + " -> Damaged " + healthModified + " by " + status.getStatusName() + "\n");
+		}
+
+		status.setRoundsRemaining(status.getRoundsRemaining() - 1);
+		if (status.getRoundsRemaining() == 0) {
+			healthModified = status.getHealthchangeOnEnd();
+			log.append(participant.getName() + " is no longer affected by " + status.getStatusName());
+			if (healthModified == 0) {
+				return; //no output
+			}
+			if (status.getModifierType() == ModifierType.RAISE) {
+				participant.applyHeal(healthModified);
+				log.append(participant.getName() + " -> Healed (Final) " + healthModified + " by " + status.getStatusName()
+						+ "\n");
+			} else {
+				participant.applyDamage(healthModified);
+				log.append(participant.getName() + " -> Damaged (Final) " + healthModified + " by " + status.getStatusName()
+						+ "\n");
+			}
+		}
 	}
 
 	private static final void checkBattleFinished(BattleInformation battle, StringBuilder builder) {

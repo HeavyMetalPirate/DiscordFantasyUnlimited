@@ -22,7 +22,7 @@ public class BattleNPC extends BattleParticipant {
 	public BattleNPC() {
 		super();
 	}
-
+	
 	public BattleNPC(HostileNPC base) {
 		this.baseId = base.getId();
 		this.raceId = base.getRaceId();
@@ -85,6 +85,10 @@ public class BattleNPC extends BattleParticipant {
 		calculateRegeneration();
 	}
 
+	public String getName() {
+		return getBase().getName();
+	}
+	
 	public HostileNPC getBase() {
 		return FantasyUnlimited.getInstance().getHostileNPCBag().getItem(baseId);
 	}

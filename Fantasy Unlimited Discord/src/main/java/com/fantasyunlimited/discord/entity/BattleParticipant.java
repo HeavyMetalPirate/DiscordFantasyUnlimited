@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.fantasyunlimited.discord.BattleStatus;
+import com.fantasyunlimited.discord.BattleStatus.ModifierType;
 import com.fantasyunlimited.discord.FantasyUnlimited;
 import com.fantasyunlimited.discord.xml.CharacterClass;
 import com.fantasyunlimited.discord.xml.CombatSkill;
@@ -45,6 +46,8 @@ public abstract class BattleParticipant implements Serializable {
 	public BattleParticipant() {
 	}
 
+	public abstract String getName();
+	
 	protected void calculateLevelBonus() {
 		// Level bonus (y=(5*2^-x/15) * 2)
 		levelBonus = (float) (5 * Math.pow(2, (level / 15)) * 2);
@@ -137,8 +140,18 @@ public abstract class BattleParticipant implements Serializable {
 				}
 			}
 		}
+		for (BattleStatus status: statusModifiers) {
+			if(status.getModifiedSkill() != null && status.getModifiedSkill() == CombatSkill.DODGE) {
+				if(status.getModifierType() == ModifierType.RAISE) {
+					chance += status.getAmountModifier();
+				}
+				else {
+					chance -= status.getAmountModifier();
+				}
+			}
+		}
 		// TODO stats modifier
-		return chance;
+		return chance >= 0 ? chance : 0;
 	}
 
 	public float calculateCritChance() {
@@ -150,8 +163,18 @@ public abstract class BattleParticipant implements Serializable {
 				}
 			}
 		}
+		for (BattleStatus status: statusModifiers) {
+			if(status.getModifiedSkill() != null && status.getModifiedSkill() == CombatSkill.CRITICAL) {
+				if(status.getModifierType() == ModifierType.RAISE) {
+					chance += status.getAmountModifier();
+				}
+				else {
+					chance -= status.getAmountModifier();
+				}
+			}
+		}
 		// TODO stats modifier
-		return chance;
+		return chance >= 0 ? chance : 0;
 	}
 
 	public float calculateBlockChance() {
@@ -169,8 +192,18 @@ public abstract class BattleParticipant implements Serializable {
 				}
 			}
 		}
+		for (BattleStatus status: statusModifiers) {
+			if(status.getModifiedSkill() != null && status.getModifiedSkill() == CombatSkill.BLOCK) {
+				if(status.getModifierType() == ModifierType.RAISE) {
+					chance += status.getAmountModifier();
+				}
+				else {
+					chance -= status.getAmountModifier();
+				}
+			}
+		}
 		// TODO stats modifier
-		return chance;
+		return chance >= 0 ? chance : 0;
 	}
 
 	public float calculateParryChance() {
@@ -182,8 +215,18 @@ public abstract class BattleParticipant implements Serializable {
 				}
 			}
 		}
+		for (BattleStatus status: statusModifiers) {
+			if(status.getModifiedSkill() != null && status.getModifiedSkill() == CombatSkill.PARRY) {
+				if(status.getModifierType() == ModifierType.RAISE) {
+					chance += status.getAmountModifier();
+				}
+				else {
+					chance -= status.getAmountModifier();
+				}
+			}
+		}
 		// TODO stats modifier
-		return chance;
+		return chance >= 0 ? chance : 0;
 	}
 
 	public Race getRace() {

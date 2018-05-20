@@ -28,6 +28,7 @@ public class Skill extends GenericItem {
 	private List<SkillRequirement> requirements = new ArrayList<>();
 
 	private Attribute buffModifiesAttribute;
+	private CombatSkill buffModifiesCombatSkill;
 	private int buffModifier;
 	private int durationInTurns;
 
@@ -180,6 +181,14 @@ public class Skill extends GenericItem {
 
 	public void setRequirements(List<SkillRequirement> requirements) {
 		this.requirements = requirements;
+	}
+
+	public CombatSkill getBuffModifiesCombatSkill() {
+		return buffModifiesCombatSkill;
+	}
+
+	public void setBuffModifiesCombatSkill(CombatSkill buffModifiesCombatSkill) {
+		this.buffModifiesCombatSkill = buffModifiesCombatSkill;
 	}
 
 	public enum SkillWeaponModifier {
