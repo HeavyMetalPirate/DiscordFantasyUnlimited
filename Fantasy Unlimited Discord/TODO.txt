@@ -2,38 +2,13 @@
 Might add REST capabilities or even a full homepage later on, depending on how things are going
 
 ###########################################################
-
-- Reactions for paginator reaction handler : order of reactions being added needs to be done!
-  Also needs a "no pagination required anymore" flag
   
 - Battle:
-	- Tweak formulas in BattleParticipant.class - at least partially done
-	- Tweak damage formula in BattleAction.class - at least partially done
-	- Think about a way to apply buffs/debuffs
-	- Implement area effects - done; now needs to be printed in a more sophisticated way (showing damage/effect values for each target seperately)
-	- Persist value changes to health/atkres(?)
-	- Flee button - done;
-	- Put data to cache after each round - done; no more stale caches!
-	- Hand out XP and loot - XP done, loot static for now, also needs a way of printing all loot and possibly rolling for rarer items in a party
-	- Implement "waiting for others" for playing in a party - done
-	- (!) fix that weird bug with message coming back null at BattleUtils.java:65 - Fixed: the cache sometimes had stale data
-[06-05-2018 22:15:01]-[Event Dispatcher Handler]-[]-[ERROR]-[com.fantasyunlimited.discord.FantasyUnlimited.sendExceptionMessage(FantasyUnlimited.java:160)]: Error occured:                                                                                                                                                                                          
-java.lang.NullPointerException
-	at com.fantasyunlimited.discord.MessageInformation.setMessage(MessageInformation.java:57)
-	at com.fantasyunlimited.discord.BattleUtils.prepareNextroundActionbars(BattleUtils.java:74)
-	at com.fantasyunlimited.discord.reactions.BattleHandler.calculateAndPrintResults(BattleHandler.java:291)
-	at com.fantasyunlimited.discord.reactions.BattleHandler.queueAction(BattleHandler.java:264)
-	at com.fantasyunlimited.discord.reactions.BattleHandler.handleTargetSelectionStatus(BattleHandler.java:115)
-	at com.fantasyunlimited.discord.reactions.BattleHandler.handle(BattleHandler.java:55)
-	at com.fantasyunlimited.discord.reactions.BattleHandler.handle(BattleHandler.java:1)
-	at com.fantasyunlimited.discord.event.ReactionForSelfAddHandler.handle(ReactionForSelfAddHandler.java:68)
-	at com.fantasyunlimited.discord.event.ReactionForSelfAddHandler.handle(ReactionForSelfAddHandler.java:1)
-	at sx.blah.discord.api.events.EventDispatcher$ListenerEventHandler.handle(EventDispatcher.java:726)
-	at sx.blah.discord.api.events.EventDispatcher.lambda$null$17(EventDispatcher.java:610)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
-	at java.lang.Thread.run(Thread.java:745)
-	
-- Serializer
-	- Observe Shutdown behavior more closely - Fixed: there was an issue with the bytebuffer
-	
+	- Tweak formulas in BattleParticipant.class - at least partially done TODO !!!
+	- Tweak damage formula in BattleAction.class - at least partially done TODO !!!
+	- Loot - Party handling of items
+	- Implement consumables (how to? reactions are already filled by skills and run away/pass)
+	- Create abstract class CannotUseDuringBattleCommandHandler which checks if you are in a battle, and if so, denies your command
+
+- Consumables
+	- implement some "use item" command (also think about battle usage of items)
