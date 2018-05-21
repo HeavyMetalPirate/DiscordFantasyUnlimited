@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.fantasyunlimited.discord.BattleStatus;
 import com.fantasyunlimited.discord.BattleStatus.ModifierType;
@@ -15,6 +16,7 @@ import com.fantasyunlimited.discord.xml.CombatSkillBonus;
 import com.fantasyunlimited.discord.xml.Equipment;
 import com.fantasyunlimited.discord.xml.Race;
 import com.fantasyunlimited.discord.xml.Weapon;
+import com.fantasyunlimited.discord.xml.Attributes.Attribute;
 import com.fantasyunlimited.discord.xml.Weapon.WeaponType;
 import com.fantasyunlimited.entity.Attributes;
 
@@ -42,12 +44,12 @@ public abstract class BattleParticipant implements Serializable {
 	protected BattleEquipment equipment;
 
 	private List<BattleStatus> statusModifiers = new ArrayList<>();
-	
+
 	public BattleParticipant() {
 	}
 
 	public abstract String getName();
-	
+
 	protected void calculateLevelBonus() {
 		// Level bonus (y=(5*2^-x/15) * 2)
 		levelBonus = (float) (5 * Math.pow(2, (level / 15)) * 2);
@@ -56,7 +58,8 @@ public abstract class BattleParticipant implements Serializable {
 	protected void calculateRegeneration() {
 		// Y = X ^(1/4) + level bonus
 		calculateLevelBonus();
-		float regen = (float) Math.pow(attributes.getWisdom(), 0.25);
+		int base = attributes.getWisdom() + getAttributeBonus(Attribute.WISDOM);
+		float regen = (float) Math.pow(base, 0.25);
 		regenPercentage = regen + levelBonus;
 	}
 
@@ -131,49 +134,74 @@ public abstract class BattleParticipant implements Serializable {
 		return equip;
 	}
 
+	public int getAttributeBonus(Attribute attribute) {
+		AtomicInteger bonus = new AtomicInteger(0);
+
+		if (equipment.getMainhand() != null) {
+			Weapon weapon = FantasyUnlimited.getInstance().getWeaponBag().getItem(equipment.getMainhand());
+			if (weapon != null)
+				weapon.getAttributeBonuses().stream().filter(atrBon -> atrBon.getAttribute() == attribute)
+						.forEach(atrBon -> bonus.addAndGet(atrBon.getBonus()));
+		}
+		if (equipment.getOffhand() != null) {
+			Weapon weapon = FantasyUnlimited.getInstance().getWeaponBag().getItem(equipment.getOffhand());
+			if (weapon != null)
+				weapon.getAttributeBonuses().stream().filter(atrBon -> atrBon.getAttribute() == attribute)
+						.forEach(atrBon -> bonus.addAndGet(atrBon.getBonus()));
+		}
+		for (Equipment equ : getCurrentEquipment()) {
+			equ.getAttributeBonuses().stream().filter(atrBon -> atrBon.getAttribute() == attribute)
+					.forEach(atrBon -> bonus.addAndGet(atrBon.getBonus()));
+		}
+
+		return bonus.get();
+	}
+
+	public int getCombatSkillBonus(CombatSkill combatSkill) {
+		AtomicInteger bonus = new AtomicInteger(0);
+
+		if (equipment.getMainhand() != null) {
+			Weapon weapon = FantasyUnlimited.getInstance().getWeaponBag().getItem(equipment.getMainhand());
+			if (weapon != null)
+				weapon.getSkillBonuses().stream().filter(skillBon -> skillBon.getSkill() == combatSkill)
+						.forEach(skillBon -> bonus.addAndGet(skillBon.getBonus()));
+		}
+		if (equipment.getOffhand() != null) {
+			Weapon weapon = FantasyUnlimited.getInstance().getWeaponBag().getItem(equipment.getOffhand());
+			if (weapon != null)
+				weapon.getSkillBonuses().stream().filter(skillBon -> skillBon.getSkill() == combatSkill)
+						.forEach(skillBon -> bonus.addAndGet(skillBon.getBonus()));
+		}
+
+		for (Equipment equ : getCurrentEquipment()) {
+			equ.getSkillBonuses().stream().filter(skillBon -> skillBon.getSkill() == combatSkill)
+					.forEach(skillBon -> bonus.addAndGet(skillBon.getBonus()));
+		}
+
+		for (BattleStatus status : statusModifiers) {
+			if (status.getModifiedSkill() != null && status.getModifiedSkill() == combatSkill) {
+				if (status.getModifierType() == ModifierType.RAISE) {
+					bonus.addAndGet(status.getAmountModifier());
+				} else {
+					bonus.addAndGet(-status.getAmountModifier());
+				}
+			}
+		}
+		
+		return bonus.get();
+	}
+
 	public float calculateDodgeChance() {
 		float chance = levelBonus; // base
-		for (Equipment equipment : getCurrentEquipment()) {
-			for (CombatSkillBonus bonus : equipment.getSkillBonuses()) {
-				if (bonus.getSkill() == CombatSkill.DODGE) {
-					chance += bonus.getBonus();
-				}
-			}
-		}
-		for (BattleStatus status: statusModifiers) {
-			if(status.getModifiedSkill() != null && status.getModifiedSkill() == CombatSkill.DODGE) {
-				if(status.getModifierType() == ModifierType.RAISE) {
-					chance += status.getAmountModifier();
-				}
-				else {
-					chance -= status.getAmountModifier();
-				}
-			}
-		}
-		// TODO stats modifier
+		chance += getCombatSkillBonus(CombatSkill.DODGE);
+		//TODO attribute calculations
 		return chance >= 0 ? chance : 0;
 	}
 
 	public float calculateCritChance() {
 		float chance = levelBonus; // base
-		for (Equipment equipment : getCurrentEquipment()) {
-			for (CombatSkillBonus bonus : equipment.getSkillBonuses()) {
-				if (bonus.getSkill() == CombatSkill.CRITICAL) {
-					chance += bonus.getBonus();
-				}
-			}
-		}
-		for (BattleStatus status: statusModifiers) {
-			if(status.getModifiedSkill() != null && status.getModifiedSkill() == CombatSkill.CRITICAL) {
-				if(status.getModifierType() == ModifierType.RAISE) {
-					chance += status.getAmountModifier();
-				}
-				else {
-					chance -= status.getAmountModifier();
-				}
-			}
-		}
-		// TODO stats modifier
+		chance += getCombatSkillBonus(CombatSkill.CRITICAL);
+		//TODO attribute calculations
 		return chance >= 0 ? chance : 0;
 	}
 
@@ -185,46 +213,14 @@ public abstract class BattleParticipant implements Serializable {
 		}
 
 		float chance = levelBonus; // base
-		for (Equipment equipment : getCurrentEquipment()) {
-			for (CombatSkillBonus bonus : equipment.getSkillBonuses()) {
-				if (bonus.getSkill() == CombatSkill.BLOCK) {
-					chance += bonus.getBonus();
-				}
-			}
-		}
-		for (BattleStatus status: statusModifiers) {
-			if(status.getModifiedSkill() != null && status.getModifiedSkill() == CombatSkill.BLOCK) {
-				if(status.getModifierType() == ModifierType.RAISE) {
-					chance += status.getAmountModifier();
-				}
-				else {
-					chance -= status.getAmountModifier();
-				}
-			}
-		}
+		chance += getCombatSkillBonus(CombatSkill.BLOCK);
 		// TODO stats modifier
 		return chance >= 0 ? chance : 0;
 	}
 
 	public float calculateParryChance() {
 		float chance = levelBonus; // base
-		for (Equipment equipment : getCurrentEquipment()) {
-			for (CombatSkillBonus bonus : equipment.getSkillBonuses()) {
-				if (bonus.getSkill() == CombatSkill.PARRY) {
-					chance += bonus.getBonus();
-				}
-			}
-		}
-		for (BattleStatus status: statusModifiers) {
-			if(status.getModifiedSkill() != null && status.getModifiedSkill() == CombatSkill.PARRY) {
-				if(status.getModifierType() == ModifierType.RAISE) {
-					chance += status.getAmountModifier();
-				}
-				else {
-					chance -= status.getAmountModifier();
-				}
-			}
-		}
+		chance += getCombatSkillBonus(CombatSkill.PARRY);
 		// TODO stats modifier
 		return chance >= 0 ? chance : 0;
 	}

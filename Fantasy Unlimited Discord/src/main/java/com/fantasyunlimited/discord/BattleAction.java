@@ -37,11 +37,10 @@ public class BattleAction implements Serializable {
 	private Map<Long, BattleParticipant> areaTargets = new HashMap<>();
 	private Map<Long, Integer> areaDamage = new HashMap<>();
 
-	public static final Integer DODGED = -2^22;
-	public static final Integer BLOCKED = -2^23;
-	public static final Integer PARRIED = -2^24;
-	
-	
+	public static final Integer DODGED = -2 ^ 22;
+	public static final Integer BLOCKED = -2 ^ 23;
+	public static final Integer PARRIED = -2 ^ 24;
+
 	private Skill usedSkill;
 
 	private int actionAmount;
@@ -55,12 +54,12 @@ public class BattleAction implements Serializable {
 		if (isPass) {
 			performAtkUsageAndRegen(0);
 			return;
-		}		
+		}
 		// if you die in that round, don't do actions because u ded
 		if (executing.isDefeated()) {
 			return;
 		}
-		if(executing.getStatusModifiers().parallelStream().anyMatch(status -> status.isIncapacitated())) {
+		if (executing.getStatusModifiers().parallelStream().anyMatch(status -> status.isIncapacitated())) {
 			setIncapacitated(true);
 			return;
 		}
@@ -101,7 +100,8 @@ public class BattleAction implements Serializable {
 			actionAmount *= 2;
 		}
 
-		// below needs to be done once we decided which type of attack (single/area) it is
+		// below needs to be done once we decided which type of attack (single/area) it
+		// is
 		// TODO stats multiplier
 		// TODO def reducer
 		// TODO level multiplier
@@ -150,43 +150,71 @@ public class BattleAction implements Serializable {
 	}
 
 	private void executeStatusChanging() {
-		// TODO how to deal with buffs
+		switch (usedSkill.getTargetType()) {
+		case AREA:
+
+			break;
+		case ENEMY:
+			if (hasEvadedAttack(1L, target)) {
+				actionAmount = 0;
+				return;
+			}
+			break;
+		case FRIEND:
+		case OWN:
+		default:
+			break;
+
+		}
+
 		BattleStatus status = new BattleStatus();
 		status.setStatusName(usedSkill.getName());
-		if(usedSkill.getType() == SkillType.BUFF) {
+		if (usedSkill.getType() == SkillType.BUFF) {
 			status.setModifierType(ModifierType.RAISE);
-		}
-		else {
+		} else {
 			status.setModifierType(ModifierType.LOWER);
 		}
-		
+
 		status.setIncapacitated(usedSkill.isSkillIncapacitates());
-		
-		if(usedSkill.getPreparationRounds() > 0) {
-			//wind up attack
+
+		if (usedSkill.getPreparationRounds() > 0) {
+			// wind up attack
 			status.setAmountModifier(0);
 			status.setHealthchangePerRound(0);
 			status.setHealthchangeOnEnd(actionAmount);
 			status.setRoundsRemaining(usedSkill.getPreparationRounds());
-		}
-		else {
-			if(usedSkill.getBuffModifiesAttribute() != null){
-				//stat modifier
+		} else {
+			if (usedSkill.getBuffModifiesAttribute() != null) {
+				// stat modifier
 				status.setModifiedAttribute(usedSkill.getBuffModifiesAttribute());
-			}
-			else if(usedSkill.getBuffModifiesCombatSkill() != null) {
-				//combat skill mod
+			} else if (usedSkill.getBuffModifiesCombatSkill() != null) {
+				// combat skill mod
 				status.setModifiedSkill(usedSkill.getBuffModifiesCombatSkill());
-			}
-			else {
-				//damage / heal over time
-				//nothing because all other things are added anyways
+			} else {
+				// damage / heal over time
+				// nothing because all other things are added anyways
 			}
 			status.setAmountModifier(usedSkill.getBuffModifier());
 			status.setRoundsRemaining(usedSkill.getDurationInTurns());
 			status.setHealthchangePerRound(actionAmount);
 		}
-		target.getStatusModifiers().add(status);
+
+		switch (usedSkill.getTargetType()) {
+		case AREA:
+			for (Long targetId : areaTargets.keySet()) {
+				BattleParticipant target = areaTargets.get(targetId);
+				if (hasEvadedAttack(targetId, target)) {
+					continue;
+				}
+				target.getStatusModifiers().add(status);
+			}
+			break;
+		case ENEMY:
+		case FRIEND:
+		case OWN:
+		default:
+			target.getStatusModifiers().add(status);
+		}
 	}
 
 	private boolean hasEvadedAttack(Long targetId, BattleParticipant target) {
@@ -217,14 +245,13 @@ public class BattleAction implements Serializable {
 		}
 		return false;
 	}
-	
+
 	public String getNameOfParticipant(BattleParticipant participant) {
 		String name = "";
-		if(participant instanceof BattleNPC) {
-			name = ((BattleNPC)participant).getBase().getName();
-		}
-		else {
-			name = ((BattlePlayer)participant).getName();
+		if (participant instanceof BattleNPC) {
+			name = ((BattleNPC) participant).getBase().getName();
+		} else {
+			name = ((BattlePlayer) participant).getName();
 		}
 		return name;
 	}
@@ -235,7 +262,7 @@ public class BattleAction implements Serializable {
 
 			break;
 		case ENEMY:
-			if (hasEvadedAttack(1L,target)) {
+			if (hasEvadedAttack(1L, target)) {
 				actionAmount = 0;
 				return;
 			}
@@ -254,9 +281,9 @@ public class BattleAction implements Serializable {
 				if (hasEvadedAttack(targetId, target)) {
 					continue;
 				}
-				//TODO target defensive calulations
+				// TODO target defensive calulations
 				applyDefensiveModifiers(target);
-				//TODO name is not good if there's several
+				// TODO name is not good if there's several
 				areaDamage.put(targetId, actionAmount);
 				target.applyDamage(actionAmount);
 			}
@@ -275,9 +302,9 @@ public class BattleAction implements Serializable {
 	}
 
 	private void applyDefensiveModifiers(BattleParticipant target) {
-		
+
 	}
-	
+
 	public BattleParticipant getExecuting() {
 		return executing;
 	}

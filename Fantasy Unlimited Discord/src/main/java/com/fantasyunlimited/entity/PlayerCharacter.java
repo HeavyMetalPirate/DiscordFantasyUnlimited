@@ -3,6 +3,7 @@ package com.fantasyunlimited.entity;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
@@ -18,7 +19,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import com.fantasyunlimited.discord.FantasyUnlimited;
+import com.fantasyunlimited.discord.xml.Attributes.Attribute;
 import com.fantasyunlimited.discord.xml.CharacterClass.EnergyType;
+import com.fantasyunlimited.discord.xml.Equipment;
+import com.fantasyunlimited.discord.xml.Weapon;
 
 @Entity
 public class PlayerCharacter implements Serializable {
@@ -60,7 +64,7 @@ public class PlayerCharacter implements Serializable {
 
 	@Column
 	private int currentAtkResource;
-	
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "Inventories")
 	private Map<String, Integer> inventory;
@@ -146,17 +150,85 @@ public class PlayerCharacter implements Serializable {
 	}
 
 	public int getMaxHealth() {
-		// TODO equipment bonus
-		return attributes.getEndurance() * 10 + currentLevel * 15;
+		int base = attributes.getEndurance() + getAttributeBonus(Attribute.ENDURANCE);
+		return base * 10 + currentLevel * 15;
 	}
 
 	public int getMaxAtkResource() {
 		// TODO equipment bonus
 		if (FantasyUnlimited.getInstance().getClassBag().getItem(classId).getEnergyType() == EnergyType.MANA) {
-			return attributes.getIntelligence() * 15 + currentLevel * 20;
+			int base = attributes.getIntelligence() + getAttributeBonus(Attribute.INTELLIGENCE);
+			return base * 15 + currentLevel * 20;
 		} else {
 			return 100;
 		}
+	}
+
+	public int getAttributeBonus(Attribute attribute) {
+		AtomicInteger bonus = new AtomicInteger(0);
+
+		if (equipment.getMainhand() != null) {
+			Weapon weapon = FantasyUnlimited.getInstance().getWeaponBag().getItem(equipment.getMainhand());
+			if (weapon != null)
+				weapon.getAttributeBonuses().stream().filter(atrBon -> atrBon.getAttribute() == attribute)
+						.forEach(atrBon -> bonus.addAndGet(atrBon.getBonus()));
+		}
+		if (equipment.getOffhand() != null) {
+			Weapon weapon = FantasyUnlimited.getInstance().getWeaponBag().getItem(equipment.getOffhand());
+			if (weapon != null)
+				weapon.getAttributeBonuses().stream().filter(atrBon -> atrBon.getAttribute() == attribute)
+						.forEach(atrBon -> bonus.addAndGet(atrBon.getBonus()));
+		}
+		if (equipment.getHelmet() != null) {
+			Equipment equ = FantasyUnlimited.getInstance().getEquipmentBag().getItem(equipment.getHelmet());
+			if (equ != null)
+				equ.getAttributeBonuses().stream().filter(atrBon -> atrBon.getAttribute() == attribute)
+						.forEach(atrBon -> bonus.addAndGet(atrBon.getBonus()));
+		}
+		if (equipment.getChest() != null) {
+			Equipment equ = FantasyUnlimited.getInstance().getEquipmentBag().getItem(equipment.getChest());
+			if (equ != null)
+				equ.getAttributeBonuses().stream().filter(atrBon -> atrBon.getAttribute() == attribute)
+						.forEach(atrBon -> bonus.addAndGet(atrBon.getBonus()));
+		}
+		if (equipment.getGloves() != null) {
+			Equipment equ = FantasyUnlimited.getInstance().getEquipmentBag().getItem(equipment.getGloves());
+			if (equ != null)
+				equ.getAttributeBonuses().stream().filter(atrBon -> atrBon.getAttribute() == attribute)
+						.forEach(atrBon -> bonus.addAndGet(atrBon.getBonus()));
+		}
+		if (equipment.getPants() != null) {
+			Equipment equ = FantasyUnlimited.getInstance().getEquipmentBag().getItem(equipment.getPants());
+			if (equ != null)
+				equ.getAttributeBonuses().stream().filter(atrBon -> atrBon.getAttribute() == attribute)
+						.forEach(atrBon -> bonus.addAndGet(atrBon.getBonus()));
+		}
+		if (equipment.getBoots() != null) {
+			Equipment equ = FantasyUnlimited.getInstance().getEquipmentBag().getItem(equipment.getBoots());
+			if (equ != null)
+				equ.getAttributeBonuses().stream().filter(atrBon -> atrBon.getAttribute() == attribute)
+						.forEach(atrBon -> bonus.addAndGet(atrBon.getBonus()));
+		}
+		if (equipment.getRing1() != null) {
+			Equipment equ = FantasyUnlimited.getInstance().getEquipmentBag().getItem(equipment.getRing1());
+			if (equ != null)
+				equ.getAttributeBonuses().stream().filter(atrBon -> atrBon.getAttribute() == attribute)
+						.forEach(atrBon -> bonus.addAndGet(atrBon.getBonus()));
+		}
+		if (equipment.getRing2() != null) {
+			Equipment equ = FantasyUnlimited.getInstance().getEquipmentBag().getItem(equipment.getRing2());
+			if (equ != null)
+				equ.getAttributeBonuses().stream().filter(atrBon -> atrBon.getAttribute() == attribute)
+						.forEach(atrBon -> bonus.addAndGet(atrBon.getBonus()));
+		}
+		if (equipment.getNeck() != null) {
+			Equipment equ = FantasyUnlimited.getInstance().getEquipmentBag().getItem(equipment.getNeck());
+			if (equ != null)
+				equ.getAttributeBonuses().stream().filter(atrBon -> atrBon.getAttribute() == attribute)
+						.forEach(atrBon -> bonus.addAndGet(atrBon.getBonus()));
+		}
+
+		return bonus.get();
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import java.util.Map;
 import com.fantasyunlimited.discord.FantasyUnlimited;
 import com.fantasyunlimited.discord.xml.CharacterClass;
 import com.fantasyunlimited.discord.xml.HostileNPC;
+import com.fantasyunlimited.discord.xml.Attributes.Attribute;
 import com.fantasyunlimited.discord.xml.CharacterClass.EnergyType;
 import com.fantasyunlimited.entity.Attributes;
 
@@ -66,10 +67,12 @@ public class BattleNPC extends BattleParticipant {
 		equipment.setNeck(base.getNeck());
 		
 		// TODO equipment bonus
-		this.maxHealth = endurance * 10 + level * 15;
+		int enduraceBase = endurance + getAttributeBonus(Attribute.ENDURANCE);
+		this.maxHealth = enduraceBase * 10 + level * 15;
 		
 		if (charClass.getEnergyType() == EnergyType.MANA) {
-			this.maxAtkResource = intelligence * 15 + level * 20;
+			int intelligenceBase = intelligence + getAttributeBonus(Attribute.INTELLIGENCE);
+			this.maxAtkResource = intelligenceBase * 15 + level * 20;
 		} else {
 			this.maxAtkResource = 100;
 		}
