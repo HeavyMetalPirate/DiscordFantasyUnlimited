@@ -36,26 +36,28 @@ public class RaceCommandHandler extends CommandHandler implements OptionDescript
 			embedBuilder.withTitle("Information about the race " + race.getName());
 			embedBuilder.appendField("Lore", race.getLore(), false);
 			StringBuilder treats = new StringBuilder();
-			for(RacialBonus bonus: race.getBonuses()) {
-				treats.append("`" + bonus.getName() + "`\n");
-				treats.append("Description: " + bonus.getDescription() + "\n");
-				String bonusStat = bonus.getCombatSkill() != null? bonus.getCombatSkill().toString() :
-									bonus.getSecondarySkill() != null? bonus.getSecondarySkill().toString() :
-										bonus.getAttribute() != null? bonus.getAttribute().toString() :
-											bonus.getWeaponType().toStringWithSuffix();
-				treats.append("`Raises " + bonusStat + " by " + bonus.getModifier() + "%`\n\n");
+			for (RacialBonus bonus : race.getBonuses()) {
+				String bonusStat = bonus.getCombatSkill() != null ? bonus.getCombatSkill().toString()
+						: bonus.getSecondarySkill() != null ? bonus.getSecondarySkill().toString()
+								: bonus.getAttribute() != null ? bonus.getAttribute().toString()
+										: bonus.getWeaponType().toStringWithSuffix();
+
+				treats.append("```fix\n" + bonus.getName() + " - Raises " + bonusStat + " by " + bonus.getModifier()
+						+ "% " + "\n");
+				treats.append("= " + bonus.getDescription() + "```\n");
 			}
 			embedBuilder.appendField("Racial treats", treats.toString(), false);
-			embedBuilder.appendDesc("This race is " + (race.isHumanPlayable()? "" : "not ") + "playable.");
+			embedBuilder.appendDesc("This race is " + (race.isHumanPlayable() ? "" : "not ") + "playable.");
 		} else {
 			// wanna print multiples?
 			StringBuilder races = new StringBuilder();
 			races.append("```md\n");
-			for(Race race: racesFound) {
+			for (Race race : racesFound) {
 				races.append("[" + race.getId() + "][" + race.getName() + "]\n");
 			}
 			races.append("```");
-			embedBuilder.appendField("Found " + racesFound.size() + " races, please specify further.", races.toString(), false);
+			embedBuilder.appendField("Found " + racesFound.size() + " races, please specify further.", races.toString(),
+					false);
 		}
 
 		FantasyUnlimited.getInstance().sendMessage(event.getChannel(), embedBuilder.build());

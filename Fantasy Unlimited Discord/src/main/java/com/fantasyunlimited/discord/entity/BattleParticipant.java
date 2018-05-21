@@ -12,7 +12,6 @@ import com.fantasyunlimited.discord.BattleStatus.ModifierType;
 import com.fantasyunlimited.discord.FantasyUnlimited;
 import com.fantasyunlimited.discord.xml.CharacterClass;
 import com.fantasyunlimited.discord.xml.CombatSkill;
-import com.fantasyunlimited.discord.xml.CombatSkillBonus;
 import com.fantasyunlimited.discord.xml.Equipment;
 import com.fantasyunlimited.discord.xml.Race;
 import com.fantasyunlimited.discord.xml.Weapon;
@@ -230,7 +229,7 @@ public abstract class BattleParticipant implements Serializable {
 
 	public float calculateBlockChance() {
 		Weapon weapon = FantasyUnlimited.getInstance().getWeaponBag().getItem(equipment.getOffhand());
-		if (weapon != null && weapon.getType() != null && weapon.getType() != WeaponType.SHIELD) {
+		if (weapon == null || (weapon != null && weapon.getType() != null && weapon.getType() != WeaponType.SHIELD)) {
 			// no block if no shield in offhand!
 			return 0f;
 		}

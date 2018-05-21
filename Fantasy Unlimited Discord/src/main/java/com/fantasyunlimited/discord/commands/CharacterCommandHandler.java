@@ -18,6 +18,7 @@ import com.fantasyunlimited.discord.MessageStatus;
 import com.fantasyunlimited.discord.MessageStatus.Name;
 import com.fantasyunlimited.discord.SerializableEmbedBuilder;
 import com.fantasyunlimited.discord.Unicodes;
+import com.fantasyunlimited.discord.entity.BattlePlayer;
 import com.fantasyunlimited.discord.xml.CharacterClass;
 import com.fantasyunlimited.discord.xml.Equipment;
 import com.fantasyunlimited.discord.xml.GenericItem;
@@ -180,7 +181,17 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 			builder.append("[Unspent points][" + character.getAttributes().getUnspent() + "]\n");
 			builder.append("```");
 			embedBuilder.appendField("Stats", builder.toString(), false);
-
+			
+			builder = new StringBuilder();
+			builder.append("```md\n");
+			BattlePlayer player = new BattlePlayer(character);
+			builder.append(MessageFormatUtils.fillStringSuffix("< Dodge Chance", 18) + "> <" + player.calculateDodgeChance() + "%>\n");
+			builder.append(MessageFormatUtils.fillStringSuffix("< Parry Chance", 18) + "> <" + player.calculateParryChance() + "%>\n");
+			builder.append(MessageFormatUtils.fillStringSuffix("< Block Chance", 18) + "> <" + player.calculateBlockChance() + "%>\n");
+			builder.append(MessageFormatUtils.fillStringSuffix("< Critical Chance", 18) + "> <" + player.calculateCritChance() + "%>\n");
+			builder.append("```");
+			embedBuilder.appendField("Combat Skills", builder.toString(), false);
+			
 			// Equipment
 			Weapon mainHand = FantasyUnlimited.getInstance().getWeaponBag()
 					.getItem(character.getEquipment().getMainhand());
