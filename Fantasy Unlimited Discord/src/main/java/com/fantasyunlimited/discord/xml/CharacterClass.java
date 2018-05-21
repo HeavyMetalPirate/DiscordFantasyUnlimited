@@ -11,6 +11,7 @@ public class CharacterClass extends GenericItem {
 	private static final long serialVersionUID = -4076926648887811462L;
 
 	private String lore;
+	private boolean humanPlayable;
 	
 	private EnergyType energyType;
 	
@@ -135,6 +136,14 @@ public class CharacterClass extends GenericItem {
 	}
 	public void setEnergyType(EnergyType energyType) {
 		this.energyType = energyType;
+	}
+
+	public boolean isHumanPlayable() {
+		return humanPlayable;
+	}
+
+	public void setHumanPlayable(boolean humanPlayable) {
+		this.humanPlayable = humanPlayable;
 	}
 
 	public enum EnergyType {

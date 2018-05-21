@@ -109,13 +109,27 @@ public class Attributes implements Serializable {
 	}
 	
 	public enum Attribute {
-		STRENGTH,
-		ENDURANCE,
-		DEXTERITY,
-		WISDOM,
-		INTELLIGENCE,
-		DEFENSE,
-		LUCK,
-		ALL
+		STRENGTH("Strength"),
+		ENDURANCE("Endurance"),
+		DEXTERITY("Dexterity"),
+		WISDOM("Wisdom"),
+		INTELLIGENCE("Intelligence"),
+		DEFENSE("Defense"),
+		LUCK("Luck"),
+		ALL("All");
+		
+		private final String value;
+		private Attribute(String value) {
+			this.value = value;
+		}
+		
+		@Override
+		public String toString() {
+			return value;
+		}
+		
+		public String toStringWithSuffix() {
+			return value + "";
+		}
 	}
 }

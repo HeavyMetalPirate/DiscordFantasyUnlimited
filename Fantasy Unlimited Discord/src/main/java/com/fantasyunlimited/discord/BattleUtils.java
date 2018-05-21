@@ -218,6 +218,8 @@ public class BattleUtils {
 
 				builder.append(prefix + MessageFormatUtils.fillStringSuffix(name, 16) + " -> ");
 
+				action.executeAction();
+				
 				if (action.isPass()) {
 					builder.append("Passed\n");
 					continue;
@@ -226,8 +228,10 @@ public class BattleUtils {
 					builder.append("Died before they could make a move!\n");
 					continue;
 				}
-
-				action.executeAction();
+				if (action.isIncapacitated()) {
+					builder.append("Is incapacitated!\n");
+					continue;
+				}
 
 				if (action.isArea()) {
 					builder.append(action.getUsedSkill().getName() + " (Area)\n");
@@ -325,7 +329,7 @@ public class BattleUtils {
 		status.setRoundsRemaining(status.getRoundsRemaining() - 1);
 		if (status.getRoundsRemaining() == 0) {
 			healthModified = status.getHealthchangeOnEnd();
-			log.append(participant.getName() + " is no longer affected by " + status.getStatusName());
+			log.append(participant.getName() + " is no longer affected by " + status.getStatusName() + "\n");
 			if (healthModified == 0) {
 				return; //no output
 			}

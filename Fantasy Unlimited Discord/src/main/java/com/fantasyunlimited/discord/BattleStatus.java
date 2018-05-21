@@ -8,9 +8,9 @@ public class BattleStatus {
 	private String statusName;
 	private int roundsRemaining;
 	private int healthchangePerRound;
-	
 	private int healthchangeOnEnd;
-
+	private boolean incapacitated;
+	
 	private Attribute modifiedAttribute;
 	private CombatSkill modifiedSkill;
 	private int amountModifier;
@@ -78,6 +78,14 @@ public class BattleStatus {
 
 	public void setStatusName(String statusName) {
 		this.statusName = statusName;
+	}
+
+	public boolean isIncapacitated() {
+		return incapacitated;
+	}
+
+	public void setIncapacitated(boolean incapacitated) {
+		this.incapacitated = incapacitated;
 	}
 
 	public enum ModifierType {

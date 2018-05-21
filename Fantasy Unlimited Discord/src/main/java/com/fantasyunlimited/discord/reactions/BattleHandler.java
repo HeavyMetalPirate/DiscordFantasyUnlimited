@@ -325,7 +325,7 @@ public class BattleHandler extends ReactionsHandler {
 		action.setArea(false);
 
 		BattleInformation battle = fetchBattleInformation(playerInfo.getCharacter());
-		
+
 		if (usedSkill == null) {
 			action.setPass(true);
 		} else {
@@ -333,14 +333,14 @@ public class BattleHandler extends ReactionsHandler {
 				action.setTarget(playerInfo.getCharacter());
 			} else if (usedSkill.getTargetType() == TargetType.AREA) {
 				action.setArea(true);
-				for(Integer id: battle.getHostiles().keySet()) {
+				for (Integer id : battle.getHostiles().keySet()) {
 					action.getAreaTargets().put(Integer.toUnsignedLong(id), battle.getHostiles().get(id));
 				}
 			} else {
 				action.setTarget(playerInfo.getTarget());
 			}
 		}
-		
+
 		// add the player info anew to avoid stale message data!
 		battle.getPlayers().put(playerInfo.getCharacter().getCharacterId(), playerInfo);
 		if (battle.getRounds().get(battle.getCurrentRound()) == null) {
@@ -353,7 +353,8 @@ public class BattleHandler extends ReactionsHandler {
 		information.getStatus().setName(Name.BATTLE_WAITING);
 		FantasyUnlimited.getInstance().getMessagesAwaitingReactions().put(playerInfo.getMessage().getLongID(),
 				information);
-		FantasyUnlimited.getInstance().editMessage(playerInfo.getMessage(), "`Please wait while the others pick their actions.`");
+		FantasyUnlimited.getInstance().editMessage(playerInfo.getMessage(),
+				"`Please wait while the others pick their actions.`");
 
 		if (battle.getRounds().get(battle.getCurrentRound()).size() == battle.getAlivePlayerCount()) {
 			calculateAndPrintResults(battle);
@@ -442,7 +443,7 @@ public class BattleHandler extends ReactionsHandler {
 
 			switch (usedSkill.getTargetType()) {
 			case AREA:
-				for(Long id: battle.getPlayers().keySet()) {
+				for (Long id : battle.getPlayers().keySet()) {
 					action.getAreaTargets().put(id, battle.getPlayers().get(id).getCharacter());
 				}
 				action.setArea(true);
@@ -497,7 +498,7 @@ public class BattleHandler extends ReactionsHandler {
 			}
 
 			Map<Dropable, Integer> loot = new HashMap<>();
-			
+
 			int xppool = 0;
 			int averagelevel = 0;
 			for (BattleNPC npc : battle.getHostiles().values()) {
@@ -505,15 +506,14 @@ public class BattleHandler extends ReactionsHandler {
 				xppool += (int) Math.ceil(Math.log10(level) * level + (10 + level)
 						+ ThreadLocalRandom.current().nextDouble(level * 2 / 3));
 				averagelevel += npc.getLevel();
-				
-				for(String itemId: npc.getBase().getLoottable().keySet()) {
+
+				for (String itemId : npc.getBase().getLoottable().keySet()) {
 					float chance = ThreadLocalRandom.current().nextFloat() * 100;
-					if(chance < npc.getBase().getLoottable().get(itemId)) {
+					if (chance < npc.getBase().getLoottable().get(itemId)) {
 						Dropable item = FantasyUnlimited.getInstance().getDropableItem(itemId);
-						if(loot.containsKey(item)) {
+						if (loot.containsKey(item)) {
 							loot.put(item, loot.get(item) + 1);
-						}
-						else {
+						} else {
 							loot.put(item, 1);
 						}
 					}
@@ -526,6 +526,11 @@ public class BattleHandler extends ReactionsHandler {
 			StringBuilder builder = new StringBuilder();
 			builder.append("```md\n");
 			for (BattlePlayerInformation playerInfo : battle.getPlayers().values()) {
+				
+				//store health info for next battle
+				playerLogic.saveNewHealth(playerInfo.getCharacter().getCharacterId(),
+						playerInfo.getCharacter().getCurrentHealth());
+
 				int yield = Math.floorDiv(xppool, battle.getPlayers().size());
 				logger.trace("XP for player " + playerInfo.getCharacter().getName() + " before level bonus: " + yield);
 				int level = playerInfo.getCharacter().getLevel();
@@ -571,31 +576,31 @@ public class BattleHandler extends ReactionsHandler {
 						builder.append("- " + charClass.getAttributes().getLuckGrowth() + " Luck\n");
 					}
 				}
-				// TODO loot calc and print				
+				// TODO loot calc and print
 				playerLogic.addItemsToInventory(playerInfo.getCharacter().getCharacterId(), Pair.of("broken-sword", 1));
 			}
-			
-			if(battle.getPlayers().size() == 1) {
+
+			if (battle.getPlayers().size() == 1) {
 				BattlePlayerInformation playerInfo = battle.getPlayers().values().iterator().next();
 				builder.append(playerInfo.getCharacter().getName() + " found the following items:\n");
-				List<Pair<String,Integer>> items = new ArrayList<>();
-				for(Dropable item: loot.keySet()) {
+				List<Pair<String, Integer>> items = new ArrayList<>();
+				for (Dropable item : loot.keySet()) {
 					items.add(Pair.of(item.getId(), loot.get(item)));
 					builder.append(loot.get(item) + "x " + item.getName());
 				}
-				Pair<String,Integer>[] itemArray = new Pair[items.size()];
+				Pair<String, Integer>[] itemArray = new Pair[items.size()];
 				itemArray = items.toArray(itemArray);
 				playerLogic.addItemsToInventory(playerInfo.getCharacter().getCharacterId(), itemArray);
+			} else {
+				// round robbin!
+				// TODO
+				// plan:
+				// every common item that matches number of players: everyone gets one
+				// every common item that doesn't match (= itemCount % playerCount != 0) =>
+				// random chance
+				// every item rarer than common => roll for it
 			}
-			else {
-				//round robbin!
-				//TODO 
-				//plan: 
-				//every common item that matches number of players: everyone gets one
-				//every common item that doesn't match (= itemCount % playerCount != 0) => random chance
-				//every item rarer than common => roll for it
-			}
-			
+
 			builder.append("```");
 
 			embedBuilder = BattleUtils.createBattleOutputEmbeds(battle, false);

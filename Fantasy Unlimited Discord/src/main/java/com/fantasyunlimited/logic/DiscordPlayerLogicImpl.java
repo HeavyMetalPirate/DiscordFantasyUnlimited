@@ -126,8 +126,8 @@ public class DiscordPlayerLogicImpl implements DiscordPlayerLogic {
 		if (character.getCurrentXp() >= xpForNextLevel & character.getCurrentLevel() < 100) {
 			character.setCurrentLevel(character.getCurrentLevel() + 1);
 			character.getAttributes().raiseUnspent(5);
-			
-			//do class attribute raise
+
+			// do class attribute raise
 			CharacterClass charClass = FantasyUnlimited.getInstance().getClassBag().getItem(character.getClassId());
 			character.getAttributes().raiseEndurance(charClass.getAttributes().getEnduranceGrowth());
 			character.getAttributes().raiseStrength(charClass.getAttributes().getStrengthGrowth());
@@ -136,9 +136,9 @@ public class DiscordPlayerLogicImpl implements DiscordPlayerLogic {
 			character.getAttributes().raiseIntelligence(charClass.getAttributes().getIntelligenceGrowth());
 			character.getAttributes().raiseDefense(charClass.getAttributes().getDefenseGrowth());
 			character.getAttributes().raiseLuck(charClass.getAttributes().getLuckGrowth());
-			
+
 			character.setCurrentHealth(character.getMaxHealth());
-			
+
 			ret = true;
 		}
 
@@ -164,5 +164,26 @@ public class DiscordPlayerLogicImpl implements DiscordPlayerLogic {
 			}
 		}
 		characterRepository.save(character);
+	}
+
+	@Override
+	@Transactional(rollbackFor = IllegalStateException.class)
+	public void saveNewHealth(Long characterId, int currentHealth) {
+		// load into session
+		PlayerCharacter character = characterRepository.findById(characterId).orElse(null);
+		if (character == null) {
+			throw new IllegalStateException("Provided character not in database!");
+		}
+		character.setCurrentHealth(currentHealth);
+		if(character.getCurrentHealth() > character.getMaxHealth()) {
+			character.setCurrentHealth(character.getMaxHealth());
+		}
+		characterRepository.save(character);
+	}
+
+	@Override
+	@Transactional(rollbackFor = IllegalStateException.class)
+	public void saveNewHealth(PlayerCharacter character, int currentHealth) {
+		saveNewHealth(character.getId(), currentHealth);
 	}
 }

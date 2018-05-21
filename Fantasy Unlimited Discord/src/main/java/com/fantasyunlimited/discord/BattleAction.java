@@ -23,6 +23,7 @@ public class BattleAction implements Serializable {
 	private static final long serialVersionUID = -1864422563335663870L;
 	private boolean isArea;
 	private boolean isPass;
+	private boolean isIncapacitated;
 	private boolean executed;
 
 	private boolean dodged;
@@ -57,6 +58,10 @@ public class BattleAction implements Serializable {
 		}		
 		// if you die in that round, don't do actions because u ded
 		if (executing.isDefeated()) {
+			return;
+		}
+		if(executing.getStatusModifiers().parallelStream().anyMatch(status -> status.isIncapacitated())) {
+			setIncapacitated(true);
 			return;
 		}
 
@@ -154,6 +159,9 @@ public class BattleAction implements Serializable {
 		else {
 			status.setModifierType(ModifierType.LOWER);
 		}
+		
+		status.setIncapacitated(usedSkill.isSkillIncapacitates());
+		
 		if(usedSkill.getPreparationRounds() > 0) {
 			//wind up attack
 			status.setAmountModifier(0);
@@ -352,5 +360,13 @@ public class BattleAction implements Serializable {
 
 	public Map<Long, Integer> getAreaDamage() {
 		return areaDamage;
+	}
+
+	public boolean isIncapacitated() {
+		return isIncapacitated;
+	}
+
+	public void setIncapacitated(boolean isIncapacitated) {
+		this.isIncapacitated = isIncapacitated;
 	}
 }

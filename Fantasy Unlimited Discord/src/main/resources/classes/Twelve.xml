@@ -215,6 +215,7 @@
 				</SkillRank>
 			</ranks>
 			<requirements />
+			<skillIncapacitates>true</skillIncapacitates>
 			<buffModifier>0</buffModifier>
 			<durationInTurns>3</durationInTurns>
 		</Skill>

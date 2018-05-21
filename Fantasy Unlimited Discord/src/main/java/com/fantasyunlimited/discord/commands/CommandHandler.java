@@ -3,6 +3,7 @@ package com.fantasyunlimited.discord.commands;
 import java.util.Properties;
 
 import com.fantasyunlimited.discord.FantasyUnlimited;
+import com.fantasyunlimited.discord.SerializableEmbedBuilder;
 import com.fantasyunlimited.discord.event.EventHandler;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -38,6 +39,11 @@ public abstract class CommandHandler extends EventHandler<MessageReceivedEvent> 
 	
 	protected String getDisplayNameForAuthor(MessageReceivedEvent event) {
 		return event.getAuthor().getDisplayName(event.getGuild());
+	}
+	
+	protected void buildEmbedBuilderWithAuthorInformation(MessageReceivedEvent event, String title) {
+		embedBuilder = new SerializableEmbedBuilder().withAuthorName(event.getAuthor().getDisplayName(event.getGuild()))
+				.withAuthorIcon(event.getAuthor().getAvatarURL()).withTitle(title);
 	}
 
 	public enum Type {

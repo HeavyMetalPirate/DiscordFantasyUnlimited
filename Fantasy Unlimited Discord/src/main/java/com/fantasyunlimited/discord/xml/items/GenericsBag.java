@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.fantasyunlimited.discord.xml.GenericItem;
 import com.thoughtworks.xstream.InitializationException;
@@ -46,8 +47,8 @@ public abstract class GenericsBag<T extends GenericItem> {
 			items.put(item.getId(), item);
 			itemsByName.put(item.getName(), item);
 		}
-		
-		for(T item: items.values()) {
+
+		for (T item : items.values()) {
 			try {
 				passSanityChecks(item);
 			} catch (SanityException e) {
@@ -65,6 +66,24 @@ public abstract class GenericsBag<T extends GenericItem> {
 
 	public T getItem(String id) {
 		return items.get(id);
+	}
+
+	public Collection<T> getItemsByValue(String value) {
+		Collection<T> items = getItemsById(value);
+		if (items == null || items.isEmpty()) {
+			items = getItemsByName(value);
+		}
+		return items;
+	}
+
+	public Collection<T> getItemsByName(String name) {
+		return itemsByName.values().stream().filter(item -> item.getName().toLowerCase().contains(name.toLowerCase()))
+				.collect(Collectors.toList());
+	}
+
+	public Collection<T> getItemsById(String id) {
+		return itemsByName.values().stream().filter(item -> item.getId().toLowerCase().contains(id.toLowerCase()))
+				.collect(Collectors.toList());
 	}
 
 	private List<Path> listFiles(Path path) throws IOException {

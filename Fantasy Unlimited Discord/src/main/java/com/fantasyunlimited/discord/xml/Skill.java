@@ -30,6 +30,7 @@ public class Skill extends GenericItem {
 	private Attribute buffModifiesAttribute;
 	private CombatSkill buffModifiesCombatSkill;
 	private int buffModifier;
+	private boolean skillIncapacitates;
 	private int durationInTurns;
 
 	public SkillRank getHighestAvailable(int level, com.fantasyunlimited.entity.Attributes attributes) {
@@ -189,6 +190,14 @@ public class Skill extends GenericItem {
 
 	public void setBuffModifiesCombatSkill(CombatSkill buffModifiesCombatSkill) {
 		this.buffModifiesCombatSkill = buffModifiesCombatSkill;
+	}
+
+	public boolean isSkillIncapacitates() {
+		return skillIncapacitates;
+	}
+
+	public void setSkillIncapacitates(boolean skillIncapacitates) {
+		this.skillIncapacitates = skillIncapacitates;
 	}
 
 	public enum SkillWeaponModifier {

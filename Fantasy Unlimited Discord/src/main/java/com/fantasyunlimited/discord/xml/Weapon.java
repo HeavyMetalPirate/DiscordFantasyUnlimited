@@ -76,18 +76,35 @@ public class Weapon extends RarityClassifiedItem {
 	}
 
 	public enum WeaponType {
-		NONE,
-		SWORD,
-		AXE,
-		DAGGER,
-		POLEARM,
-		GREATSWORD,
-		GREATAXE,
-		BOW,
-		CROSSBOW,
-		STAFF,
-		WAND,
-		SHIELD
+		NONE("None"),
+		SWORD("Sword"),
+		AXE("Axe"),
+		DAGGER("Dagger"),
+		POLEARM("Polearm"),
+		GREATSWORD("Greatsword"),
+		GREATAXE("Greataxe"),
+		BOW("Bow"),
+		CROSSBOW("Crossbow"),
+		STAFF("Staff"),
+		WAND("Wand"),
+		SHIELD("Shield");
+		
+		private final String value;
+		private WeaponType(String value) {
+			this.value = value;
+		}
+		
+		@Override
+		public String toString() {
+			return value;
+		}
+		
+		public String toStringWithSuffix() {
+			if(value.equals("Shield")) {
+				return value + " blocking";
+			}
+			return value + " damage";
+		}
 	}
 	
 	public enum Hand {

@@ -21,6 +21,10 @@ public interface DiscordPlayerLogic extends CrudLogic<DiscordPlayer> {
 	public boolean isNameAvailable(String name);
 
 	public DiscordPlayer selectActiveCharacter(DiscordPlayer player, PlayerCharacter character);
+	
+	public void saveNewHealth(Long characterId, int currentHealth);
+	public void saveNewHealth(PlayerCharacter character, int currentHealth);
+	
 
 	/**
 	 * returns true if the character leveled up

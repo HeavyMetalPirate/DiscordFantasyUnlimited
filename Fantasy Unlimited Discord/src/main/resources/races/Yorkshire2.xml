@@ -7,7 +7,7 @@
   <bonuses>
     <RacialBonus>
       <name>Holy Mother of God</name>
-      <description>Raises critical chance by 5%. Holy mother of god, this is overpowered. Who allowed this?!</description>
+      <description>Holy mother of god, this is overpowered. Who allowed this?!</description>
       <iconName>mthgd.png</iconName>
       <combatSkill>CRITICAL</combatSkill>
       <modifier>5</modifier>

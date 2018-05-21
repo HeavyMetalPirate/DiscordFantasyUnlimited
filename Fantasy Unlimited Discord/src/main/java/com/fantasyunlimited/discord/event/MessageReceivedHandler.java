@@ -15,6 +15,7 @@ import com.fantasyunlimited.discord.commands.HelpCommandHandler;
 import com.fantasyunlimited.discord.commands.InventoryCommandHandler;
 import com.fantasyunlimited.discord.commands.PaginatorCommandHandler;
 import com.fantasyunlimited.discord.commands.PingCommandHandler;
+import com.fantasyunlimited.discord.commands.RaceCommandHandler;
 import com.fantasyunlimited.discord.commands.ReactionTestHandler;
 import com.fantasyunlimited.discord.commands.RegisterCommandHandler;
 import com.fantasyunlimited.discord.commands.UnknownCommandHandler;
@@ -44,6 +45,7 @@ public class MessageReceivedHandler extends EventHandler<MessageReceivedEvent> {
 		commands.put(InventoryCommandHandler.CMD, new InventoryCommandHandler(properties));
 		commands.put(PaginatorCommandHandler.CMD.toLowerCase(), new PaginatorCommandHandler(properties));
 		commands.put(BattleCommandHandler.CMD, new BattleCommandHandler(properties));
+		commands.put(RaceCommandHandler.CMD, new RaceCommandHandler(properties));
 		//Needs to be last always because it loads all previous commands to print
 		commands.put(HelpCommandHandler.CMD.toLowerCase(), new HelpCommandHandler(properties));
 		//handler for unknown commands
