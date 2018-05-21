@@ -12,6 +12,7 @@ import org.apache.commons.lang3.tuple.Triple;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fantasyunlimited.discord.FantasyUnlimited;
+import com.fantasyunlimited.discord.MessageFormatUtils;
 import com.fantasyunlimited.discord.MessageInformation;
 import com.fantasyunlimited.discord.MessageStatus;
 import com.fantasyunlimited.discord.MessageStatus.Name;
@@ -23,6 +24,7 @@ import com.fantasyunlimited.discord.xml.GenericItem;
 import com.fantasyunlimited.discord.xml.Location;
 import com.fantasyunlimited.discord.xml.Race;
 import com.fantasyunlimited.discord.xml.Weapon;
+import com.fantasyunlimited.discord.xml.Attributes.Attribute;
 import com.fantasyunlimited.entity.DiscordPlayer;
 import com.fantasyunlimited.entity.PlayerCharacter;
 import com.fantasyunlimited.logic.DiscordPlayerLogic;
@@ -117,15 +119,16 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 			StringBuilder builder = new StringBuilder();
 
 			Location location = FantasyUnlimited.getInstance().getLocationsBag().getItem(character.getLocationId());
-			builder.append("```\n");
-			builder.append("Name: \t" + character.getName() + "\n");
-			builder.append("Level:\t" + character.getCurrentLevel() + "\n");
-			builder.append("Experience: "
+			builder.append("```md\n");
+			builder.append(MessageFormatUtils.fillStringSuffix("[Name", 11) + "][" + character.getName() + "]\n");
+			builder.append(
+					MessageFormatUtils.fillStringSuffix("[Level", 11) + "][" + character.getCurrentLevel() + "]\n");
+			builder.append(MessageFormatUtils.fillStringSuffix("[Experience", 11) + "]["
 					+ FantasyUnlimited.getInstance().getCurrentXpForLevel(character.getCurrentLevel(),
 							character.getCurrentXp())
 					+ " / " + FantasyUnlimited.getInstance().getNextLevelExperience(character.getCurrentLevel())
-					+ "\n");
-			builder.append("Current location: " + location.getName());
+					+ "]\n");
+			builder.append("[Current location][" + location.getName() + "]");
 			builder.append("```");
 			embedBuilder.appendField("Basic data", builder.toString(), true);
 
@@ -134,26 +137,47 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 			CharacterClass charClass = FantasyUnlimited.getInstance().getClassBag().getItem(character.getClassId());
 
 			builder = new StringBuilder();
-			builder.append("```\n");
-			builder.append("Race: \t" + race.getName() + "\n");
-			builder.append("Class:\t" + charClass.getName());
+			builder.append("```md\n");
+			builder.append(MessageFormatUtils.fillStringSuffix("[Race", 6) + "][" + race.getName() + "]\n");
+			builder.append(MessageFormatUtils.fillStringSuffix("[Class", 6) + "][" + charClass.getName() + "]");
 			builder.append("```");
 			embedBuilder.appendField("Race & Class", builder.toString(), true);
 
 			// Stats
 			builder = new StringBuilder();
-			builder.append("```\n");
-			builder.append("Health: " + character.getCurrentHealth() + "/" + character.getMaxHealth() + "\n");
-			builder.append(charClass.getEnergyType().toString() + ": " + character.getCurrentAtkResource() + "/"
-					+ character.getMaxAtkResource() + "\n");
-			builder.append("STR:\t" + character.getAttributes().getStrength() + "\t");
-			builder.append("DEX:\t" + character.getAttributes().getDexterity() + "\n");
-			builder.append("END:\t" + character.getAttributes().getEndurance() + "\t");
-			builder.append("DEF:\t" + character.getAttributes().getDefense() + "\n");
-			builder.append("WIS:\t" + character.getAttributes().getWisdom() + "\t");
-			builder.append("INT:\t" + character.getAttributes().getIntelligence() + "\n");
-			builder.append("LCK:\t" + character.getAttributes().getLuck() + "\n");
-			builder.append("Unspent points: " + character.getAttributes().getUnspent());
+			builder.append("```md\n");
+			builder.append(MessageFormatUtils.fillStringSuffix("# Health: ", 10) + MessageFormatUtils
+					.fillStringPrefix(character.getCurrentHealth() + "/" + character.getMaxHealth(), 10) + " #\n");
+			builder.append(
+					MessageFormatUtils.fillStringSuffix("# " + charClass.getEnergyType().toString() + ": ", 10)
+							+ MessageFormatUtils.fillStringPrefix(
+									character.getCurrentAtkResource() + "/" + character.getMaxAtkResource(), 10)
+							+ " #\n");
+			builder.append(MessageFormatUtils.fillStringSuffix("< Strength", 15)
+					+ MessageFormatUtils.fillStringSuffix(character.getAttributes().getStrength() + " > <+"
+							+ character.getAttributeBonus(Attribute.STRENGTH) + ">", 10));
+			builder.append(MessageFormatUtils.fillStringSuffix("< Dexterity", 15)
+					+ MessageFormatUtils.fillStringSuffix(character.getAttributes().getDexterity() + " > <+"
+							+ character.getAttributeBonus(Attribute.DEXTERITY) + ">", 10)
+					+ "\n");
+			builder.append(MessageFormatUtils.fillStringSuffix("< Endurance", 15)
+					+ MessageFormatUtils.fillStringSuffix(character.getAttributes().getEndurance() + " > <+"
+							+ character.getAttributeBonus(Attribute.ENDURANCE) + ">", 10));
+			builder.append(MessageFormatUtils.fillStringSuffix("< Defense", 15)
+					+ MessageFormatUtils.fillStringSuffix(character.getAttributes().getDefense() + " > <+"
+							+ character.getAttributeBonus(Attribute.DEFENSE) + ">", 10)
+					+ "\n");
+			builder.append(MessageFormatUtils.fillStringSuffix("< Wisdom", 15)
+					+ MessageFormatUtils.fillStringSuffix(character.getAttributes().getWisdom() + " > <+"
+							+ character.getAttributeBonus(Attribute.WISDOM) + ">", 10));
+			builder.append(MessageFormatUtils.fillStringSuffix("< Intelligence", 15)
+					+ MessageFormatUtils.fillStringSuffix(character.getAttributes().getIntelligence() + " > <+"
+							+ character.getAttributeBonus(Attribute.INTELLIGENCE) + ">", 10)
+					+ "\n");
+			builder.append(MessageFormatUtils.fillStringSuffix("< Luck", 15) + MessageFormatUtils.fillStringSuffix(
+					character.getAttributes().getLuck() + " > <+" + character.getAttributeBonus(Attribute.LUCK) + ">",
+					10) + "\n");
+			builder.append("[Unspent points][" + character.getAttributes().getUnspent() + "]\n");
 			builder.append("```");
 			embedBuilder.appendField("Stats", builder.toString(), false);
 

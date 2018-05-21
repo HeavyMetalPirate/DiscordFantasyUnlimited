@@ -283,7 +283,6 @@ public class BattleAction implements Serializable {
 				}
 				// TODO target defensive calulations
 				applyDefensiveModifiers(target);
-				// TODO name is not good if there's several
 				areaDamage.put(targetId, actionAmount);
 				target.applyDamage(actionAmount);
 			}

@@ -134,6 +134,24 @@ public abstract class BattleParticipant implements Serializable {
 		return equip;
 	}
 
+	/**
+	 * Class and race bonus aren't applied linear, as they are % values
+	 * 
+	 * @param attribute
+	 * @param type
+	 * @return
+	 */
+	public int applyAttributeClassAndRaceBonus(int attribute, Attribute type) {
+		AtomicInteger bonus = new AtomicInteger(100);
+
+		getRace().getBonuses().stream().filter(bon -> bon.getAttribute() == type)
+				.forEach(bon -> bonus.addAndGet(bon.getModifier()));
+		getCharClass().getBonuses().stream().filter(bon -> bon.getAttribute() == type)
+				.forEach(bon -> bonus.addAndGet(bon.getModifier()));
+
+		return attribute * bonus.get() / 100;
+	}
+
 	public int getAttributeBonus(Attribute attribute) {
 		AtomicInteger bonus = new AtomicInteger(0);
 
@@ -187,21 +205,26 @@ public abstract class BattleParticipant implements Serializable {
 				}
 			}
 		}
-		
+
+		getRace().getBonuses().stream().filter(bon -> bon.getCombatSkill() == combatSkill)
+				.forEach(bon -> bonus.addAndGet(bon.getModifier()));
+		getCharClass().getBonuses().stream().filter(bon -> bon.getCombatSkill() == combatSkill)
+				.forEach(bon -> bonus.addAndGet(bon.getModifier()));
+
 		return bonus.get();
 	}
 
 	public float calculateDodgeChance() {
 		float chance = levelBonus; // base
 		chance += getCombatSkillBonus(CombatSkill.DODGE);
-		//TODO attribute calculations
+		// TODO attribute calculations
 		return chance >= 0 ? chance : 0;
 	}
 
 	public float calculateCritChance() {
 		float chance = levelBonus; // base
 		chance += getCombatSkillBonus(CombatSkill.CRITICAL);
-		//TODO attribute calculations
+		// TODO attribute calculations
 		return chance >= 0 ? chance : 0;
 	}
 

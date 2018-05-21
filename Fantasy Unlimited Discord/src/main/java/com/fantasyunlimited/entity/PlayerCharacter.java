@@ -155,7 +155,6 @@ public class PlayerCharacter implements Serializable {
 	}
 
 	public int getMaxAtkResource() {
-		// TODO equipment bonus
 		if (FantasyUnlimited.getInstance().getClassBag().getItem(classId).getEnergyType() == EnergyType.MANA) {
 			int base = attributes.getIntelligence() + getAttributeBonus(Attribute.INTELLIGENCE);
 			return base * 15 + currentLevel * 20;
@@ -246,7 +245,12 @@ public class PlayerCharacter implements Serializable {
 	}
 
 	public int getCurrentAtkResource() {
-		return currentAtkResource;
+		if(FantasyUnlimited.getInstance().getClassBag().getItem(classId).getEnergyType() == EnergyType.RAGE) {
+			return 0;
+		}
+		else {
+			return getMaxAtkResource();
+		}
 	}
 
 	public void setCurrentAtkResource(int currentAtkResource) {

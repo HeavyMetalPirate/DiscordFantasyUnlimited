@@ -576,8 +576,6 @@ public class BattleHandler extends ReactionsHandler {
 						builder.append("- " + charClass.getAttributes().getLuckGrowth() + " Luck\n");
 					}
 				}
-				// TODO loot calc and print
-				playerLogic.addItemsToInventory(playerInfo.getCharacter().getCharacterId(), Pair.of("broken-sword", 1));
 			}
 
 			if (battle.getPlayers().size() == 1) {

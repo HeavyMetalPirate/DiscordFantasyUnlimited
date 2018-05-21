@@ -66,7 +66,6 @@ public class BattleNPC extends BattleParticipant {
 		equipment.setRing2(base.getRing2());
 		equipment.setNeck(base.getNeck());
 		
-		// TODO equipment bonus
 		int enduraceBase = endurance + getAttributeBonus(Attribute.ENDURANCE);
 		this.maxHealth = enduraceBase * 10 + level * 15;
 		

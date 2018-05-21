@@ -6,7 +6,6 @@ public class RaceBag extends GenericsBag<Race> {
 
 	public RaceBag() {
 		super("races");
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

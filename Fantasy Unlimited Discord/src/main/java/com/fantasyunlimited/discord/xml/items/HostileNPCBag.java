@@ -47,9 +47,7 @@ public class HostileNPCBag extends GenericsBag<HostileNPC> {
 			if (chance == null || chance < 0.1) {
 				throw new SanityException("Invalid drop chance for loot '" + loot + "': " + chance);
 			}
-			//TODO: consumables, craft ingredients etc.
-			if (FantasyUnlimited.getInstance().getWeaponBag().getItem(loot) == null
-					&& FantasyUnlimited.getInstance().getEquipmentBag().getItem(loot) == null) {
+			if (FantasyUnlimited.getInstance().getDropableItem(loot) == null) {
 				throw new SanityException("Loot '" + loot + "' not found in any items bag!");
 			}
 		}
