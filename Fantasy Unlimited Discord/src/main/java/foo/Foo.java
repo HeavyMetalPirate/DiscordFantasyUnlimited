@@ -37,6 +37,7 @@ import com.fantasyunlimited.discord.xml.CharacterClass;
 import com.fantasyunlimited.discord.xml.ClassBonus;
 import com.fantasyunlimited.discord.xml.CombatSkill;
 import com.fantasyunlimited.discord.xml.CombatSkillBonus;
+import com.fantasyunlimited.discord.xml.Consumable;
 import com.fantasyunlimited.discord.xml.Equipment;
 import com.fantasyunlimited.discord.xml.EquipmentType;
 import com.fantasyunlimited.discord.xml.HostileNPC;
@@ -100,7 +101,19 @@ public class Foo {
 		xstream.alias("TravelConnection", TravelConnection.class);
 		xstream.alias("NPC", NPC.class);
 		xstream.alias("HostileNPC", HostileNPC.class);
+		xstream.alias("Consumable", Consumable.class);
 
+		Consumable consumable = new Consumable();
+		consumable.setId("smallHealthPot");
+		consumable.setName("Small Health Potion");
+		consumable.setIconName("smallHealthpot.jpg");
+		consumable.setAtkResourceRestored(0);
+		consumable.setHealthRestored(30);
+		xstream.toXML(consumable, System.out);
+
+		System.out.println(
+				"\n=========================================================================================\n");
+		
 		HostileNPC hostileNPC = new HostileNPC();
 		hostileNPC.setId("dargon");
 		hostileNPC.setName("Dargon Woraw");

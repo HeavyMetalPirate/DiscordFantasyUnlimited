@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Consumable>
+  <id>smallHealthPot</id>
+  <name>Small Health Potion</name>
+  <iconName>smallHealthpot.jpg</iconName>
+  <value>0</value>
+  <duringBattle>false</duringBattle>
+  <combatSkillModifiers/>
+  <attributeModifiers/>
+  <healthRestored>30</healthRestored>
+  <atkResourceRestored>0</atkResourceRestored>
+</Consumable>

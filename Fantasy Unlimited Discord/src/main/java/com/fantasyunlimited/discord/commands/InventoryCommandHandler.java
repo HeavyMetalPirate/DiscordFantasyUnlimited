@@ -12,6 +12,7 @@ import com.fantasyunlimited.discord.MessageFormatUtils;
 import com.fantasyunlimited.discord.MessageInformation;
 import com.fantasyunlimited.discord.MessageStatus;
 import com.fantasyunlimited.discord.MessageStatus.Name;
+import com.fantasyunlimited.discord.xml.Consumable;
 import com.fantasyunlimited.discord.xml.Equipment;
 import com.fantasyunlimited.discord.xml.Weapon;
 import com.fantasyunlimited.entity.DiscordPlayer;
@@ -40,6 +41,7 @@ public class InventoryCommandHandler extends CommandSupportsPaginatorHandler {
 
 		List<Weapon> weapons = new ArrayList<>();
 		List<Equipment> equipments = new ArrayList<>();
+		List<Consumable> consumables = new ArrayList<>();
 		// TODO other item types
 
 		List<String> inventory = new ArrayList<String>();
@@ -49,24 +51,29 @@ public class InventoryCommandHandler extends CommandSupportsPaginatorHandler {
 				weapons.add(FantasyUnlimited.getInstance().getWeaponBag().getItem(itemId));
 			} else if (FantasyUnlimited.getInstance().getEquipmentBag().getItem(itemId) != null) {
 				equipments.add(FantasyUnlimited.getInstance().getEquipmentBag().getItem(itemId));
+			} else if (FantasyUnlimited.getInstance().getConsumablesBag().getItem(itemId) != null) {
+				consumables.add(FantasyUnlimited.getInstance().getConsumablesBag().getItem(itemId));
 			}
 		}
 
 		inventory.add("# Weapons & Shields #");
-		for (Weapon weapon : weapons) {
-			inventory.add(
-					"[" + MessageFormatUtils.fillStringPrefix(character.getInventory().get(weapon.getId()) + "x", 5)
-							+ "][" + MessageFormatUtils.fillStringSuffix(weapon.getName(), 30) + "]");
-		}
+		weapons.stream()
+				.forEach(item -> inventory.add(
+						"[" + MessageFormatUtils.fillStringPrefix(character.getInventory().get(item.getId()) + "x", 5)
+								+ "][" + MessageFormatUtils.fillStringSuffix(item.getName(), 30) + "]"));
 		inventory.add("# Equipment #");
-		for (Equipment equipment : equipments) {
-			inventory.add(
-					"[" + MessageFormatUtils.fillStringPrefix(character.getInventory().get(equipment.getId()) + "x", 5)
-							+ "][" + MessageFormatUtils.fillStringSuffix(equipment.getName(), 30) + "]");
-		}
+		equipments.stream()
+				.forEach(item -> inventory.add(
+						"[" + MessageFormatUtils.fillStringPrefix(character.getInventory().get(item.getId()) + "x", 5)
+								+ "][" + MessageFormatUtils.fillStringSuffix(item.getName(), 30) + "]"));
 		inventory.add("# Consumables #");
+		consumables.stream()
+				.forEach(item -> inventory.add(
+						"[" + MessageFormatUtils.fillStringPrefix(character.getInventory().get(item.getId()) + "x", 5)
+								+ "][" + MessageFormatUtils.fillStringSuffix(item.getName(), 30) + "]"));
+
 		inventory.add("# Others #");
-		
+
 		MessageInformation information = new MessageInformation();
 		information.setCanBeRemoved(false);
 		information.setOriginDate(event.getMessage().getTimestamp());
@@ -74,7 +81,8 @@ public class InventoryCommandHandler extends CommandSupportsPaginatorHandler {
 		MessageStatus status = new MessageStatus();
 		status.setName(Name.PAGINATION_TEST);
 		information.setStatus(status);
-		information.getVars().put("pageHeader", "Inventory of " + character.getName() + " (" + getDisplayNameForAuthor(event) + ")");
+		information.getVars().put("pageHeader",
+				"Inventory of " + character.getName() + " (" + getDisplayNameForAuthor(event) + ")");
 
 		return Triple.of(15, information, inventory);
 	}

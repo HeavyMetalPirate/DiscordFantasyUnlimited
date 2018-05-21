@@ -548,32 +548,32 @@ public class BattleHandler extends ReactionsHandler {
 				logger.trace("Character level: " + playerInfo.getCharacter().getLevel());
 				logger.trace("XP for player " + playerInfo.getCharacter().getName() + " after level bonus: " + yield);
 
-				builder.append(playerInfo.getCharacter().getName() + " received " + yield + " experience.\n");
+				builder.append("[" + playerInfo.getCharacter().getName() + "][Received " + yield + " experience]\n");
 				if (playerLogic.addExperience(playerInfo.getCharacter().getCharacterId(), yield)) {
-					builder.append(playerInfo.getCharacter().getName()
-							+ " leveled up! They receive 5 status points for distribution.\n");
+					builder.append("[" + playerInfo.getCharacter().getName()
+							+ "][Leveled up! They receive 5 status points for distribution.]\n");
 					CharacterClass charClass = playerInfo.getCharacter().getCharClass();
 					builder.append("They also gain: \n");
 					if (charClass.getAttributes().getEnduranceGrowth() > 0) {
-						builder.append("- " + charClass.getAttributes().getEnduranceGrowth() + " Endurance\n");
+						builder.append("+ " + charClass.getAttributes().getEnduranceGrowth() + " Endurance\n");
 					}
 					if (charClass.getAttributes().getStrengthGrowth() > 0) {
-						builder.append("- " + charClass.getAttributes().getStrengthGrowth() + " Strength\n");
+						builder.append("+ " + charClass.getAttributes().getStrengthGrowth() + " Strength\n");
 					}
 					if (charClass.getAttributes().getDexterityGrowth() > 0) {
-						builder.append("- " + charClass.getAttributes().getDexterityGrowth() + " Dexterity\n");
+						builder.append("+ " + charClass.getAttributes().getDexterityGrowth() + " Dexterity\n");
 					}
 					if (charClass.getAttributes().getWisdomGrowth() > 0) {
-						builder.append("- " + charClass.getAttributes().getWisdomGrowth() + " Wisdom\n");
+						builder.append("+ " + charClass.getAttributes().getWisdomGrowth() + " Wisdom\n");
 					}
 					if (charClass.getAttributes().getIntelligenceGrowth() > 0) {
-						builder.append("- " + charClass.getAttributes().getIntelligenceGrowth() + " Intelligence\n");
+						builder.append("+ " + charClass.getAttributes().getIntelligenceGrowth() + " Intelligence\n");
 					}
 					if (charClass.getAttributes().getDefenseGrowth() > 0) {
-						builder.append("- " + charClass.getAttributes().getDefenseGrowth() + " Defense\n");
+						builder.append("+ " + charClass.getAttributes().getDefenseGrowth() + " Defense\n");
 					}
 					if (charClass.getAttributes().getLuckGrowth() > 0) {
-						builder.append("- " + charClass.getAttributes().getLuckGrowth() + " Luck\n");
+						builder.append("+ " + charClass.getAttributes().getLuckGrowth() + " Luck\n");
 					}
 				}
 			}
@@ -584,7 +584,7 @@ public class BattleHandler extends ReactionsHandler {
 				List<Pair<String, Integer>> items = new ArrayList<>();
 				for (Dropable item : loot.keySet()) {
 					items.add(Pair.of(item.getId(), loot.get(item)));
-					builder.append(loot.get(item) + "x " + item.getName());
+					builder.append("[" + loot.get(item) + "x][" + item.getName() + "]\n");
 				}
 				Pair<String, Integer>[] itemArray = new Pair[items.size()];
 				itemArray = items.toArray(itemArray);

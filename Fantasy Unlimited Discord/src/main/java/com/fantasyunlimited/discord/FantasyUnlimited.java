@@ -73,6 +73,7 @@ public class FantasyUnlimited extends BaseBot {
 	private ClassBag classBag = new ClassBag();
 	private LocationBag locationsBag = new LocationBag();
 	private HostileNPCBag hostileNPCBag = new HostileNPCBag();
+	private ConsumablesBag consumablesBag = new ConsumablesBag();
 
 	private Map<Integer, Long> experienceTable;
 
@@ -159,6 +160,10 @@ public class FantasyUnlimited extends BaseBot {
 			return dropable;
 		}
 		dropable = weaponBag.getItem(id);
+		if(dropable != null) {
+			return dropable;
+		}
+		dropable = consumablesBag.getItem(id);
 		if(dropable != null) {
 			return dropable;
 		}
@@ -249,6 +254,7 @@ public class FantasyUnlimited extends BaseBot {
 		xstream.alias("TravelConnection", TravelConnection.class);
 		xstream.alias("NPC", NPC.class);
 		xstream.alias("HostileNPC", HostileNPC.class);
+		xstream.alias("Consumable", Consumable.class);
 		return xstream;
 	}
 
@@ -396,5 +402,13 @@ public class FantasyUnlimited extends BaseBot {
 
 	public void setBotUser(IUser botUser) {
 		this.botUser = botUser;
+	}
+
+	public ConsumablesBag getConsumablesBag() {
+		return consumablesBag;
+	}
+
+	public void setConsumablesBag(ConsumablesBag consumablesBag) {
+		this.consumablesBag = consumablesBag;
 	}
 }

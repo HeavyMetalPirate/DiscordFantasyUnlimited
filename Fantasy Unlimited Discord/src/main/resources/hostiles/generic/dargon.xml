@@ -11,7 +11,11 @@
   <loottable>
     <entry>
       <string>broken-sword</string>
-      <double>100.0</double>
+      <double>50.0</double>
+    </entry>
+    <entry>
+      <string>smallHealthPot</string>
+      <double>50.0</double>
     </entry>
   </loottable>
 </HostileNPC>

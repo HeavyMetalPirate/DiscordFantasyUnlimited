@@ -17,6 +17,7 @@ public class BotInitializedHandler implements IListener<ReadyEvent>{
 		bot.setPlayingText("SUCK IT SLAYDEN");
 		try {
 			XStream xstream = bot.initializeXStream();
+			bot.getConsumablesBag().initialize(xstream);
 			bot.getWeaponBag().initialize(xstream);
 			bot.getEquipmentBag().initialize(xstream);
 			bot.getRaceBag().initialize(xstream);
@@ -28,6 +29,7 @@ public class BotInitializedHandler implements IListener<ReadyEvent>{
 			bot.sendExceptionMessage(e);
 		}
 		
+		logger.debug("Initialized: " + bot.getConsumablesBag().getItems().size() + " Consumables");
 		logger.debug("Initialized: " + bot.getWeaponBag().getItems().size() + " Weapons");
 		logger.debug("Initialized: " + bot.getEquipmentBag().getItems().size() + " Equipments");
 		logger.debug("Initialized: " + bot.getRaceBag().getItems().size() + " Races");
