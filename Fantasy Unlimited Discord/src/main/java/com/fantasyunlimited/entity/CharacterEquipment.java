@@ -1,6 +1,10 @@
 package com.fantasyunlimited.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,8 +14,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
+import com.fantasyunlimited.discord.FantasyUnlimited;
+import com.fantasyunlimited.discord.xml.Equipment;
+import com.fantasyunlimited.discord.xml.Gear;
+import com.fantasyunlimited.discord.xml.Weapon;
+
 @Entity
-public class CharacterEquipment implements Serializable  {
+public class CharacterEquipment implements Serializable {
 	/**
 	 * 
 	 */
@@ -51,6 +60,22 @@ public class CharacterEquipment implements Serializable  {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public Weapon getWeapon(String id) {
+		return FantasyUnlimited.getInstance().getWeaponBag().getItem(id);
+	}
+
+	public Equipment getEquipment(String id) {
+		return FantasyUnlimited.getInstance().getEquipmentBag().getItem(id);
+	}
+
+	public List<Gear> getGear() {
+		List<Gear> equip = new ArrayList<>(Arrays.asList(getWeapon(mainhand), getWeapon(offhand),
+				getEquipment(helmet), getEquipment(chest), getEquipment(gloves), getEquipment(pants),
+				getEquipment(boots), getEquipment(ring1), getEquipment(ring2), getEquipment(neck)));
+		equip.removeAll(Collections.singleton(null));
+		return equip;
 	}
 
 	public PlayerCharacter getCharacter() {

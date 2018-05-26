@@ -5,6 +5,7 @@
   <name>Nine</name>
   <iconName>depraved.png</iconName>
   <lore>The depraved is depraved. Depraving, huh?</lore>
+  <humanPlayable>true</humanPlayable>
   <energyType>RAGE</energyType>
   <attributes>
     <endurance>1</endurance>

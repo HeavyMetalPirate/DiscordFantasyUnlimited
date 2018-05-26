@@ -212,18 +212,22 @@ public abstract class BattleParticipant implements Serializable {
 
 		return bonus.get();
 	}
-
+	
+	private float getAttributeChanceBonus(Attribute attribute) {
+		return 0f;
+	}
+	
 	public float calculateDodgeChance() {
 		float chance = levelBonus; // base
 		chance += getCombatSkillBonus(CombatSkill.DODGE);
-		// TODO attribute calculations
+		chance += getAttributeChanceBonus(Attribute.DEXTERITY);
 		return chance >= 0 ? chance : 0;
 	}
 
 	public float calculateCritChance() {
 		float chance = levelBonus; // base
 		chance += getCombatSkillBonus(CombatSkill.CRITICAL);
-		// TODO attribute calculations
+		chance += getAttributeChanceBonus(Attribute.INTELLIGENCE); //TODO
 		return chance >= 0 ? chance : 0;
 	}
 
@@ -236,14 +240,14 @@ public abstract class BattleParticipant implements Serializable {
 
 		float chance = levelBonus; // base
 		chance += getCombatSkillBonus(CombatSkill.BLOCK);
-		// TODO stats modifier
+		chance += getAttributeChanceBonus(Attribute.DEFENSE);
 		return chance >= 0 ? chance : 0;
 	}
 
 	public float calculateParryChance() {
 		float chance = levelBonus; // base
 		chance += getCombatSkillBonus(CombatSkill.PARRY);
-		// TODO stats modifier
+		chance += getAttributeChanceBonus(Attribute.STRENGTH);
 		return chance >= 0 ? chance : 0;
 	}
 

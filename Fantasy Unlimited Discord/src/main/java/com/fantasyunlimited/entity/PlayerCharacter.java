@@ -20,6 +20,7 @@ import javax.persistence.OneToOne;
 
 import com.fantasyunlimited.discord.FantasyUnlimited;
 import com.fantasyunlimited.discord.xml.Attributes.Attribute;
+import com.fantasyunlimited.discord.xml.CharacterClass;
 import com.fantasyunlimited.discord.xml.CharacterClass.EnergyType;
 import com.fantasyunlimited.discord.xml.Equipment;
 import com.fantasyunlimited.discord.xml.Weapon;
@@ -149,17 +150,29 @@ public class PlayerCharacter implements Serializable {
 		return equipment;
 	}
 
+	public CharacterClass getCharacterClass() {
+		return FantasyUnlimited.getInstance().getClassBag().getItem(classId);
+	}
+
 	public int getMaxHealth() {
 		int base = attributes.getEndurance() + getAttributeBonus(Attribute.ENDURANCE);
 		return base * 10 + currentLevel * 15;
 	}
 
 	public int getMaxAtkResource() {
+		AtomicInteger extra = new AtomicInteger(0);
+		equipment.getGear().stream().filter(equipment -> equipment != null)
+				.filter(equipment -> equipment.getAtkResourceBonuses() != null)
+				.forEach(equipment -> equipment.getAtkResourceBonuses().stream()
+						.filter(bonus -> bonus.getSkill() == getCharacterClass().getEnergyType())
+						.forEach(bonus -> extra.getAndAdd(bonus.getBonus())));
+
 		if (FantasyUnlimited.getInstance().getClassBag().getItem(classId).getEnergyType() == EnergyType.MANA) {
 			int base = attributes.getIntelligence() + getAttributeBonus(Attribute.INTELLIGENCE);
+			base += extra.get();
 			return base * 15 + currentLevel * 20;
 		} else {
-			return 100;
+			return 100 + extra.get();
 		}
 	}
 
@@ -245,10 +258,9 @@ public class PlayerCharacter implements Serializable {
 	}
 
 	public int getCurrentAtkResource() {
-		if(FantasyUnlimited.getInstance().getClassBag().getItem(classId).getEnergyType() == EnergyType.RAGE) {
+		if (FantasyUnlimited.getInstance().getClassBag().getItem(classId).getEnergyType() == EnergyType.RAGE) {
 			return 0;
-		}
-		else {
+		} else {
 			return getMaxAtkResource();
 		}
 	}

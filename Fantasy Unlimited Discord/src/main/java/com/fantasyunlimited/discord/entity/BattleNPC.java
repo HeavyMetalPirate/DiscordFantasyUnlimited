@@ -2,12 +2,15 @@ package com.fantasyunlimited.discord.entity;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.fantasyunlimited.discord.FantasyUnlimited;
 import com.fantasyunlimited.discord.xml.CharacterClass;
 import com.fantasyunlimited.discord.xml.HostileNPC;
+import com.fantasyunlimited.discord.xml.Weapon;
 import com.fantasyunlimited.discord.xml.Attributes.Attribute;
 import com.fantasyunlimited.discord.xml.CharacterClass.EnergyType;
+import com.fantasyunlimited.discord.xml.Equipment;
 import com.fantasyunlimited.entity.Attributes;
 
 public class BattleNPC extends BattleParticipant {
@@ -23,7 +26,7 @@ public class BattleNPC extends BattleParticipant {
 	public BattleNPC() {
 		super();
 	}
-	
+
 	public BattleNPC(HostileNPC base) {
 		this.baseId = base.getId();
 		this.raceId = base.getRaceId();
@@ -65,32 +68,53 @@ public class BattleNPC extends BattleParticipant {
 		equipment.setRing1(base.getRing1());
 		equipment.setRing2(base.getRing2());
 		equipment.setNeck(base.getNeck());
-		
+
 		int enduraceBase = endurance + getAttributeBonus(Attribute.ENDURANCE);
 		this.maxHealth = enduraceBase * 10 + level * 15;
-		
+
+		final AtomicInteger resourceBonus = new AtomicInteger(0);
+		for (Equipment eq : getCurrentEquipment()) {
+			if (eq.getAtkResourceBonuses() == null) {
+				continue;
+			}
+			eq.getAtkResourceBonuses().stream().filter(bonus -> bonus.getSkill() == charClass.getEnergyType())
+					.forEach(bonus -> resourceBonus.getAndAdd(bonus.getBonus()));
+		}
+		Weapon mainhand = FantasyUnlimited.getInstance().getWeaponBag().getItem(base.getMainhand());
+		Weapon offhand = FantasyUnlimited.getInstance().getWeaponBag().getItem(base.getOffhand());
+
+		if (mainhand != null && mainhand.getAtkResourceBonuses() != null) {
+			mainhand.getAtkResourceBonuses().stream().filter(bonus -> bonus.getSkill() == charClass.getEnergyType())
+					.forEach(bonus -> resourceBonus.getAndAdd(bonus.getBonus()));
+		}
+		if (offhand != null && offhand.getAtkResourceBonuses() != null) {
+			offhand.getAtkResourceBonuses().stream().filter(bonus -> bonus.getSkill() == charClass.getEnergyType())
+					.forEach(bonus -> resourceBonus.getAndAdd(bonus.getBonus()));
+		}
+
 		if (charClass.getEnergyType() == EnergyType.MANA) {
 			int intelligenceBase = intelligence + getAttributeBonus(Attribute.INTELLIGENCE);
 			this.maxAtkResource = intelligenceBase * 15 + level * 20;
 		} else {
 			this.maxAtkResource = 100;
 		}
-		
+
+		this.maxAtkResource += resourceBonus.get();
+
 		this.currentHealth = maxHealth;
-		if(charClass.getEnergyType() == EnergyType.RAGE) {
+		if (charClass.getEnergyType() == EnergyType.RAGE) {
 			this.currentAtkResource = 0;
-		}
-		else {
+		} else {
 			this.currentAtkResource = maxAtkResource;
 		}
-		
+
 		calculateRegeneration();
 	}
 
 	public String getName() {
 		return getBase().getName();
 	}
-	
+
 	public HostileNPC getBase() {
 		return FantasyUnlimited.getInstance().getHostileNPCBag().getItem(baseId);
 	}

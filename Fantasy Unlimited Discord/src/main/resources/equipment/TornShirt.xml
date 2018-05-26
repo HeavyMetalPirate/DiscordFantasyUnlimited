@@ -21,4 +21,10 @@
   	</AttributeBonus>
   </attributeBonuses>
   <secondarySkillBonuses/>
+  <atkResourceBonuses>
+  	<AttackResourceBonus>
+  		<energyType>RAGE</energyType>
+  		<bonus>5</bonus>
+  	</AttackResourceBonus>
+  </atkResourceBonuses>
 </Equipment>

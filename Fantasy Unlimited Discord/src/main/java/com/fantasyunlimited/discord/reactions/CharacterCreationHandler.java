@@ -112,9 +112,12 @@ public class CharacterCreationHandler extends PaginationHandler {
 
 		int classCounter = 0;
 		for (CharacterClass characterClass : FantasyUnlimited.getInstance().getClassBag().getItems()) {
+			if (characterClass.isHumanPlayable() == false) {
+				continue;
+			}
 			information.getVars().put("class" + classCounter, characterClass);
 			classCounter++; // then increment the counter for display
-			int displayValue = classCounter % itemsPerPage == 0? itemsPerPage : classCounter % itemsPerPage;
+			int displayValue = classCounter % itemsPerPage == 0 ? itemsPerPage : classCounter % itemsPerPage;
 			values.add(displayValue + ": " + characterClass.getName() + " (ID: " + characterClass.getId() + ")");
 		}
 		information.getVars().put(PaginationHandler.VARNAME, values);
@@ -177,7 +180,8 @@ public class CharacterCreationHandler extends PaginationHandler {
 		return Triple.of(false, new String[] { Unicodes.checkmark, Unicodes.crossmark }, false);
 	}
 
-	private Triple<Boolean, String[], Boolean> handleConfirmationSelection(MessageInformation information, String emojiName) {
+	private Triple<Boolean, String[], Boolean> handleConfirmationSelection(MessageInformation information,
+			String emojiName) {
 		if (emojiName.equals(Unicodes.crossmark)) {
 			information.setCanBeRemoved(true);
 			FantasyUnlimited.getInstance().editMessage(information.getMessage(), "Creation aborted by "
@@ -232,9 +236,9 @@ public class CharacterCreationHandler extends PaginationHandler {
 		Location startingLocation = FantasyUnlimited.getInstance().getLocationsBag().getItem(character.getLocationId());
 		embedBuilder = new SerializableEmbedBuilder()
 				.withFooterText("Your active character is '" + player.getCurrentCharacter().getName() + "'.")
-				.appendField("The journey begins...",
-						"It's finally time for your adventure to begin. You grab your " + startingWeapon.getName()
-								+ " and set off. Like every new adventurer you first have to pass a bunch of tests, before you are legally allowed to roam the lands.",
+				.appendField("The journey begins...", "It's finally time for your adventure to begin. You grab your "
+						+ startingWeapon.getName()
+						+ " and set off. Like every new adventurer you first have to pass a bunch of tests, before you are legally allowed to roam the lands.",
 						false)
 				.appendField("You arrive at " + startingLocation.getName(),
 						startingLocation.getDescription() + "\nThis looks like a perfect place for your first steps.",

@@ -414,6 +414,7 @@ public class CharacterCommandHandler extends CommandRequiresAuthenticationHandle
 
 			List<String> values = new ArrayList<String>();
 			for (Race race : FantasyUnlimited.getInstance().getRaceBag().getItems()) {
+				if(race.isHumanPlayable() == false) { continue; }
 				information.getVars().put("race" + raceCounter, race);
 				raceCounter++; // then increment the counter for display
 				int displayValue = raceCounter % itemsPerPage == 0 ? itemsPerPage : raceCounter % itemsPerPage;

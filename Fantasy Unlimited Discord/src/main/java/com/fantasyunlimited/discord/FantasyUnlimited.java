@@ -207,7 +207,7 @@ public class FantasyUnlimited extends BaseBot {
 		for (StackTraceElement element : e.getStackTrace()) {
 			builder += ("\tat " + element.toString() + "\n");
 			stackelements++;
-			if (stackelements == 15) {
+			if (stackelements == 5) {
 				break;
 			}
 		}
@@ -226,7 +226,7 @@ public class FantasyUnlimited extends BaseBot {
 			for (StackTraceElement element : next.getStackTrace()) {
 				builder += ("\tat " + element.toString() + "\n");
 				stackelements++;
-				if (stackelements == 15) {
+				if (stackelements == 5) {
 					break;
 				}
 			}
@@ -250,6 +250,7 @@ public class FantasyUnlimited extends BaseBot {
 		xstream.alias("CombatSkillBonus", CombatSkillBonus.class);
 		xstream.alias("SecondarySkill", SecondarySkill.class);
 		xstream.alias("SecondarySkillBonus", SecondarySkillBonus.class);
+		xstream.alias("AttackResourceBonus", AttackResourceBonus.class);
 		xstream.alias("Location", Location.class);
 		xstream.alias("TravelConnection", TravelConnection.class);
 		xstream.alias("NPC", NPC.class);

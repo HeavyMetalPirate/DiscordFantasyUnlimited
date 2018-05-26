@@ -1,23 +1,16 @@
 package com.fantasyunlimited.discord.xml;
 
-import java.util.ArrayList;
-import java.util.List;
+public class Weapon extends Gear {
 
-public class Weapon extends RarityClassifiedItem {
-	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 6658084902076289428L;
 	private WeaponType type;
 	private Hand hand;
-	
+
 	private int minDamage;
 	private int maxDamage;
-	
-	private List<CombatSkillBonus> skillBonuses = new ArrayList<>();
-	private List<AttributeBonus> attributeBonuses = new ArrayList<>();
-	private List<SecondarySkillBonus> secondarySkillBonuses = new ArrayList<>();
 
 	public WeaponType getType() {
 		return type;
@@ -51,66 +44,31 @@ public class Weapon extends RarityClassifiedItem {
 		this.maxDamage = maxDamage;
 	}
 
-	public List<CombatSkillBonus> getSkillBonuses() {
-		return skillBonuses;
-	}
-
-	public void setSkillBonuses(List<CombatSkillBonus> skillBonuses) {
-		this.skillBonuses = skillBonuses;
-	}
-
-	public List<AttributeBonus> getAttributeBonuses() {
-		return attributeBonuses;
-	}
-
-	public void setAttributeBonuses(List<AttributeBonus> attributeBonuses) {
-		this.attributeBonuses = attributeBonuses;
-	}
-
-	public List<SecondarySkillBonus> getSecondarySkillBonuses() {
-		return secondarySkillBonuses;
-	}
-
-	public void setSecondarySkillBonuses(List<SecondarySkillBonus> secondarySkillBonuses) {
-		this.secondarySkillBonuses = secondarySkillBonuses;
-	}
-
 	public enum WeaponType {
-		NONE("None"),
-		SWORD("Sword"),
-		AXE("Axe"),
-		DAGGER("Dagger"),
-		POLEARM("Polearm"),
-		GREATSWORD("Greatsword"),
-		GREATAXE("Greataxe"),
-		BOW("Bow"),
-		CROSSBOW("Crossbow"),
-		STAFF("Staff"),
-		WAND("Wand"),
-		SHIELD("Shield");
-		
+		NONE("None"), SWORD("Sword"), AXE("Axe"), DAGGER("Dagger"), POLEARM("Polearm"), GREATSWORD(
+				"Greatsword"), GREATAXE(
+						"Greataxe"), BOW("Bow"), CROSSBOW("Crossbow"), STAFF("Staff"), WAND("Wand"), SHIELD("Shield");
+
 		private final String value;
+
 		private WeaponType(String value) {
 			this.value = value;
 		}
-		
+
 		@Override
 		public String toString() {
 			return value;
 		}
-		
+
 		public String toStringWithSuffix() {
-			if(value.equals("Shield")) {
+			if (value.equals("Shield")) {
 				return value + " blocking";
 			}
 			return value + " damage";
 		}
 	}
-	
+
 	public enum Hand {
-		LEFT,
-		RIGHT,
-		BOTH,
-		TWOHANDED
+		LEFT, RIGHT, BOTH, TWOHANDED
 	}
 }

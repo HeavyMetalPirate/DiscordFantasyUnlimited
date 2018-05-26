@@ -6,6 +6,7 @@
 	<iconName>depraved.png</iconName>
 	<lore>The depraved is depraved. Depraving, huh? This time in blue!
 	</lore>
+  <humanPlayable>true</humanPlayable>
 	<energyType>RAGE</energyType>
 	<attributes>
 		<endurance>1</endurance>
