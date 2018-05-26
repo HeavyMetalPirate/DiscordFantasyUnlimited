@@ -37,8 +37,9 @@
 	<bonuses>
 		<ClassBonus>
 			<id>1</id>
-			<name>Raises strength by 5%. Who knew depraved could bear any
-				strength at all?</name>
+			<name>Depraved Power</name>
+			<description>Who knew depraved could bear any
+				strength at all?</description>
 			<iconName>dprStr.png</iconName>
 			<attribute>STRENGTH</attribute>
 			<modifier>5</modifier>

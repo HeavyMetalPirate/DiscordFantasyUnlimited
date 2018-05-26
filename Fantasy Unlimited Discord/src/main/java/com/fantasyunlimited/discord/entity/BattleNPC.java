@@ -11,6 +11,7 @@ import com.fantasyunlimited.discord.xml.Weapon;
 import com.fantasyunlimited.discord.xml.Attributes.Attribute;
 import com.fantasyunlimited.discord.xml.CharacterClass.EnergyType;
 import com.fantasyunlimited.discord.xml.Equipment;
+import com.fantasyunlimited.discord.xml.Gear;
 import com.fantasyunlimited.entity.Attributes;
 
 public class BattleNPC extends BattleParticipant {
@@ -73,22 +74,11 @@ public class BattleNPC extends BattleParticipant {
 		this.maxHealth = enduraceBase * 10 + level * 15;
 
 		final AtomicInteger resourceBonus = new AtomicInteger(0);
-		for (Equipment eq : getCurrentEquipment()) {
+		for (Gear eq : getCurrentGear()) {
 			if (eq.getAtkResourceBonuses() == null) {
 				continue;
 			}
 			eq.getAtkResourceBonuses().stream().filter(bonus -> bonus.getSkill() == charClass.getEnergyType())
-					.forEach(bonus -> resourceBonus.getAndAdd(bonus.getBonus()));
-		}
-		Weapon mainhand = FantasyUnlimited.getInstance().getWeaponBag().getItem(base.getMainhand());
-		Weapon offhand = FantasyUnlimited.getInstance().getWeaponBag().getItem(base.getOffhand());
-
-		if (mainhand != null && mainhand.getAtkResourceBonuses() != null) {
-			mainhand.getAtkResourceBonuses().stream().filter(bonus -> bonus.getSkill() == charClass.getEnergyType())
-					.forEach(bonus -> resourceBonus.getAndAdd(bonus.getBonus()));
-		}
-		if (offhand != null && offhand.getAtkResourceBonuses() != null) {
-			offhand.getAtkResourceBonuses().stream().filter(bonus -> bonus.getSkill() == charClass.getEnergyType())
 					.forEach(bonus -> resourceBonus.getAndAdd(bonus.getBonus()));
 		}
 

@@ -10,9 +10,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.fantasyunlimited.discord.BattleStatus;
 import com.fantasyunlimited.discord.BattleStatus.ModifierType;
 import com.fantasyunlimited.discord.FantasyUnlimited;
+import com.fantasyunlimited.discord.ItemUtils;
 import com.fantasyunlimited.discord.xml.CharacterClass;
 import com.fantasyunlimited.discord.xml.CombatSkill;
 import com.fantasyunlimited.discord.xml.Equipment;
+import com.fantasyunlimited.discord.xml.Gear;
 import com.fantasyunlimited.discord.xml.Race;
 import com.fantasyunlimited.discord.xml.Weapon;
 import com.fantasyunlimited.discord.xml.Attributes.Attribute;
@@ -119,16 +121,13 @@ public abstract class BattleParticipant implements Serializable {
 		}
 	}
 
-	public List<Equipment> getCurrentEquipment() {
-		List<Equipment> equip = new ArrayList<>(
-				Arrays.asList(FantasyUnlimited.getInstance().getEquipmentBag().getItem(equipment.getHelmet()),
-						FantasyUnlimited.getInstance().getEquipmentBag().getItem(equipment.getChest()),
-						FantasyUnlimited.getInstance().getEquipmentBag().getItem(equipment.getGloves()),
-						FantasyUnlimited.getInstance().getEquipmentBag().getItem(equipment.getBoots()),
-						FantasyUnlimited.getInstance().getEquipmentBag().getItem(equipment.getPants()),
-						FantasyUnlimited.getInstance().getEquipmentBag().getItem(equipment.getRing1()),
-						FantasyUnlimited.getInstance().getEquipmentBag().getItem(equipment.getRing2()),
-						FantasyUnlimited.getInstance().getEquipmentBag().getItem(equipment.getNeck())));
+	public List<Gear> getCurrentGear() {
+		List<Gear> equip = new ArrayList<>(
+				Arrays.asList(ItemUtils.getWeapon(equipment.getMainhand()), ItemUtils.getWeapon(equipment.getOffhand()),
+						ItemUtils.getEquipment(equipment.getHelmet()), ItemUtils.getEquipment(equipment.getChest()),
+						ItemUtils.getEquipment(equipment.getGloves()), ItemUtils.getEquipment(equipment.getBoots()),
+						ItemUtils.getEquipment(equipment.getPants()), ItemUtils.getEquipment(equipment.getRing1()),
+						ItemUtils.getEquipment(equipment.getRing2()), ItemUtils.getEquipment(equipment.getNeck())));
 		equip.removeAll(Collections.singleton(null));
 		return equip;
 	}
@@ -153,20 +152,10 @@ public abstract class BattleParticipant implements Serializable {
 
 	public int getAttributeBonus(Attribute attribute) {
 		AtomicInteger bonus = new AtomicInteger(0);
-
-		if (equipment.getMainhand() != null) {
-			Weapon weapon = FantasyUnlimited.getInstance().getWeaponBag().getItem(equipment.getMainhand());
-			if (weapon != null)
-				weapon.getAttributeBonuses().stream().filter(atrBon -> atrBon.getAttribute() == attribute)
-						.forEach(atrBon -> bonus.addAndGet(atrBon.getBonus()));
-		}
-		if (equipment.getOffhand() != null) {
-			Weapon weapon = FantasyUnlimited.getInstance().getWeaponBag().getItem(equipment.getOffhand());
-			if (weapon != null)
-				weapon.getAttributeBonuses().stream().filter(atrBon -> atrBon.getAttribute() == attribute)
-						.forEach(atrBon -> bonus.addAndGet(atrBon.getBonus()));
-		}
-		for (Equipment equ : getCurrentEquipment()) {
+		for (Gear equ : getCurrentGear()) {
+			if (equ.getAttributeBonuses() == null) {
+				continue;
+			}
 			equ.getAttributeBonuses().stream().filter(atrBon -> atrBon.getAttribute() == attribute)
 					.forEach(atrBon -> bonus.addAndGet(atrBon.getBonus()));
 		}
@@ -177,20 +166,10 @@ public abstract class BattleParticipant implements Serializable {
 	public int getCombatSkillBonus(CombatSkill combatSkill) {
 		AtomicInteger bonus = new AtomicInteger(0);
 
-		if (equipment.getMainhand() != null) {
-			Weapon weapon = FantasyUnlimited.getInstance().getWeaponBag().getItem(equipment.getMainhand());
-			if (weapon != null)
-				weapon.getSkillBonuses().stream().filter(skillBon -> skillBon.getSkill() == combatSkill)
-						.forEach(skillBon -> bonus.addAndGet(skillBon.getBonus()));
-		}
-		if (equipment.getOffhand() != null) {
-			Weapon weapon = FantasyUnlimited.getInstance().getWeaponBag().getItem(equipment.getOffhand());
-			if (weapon != null)
-				weapon.getSkillBonuses().stream().filter(skillBon -> skillBon.getSkill() == combatSkill)
-						.forEach(skillBon -> bonus.addAndGet(skillBon.getBonus()));
-		}
-
-		for (Equipment equ : getCurrentEquipment()) {
+		for (Gear equ : getCurrentGear()) {
+			if (equ.getSkillBonuses() == null) {
+				continue;
+			}
 			equ.getSkillBonuses().stream().filter(skillBon -> skillBon.getSkill() == combatSkill)
 					.forEach(skillBon -> bonus.addAndGet(skillBon.getBonus()));
 		}
@@ -212,11 +191,11 @@ public abstract class BattleParticipant implements Serializable {
 
 		return bonus.get();
 	}
-	
+
 	private float getAttributeChanceBonus(Attribute attribute) {
 		return 0f;
 	}
-	
+
 	public float calculateDodgeChance() {
 		float chance = levelBonus; // base
 		chance += getCombatSkillBonus(CombatSkill.DODGE);
@@ -227,7 +206,7 @@ public abstract class BattleParticipant implements Serializable {
 	public float calculateCritChance() {
 		float chance = levelBonus; // base
 		chance += getCombatSkillBonus(CombatSkill.CRITICAL);
-		chance += getAttributeChanceBonus(Attribute.INTELLIGENCE); //TODO
+		chance += getAttributeChanceBonus(Attribute.INTELLIGENCE); // TODO
 		return chance >= 0 ? chance : 0;
 	}
 

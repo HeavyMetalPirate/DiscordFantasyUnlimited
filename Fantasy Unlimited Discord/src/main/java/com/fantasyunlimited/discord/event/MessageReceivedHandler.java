@@ -9,6 +9,7 @@ import java.util.Properties;
 import com.fantasyunlimited.discord.FantasyUnlimited;
 import com.fantasyunlimited.discord.commands.BattleCommandHandler;
 import com.fantasyunlimited.discord.commands.CharacterCommandHandler;
+import com.fantasyunlimited.discord.commands.ClassCommandHandler;
 import com.fantasyunlimited.discord.commands.CommandHandler;
 import com.fantasyunlimited.discord.commands.CommandRequiresAuthenticationHandler;
 import com.fantasyunlimited.discord.commands.HelpCommandHandler;
@@ -46,6 +47,7 @@ public class MessageReceivedHandler extends EventHandler<MessageReceivedEvent> {
 		commands.put(PaginatorCommandHandler.CMD.toLowerCase(), new PaginatorCommandHandler(properties));
 		commands.put(BattleCommandHandler.CMD, new BattleCommandHandler(properties));
 		commands.put(RaceCommandHandler.CMD, new RaceCommandHandler(properties));
+		commands.put(ClassCommandHandler.CMD, new ClassCommandHandler(properties));
 		//Needs to be last always because it loads all previous commands to print
 		commands.put(HelpCommandHandler.CMD.toLowerCase(), new HelpCommandHandler(properties));
 		//handler for unknown commands

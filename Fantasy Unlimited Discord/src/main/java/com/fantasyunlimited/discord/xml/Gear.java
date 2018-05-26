@@ -10,7 +10,7 @@ public abstract class Gear extends RarityClassifiedItem {
 	private static final long serialVersionUID = 7619515846737944068L;
 	private List<CombatSkillBonus> skillBonuses = new ArrayList<>();
 	private List<AttributeBonus> attributeBonuses = new ArrayList<>();
-	private List<SecondarySkill> secondarySkillBonuses = new ArrayList<>();
+	private List<SecondarySkillBonus> secondarySkillBonuses = new ArrayList<>();
 	private List<AttackResourceBonus> atkResourceBonuses = new ArrayList<>();
 
 	private String classExclusive;
@@ -32,11 +32,11 @@ public abstract class Gear extends RarityClassifiedItem {
 		this.attributeBonuses = attributeBonuses;
 	}
 
-	public List<SecondarySkill> getSecondarySkillBonuses() {
+	public List<SecondarySkillBonus> getSecondarySkillBonuses() {
 		return secondarySkillBonuses;
 	}
 
-	public void setSecondarySkillBonuses(List<SecondarySkill> secondarySkillBonuses) {
+	public void setSecondarySkillBonuses(List<SecondarySkillBonus> secondarySkillBonuses) {
 		this.secondarySkillBonuses = secondarySkillBonuses;
 	}
 

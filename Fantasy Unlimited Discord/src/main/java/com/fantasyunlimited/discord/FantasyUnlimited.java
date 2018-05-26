@@ -154,24 +154,24 @@ public class FantasyUnlimited extends BaseBot {
 
 	public Dropable getDropableItem(String id) {
 		Dropable dropable = null;
-		
+
 		dropable = equipmentBag.getItem(id);
-		if(dropable != null) {
+		if (dropable != null) {
 			return dropable;
 		}
 		dropable = weaponBag.getItem(id);
-		if(dropable != null) {
+		if (dropable != null) {
 			return dropable;
 		}
 		dropable = consumablesBag.getItem(id);
-		if(dropable != null) {
+		if (dropable != null) {
 			return dropable;
 		}
-		//TODO others
-		
+		// TODO others
+
 		return dropable;
 	}
-	
+
 	public Cache<Long, DiscordPlayer> getRegisteredUserCache() {
 		return cacheManager.getCache("registeredUsersPlaying", Long.class, DiscordPlayer.class);
 	}
@@ -207,11 +207,15 @@ public class FantasyUnlimited extends BaseBot {
 		for (StackTraceElement element : e.getStackTrace()) {
 			builder += ("\tat " + element.toString() + "\n");
 			stackelements++;
-			if (stackelements == 5) {
+			if (stackelements == 15) {
 				break;
 			}
 		}
 		builder += "```";
+		if (builder.length() > 1024) {
+			builder = builder.substring(0, 1020) + "```";
+		}
+
 		embedBuilder.appendField("Exception", builder, false);
 		builder = "";
 		Throwable next = e.getCause();
@@ -226,11 +230,14 @@ public class FantasyUnlimited extends BaseBot {
 			for (StackTraceElement element : next.getStackTrace()) {
 				builder += ("\tat " + element.toString() + "\n");
 				stackelements++;
-				if (stackelements == 5) {
+				if (stackelements == 15) {
 					break;
 				}
 			}
 			builder += ("```");
+			if (builder.length() > 1024) {
+				builder = builder.substring(0, 1020) + "```";
+			}
 			embedBuilder.appendField("Cause " + cause, builder, false);
 			next = next.getCause();
 		}
@@ -344,7 +351,7 @@ public class FantasyUnlimited extends BaseBot {
 		new Thread(() -> {
 			for (String emoji : customEmojis.keySet()) {
 				RequestBuffer.request(() -> {
-					//0L = marker for unicodes
+					// 0L = marker for unicodes
 					if (customEmojis.get(emoji) == 0L) {
 						message.addReaction(ReactionEmoji.of(emoji));
 					} else {
