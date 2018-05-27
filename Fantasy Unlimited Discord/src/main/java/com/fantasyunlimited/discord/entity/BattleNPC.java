@@ -7,10 +7,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.fantasyunlimited.discord.FantasyUnlimited;
 import com.fantasyunlimited.discord.xml.CharacterClass;
 import com.fantasyunlimited.discord.xml.HostileNPC;
-import com.fantasyunlimited.discord.xml.Weapon;
 import com.fantasyunlimited.discord.xml.Attributes.Attribute;
 import com.fantasyunlimited.discord.xml.CharacterClass.EnergyType;
-import com.fantasyunlimited.discord.xml.Equipment;
 import com.fantasyunlimited.discord.xml.Gear;
 import com.fantasyunlimited.entity.Attributes;
 

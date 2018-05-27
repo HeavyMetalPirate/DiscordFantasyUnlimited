@@ -13,7 +13,6 @@ import com.fantasyunlimited.discord.FantasyUnlimited;
 import com.fantasyunlimited.discord.ItemUtils;
 import com.fantasyunlimited.discord.xml.CharacterClass;
 import com.fantasyunlimited.discord.xml.CombatSkill;
-import com.fantasyunlimited.discord.xml.Equipment;
 import com.fantasyunlimited.discord.xml.Gear;
 import com.fantasyunlimited.discord.xml.Race;
 import com.fantasyunlimited.discord.xml.Weapon;

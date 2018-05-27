@@ -15,7 +15,6 @@ import com.fantasyunlimited.discord.Unicodes;
 import com.fantasyunlimited.discord.commands.CommandSupportsPaginatorHandler;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.reaction.ReactionAddEvent;
-import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.RequestBuffer;
 
 public abstract class PaginationHandler extends ReactionsHandler {
