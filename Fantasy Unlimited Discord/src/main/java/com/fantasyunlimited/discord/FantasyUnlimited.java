@@ -73,6 +73,7 @@ public class FantasyUnlimited extends BaseBot {
 	private ClassBag classBag = new ClassBag();
 	private LocationBag locationsBag = new LocationBag();
 	private HostileNPCBag hostileNPCBag = new HostileNPCBag();
+	private NPCBag npcBag = new NPCBag();
 	private ConsumablesBag consumablesBag = new ConsumablesBag();
 
 	private Map<Integer, Long> experienceTable;
@@ -418,5 +419,9 @@ public class FantasyUnlimited extends BaseBot {
 
 	public void setConsumablesBag(ConsumablesBag consumablesBag) {
 		this.consumablesBag = consumablesBag;
+	}
+
+	public NPCBag getNpcBag() {
+		return npcBag;
 	}
 }

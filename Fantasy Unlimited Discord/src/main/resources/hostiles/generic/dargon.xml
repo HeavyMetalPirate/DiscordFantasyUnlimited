@@ -8,6 +8,8 @@
   <classId>1</classId>
   <unique>true</unique>
   <level>1</level>
+  <minimumGold>1</minimumGold>
+  <maximumGold>5</maximumGold>
   <loottable>
     <entry>
       <string>broken-sword</string>

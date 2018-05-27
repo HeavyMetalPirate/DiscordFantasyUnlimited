@@ -61,6 +61,9 @@ public class PlayerCharacter implements Serializable {
 	private int currentXp;
 
 	@Column
+	private int gold;
+
+	@Column
 	private int currentHealth;
 
 	@Column
@@ -142,6 +145,14 @@ public class PlayerCharacter implements Serializable {
 		this.currentXp = currentXp;
 	}
 
+	public int getGold() {
+		return gold;
+	}
+
+	public void setGold(int gold) {
+		this.gold = gold;
+	}
+
 	public Attributes getAttributes() {
 		return attributes;
 	}
@@ -174,6 +185,18 @@ public class PlayerCharacter implements Serializable {
 		} else {
 			return 100 + extra.get();
 		}
+	}
+
+	public void addGold(int amount) {
+		this.gold += amount;
+	}
+
+	public void removeGold(int amount) {
+		if (amount > this.gold) {
+			throw new IllegalStateException(
+					"Cannot remove more gold than the character is owning! " + this.gold + " (owned) vs. " + amount);
+		}
+		this.gold -= amount;
 	}
 
 	public int getAttributeBonus(Attribute attribute) {

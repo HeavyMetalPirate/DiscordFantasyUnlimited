@@ -27,6 +27,8 @@ public class HostileNPC extends GenericItem {
 	private String neck;	
 	
 	private Map<String, Double> loottable = new HashMap<>();
+	private int minimumGold;
+	private int maximumGold;
 
 	public String getRaceId() {
 		return raceId;
@@ -146,5 +148,21 @@ public class HostileNPC extends GenericItem {
 
 	public void setLoottable(Map<String, Double> loottable) {
 		this.loottable = loottable;
+	}
+
+	public int getMinimumGold() {
+		return minimumGold;
+	}
+
+	public void setMinimumGold(int minimumGold) {
+		this.minimumGold = minimumGold;
+	}
+
+	public int getMaximumGold() {
+		return maximumGold;
+	}
+
+	public void setMaximumGold(int maximumGold) {
+		this.maximumGold = maximumGold;
 	}
 }

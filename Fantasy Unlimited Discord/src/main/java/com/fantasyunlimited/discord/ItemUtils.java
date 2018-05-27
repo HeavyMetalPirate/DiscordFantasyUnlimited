@@ -5,6 +5,7 @@ import com.fantasyunlimited.discord.xml.Consumable;
 import com.fantasyunlimited.discord.xml.Equipment;
 import com.fantasyunlimited.discord.xml.HostileNPC;
 import com.fantasyunlimited.discord.xml.Location;
+import com.fantasyunlimited.discord.xml.NPC;
 import com.fantasyunlimited.discord.xml.Race;
 import com.fantasyunlimited.discord.xml.Weapon;
 
@@ -23,6 +24,9 @@ public final class ItemUtils {
 	}
 	public static final HostileNPC getHostileNPC(String id) {
 		return FantasyUnlimited.getInstance().getHostileNPCBag().getItem(id);
+	}
+	public static final NPC getNPC(String id) {
+		return FantasyUnlimited.getInstance().getNpcBag().getItem(id);
 	}
 	public static final Location getLocation(String id) {
 		return FantasyUnlimited.getInstance().getLocationsBag().getItem(id);

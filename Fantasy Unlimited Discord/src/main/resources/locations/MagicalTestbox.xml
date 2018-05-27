@@ -17,7 +17,9 @@
       <toll>9001</toll>
     </TravelConnection>
   </connections>
-  <npcIds/>
+  <npcIds>
+  	<string>blind-guardian</string>
+  </npcIds>
   <hostileNPCIds>
     <string>dargon</string>
     <string>werewolf</string>

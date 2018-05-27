@@ -103,6 +103,25 @@ public class Foo {
 		xstream.alias("HostileNPC", HostileNPC.class);
 		xstream.alias("Consumable", Consumable.class);
 
+		NPC npc = new NPC();
+		npc.setId("blind-guardian");
+		npc.setName("Blind Guardian");
+		npc.setDescription("Guarding Valhalla since 1984.");
+		npc.setIconName("blind-guardian.png");
+		npc.setLevel(1);
+		npc.setClassId("1");
+		npc.setRaceId("1");
+		npc.setVending(false);
+		npc.getGenericDialogue().add("The flame of Troy will shine bright!");
+		npc.getGenericDialogue().add("Welcome to the end, watch your step, %player%, you may fall...");
+		npc.getGenericDialogue().add("And then there was silence, just a voice from the other world...");
+		npc.getGenericDialogue().add("So many centuries, so many gods, we were the prisoners of our own fantasy.");
+		xstream.toXML(npc, System.out);
+
+		System.out.println(
+				"\n=========================================================================================\n");
+		
+		
 		Consumable consumable = new Consumable();
 		consumable.setId("smallHealthPot");
 		consumable.setName("Small Health Potion");

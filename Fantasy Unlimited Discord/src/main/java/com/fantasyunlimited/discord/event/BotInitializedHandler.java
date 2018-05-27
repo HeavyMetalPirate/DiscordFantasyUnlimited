@@ -14,7 +14,7 @@ public class BotInitializedHandler implements IListener<ReadyEvent>{
 	@Override
 	public void handle(ReadyEvent event) {
 		FantasyUnlimited bot = FantasyUnlimited.getInstance();
-		bot.setPlayingText("SUCK IT SLAYDEN");
+		bot.setPlayingText("Serving your mother since 1984");
 		try {
 			XStream xstream = bot.initializeXStream();
 			bot.getConsumablesBag().initialize(xstream);
@@ -23,6 +23,7 @@ public class BotInitializedHandler implements IListener<ReadyEvent>{
 			bot.getRaceBag().initialize(xstream);
 			bot.getClassBag().initialize(xstream);
 			bot.getHostileNPCBag().initialize(xstream);
+			bot.getNpcBag().initialize(xstream);
 			bot.getLocationsBag().initialize(xstream);
 		}
 		catch(Exception e) {

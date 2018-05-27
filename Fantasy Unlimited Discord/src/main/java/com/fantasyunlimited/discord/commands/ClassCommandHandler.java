@@ -39,6 +39,9 @@ public class ClassCommandHandler extends CommandHandler implements OptionDescrip
 			CharacterClass charClass = classesFound.iterator().next();
 			embedBuilder.withTitle("Information about the class " + charClass.getName());
 			embedBuilder.appendField("Lore", charClass.getLore(), false);
+			// TODO: icons
+			// embedBuilder.withThumbnail("https://cdn.discordapp.com/emojis/" +
+			// skill.getIconId() + ".png?v=1");
 
 			StringBuilder baseStats = new StringBuilder();
 			baseStats.append("```md\n");

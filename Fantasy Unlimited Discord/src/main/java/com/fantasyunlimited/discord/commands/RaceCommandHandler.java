@@ -35,6 +35,10 @@ public class RaceCommandHandler extends CommandHandler implements OptionDescript
 			Race race = racesFound.iterator().next();
 			embedBuilder.withTitle("Information about the race " + race.getName());
 			embedBuilder.appendField("Lore", race.getLore(), false);
+			// TODO: Icon
+			// embedBuilder.withThumbnail("https://cdn.discordapp.com/emojis/" +
+			// race.getIconId() + ".png?v=1");
+
 			StringBuilder treats = new StringBuilder();
 			for (RacialBonus bonus : race.getBonuses()) {
 				String bonusStat = bonus.getCombatSkill() != null ? bonus.getCombatSkill().toString()

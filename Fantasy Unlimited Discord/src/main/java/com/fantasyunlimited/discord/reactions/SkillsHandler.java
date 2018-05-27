@@ -56,15 +56,19 @@ public class SkillsHandler extends ReactionsHandler {
 		}
 
 		Skill skill = skills.get(currentPage - 1);
+
+		
 		CharacterClass charClass = (CharacterClass) information.getVars().get("class");
 		buildEmbedBuilderWithAuthorInformation(event, "Information about skills of the class " + charClass.getName());
 
+		embedBuilder.withThumbnail("https://cdn.discordapp.com/emojis/" + skill.getIconId() + ".png?v=1");
+		
 		StringBuilder basics = new StringBuilder();
 		basics.append("```md\n");
 		basics.append(MessageFormatUtils.fillStringSuffix("Name:", 15) + skill.getName() + "\n");
 
 		String description = MessageFormatUtils.fillStringSuffix("Description:", 15) + skill.getDescription();
-		description = WordUtils.wrap(description, 60, "\n               ", false);
+		description = WordUtils.wrap(description, 45, "\n               ", false);
 
 		basics.append(description + "\n");
 		basics.append(MessageFormatUtils.fillStringSuffix("Base cost:", 15) + skill.getCostOfExecution() + " "
@@ -178,7 +182,7 @@ public class SkillsHandler extends ReactionsHandler {
 	}
 
 	protected void buildEmbedBuilderWithAuthorInformation(ReactionAddEvent event, String title) {
-		embedBuilder = new SerializableEmbedBuilder().withAuthorName(event.getAuthor().getDisplayName(event.getGuild()))
-				.withAuthorIcon(event.getAuthor().getAvatarURL()).withTitle(title);
+		embedBuilder = new SerializableEmbedBuilder().withAuthorName(event.getUser().getDisplayName(event.getGuild()))
+				.withAuthorIcon(event.getUser().getAvatarURL()).withTitle(title);
 	}
 }
