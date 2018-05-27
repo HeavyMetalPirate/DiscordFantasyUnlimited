@@ -19,6 +19,7 @@ import com.fantasyunlimited.discord.commands.PingCommandHandler;
 import com.fantasyunlimited.discord.commands.RaceCommandHandler;
 import com.fantasyunlimited.discord.commands.ReactionTestHandler;
 import com.fantasyunlimited.discord.commands.RegisterCommandHandler;
+import com.fantasyunlimited.discord.commands.SkillsCommandHandler;
 import com.fantasyunlimited.discord.commands.UnknownCommandHandler;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -48,6 +49,7 @@ public class MessageReceivedHandler extends EventHandler<MessageReceivedEvent> {
 		commands.put(BattleCommandHandler.CMD, new BattleCommandHandler(properties));
 		commands.put(RaceCommandHandler.CMD, new RaceCommandHandler(properties));
 		commands.put(ClassCommandHandler.CMD, new ClassCommandHandler(properties));
+		commands.put(SkillsCommandHandler.CMD, new SkillsCommandHandler(properties));
 		//Needs to be last always because it loads all previous commands to print
 		commands.put(HelpCommandHandler.CMD.toLowerCase(), new HelpCommandHandler(properties));
 		//handler for unknown commands

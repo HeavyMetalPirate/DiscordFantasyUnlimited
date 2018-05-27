@@ -9,10 +9,7 @@ import com.fantasyunlimited.discord.MessageFormatUtils;
 import com.fantasyunlimited.discord.xml.CharacterClass;
 import com.fantasyunlimited.discord.xml.ClassBonus;
 import com.fantasyunlimited.discord.xml.Equipment;
-import com.fantasyunlimited.discord.xml.Race;
-import com.fantasyunlimited.discord.xml.RacialBonus;
 import com.fantasyunlimited.discord.xml.Weapon;
-import com.fantasyunlimited.discord.xml.Attributes.Attribute;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
@@ -29,7 +26,7 @@ public class ClassCommandHandler extends CommandHandler implements OptionDescrip
 
 		if (value == null || value.isEmpty()) {
 			FantasyUnlimited.getInstance().sendMessage(event.getChannel(),
-					"Usage: `" + properties.getProperty(FantasyUnlimited.PREFIX_KEY) + "race <id/name>");
+					"Usage: `" + properties.getProperty(FantasyUnlimited.PREFIX_KEY) + "class <id/name>");
 			return;
 		}
 
@@ -159,7 +156,7 @@ public class ClassCommandHandler extends CommandHandler implements OptionDescrip
 
 	@Override
 	public String getDescription() {
-		return "Displays information about races";
+		return "Displays information about classes";
 	}
 
 	@Override
@@ -169,7 +166,7 @@ public class ClassCommandHandler extends CommandHandler implements OptionDescrip
 
 	@Override
 	public String getParameter() {
-		return "name/id of the race";
+		return "name/id of the class";
 	}
 
 }

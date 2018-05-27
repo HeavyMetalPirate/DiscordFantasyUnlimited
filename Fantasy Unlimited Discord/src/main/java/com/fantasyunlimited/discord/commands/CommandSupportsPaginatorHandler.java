@@ -67,6 +67,10 @@ public abstract class CommandSupportsPaginatorHandler extends CommandRequiresAut
 	public void handle(MessageReceivedEvent event) {
 		Triple<Integer, MessageInformation, List<String>> paginationParams = doDelegate(event);
 
+		if (paginationParams == null) {
+			return;
+		}
+
 		MessageInformation information = paginationParams.getMiddle();
 		Integer itemsPerPage = paginationParams.getLeft();
 		List<String> values = paginationParams.getRight();

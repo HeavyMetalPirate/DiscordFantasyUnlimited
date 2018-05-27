@@ -61,7 +61,7 @@ public class Skill extends GenericItem {
 			attributeInQuestion = attributes.getWisdom();
 			break;
 		}
-		
+
 		for (SkillRank rank : ranks) {
 			if (level >= rank.getRequiredPlayerLevel() && attributeInQuestion >= rank.getRequiredAttributeValue()
 					&& (highest == null || highest.getRank() < rank.getRank())) {
@@ -201,7 +201,18 @@ public class Skill extends GenericItem {
 	}
 
 	public enum SkillWeaponModifier {
-		WEAPON_MAINHAND, WEAPON_OFFHAND, NONE
+		WEAPON_MAINHAND("Mainhand"), WEAPON_OFFHAND("Offhand"), NONE("None");
+
+		private final String value;
+
+		private SkillWeaponModifier(String value) {
+			this.value = value;
+		}
+
+		@Override
+		public String toString() {
+			return this.value;
+		}
 	}
 
 	public enum SkillType {
