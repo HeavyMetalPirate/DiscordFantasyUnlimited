@@ -12,6 +12,7 @@ import com.fantasyunlimited.discord.reactions.BasicPaginationDelegate;
 import com.fantasyunlimited.discord.reactions.BattleHandler;
 import com.fantasyunlimited.discord.reactions.CharacterCreationHandler;
 import com.fantasyunlimited.discord.reactions.ReactionsHandler;
+import com.fantasyunlimited.discord.reactions.SkillsHandler;
 
 import sx.blah.discord.handle.impl.events.guild.channel.message.reaction.ReactionAddEvent;
 
@@ -35,6 +36,7 @@ public class ReactionForSelfAddHandler extends EventHandler<ReactionAddEvent> {
 		reactionHandlers.put(Name.PAGINATION_TEST, basicPaginator);
 		reactionHandlers.put(Name.BATTLE_ACTIONBAR, battleHandler);
 		reactionHandlers.put(Name.BATTLE_TARGETSELECTION, battleHandler);
+		reactionHandlers.put(Name.SKILLS_INFO, new SkillsHandler(properties));
 		
 	}
 

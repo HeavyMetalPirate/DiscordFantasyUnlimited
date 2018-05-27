@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.text.WordUtils;
+
 import com.fantasyunlimited.discord.FantasyUnlimited;
 import com.fantasyunlimited.discord.MessageFormatUtils;
 import com.fantasyunlimited.discord.MessageInformation;
@@ -40,6 +42,7 @@ public class SkillsCommandHandler extends CommandHandler implements OptionDescri
 		boolean requirePagination = false;
 
 		final List<Skill> skills = new ArrayList<>();
+		CharacterClass charClass = null;
 
 		Collection<CharacterClass> classesFound = FantasyUnlimited.getInstance().getClassBag().getItemsByValue(value);
 		if (classesFound.isEmpty()) {
@@ -47,7 +50,7 @@ public class SkillsCommandHandler extends CommandHandler implements OptionDescri
 		} else if (classesFound.size() == 1) {
 			requirePagination = true;
 
-			CharacterClass charClass = classesFound.iterator().next();
+			charClass = classesFound.iterator().next();
 			embedBuilder.withTitle("Information about skills of the class " + charClass.getName());
 
 			skills.addAll(charClass.getSkills());
@@ -57,7 +60,9 @@ public class SkillsCommandHandler extends CommandHandler implements OptionDescri
 			StringBuilder basics = new StringBuilder();
 			basics.append("```md\n");
 			basics.append(MessageFormatUtils.fillStringSuffix("Name:", 15) + skill.getName() + "\n");
-			basics.append(MessageFormatUtils.fillStringSuffix("Description:", 15) + skill.getDescription() + "\n");
+			String description = MessageFormatUtils.fillStringSuffix("Description:", 15) + skill.getDescription();
+			description = WordUtils.wrap(description, 60, "\n               ", false);
+			basics.append(description + "\n");
 			basics.append(MessageFormatUtils.fillStringSuffix("Base cost:", 15) + skill.getCostOfExecution() + " "
 					+ charClass.getEnergyType().toString() + "\n");
 
@@ -110,13 +115,10 @@ public class SkillsCommandHandler extends CommandHandler implements OptionDescri
 
 			damage.append(MessageFormatUtils.fillStringSuffix("Base Amount:", 17) + skill.getMinDamage() + "-"
 					+ skill.getMaxDamage() + "\n");
-			damage.append(MessageFormatUtils.fillStringSuffix("Stat modifier:", 17) + (skill.getAttribute() != null
-					? skill.getAttribute().toString()
-					: "None") + "\n");
-			damage.append(
-					MessageFormatUtils.fillStringSuffix("Weapon modifier:", 17) + (skill.getWeaponModifier() != null
-							? skill.getWeaponModifier().toString()
-							: "None") + "\n");
+			damage.append(MessageFormatUtils.fillStringSuffix("Stat modifier:", 17)
+					+ (skill.getAttribute() != null ? skill.getAttribute().toString() : "None") + "\n");
+			damage.append(MessageFormatUtils.fillStringSuffix("Weapon modifier:", 17)
+					+ (skill.getWeaponModifier() != null ? skill.getWeaponModifier().toString() : "None") + "\n");
 
 			damage.append("```");
 			embedBuilder.appendField("Damage values", damage.toString(), false);
@@ -168,8 +170,8 @@ public class SkillsCommandHandler extends CommandHandler implements OptionDescri
 			// wanna print multiples?
 			StringBuilder classes = new StringBuilder();
 			classes.append("```md\n");
-			for (CharacterClass charClass : classesFound) {
-				classes.append("[" + charClass.getId() + "][" + charClass.getName() + "]\n");
+			for (CharacterClass found : classesFound) {
+				classes.append("[" + found.getId() + "][" + found.getName() + "]\n");
 			}
 			classes.append("```");
 			embedBuilder.appendField("Found " + classesFound.size() + " classes, please specify further.",
@@ -179,9 +181,9 @@ public class SkillsCommandHandler extends CommandHandler implements OptionDescri
 		IMessage msg = FantasyUnlimited.getInstance().sendMessage(event.getChannel(), embedBuilder.build());
 
 		if (requirePagination) {
-			
+
 			embedBuilder.withFooterText("Page 1 of " + skills.size());
-			
+
 			FantasyUnlimited.getInstance().addReactions(msg,
 					new String[] { Unicodes.arrow_backward, Unicodes.arrow_forward });
 
@@ -194,6 +196,7 @@ public class SkillsCommandHandler extends CommandHandler implements OptionDescri
 			information.setStatus(status);
 			information.setMessage(msg);
 			information.getVars().put("skills", skills);
+			information.getVars().put("class", charClass);
 			information.getStatus().setCurrentPage(1);
 			FantasyUnlimited.getInstance().getMessagesAwaitingReactions().put(msg.getLongID(), information);
 		}
