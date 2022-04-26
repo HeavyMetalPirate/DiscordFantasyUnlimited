@@ -1,0 +1,10 @@
+plugins {
+    id 'foo-plugin'
+}
+
+dependencies {
+    api project(':Database')
+    api project(':ItemHandling')
+}
+
+bootJar.enabled = false

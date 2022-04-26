@@ -1,0 +1,14 @@
+###### IGNORING WEB ADMIN EMERGENCY FRONTEND FOR NOW ######
+Might add REST capabilities or even a full homepage later on, depending on how things are going
+
+###########################################################
+  
+- Battle:
+	- Tweak formulas in BattleParticipant.class - at least partially done TODO !!!
+	- Tweak damage formula in BattleAction.class - at least partially done TODO !!!
+	- Loot - Party handling of items
+	- Implement consumables (how to? reactions are already filled by skills and run away/pass)
+	- Create abstract class CannotUseDuringBattleCommandHandler which checks if you are in a battle, and if so, denies your command
+
+- Consumables
+	- implement some "use item" command (also think about battle usage of items)

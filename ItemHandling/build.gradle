@@ -1,0 +1,10 @@
+plugins {
+    id 'foo-plugin'
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/com.thoughtworks.xstream/xstream
+    api 'com.thoughtworks.xstream:xstream:1.4.19'
+}
+
+bootJar.enabled = false

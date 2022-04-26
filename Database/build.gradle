@@ -1,0 +1,12 @@
+plugins {
+    id 'fu-spring-jpa'
+}
+
+dependencies {
+    api project(':ItemHandling')
+
+    // TODO OOF
+    implementation 'com.h2database:h2:2.1.212'
+}
+
+bootJar.enabled = false

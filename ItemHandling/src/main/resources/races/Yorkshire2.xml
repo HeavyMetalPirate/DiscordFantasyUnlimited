@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Race>
+  <id>8</id>
+  <name>Yorkshire Terrier 8</name>
+  <description>Yorkie is a yorkie.</description>
+  <lore>Aww, isn't he cute?!</lore>
+  <humanPlayable>true</humanPlayable>
+  <bonuses>
+    <RacialBonus>
+      <name>Holy Mother of God</name>
+      <description>Holy mother of god, this is overpowered. Who allowed this?!</description>
+      <iconName>mthgd.png</iconName>
+      <combatSkill>CRITICAL</combatSkill>
+      <modifier>5</modifier>
+    </RacialBonus>
+  </bonuses>
+</Race>
