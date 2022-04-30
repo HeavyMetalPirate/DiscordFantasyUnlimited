@@ -107,3 +107,7 @@ Note: Beware of modifying this element as it can break the animations - you shou
 table, tr, th, td {
     border: solid 1px;
 }
+
+span.bannerLogin {
+    margin-left: auto;
+}

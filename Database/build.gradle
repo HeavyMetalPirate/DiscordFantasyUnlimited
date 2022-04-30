@@ -5,8 +5,7 @@ plugins {
 dependencies {
     api project(':ItemHandling')
 
-    // TODO OOF
-    implementation 'com.h2database:h2:2.1.212'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 }
 
 bootJar.enabled = false

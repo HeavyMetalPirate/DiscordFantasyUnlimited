@@ -1,5 +1,8 @@
 import React, {Component} from 'react';
+import { Container, Button, Navbar, NavbarText } from 'reactstrap';
+import { Link } from 'react-router-dom';
 import { push as Menu } from 'react-burger-menu'
+import { LoginForm } from '../user/LoginForm'
 
 export default class AppNavbar extends Component {
     constructor(props) {
@@ -17,6 +20,11 @@ export default class AppNavbar extends Component {
     render() {
         return (
         <div>
+            <Navbar dark color="dark">
+                <span className="bannerLogin">
+                    <LoginForm />
+                </span>
+            </Navbar>
             <Menu
                 noOverlay
                 outerContainerId={"baseContainer"}

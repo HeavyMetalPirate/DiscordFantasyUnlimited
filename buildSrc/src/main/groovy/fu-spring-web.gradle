@@ -8,6 +8,7 @@ dependencies {
         exclude module: 'spring-boot-starter-tomcat'
     }
     implementation 'org.springframework.boot:spring-boot-starter-jetty'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 
     implementation 'org.springdoc:springdoc-openapi-ui:1.6.8'
 }
