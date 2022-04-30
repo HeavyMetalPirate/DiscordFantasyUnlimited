@@ -1,0 +1,14 @@
+{
+  "character.foo": "This is another Foo text",
+  "creation.name": "Name",
+  "creation.name.long": "Name of your character",
+  "creation.class": "Class",
+  "creation.race": "Race",
+  "creation.button.create": "Create character",
+  "character.list.name": "Character name",
+  "character.list.race": "Race",
+  "character.list.class": "Class",
+  "character.list.location": "Current location",
+  "character.list.select": "Select character",
+  "character.create": "Create new character"
+}

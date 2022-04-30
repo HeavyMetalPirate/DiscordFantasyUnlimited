@@ -23,6 +23,20 @@ public class Attributes implements Serializable {
 	public Attributes() {
 		
 	}
+
+	public com.fantasyunlimited.items.entity.Attributes convert() {
+		com.fantasyunlimited.items.entity.Attributes attributes = new com.fantasyunlimited.items.entity.Attributes();
+
+		attributes.setDefense(defense);
+		attributes.setDexterity(dexterity);
+		attributes.setEndurance(endurance);
+		attributes.setIntelligence(intelligence);
+		attributes.setLuck(luck);
+		attributes.setStrength(strength);
+		attributes.setWisdom(wisdom);
+
+		return attributes;
+	}
 	
 	public void raiseEndurance(int amount) {
 		endurance += amount;

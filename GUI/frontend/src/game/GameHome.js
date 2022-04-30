@@ -7,30 +7,22 @@ import { withTranslation } from "react-i18next";
 import { useSetState, useTrackedState } from '../SessionStore';
 import logo from '../logo.svg';
 
-export const UserInformation = () => {
-    const fooState = useTrackedState();
-    const setUserState = useSetState();
+import { CharacterSelection, CharacterCreation } from './CharacterManagement'
 
-    useEffect(() => {
-        const userState = async() => {
-            console.log("Fetching current user...");
-            const resp = await fetch('/api/user/current');
-            try {
-                // will only return json if logged in
-                const data = await resp.json();
-                console.log(data);
-                setUserState({user: data.principal, token: data.csrf});
-            }
-            catch(error) {
-                // clean up state
-                setUserState({user: null, token: null});
-            }
-        }
-        userState();
-    }, []);
+const GamePanel = (props) => {
+    const setState = useSetState();
+    const state = useTrackedState();
 
-    return (
-        <span />
+    if(!state.character) {
+        return(
+            <CharacterSelection />
+        )
+    }
+
+    return(
+        <div>
+            GamePanel etc.
+        </div>
     )
 }
 
@@ -44,6 +36,7 @@ class GameHome extends Component {
                     <img src={logo} className="App-logo" alt="logo" />
                 </header>
                 <h1>GameHome TODO</h1>
+                <GamePanel />
             </div>
         );
     }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/api/content")
@@ -43,6 +44,14 @@ public class ContentListingController {
     public ResponseEntity<Collection<CharacterClass>> getCharacterClasses() {
         return new ResponseEntity<>(classBag.getItems(), HttpStatus.OK);
     }
+    @RequestMapping(value = "/classes/playable", produces = "application/json", method = RequestMethod.GET)
+    @Operation(summary = "Playable Character classes", description = "Lists all playable character classes")
+    public ResponseEntity<Collection<CharacterClass>> getPlayableCharacterClasses() {
+        return new ResponseEntity<>(classBag.getItems().stream()
+                                            .filter(clazz -> clazz.isHumanPlayable())
+                                            .collect(Collectors.toList()), HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/classes/{id}", produces = "application/json", method = RequestMethod.GET)
     @Operation(summary = "Character class", description = "Returns a single class")
     public ResponseEntity<CharacterClass> getCharacterClass(@PathVariable String id) {
@@ -53,6 +62,13 @@ public class ContentListingController {
     @Operation(summary = "Races", description = "Lists all races")
     public ResponseEntity<Collection<Race>> getRaces() {
         return new ResponseEntity<>(raceBag.getItems(), HttpStatus.OK);
+    }
+    @RequestMapping(value = "/races/playable", produces = "application/json", method = RequestMethod.GET)
+    @Operation(summary = "Playable Races", description = "Lists all playable races")
+    public ResponseEntity<Collection<Race>> getPlayableRaces() {
+        return new ResponseEntity<>(raceBag.getItems().stream()
+                                            .filter(race -> race.isHumanPlayable())
+                                            .collect(Collectors.toList()), HttpStatus.OK);
     }
     @RequestMapping(value = "/races/{id}", produces = "application/json", method = RequestMethod.GET)
     @Operation(summary = "Races", description = "Returns a single race")

@@ -5,27 +5,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 import com.fantasyunlimited.items.bags.ClassBag;
 import com.fantasyunlimited.items.bags.EquipmentBag;
 import com.fantasyunlimited.items.bags.WeaponBag;
-import com.fantasyunlimited.items.entity.Attributes;
 import com.fantasyunlimited.items.entity.Attributes.Attribute;
 import com.fantasyunlimited.items.entity.CharacterClass;
 import com.fantasyunlimited.items.entity.CharacterClass.EnergyType;
 import com.fantasyunlimited.items.entity.Equipment;
 import com.fantasyunlimited.items.entity.Weapon;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class PlayerCharacter implements Serializable {
@@ -38,6 +29,8 @@ public class PlayerCharacter implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
+	@ManyToOne(fetch = FetchType.EAGER)
+	private FantasyUnlimitedUser user;
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private CharacterEquipment equipment = new CharacterEquipment();
@@ -74,10 +67,10 @@ public class PlayerCharacter implements Serializable {
 	private Map<String, Integer> inventory;
 
 	@Embedded
-	private com.fantasyunlimited.items.entity.Attributes attributes;
+	private Attributes attributes;
 
 	public PlayerCharacter() {
-		attributes = new com.fantasyunlimited.items.entity.Attributes();
+		attributes = new Attributes();
 		setInventory(new HashMap<String, Integer>());
 	}
 
@@ -87,6 +80,14 @@ public class PlayerCharacter implements Serializable {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public FantasyUnlimitedUser getUser() {
+		return user;
+	}
+
+	public void setUser(FantasyUnlimitedUser user) {
+		this.user = user;
 	}
 
 	public String getName() {

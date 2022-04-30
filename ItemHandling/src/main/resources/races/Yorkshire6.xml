@@ -5,6 +5,7 @@
   <description>Yorkie is a yorkie.</description>
   <lore>Aww, isn't he cute?!</lore>
   <humanPlayable>true</humanPlayable>
+  <startingLocationId>testbox</startingLocationId>
   <bonuses>
     <RacialBonus>
       <name>Holy Mother of God</name>

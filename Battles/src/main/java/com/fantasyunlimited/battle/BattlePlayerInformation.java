@@ -17,10 +17,6 @@ public class BattlePlayerInformation implements Serializable  {
     private Skill skillUsed;
     private BattleParticipant target;
 
-    private long guildId;
-    private long channelId;
-    private long messageId;
-
     public BattlePlayer getCharacter() {
         return character;
     }

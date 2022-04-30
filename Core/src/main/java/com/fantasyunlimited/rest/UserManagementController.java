@@ -1,12 +1,16 @@
 package com.fantasyunlimited.rest;
 
 import com.fantasyunlimited.data.entity.FantasyUnlimitedUser;
+import com.fantasyunlimited.data.entity.PlayerCharacter;
 import com.fantasyunlimited.data.enums.UserFoundStatus;
 import com.fantasyunlimited.data.service.FantasyUnlimitedUserService;
-import com.fantasyunlimited.rest.dto.UserRegistrationBody;
-import com.fantasyunlimited.rest.dto.UserRegistrationResponse;
-import com.fantasyunlimited.rest.dto.UserRegistrationStatus;
-import com.fantasyunlimited.rest.dto.UserSessionInformation;
+import com.fantasyunlimited.items.bags.ClassBag;
+import com.fantasyunlimited.items.bags.LocationBag;
+import com.fantasyunlimited.items.bags.RaceBag;
+import com.fantasyunlimited.items.entity.CharacterClass;
+import com.fantasyunlimited.items.entity.Location;
+import com.fantasyunlimited.items.entity.Race;
+import com.fantasyunlimited.rest.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/api/user")
@@ -29,6 +35,68 @@ public class UserManagementController {
 
     @Autowired
     private FantasyUnlimitedUserService userService;
+    @Autowired
+    private LocationBag locationBag;
+    @Autowired
+    private ClassBag classBag;
+    @Autowired
+    private RaceBag raceBag;
+
+    @RequestMapping(value = "/characters/create", method = RequestMethod.POST, consumes = "application/json")
+    public ResponseEntity<String> createCharacter(@RequestBody CharacterCreationBody characterCreationBody, HttpServletRequest request) {
+
+        if(userService.characterExistsByName(characterCreationBody.name())) {
+            return new ResponseEntity<>("Character exists!", HttpStatus.CONFLICT);
+        }
+
+        FantasyUnlimitedUser user = userService.getUser(request.getUserPrincipal().getName());
+        try {
+            userService.createCharacter(user, characterCreationBody.name(), characterCreationBody.classId(), characterCreationBody.raceId());
+        }
+        catch(IllegalArgumentException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("OK!", HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/characters", method = RequestMethod.GET)
+    public ResponseEntity<List<CharacterListItem>> getPlayerCharacters(HttpServletRequest request) {
+
+        if(request.getUserPrincipal() == null)
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+
+        String userName = request.getUserPrincipal().getName();
+        FantasyUnlimitedUser user = userService.getUser(userName);
+        log.debug("Found characters for user {}: {}", userName, user.getCharacters());
+
+        HttpStatus responseStatus;
+        if(user.getCharacters().isEmpty())
+            responseStatus = HttpStatus.NOT_FOUND;
+        else
+            responseStatus = HttpStatus.OK;
+
+        List<CharacterListItem> items = user.getCharacters().stream()
+                .map(character -> {
+                    CharacterClass characterClass = classBag.getItem(character.getClassId());
+                    ClassItem classItem = new ClassItem(characterClass.getId(), characterClass.getName(), characterClass.getIconName());
+
+                    Race race = raceBag.getItem(character.getRaceId());
+                    RaceItem raceItem = new RaceItem(race.getId(), race.getName(), race.getIconName());
+
+                    Location location = locationBag.getItem(character.getLocationId());
+                    LocationItem locationItem = new LocationItem(location.getId(), location.getName(), location.getIconName());
+
+                    return new CharacterListItem(
+                                    character.getId(),
+                                    character.getName(),
+                                    classItem,
+                                    raceItem,
+                                    locationItem,
+                                    character.getCurrentLevel());
+                }).collect(Collectors.toList());
+
+        return new ResponseEntity<>(items, responseStatus);
+    }
 
     @RequestMapping(value = "/current", method = RequestMethod.GET)
     public ResponseEntity<UserSessionInformation> currentUserNameSimple(HttpServletRequest request, CsrfToken token) {

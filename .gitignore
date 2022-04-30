@@ -1,4 +1,4 @@
-/*-DEV.properties
+**/application-*.properties
 
 # Compiled class file
 *.class

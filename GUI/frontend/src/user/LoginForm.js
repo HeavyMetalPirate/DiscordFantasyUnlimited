@@ -33,7 +33,7 @@ export const LoginForm = (props) => {
         };
         fetch('/logout', requestOptions)
                 .then((response) => {
-                    setUserState({user: null});
+                    setUserState({user: null, token: null, character: null});
                     window.location.href = '/';
                 });
     }

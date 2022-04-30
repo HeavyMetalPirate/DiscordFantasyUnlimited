@@ -11,6 +11,7 @@ public class Race extends GenericItem {
 	private static final long serialVersionUID = -173288658621969325L;
 
 	private String lore;
+	private String startingLocationId;
 	private boolean humanPlayable;
 	
 	private List<RacialBonus> bonuses = new ArrayList<>();
@@ -32,5 +33,13 @@ public class Race extends GenericItem {
 	}
 	public void setHumanPlayable(boolean humanPlayable) {
 		this.humanPlayable = humanPlayable;
+	}
+
+	public String getStartingLocationId() {
+		return startingLocationId;
+	}
+
+	public void setStartingLocationId(String startingLocationId) {
+		this.startingLocationId = startingLocationId;
 	}
 }

@@ -1,0 +1,8 @@
+{
+  "character.foo": "This is another Foo text",
+  "creation.name": "Name",
+  "creation.name.long": "Name of your character",
+  "creation.class": "Class",
+  "creation.race": "Race",
+  "creation.button.create": "Create character"
+}

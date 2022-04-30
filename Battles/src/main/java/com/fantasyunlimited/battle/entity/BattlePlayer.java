@@ -28,7 +28,7 @@ public class BattlePlayer extends BattleParticipant {
 
 		this.name = base.getName();
 		this.level = base.getCurrentLevel();
-		this.attributes = base.getAttributes();
+		this.attributes = base.getAttributes().convert();
 		this.equipment = new BattleEquipment(base.getEquipment());
 
 		this.maxHealth = base.getMaxHealth(weaponBag, equipmentBag);
@@ -49,7 +49,6 @@ public class BattlePlayer extends BattleParticipant {
 	public String getName() {
 		return name;
 	}
-
 
 	public Long getCharacterId() {
 		return characterId;

@@ -5,6 +5,7 @@ import com.fantasyunlimited.items.bags.WeaponBag;
 import com.fantasyunlimited.items.entity.Equipment;
 import com.fantasyunlimited.items.entity.Gear;
 import com.fantasyunlimited.items.entity.Weapon;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import java.io.Serializable;
 import java.util.ArrayList;
