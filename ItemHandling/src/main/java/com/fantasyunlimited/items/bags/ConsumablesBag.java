@@ -19,4 +19,8 @@ public class ConsumablesBag extends GenericsBag<Consumable>{
 		return sanity;
 	}
 
+	@Override
+	public void initializeItemFields(Consumable item) {
+		// NO OP
+	}
 }

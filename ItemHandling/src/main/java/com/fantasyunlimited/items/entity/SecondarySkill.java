@@ -3,11 +3,11 @@ package com.fantasyunlimited.items.entity;
 import java.io.Serializable;
 
 public enum SecondarySkill implements Serializable {
-	WOODCUTTING("Woodcutting"),
-	FISHING("Fishing"),
-	MINING("Mining"),
-	ALCHEMY("Alchemy"),
-	ENCHANTING("Enchanting");
+	WOODCUTTING("secondary.skills.woodcutting"),
+	FISHING("secondary.skills.fishing"),
+	MINING("secondary.skills.mining"),
+	ALCHEMY("secondary.skills.alchemy"),
+	ENCHANTING("secondary.skills.enchanting");
 	
 	private final String value;
 	private SecondarySkill(String value) {

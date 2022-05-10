@@ -1,0 +1,19 @@
+{
+  "location.travel.duration": "seconds",
+  "location.travel.toll.unaffordable": "Can't afford toll for the route",
+  "location.skill.low": "Your skill is not high enough",
+  "location.battle.health.low": "Your health is too low to battle",
+  "location.action.perform": "Go",
+  "location.action.market.perform": "Visit",
+  "location.action.combat.perform": "Go",
+  "location.action.market.no.access": "No access from this location",
+  "location.trading.global": "Global trading market",
+  "location.trading.local": "Local trading market",
+  "location.combat.search": "Look for an encounter...",
+  "location.npcs": "Look for a person...",
+  "secondary.skills.fishing": "Go fish",
+  "secondary.skills.mining": "Go mine",
+  "secondary.skills.enchanting": "Visit the enchanting table",
+  "secondary.skills.woodcutting": "Go cut some wood",
+  "secondary.skills.alchemy": "Visit the alchemy lab"
+}

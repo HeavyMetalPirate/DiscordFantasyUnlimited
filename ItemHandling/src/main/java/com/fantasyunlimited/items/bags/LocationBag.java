@@ -1,9 +1,12 @@
 package com.fantasyunlimited.items.bags;
 
+import com.fantasyunlimited.items.entity.HostileNPC;
 import com.fantasyunlimited.items.entity.Location;
 import com.fantasyunlimited.items.entity.TravelConnection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
 
 @Component
 public class LocationBag extends GenericsBag<Location> {
@@ -27,8 +30,10 @@ public class LocationBag extends GenericsBag<Location> {
 				|| npcBag.getItems().isEmpty()) {
 			throw new SanityException("Hostile NPCs haven't been initialized yet!");
 		}
+
 		for (String hostile : item.getHostileNPCIds()) {
-			if (hostileNPCBag.getItem(hostile) == null) {
+			HostileNPC hostileNPC = hostileNPCBag.getItem(hostile);
+			if (hostileNPC == null) {
 				throw new SanityException("Hostile NPC '" + hostile + "' not found!");
 			}
 		}
@@ -51,4 +56,12 @@ public class LocationBag extends GenericsBag<Location> {
 		return true;
 	}
 
+	@Override
+	public void initializeItemFields(Location item) {
+		for (String friendly : item.getNpcIds()) {
+			if(item.getNpcs() == null) item.setNpcs(new ArrayList<>());
+
+			item.getNpcs().add(npcBag.getItem(friendly));
+		}
+	}
 }

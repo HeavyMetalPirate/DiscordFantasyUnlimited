@@ -19,4 +19,9 @@ public class SkillBag extends GenericsBag<Skill> {
 
         return true;
     }
+
+    @Override
+    public void initializeItemFields(Skill item) {
+        // NO OP
+    }
 }

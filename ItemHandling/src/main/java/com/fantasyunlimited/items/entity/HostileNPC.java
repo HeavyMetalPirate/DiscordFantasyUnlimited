@@ -1,5 +1,7 @@
 package com.fantasyunlimited.items.entity;
 
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +31,32 @@ public class HostileNPC extends GenericItem {
 	private Map<String, Double> loottable = new HashMap<>();
 	private int minimumGold;
 	private int maximumGold;
+
+	@XStreamOmitField
+	private CharacterClass characterClass;
+	@XStreamOmitField
+	private Race race;
+
+	@XStreamOmitField
+	private Weapon mainhandInstance;
+	@XStreamOmitField
+	private Weapon offhandInstance;
+	@XStreamOmitField
+	private Equipment helmetInstance;
+	@XStreamOmitField
+	private Equipment gloveInstance;
+	@XStreamOmitField
+	private Equipment chestInstance;
+	@XStreamOmitField
+	private Equipment pantsInstance;
+	@XStreamOmitField
+	private Equipment bootsInstance;
+	@XStreamOmitField
+	private Equipment ring1Instance;
+	@XStreamOmitField
+	private Equipment ring2Instance;
+	@XStreamOmitField
+	private Equipment neckInstance;
 
 	public String getRaceId() {
 		return raceId;
@@ -164,5 +192,101 @@ public class HostileNPC extends GenericItem {
 
 	public void setMaximumGold(int maximumGold) {
 		this.maximumGold = maximumGold;
+	}
+
+	public CharacterClass getCharacterClass() {
+		return characterClass;
+	}
+
+	public void setCharacterClass(CharacterClass characterClass) {
+		this.characterClass = characterClass;
+	}
+
+	public Race getRace() {
+		return race;
+	}
+
+	public void setRace(Race race) {
+		this.race = race;
+	}
+
+	public Weapon getMainhandInstance() {
+		return mainhandInstance;
+	}
+
+	public void setMainhandInstance(Weapon mainhandInstance) {
+		this.mainhandInstance = mainhandInstance;
+	}
+
+	public Weapon getOffhandInstance() {
+		return offhandInstance;
+	}
+
+	public void setOffhandInstance(Weapon offhandInstance) {
+		this.offhandInstance = offhandInstance;
+	}
+
+	public Equipment getHelmetInstance() {
+		return helmetInstance;
+	}
+
+	public void setHelmetInstance(Equipment helmetInstance) {
+		this.helmetInstance = helmetInstance;
+	}
+
+	public Equipment getGloveInstance() {
+		return gloveInstance;
+	}
+
+	public void setGloveInstance(Equipment gloveInstance) {
+		this.gloveInstance = gloveInstance;
+	}
+
+	public Equipment getChestInstance() {
+		return chestInstance;
+	}
+
+	public void setChestInstance(Equipment chestInstance) {
+		this.chestInstance = chestInstance;
+	}
+
+	public Equipment getPantsInstance() {
+		return pantsInstance;
+	}
+
+	public void setPantsInstance(Equipment pantsInstance) {
+		this.pantsInstance = pantsInstance;
+	}
+
+	public Equipment getBootsInstance() {
+		return bootsInstance;
+	}
+
+	public void setBootsInstance(Equipment bootsInstance) {
+		this.bootsInstance = bootsInstance;
+	}
+
+	public Equipment getRing1Instance() {
+		return ring1Instance;
+	}
+
+	public void setRing1Instance(Equipment ring1Instance) {
+		this.ring1Instance = ring1Instance;
+	}
+
+	public Equipment getRing2Instance() {
+		return ring2Instance;
+	}
+
+	public void setRing2Instance(Equipment ring2Instance) {
+		this.ring2Instance = ring2Instance;
+	}
+
+	public Equipment getNeckInstance() {
+		return neckInstance;
+	}
+
+	public void setNeckInstance(Equipment neckInstance) {
+		this.neckInstance = neckInstance;
 	}
 }

@@ -18,4 +18,9 @@ public class WeaponBag extends GenericsBag<Weapon> {
 
 		return true;
 	}
+
+	@Override
+	public void initializeItemFields(Weapon item) {
+		// NO OP
+	}
 }

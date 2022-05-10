@@ -1,0 +1,365 @@
+import React, {useEffect, useState} from 'react';
+import {
+    Container,
+    Table,
+    Button,
+    Form,
+    FormGroup,
+    FormFeedback,
+    Label,
+    Col,
+    Input,
+    Card,
+    CardBody,
+    CardTitle,
+    CardSubtitle
+} from 'reactstrap';
+import { useNavigate, Link } from 'react-router-dom';
+
+import './GamePanel.css'
+import { get_steps, calculateHealthPercentage, calculateResourcePercentage } from './utils/StatusbarUtils'
+import { useSetState, useTrackedState } from '../SessionStore';
+import { UserSearch } from '../user/UserComponents'
+
+const ManaBar = ({character}) => {
+    var steps;
+
+    if(character.resources.energyType === 'RAGE') {
+        // Red
+        steps = get_steps('rgb(155, 0, 0)', 'rgb(255, 0, 0)' , 100);
+    }
+    else if(character.resources.energyType === 'FOCUS') {
+        // Yellow
+        steps = get_steps('rgb(155, 155, 0)', 'rgb(255, 255, 0)' , 100);
+    }
+    else {
+        // Mana, blue
+        steps = get_steps('rgb(0, 0, 155)', 'rgb(0, 0, 255)' , 100);
+    }
+
+    const p = calculateResourcePercentage(character);
+
+    return (
+        <div className="player">
+            <div className="mana">
+                <div className="bar" style= {{ width: p + '%', background: Object.keys(steps)[Math.floor(p)] }}></div>
+                <span className="stat">
+                    <span className="left">{ character.resources.currentResource }</span>
+                    <span className="right">{ character.resources.maxResource }</span>
+                </span>
+            </div>
+        </div>
+    )
+}
+
+const HealthBar = ({character}) => {
+
+    const steps = get_steps('rgb(255, 0, 0)', 'rgb(0, 128, 0)' , 100);
+    const p = calculateHealthPercentage(character);
+
+    return (
+        <div className="player">
+            <div className="health">
+                <div className="bar" style= {{ width: p + '%', background: Object.keys(steps)[Math.floor(p)] }}></div>
+                <span className="stat">
+                    <span className="left">{ character.resources.currentHealth }</span>
+                    <span className="right">{ character.resources.maxHealth }</span>
+                </span>
+            </div>
+        </div>
+    )
+}
+
+export const CurrentCharacterPanel = (props) => {
+    const t = props.translation;
+    const setState = useSetState();
+    const state = useTrackedState();
+    const navigate = useNavigate();
+
+    const [character, setCharacter] = useState(null);
+    const [currentActiveUsers, setCurrentActiveUsers] = useState(null);
+
+    useEffect(() => {
+        const getCharacter = async() => {
+            // await the response from the server
+            const res = await fetch('/api/user/characters/get');
+            try {
+                // await the json data in the response
+                const data = await res.json();
+                // set the state of the const 'skill'
+                setCharacter(data);
+                setState((prevState) => ({ ...prevState, characterData: data}));
+            }
+            catch(error) {
+                setCharacter(null);
+                setState((prevState) => ({ ...prevState, characterData: null}));
+            }
+        };
+        if(state.selectedCharacter && state.selectedCharacter !== null && state.selectedCharacter !== '0') {
+            getCharacter();
+        }
+    }, [state.selectedCharacter]);
+
+    useEffect(() => {
+        const getActiveUsers = async() => {
+            const res = await fetch('/api/user/actives')
+            // await the json data in the response
+            const data = await res.json();
+            // set the state of the const 'skill'
+            setCurrentActiveUsers(data.map( user => {
+                return user
+            }));
+        };
+        getActiveUsers();
+    }, []); // TODO how to refresh? https://stackoverflow.com/questions/59667278/react-hooks-periodic-run-useeffect
+
+    if(!character) {
+        return (
+            <Container fluid style={{paddingRight: "unset", paddingLeft: "unset"}}>
+                <Card>
+
+                </Card>
+            </Container>
+        )
+    }
+
+    function goToSelection() {
+        setState((prev) => ({ ...prev, selectedCharacter: null, stateChanged: true}));
+        fetch('/api/user/characters/select?id=0')
+            .then(navigate('/game'));
+    }
+
+    function goToEquipment() {
+        navigate('/game/equipment');
+    }
+    function goToInventory() {
+        navigate('/game/inventory');
+    }
+
+    return (
+        <Container fluid style={{paddingRight: "unset", paddingLeft: "unset" }}>
+            <Card>
+                <CardBody>
+                    <CardTitle tag="h5">{character.name}</CardTitle>
+                    <CardSubtitle className="mb-2 text-muted" tag="h6">{t('character.current.panel.level', {ns: 'character'})} {character.level} {t(character.race.name, {ns: 'race'})} {t(character.characterClass.name, {ns: 'characterClass'})} </CardSubtitle>
+                    <CardSubtitle className="mb-2 text-muted" tag="h6">{t(character.location.name, {ns:'location'})}</CardSubtitle>
+                </CardBody>
+                <CardBody>
+                    <span style={{"textAlign":"left", display: "block"}}>{t('character.current.panel.health', {ns: 'character'})}:</span>
+                    <span style={{ width: "9em" }}><HealthBar character={character} /></span>
+
+                    <span style={{"textAlign":"left", display: "block"}}>{t('character.current.panel.' + character.resources.energyType, {ns: 'character'})}:</span>
+                    <span style={{ width: "9em" }}><ManaBar character={character} /></span>
+                </CardBody>
+                <Container style={{marginBottom: "2px"}}>
+                    <Button style={{"margin": "3px", width: "46%"}} onClick={() => goToEquipment()}>{t('character.current.panel.manage.equipment', {ns: 'character'})}</Button>
+                    <Button style={{"margin": "3px", width: "46%"}} onClick={() => goToInventory()}>{t('character.current.panel.manage.inventory', {ns: 'character'})}</Button>
+                </Container>
+                <img alt="Card cap" src="images/fu.png" />
+                <Button style={{"margin": "5px"}} onClick={() => goToSelection()}>{t('character.current.panel.select', {ns: 'character'})}</Button>
+
+                <CardBody>
+                    <UserSearch details={currentActiveUsers} />
+                </CardBody>
+            </Card>
+        </Container>
+    );
+}
+
+export const CharacterSelection = (props) => {
+    // React i18n Hook
+    const t = props.translation;
+    const setState = useSetState();
+    const state = useTrackedState();
+    const navigate = useNavigate();
+
+    // Variables
+    const [characters, setCharacters] = useState(null);
+    const [characterList, setCharacterList] = useState(null);
+
+    function selectCharacter(id) {
+        fetch('/api/user/characters/select?id=' + id)
+            .then(() => {
+                setState((prevState) => ({ ...prevState, selectedCharacter: id, stateChanged: true}))
+                navigate('/game');
+            });
+
+    }
+
+    useEffect(() => {
+        // Define getSkill method as async
+        const getCharacters = async() => {
+            // await the response from the server
+            const res = await fetch('/api/user/characters');
+            // await the json data in the response
+            const data = await res.json();
+            // set the state of the const 'skill'
+            setCharacters(data);
+
+            setCharacterList(
+                data.map(character => {
+                    return (
+                        <tr key={character.id}>
+                            <td>{character.name}</td>
+                            <td>{character.level}</td>
+                            <td>{character.race.name}</td>
+                            <td>{character.characterClass.name}</td>
+                            <td>{character.location.name}</td>
+                            <td><Button onClick={() => selectCharacter(character.id)}>{t('character.list.select', {ns: 'character'})}</Button></td>
+                        </tr>
+                    )
+                })
+            );
+        }
+
+        // call async method getCharacters()
+        getCharacters();
+    }, [state.user]);
+
+    return (
+        <Container fluid>
+            <h2>{t('character.selection.header', {ns: 'character'})}</h2>
+            <span>Characters: {characters && characters.length}</span>
+
+            <Table>
+                <thead>
+                    <tr>
+                        <th>{t('character.list.name', {ns: 'character'})}</th>
+                        <th>{t('character.list.level', {ns: 'character'})}</th>
+                        <th>{t('character.list.race', {ns: 'character'})}</th>
+                        <th>{t('character.list.class', {ns: 'character'})}</th>
+                        <th>{t('character.list.location', {ns: 'character'})}</th>
+                        <th>
+                            <Button size="sm" color="primary" tag={Link} to={'/game/characters/create'}>{t('character.create', {ns: 'character'})}</Button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {characterList}
+                </tbody>
+            </Table>
+        </Container>
+    )
+}
+export const CharacterCreation = (props) => {
+    // React i18n Hook
+    const t = props.translation;
+    const userState = useTrackedState();
+    const navigate = useNavigate();
+
+    // Variables
+    const [classes, setClasses] = useState(null);
+    const [races, setRaces] = useState(null);
+
+    const [nameTaken, setNameTaken] = useState(null);
+
+    useEffect(() => {
+        // Define getCharacters method as async
+        const getClasses = async() => {
+            // await the response from the server
+            const res = await fetch('/api/content/classes/playable');
+            // await the json data in the response
+            const data = await res.json();
+
+            setClasses(
+                data.map(clazz => {
+                    return (
+                        <option key={clazz.id} value={clazz.id}>{t(clazz.name, {ns: 'characterClass'})}</option>
+                    )
+                })
+            );
+        }
+        // Define getRaces method as async
+        const getRaces = async() => {
+            // await the response from the server
+            const res = await fetch('/api/content/races/playable');
+            // await the json data in the response
+            const data = await res.json();
+
+            setRaces(
+                data.map(race => {
+                    return (
+                        <option key={race.id} value={race.id}>{t(race.name, {ns: 'race'})}</option>
+                    )
+                })
+            );
+        }
+
+        // call async method getClasses() + getRaces()
+        getClasses();
+        getRaces();
+    }, []);
+
+    function createCharacter(event) {
+        event.preventDefault();
+        const data = new FormData(event.target);
+        const creationBody = {name: data.get('name'), classId: data.get('class'), raceId: data.get('race')}
+
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN' : userState.token.token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(creationBody)
+        };
+
+        fetch('/api/user/characters/create', requestOptions)
+            .then((response) => {
+                console.log(response);
+                if(response.status === '409') {
+                    // conflict because of name
+                    console.log('Character exists by name!');
+                    setNameTaken(true);
+                }
+                else if (response.status === '200') {
+                    // success
+                    console.log('Character created successfully!');
+                    setNameTaken(false);
+                    navigate('/game');
+                }
+                else {
+                    console.log('Unknown error ' + response.status);
+                    setNameTaken(false);
+                }
+            });
+
+    };
+
+    return (
+        <Container fluid>
+            <h2>CharacterCreation TODO</h2>
+            {t('character.foo', {ns: 'character'})}
+            <Form onSubmit={createCharacter}>
+                <FormGroup row>
+                    <Label for="name" sm={2}>{t('creation.name', {ns: 'character'})}</Label>
+                    <Col sm={10}>
+                        <Input invalid={nameTaken} id="name" name="name" placeholder={t('creation.name.long', {ns: 'character'})} type="text" />
+                        <FormFeedback>{t('creation.name.taken', {ns: 'character'})}</FormFeedback>
+                    </Col>
+                </FormGroup>
+                <FormGroup row>
+                    <Label for="race" sm={2}>{t('creation.race', {ns: 'character'})}</Label>
+                    <Col sm={10}>
+                        <Input id="race" name="race" placeholder={t('creation.name.long', {ns: 'character'})} type="select">
+                            {races}
+                        </Input>
+                    </Col>
+                </FormGroup>
+                <FormGroup row>
+                    <Label for="class" sm={2}>{t('creation.class', {ns: 'character'})}</Label>
+                    <Col sm={10}>
+                        <Input id="class" name="class" placeholder={t('creation.name.long', {ns: 'character'})} type="select">
+                            {classes}
+                        </Input>
+                    </Col>
+                </FormGroup>
+                <FormGroup check row>
+                    <Col sm={{ offset: 2, size: 10 }}>
+                        <Button type="submit">{t('creation.button.create', {ns: 'character'})}</Button>
+                    </Col>
+                </FormGroup>
+            </Form>
+        </Container>
+    )
+}

@@ -10,14 +10,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class OpenApiConfiguration {
-    @Bean
-    public GroupedOpenApi publicApi() {
-        return GroupedOpenApi.builder()
-                .group("Foo")
-                .pathsToMatch("/**")
-                .packagesToScan("com.fantasyunlimited.rest")
-                .build();
-    }
 
     @Bean
     public GroupedOpenApi contentListings() {
@@ -29,14 +21,32 @@ public class OpenApiConfiguration {
     }
 
     @Bean
+    public GroupedOpenApi userOperations() {
+        return GroupedOpenApi.builder()
+                .group("User Operations")
+                .pathsToMatch("/api/user/**")
+                .packagesToScan("com.fantasyunlimited.rest")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi gameOperations() {
+        return GroupedOpenApi.builder()
+                .group("Game Operations")
+                .pathsToMatch("/api/game/**")
+                .packagesToScan("com.fantasyunlimited.rest")
+                .build();
+    }
+
+    @Bean
     public OpenAPI springShopOpenAPI() {
         return new OpenAPI()
-                .info(new Info().title("SpringShop API")
-                        .description("Spring shop sample application")
+                .info(new Info().title("FantasyUnlimited API")
+                        .description("Fantasy Unlimited - REST API Description")
                         .version("v0.0.1")
-                        .license(new License().name("Apache 2.0").url("http://springdoc.org")))
-                .externalDocs(new ExternalDocumentation()
-                        .description("SpringShop Wiki Documentation")
-                        .url("https://springshop.wiki.github.org/docs"));
+                        .license(new License().name("Apache 2.0")
+                                              .url("https://fantasyunlimited.com")
+                        )
+                );
     }
 }

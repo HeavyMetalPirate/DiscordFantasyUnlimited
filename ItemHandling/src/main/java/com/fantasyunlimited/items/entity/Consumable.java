@@ -13,9 +13,10 @@ public class Consumable extends RarityClassifiedItem {
 	private boolean duringBattle;
 	private List<CombatSkillBonus> combatSkillModifiers = new ArrayList<>();
 	private List<AttributeBonus> attributeModifiers = new ArrayList<>();
-	
+	private int durationRounds;
 	private int healthRestored;
 	private int atkResourceRestored;
+	private CharacterClass.EnergyType resourceType;
 	public boolean isDuringBattle() {
 		return duringBattle;
 	}
@@ -46,6 +47,23 @@ public class Consumable extends RarityClassifiedItem {
 	public void setAtkResourceRestored(int atkResourceRestored) {
 		this.atkResourceRestored = atkResourceRestored;
 	}
+
+	public CharacterClass.EnergyType getResourceType() {
+		return resourceType;
+	}
+
+	public void setResourceType(CharacterClass.EnergyType resourceType) {
+		this.resourceType = resourceType;
+	}
+
+	public int getDurationRounds() {
+		return durationRounds;
+	}
+
+	public void setDurationRounds(int durationRounds) {
+		this.durationRounds = durationRounds;
+	}
+
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}	

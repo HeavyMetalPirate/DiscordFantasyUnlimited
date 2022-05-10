@@ -3,7 +3,7 @@
   <id>torn-shirt</id>
   <name>Torn shirt</name>
   <description>Better than nothing, huh? If you wear it wrong, puts one of your nipples on display.</description>
-  <iconName>trnshrt.png</iconName>
+  <iconName>../images/items/trnshrt.png</iconName>
   <rarity>ARTIFACT</rarity>
   <value>10</value>
   <type>CHEST</type>

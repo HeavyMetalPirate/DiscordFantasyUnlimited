@@ -1,5 +1,7 @@
 package com.fantasyunlimited.items.entity;
 
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +25,11 @@ public class NPC extends GenericItem {
 	
 	private List<String> genericDialogue = new ArrayList<>();
 	private List<String> questIds = new ArrayList<>();
+
+	@XStreamOmitField
+	private Map<Dropable, Integer> sellingItems = new HashMap<>();
+	@XStreamOmitField
+	private List<Quest> quests = new ArrayList<>();
 	
 	public String getRaceId() {
 		return raceId;
@@ -71,5 +78,21 @@ public class NPC extends GenericItem {
 	}
 	public void setQuestIds(List<String> questIds) {
 		this.questIds = questIds;
+	}
+
+	public Map<Dropable, Integer> getSellingItems() {
+		return sellingItems;
+	}
+
+	public void setSellingItems(Map<Dropable, Integer> sellingItems) {
+		this.sellingItems = sellingItems;
+	}
+
+	public List<Quest> getQuests() {
+		return quests;
+	}
+
+	public void setQuests(List<Quest> quests) {
+		this.quests = quests;
 	}
 }

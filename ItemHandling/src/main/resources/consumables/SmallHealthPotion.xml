@@ -2,11 +2,15 @@
 <Consumable>
   <id>smallHealthPot</id>
   <name>Small Health Potion</name>
-  <iconName>smallHealthpot.jpg</iconName>
+  <iconName>../images/items/smallHealthpot.jpg</iconName>
+  <description>A small health potion. Comes in just one flavor, and you ain't gonna like it.</description>
+  <rarity>COMMON</rarity>
   <value>0</value>
   <duringBattle>false</duringBattle>
-  <combatSkillModifiers/>
-  <attributeModifiers/>
+  <combatSkillModifiers />
+  <attributeModifiers />
+  <durationRounds>0</durationRounds>
   <healthRestored>30</healthRestored>
   <atkResourceRestored>0</atkResourceRestored>
+  <resourceType>RAGE</resourceType>
 </Consumable>

@@ -7,8 +7,14 @@
   <marketAccess>false</marketAccess>
   <globalMarketAccess>false</globalMarketAccess>
   <allowedSecondarySkills>
-    <SecondarySkill>MINING</SecondarySkill>
-    <SecondarySkill>FISHING</SecondarySkill>
+    <entry>
+      <SecondarySkill>MINING</SecondarySkill>
+      <Integer>0</Integer>
+    </entry>
+    <entry>
+      <SecondarySkill>FISHING</SecondarySkill>
+      <Integer>5</Integer>
+    </entry>
   </allowedSecondarySkills>
   <connections>
     <TravelConnection>

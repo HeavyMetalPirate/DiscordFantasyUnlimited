@@ -5,8 +5,7 @@ import com.fantasyunlimited.data.dao.PlayerCharacterRepository;
 import com.fantasyunlimited.data.entity.FantasyUnlimitedUser;
 import com.fantasyunlimited.data.entity.PlayerCharacter;
 import com.fantasyunlimited.data.enums.UserFoundStatus;
-import com.fantasyunlimited.items.bags.ClassBag;
-import com.fantasyunlimited.items.bags.RaceBag;
+import com.fantasyunlimited.items.bags.*;
 import com.fantasyunlimited.items.entity.CharacterClass;
 import com.fantasyunlimited.items.entity.Race;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +27,22 @@ public class FantasyUnlimitedUserService {
     @Autowired
     private RaceBag raceBag;
     @Autowired
+    private WeaponBag weaponBag;
+    @Autowired
+    private EquipmentBag equipmentBag;
+    @Autowired
+    private LocationBag locationBag;
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     public boolean characterExistsByName(String name) {
         return characterRepository.findByNameIgnoreCase(name).isPresent();
+    }
+
+    @Transactional(readOnly = true)
+    public PlayerCharacter getPlayerCharacterById(Long id) {
+        return characterRepository.findById(id).get();
     }
 
     @Transactional
@@ -47,8 +57,8 @@ public class FantasyUnlimitedUserService {
             throw new IllegalArgumentException("Selected a non-playable option.");
         }
 
-        character.setRaceId(raceId);
-        character.setClassId(classId);
+        character.setRaceId(selectedRace);
+        character.setClassId(selectedClass);
 
         // Set up Attributes
         character.getAttributes().setEndurance(selectedClass.getAttributes().getEndurance());
@@ -62,29 +72,34 @@ public class FantasyUnlimitedUserService {
 
         // Set up starting equipment
         character.getEquipment().setCharacter(character);
-        character.getEquipment().setMainhand(selectedClass.getStartingMainhand());
-        character.getEquipment().setOffhand(selectedClass.getStartingOffhand());
-        character.getEquipment().setHelmet(selectedClass.getStartingHelmet());
-        character.getEquipment().setChest(selectedClass.getStartingChest());
-        character.getEquipment().setGloves(selectedClass.getStartingGloves());
-        character.getEquipment().setPants(selectedClass.getStartingPants());
-        character.getEquipment().setBoots(selectedClass.getStartingBoots());
-        character.getEquipment().setRing1(selectedClass.getStartingRing1());
-        character.getEquipment().setRing2(selectedClass.getStartingRing2());
-        character.getEquipment().setNeck(selectedClass.getStartingNeck());
+        character.getEquipment().setMainhand(weaponBag.getItem(selectedClass.getStartingMainhand()));
+        character.getEquipment().setOffhand(weaponBag.getItem(selectedClass.getStartingOffhand()));
+        character.getEquipment().setHelmet(equipmentBag.getItem(selectedClass.getStartingHelmet()));
+        character.getEquipment().setChest(equipmentBag.getItem(selectedClass.getStartingChest()));
+        character.getEquipment().setGloves(equipmentBag.getItem(selectedClass.getStartingGloves()));
+        character.getEquipment().setPants(equipmentBag.getItem(selectedClass.getStartingPants()));
+        character.getEquipment().setBoots(equipmentBag.getItem(selectedClass.getStartingBoots()));
+        character.getEquipment().setRing1(equipmentBag.getItem(selectedClass.getStartingRing1()));
+        character.getEquipment().setRing2(equipmentBag.getItem(selectedClass.getStartingRing2()));
+        character.getEquipment().setNeck(equipmentBag.getItem(selectedClass.getStartingNeck()));
 
         // Set up starting location
-        character.setLocationId(selectedRace.getStartingLocationId());
+        character.setLocationId(locationBag.getItem(selectedRace.getStartingLocationId()));
 
         // Set up additional initial values
         character.setCurrentLevel(1);
         character.setCurrentXp(0);
-        character.setCurrentHealth(selectedClass.getAttributes().getEndurance() * 10 + 15);
-        character.setCurrentAtkResource(selectedClass.getAttributes().getWisdom() * 15 + 20);
-
+        character.setCurrentHealth(character.getMaxHealth());
+        if(selectedClass.getEnergyType() == CharacterClass.EnergyType.RAGE) {
+            character.setCurrentAtkResource(0);
+        }
+        else {
+            character.setCurrentAtkResource(character.getMaxAtkResource());
+        }
         // Fetch user into transaction session and add character
         user = repository.findByUserName(user.getUserName());
         user.getCharacters().add(character);
+        character.setUser(user);
         repository.save(user);
     }
 

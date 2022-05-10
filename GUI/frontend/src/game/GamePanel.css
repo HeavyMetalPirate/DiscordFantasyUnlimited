@@ -1,0 +1,75 @@
+.Game.MainPanel {
+    margin-right: 250px;
+}
+
+.game-sidebar {
+    z-index: 1000;
+    position: fixed;
+    top: 0;
+    right: 250px;
+    width: 250px;
+    height: 100%;
+    margin-right: -250px;
+    overflow-y: auto;
+    background: transparent;
+}
+
+.player {
+   display: inline-block;
+   border: solid 1px black;
+   width: 100%;
+   height: 100%;
+   position: relative;
+   float: left;
+}
+
+.health, .mana {
+   position: relative;
+   height: 1em;
+   width: 100%;
+   /*background: linear-gradient(#ff9933, #b76d24);*/
+   background: #FFFFFF;
+}
+
+.health .bar, .mana .bar {
+   position: absolute;
+   left: 0;
+   top: 0;
+   height: inherit;
+   width: 100%;
+   background: rgb(0, 128, 0);
+   transition: width 250ms, background 100ms;
+}
+
+.health .bar:after, .mana .bar:after{
+   content: ' ';
+   display: block;
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 1em;
+   background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.3));
+   z-index: 1;
+}
+
+.health .stat, .mana .stat{
+   text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+   font-family: Monospace, sans-serif;
+   top: 2px;
+   width: 100%;
+   font-size: 11px;
+   letter-spacing: 1px;
+   z-index: 1;
+   color: #FFF;
+}
+
+.health .stat .left, .mana .stat .left {
+   position: absolute;
+   left: 3px;
+}
+
+.health .stat .right, .mana .stat .right {
+   position: absolute;
+   right: 1px;
+}

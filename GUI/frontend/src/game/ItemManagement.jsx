@@ -1,0 +1,455 @@
+import React, {useEffect, useState} from 'react';
+import {
+    Button,
+    Card,
+    CardBody,
+    CardTitle,
+    CardText,
+    CardImg,
+    CardGroup,
+    CardHeader,
+    CardFooter,
+    Container,
+    InputGroup,
+    Input,
+    Label
+} from 'reactstrap';
+import {
+    ControlledMenu,
+    MenuItem,
+    MenuHeader,
+    useMenuState
+} from '@szhsin/react-menu';
+import '@szhsin/react-menu/dist/index.css';
+
+import { useSetState, useTrackedState } from '../SessionStore';
+
+import './ItemManagement.css'
+
+export const EquipmentManager = (props) => {
+    const t = props.translation;
+
+    return (
+        <div>EquipmentManager TODO</div>
+    )
+}
+
+const ItemDetailView = (props) => {
+    const t = props.translation;
+    const [selectedItem, setSelectedItem] = useState(null);
+    const [x, setX] = useState(0);
+    const [y, setY] = useState(0);
+
+    useEffect(() => {
+        if(!props.item) {
+            return;
+        }
+        setSelectedItem(props.item.item);
+        setX(props.x);
+        setY(props.y);
+    }, [props.item]);
+
+    function getGearBonuses() {
+        var attributeBonus = "", skillBonus = "", secondarySkillBonus = "", attackResourceBonus = "";
+
+        if(selectedItem.attributeBonuses && selectedItem.attributeBonuses.length > 0) {
+            attributeBonus = selectedItem.attributeBonuses.map(bonus => {
+                return <li className="buff-text">+{bonus.bonus} {t('character.attributes.' + bonus.attribute, {ns:'character'})}</li>
+            });
+        }
+
+        if(selectedItem.skillBonuses && selectedItem.skillBonuses.length > 0) {
+            skillBonus = selectedItem.skillBonuses.map(bonus => {
+                return <li className="buff-text">+{bonus.bonus}% {t('character.skills.' + bonus.skill, {ns:'character'})}</li>
+            });
+        }
+
+        if(selectedItem.secondarySkillBonuses && selectedItem.secondarySkillBonuses.length > 0) {
+            secondarySkillBonus = selectedItem.secondarySkillBonuses.map(bonus => {
+                return <li className="buff-text">+{bonus.bonus} {t('character.secondary.skills.' + bonus.skill, {ns:'character'})}</li>
+            });
+        }
+        if(selectedItem.atkResourceBonuses && selectedItem.atkResourceBonuses.length > 0) {
+            attackResourceBonus = selectedItem.atkResourceBonuses.map(bonus => {
+                return <li className="buff-text">+{bonus.bonus} {t('character.energy.type.' + bonus.skill, {ns:'character'})}</li>
+            });
+        }
+
+        return (
+            <ul style={{paddingLeft: "0", marginTop: "1em"}}>
+                {attributeBonus}
+                {skillBonus}
+                {secondarySkillBonus}
+                {attackResourceBonus}
+            </ul>
+        );
+    }
+
+    function getDetailsContainer() {
+        if(!props.item) return <div/>
+        if(!selectedItem) return <div/>
+
+        var bodyContent = null;
+
+        if(props.item.type === 'weapon') {
+
+            var classExclusiveElement = "", raceExclusiveElement = "";
+
+            if(selectedItem.classExclusive) {
+                classExclusiveElement = <span className="card-header-text">{t('items.weapon.exclusive.class.' + selectedItem.classExclusive, {ns:'items'})}</span>
+            }
+            if(selectedItem.raceExclusive) {
+                raceExclusiveElement = <span className="card-header-text">{t('items.weapon.exclusive.race.' + selectedItem.raceExclusive, {ns:'items'})}</span>
+            }
+
+            bodyContent = (
+                <CardBody style={{ textAlign: "left", paddingTop: "0" }}>
+                    <CardText>
+                        <span className="card-header-text">{t('items.weapon.hand.' + selectedItem.hand, {ns:'items'})} {t('items.weapon.type.' + selectedItem.type, {ns:'items'})}</span>
+                    </CardText>
+                    <CardText>
+                        {selectedItem.minDamage} - {selectedItem.maxDamage} {t('items.weapon.damage', {ns:'items'})}
+                    </CardText>
+                    {getGearBonuses()}
+                    <CardText>
+                        {raceExclusiveElement}
+                        {classExclusiveElement}
+                    </CardText>
+                </CardBody>
+
+            )
+        }
+        else if(props.item.type === 'equipment') {
+            var classExclusiveElement = "", raceExclusiveElement = "";
+
+            if(selectedItem.classExclusive) {
+                classExclusiveElement = <span className="card-header-text">{t('items.weapon.exclusive.class.' + selectedItem.classExclusive, {ns:'items'})}</span>
+            }
+            if(selectedItem.raceExclusive) {
+                raceExclusiveElement = <span className="card-header-text">{t('items.weapon.exclusive.race.' + selectedItem.raceExclusive, {ns:'items'})}</span>
+            }
+
+            bodyContent = (
+                <CardBody style={{ textAlign: "left", paddingTop: "0"  }}>
+
+                    <CardText>
+                        <span className="card-header-text">{t('items.armor.type.' + selectedItem.type, {ns:'items'})}</span>
+                    </CardText>
+                    <CardText>
+                        {selectedItem.armor} {t('items.armor.value', {ns:'items'})}
+                    </CardText>
+
+                    {getGearBonuses()}
+                    <CardText>
+                        {raceExclusiveElement}
+                        {classExclusiveElement}
+                    </CardText>
+                </CardBody>
+            )
+        }
+        else if(props.item.type === 'consumable') {
+            var healthRestore = "", resoureRestore = "";
+
+            if(selectedItem.healthRestored > 0) {
+                healthRestore = <span className="card-header-text">+{selectedItem.healthRestored} {t('items.consumable.restore.health', {ns:'items'})}</span>
+            }
+            if(selectedItem.atkResourceRestored > 0) {
+                resoureRestore = <span className="card-header-text">+{selectedItem.atkResourceRestored} {t('items.consumable.restore.resource.' + selectedItem.resourceType, {ns:'items'})}</span>
+            }
+
+            var attributeBonus = "", skillBonus = "", roundsDuration = "";
+
+            if(selectedItem.attributeModifiers && selectedItem.attributeModifiers.length > 0) {
+                attributeBonus = selectedItem.attributeModifiers.map(bonus => {
+                    return <li className="buff-text">+{bonus.bonus} {t('character.attributes.' + bonus.attribute, {ns:'character'})}</li>
+                });
+            }
+
+            if(selectedItem.combatSkillModifiers && selectedItem.combatSkillModifiers.length > 0) {
+                skillBonus = selectedItem.combatSkillModifiers.map(bonus => {
+                    return <li className="buff-text">+{bonus.bonus}% {t('character.skills.' + bonus.skill, {ns:'character'})}</li>
+                });
+            }
+
+            if(skillBonus.length > 0 || attributeBonus.length > 0) {
+                var consumableDuration = "";
+                if(selectedItem.durationRounds > 0) {
+                    consumableDuration = selectedItem.durationRounds + " " + t('items.consumable.duration.rounds', {ns: 'items'})
+                }
+                else {
+                    consumableDuration = t('items.consumable.duration.rounds.full', {ns: 'items'})
+                }
+                roundsDuration = <li>{t('items.consumable.duration', {ns: 'items'})}: {consumableDuration}</li>
+            }
+
+            var bonusDetails = "";
+            if(roundsDuration.length > 0) {
+                bonusDetails = (
+                    <CardText>
+                        <ul style={{paddingLeft: "0", marginTop: "1em"}}>
+                            {attributeBonus}
+                            {skillBonus}
+                            {roundsDuration}
+                        </ul>
+                    </CardText>
+                )
+            }
+
+            bodyContent = (
+                <CardBody style={{ textAlign: "left", paddingTop: "0"  }}>
+                    <CardText>
+                        {healthRestore}
+                        {resoureRestore}
+                    </CardText>
+                    {bonusDetails}
+                    <CardText>
+                        <span className="card-header-text">{t('items.consumable.usable.battle.' + selectedItem.duringBattle, {ns:'items'})}</span>
+                    </CardText>
+                </CardBody>
+            )
+        }
+        else {
+            return <div>Unknown item type {props.item.type}</div>
+        }
+
+        return (
+            <Card>
+                <CardHeader>
+                    <CardImg className={"item-icon " + selectedItem.rarity.toLowerCase()} left src={selectedItem.iconName} />
+                    <div className="card-header-text">
+                        <span className="card-header-text">{t(selectedItem.name, {ns: 'items'})}</span>
+                        <span className="card-header-text">{t('items.rarity.' + selectedItem.rarity.toLowerCase(), {ns: 'items'})}</span>
+                    </div>
+                </CardHeader>
+                {bodyContent}
+                <CardFooter style={{ textAlign: "left" }}>
+                    <span className="card-footer-text">{t(selectedItem.description, {ns: 'items'})}</span>
+                    <CardText>
+                        {t('items.value', {ns:'items'})}: {selectedItem.value} {t('character.stats.gold', {ns:'character'})}
+                    </CardText>
+                </CardFooter>
+            </Card>
+        )
+    }
+
+    return (
+        <Container className="item-detail-view" style={{visibility: props.visible, left: x, top: y}}>
+            {getDetailsContainer()}
+        </Container>
+    )
+}
+
+const InventoryList = ({inventory, t}) => {
+    const [selectedItem, setSelectedItem] = useState(null);
+    const [detailsVisible, setDetailsVisible] = useState(null);
+    const [x, setX] = useState(0);
+    const [y, setY] = useState(0);
+    const [menuProps, toggleMenu] = useMenuState();
+    const [anchorPoint, setAnchorPoint] = useState({ x: 0, y: 0 });
+    const [contextMenuItem, setContextMenuItem] = useState({item: null, name: null});
+
+    useEffect(() => {
+        if(!selectedItem) {
+            setDetailsVisible("hidden");
+        }
+        else {
+            setDetailsVisible("visible");
+        }
+    }, [selectedItem, x, y]);
+
+    function mouseLeftItem(event) {
+        event.preventDefault();
+        setSelectedItem(null);
+    }
+
+    function getItemFromEvent(event) {
+        var card = event.target;
+
+        while(!card.attributes.foo) {
+            if(!card.parentElement) {
+                card = null;
+                return;
+            }
+            card = card.parentElement;
+        }
+        const itemId = card.attributes.foo.value;
+
+        return inventory.find(element => element.item.id === itemId);
+    }
+
+    function mouseOverItem(event) {
+        event.preventDefault(true);
+        console.log(menuProps);
+        setSelectedItem(getItemFromEvent(event));
+        setX(event.clientX);
+        setY(event.clientY);
+    }
+
+    function mouseClickOnItem(event) {
+        event.preventDefault(true);
+        setAnchorPoint({ x: event.clientX, y: event.clientY });
+        setContextMenuItem({item: selectedItem, name: t(selectedItem.item.name, {ns: 'items'})})
+        toggleMenu(true);
+    }
+    function closeContextMenu(event) {
+        toggleMenu(false);
+        console.log(menuProps);
+    }
+
+    if(!inventory) {
+        return <div className="inventory-items-list" />;
+    }
+    const itemCards = inventory.map(
+        entry => {
+          return (
+              <Card foo={entry.item.id} onClick={mouseClickOnItem} onMouseOver={mouseOverItem} onMouseLeave={mouseLeftItem} className="item-card" key={entry.item.id}>
+                  <CardBody className="item-card-body">
+                      <CardImg className={"item-icon " + entry.item.rarity.toLowerCase()} top src={entry.item.iconName} />
+                      <CardTitle tag="p">{t(entry.item.name, {ns: 'items'})}</CardTitle>
+                      <CardText tag="p" className="item-count">x{entry.count}</CardText>
+                  </CardBody>
+              </Card>
+          )
+      })
+
+    function contextMenu() {
+        if(!contextMenuItem.name || !contextMenuItem.item) {
+            return <div/>;
+        }
+        return (
+            <ControlledMenu {...menuProps} anchorPoint={anchorPoint} onClose={closeContextMenu}>
+                <MenuHeader>{contextMenuItem.name && contextMenuItem.name}</MenuHeader>
+                <MenuItem>{t('items.manager.context.menu.use', {ns:'items'})}</MenuItem>
+                <MenuItem>{t('items.manager.context.menu.drop', {ns:'items'})}</MenuItem>
+                <MenuItem>{t('items.manager.context.menu.close', {ns:'items'})}</MenuItem>
+            </ControlledMenu>
+        )
+    }
+
+    return(
+        <div className="inventory-items-list">
+            <CardGroup>
+                {itemCards}
+            </CardGroup>
+            <ItemDetailView translation={t} visible={detailsVisible} item={selectedItem} x={x} y={y} />
+            {contextMenu()}
+        </div>
+    );
+// <ItemContextMenu onMenuClosing={removeClickedItem} translation={t} item={clickedItem} x={x} y={y} />
+}
+
+export const InventoryManager = (props) => {
+    const t = props.translation;
+
+    const [inventory, setInventory] = useState(null);
+    const [searchField, setSearchField] = useState("");
+    const [sortMode, setSortMode] = useState("");
+
+    useEffect(() => {
+        const getInventory = async() => {
+            const resp = await fetch('/api/game/inventory');
+            const data = await resp.json();
+
+            setInventory(data);
+        };
+        getInventory();
+    }, []);
+
+    let filteredItems = null;
+    if(inventory) {
+        filteredItems = inventory.items.filter(
+            entry => {
+                const translatedName = t(entry.item.name, {ns:'items'});
+                return (
+                    translatedName.toLowerCase().includes(searchField.toLowerCase())
+                );
+            }
+        );
+    }
+    if(filteredItems) {
+        filteredItems.sort((a, b) => {
+            switch(sortMode) {
+                case 'type':
+                    return a.type > b.type ? 1 : -1;
+                case 'name':
+                    const aTranslatedName = t(a.item.name, {ns:'items'});
+                    const bTranslatedName = t(b.item.name, {ns:'items'});
+                    return aTranslatedName > bTranslatedName ? 1 : -1;
+                case 'value':
+                    return a.item.value > b.item.value ? -1 : 1;
+                case 'quantity':
+                    return a.count > b.count ? -1 : 1;
+                case 'rarity':
+                default:
+                    if(a.item.rarity === b.item.rarity) {
+                        // Both same rarity: use value
+                        return a.item.value > b.item.value ? -1 : 1;
+                    }
+                    // Artifacts
+                    if(a.item.rarity === 'ARTIFACT') {
+                        return -1;
+                    }
+                    if(b.item.rarity === 'ARTIFACT') {
+                        return 1;
+                    }
+                    // Legendary
+                    if(a.item.rarity === 'LEGENDARY') {
+                        return -1;
+                    }
+                    if(b.item.rarity === 'LEGENDARY') {
+                        return 1;
+                    }
+                    // Epic
+                    if(a.item.rarity === 'EPIC') {
+                        return -1;
+                    }
+                    if(b.item.rarity === 'EPIC') {
+                        return 1;
+                    }
+                    // Rare
+                    if(a.item.rarity === 'RARE') {
+                        return -1;
+                    }
+                    if(b.item.rarity === 'RARE') {
+                        return 1;
+                    }
+                    // Uncommon
+                    if(a.item.rarity === 'UNCOMMON') {
+                        return -1;
+                    }
+                    if(b.item.rarity === 'UNCOMMON') {
+                        return 1;
+                    }
+                    // Common: value again but should be dead code really...
+                    return a.item.value > b.item.value ? -1 : 1;
+            }
+        });
+    }
+
+    const handleFilterChange = e => {
+        setSearchField(e.target.value);
+    };
+
+    const handleSortModeChange = e => {
+        setSortMode(e.target.value);
+    }
+
+    return (
+        <div>
+            <span>InventoryManager TODO</span>
+            <InputGroup>
+                <Input name="inventoryFilter" onChange={handleFilterChange} style={{width: "70%"}} placeholder={t('items.manager.filter.text', {ns: 'items'})} />
+                <Label style={{margin: "auto", paddingLeft: "1em", paddingRight: "0.25em"}} for="inventorySortMode">{t('items.manager.sort', {ns: 'items'})}:</Label>
+                <Input name="inventorySortMode" onChange={handleSortModeChange} type="select">
+                    <option value="rarity">{t('items.manager.sort.rarity', {ns: 'items'})}</option>
+                    <option value="type">{t('items.manager.sort.type', {ns: 'items'})}</option>
+                    <option value="name">{t('items.manager.sort.name', {ns: 'items'})}</option>
+                    <option value="value">{t('items.manager.sort.value', {ns: 'items'})}</option>
+                    <option value="quantity">{t('items.manager.sort.quantity', {ns: 'items'})}</option>
+                </Input>
+            </InputGroup>
+
+            <InventoryList inventory={filteredItems} t={t} />
+        </div>
+    )
+}

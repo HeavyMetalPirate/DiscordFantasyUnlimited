@@ -45,9 +45,18 @@ public class Weapon extends Gear {
 	}
 
 	public enum WeaponType {
-		NONE("None"), SWORD("Sword"), AXE("Axe"), DAGGER("Dagger"), POLEARM("Polearm"), GREATSWORD(
-				"Greatsword"), GREATAXE(
-						"Greataxe"), BOW("Bow"), CROSSBOW("Crossbow"), STAFF("Staff"), WAND("Wand"), SHIELD("Shield");
+		NONE("None"),
+		SWORD("Sword"),
+		AXE("Axe"),
+		DAGGER("Dagger"),
+		POLEARM("Polearm"),
+		GREATSWORD("Greatsword"),
+		GREATAXE("Greataxe"),
+		BOW("Bow"),
+		CROSSBOW("Crossbow"),
+		STAFF("Staff"),
+		WAND("Wand"),
+		SHIELD("Shield");
 
 		private final String value;
 

@@ -1,18 +1,13 @@
 package com.fantasyunlimited.battle.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.fantasyunlimited.battle.BattleStatus;
-import com.fantasyunlimited.battle.BattleStatus.ModifierType;
-import com.fantasyunlimited.items.bags.ClassBag;
-import com.fantasyunlimited.items.bags.RaceBag;
-import com.fantasyunlimited.items.bags.WeaponBag;
-import com.fantasyunlimited.items.util.ItemUtils;
+import com.fantasyunlimited.battle.entity.BattleStatus.ModifierType;
+import com.fantasyunlimited.data.converter.CharacterClassConverter;
+import com.fantasyunlimited.data.converter.RaceConverter;
+import com.fantasyunlimited.data.entity.Attributes;
 import com.fantasyunlimited.items.entity.CharacterClass;
 import com.fantasyunlimited.items.entity.CombatSkill;
 import com.fantasyunlimited.items.entity.Gear;
@@ -20,17 +15,25 @@ import com.fantasyunlimited.items.entity.Race;
 import com.fantasyunlimited.items.entity.Weapon;
 import com.fantasyunlimited.items.entity.Attributes.Attribute;
 import com.fantasyunlimited.items.entity.Weapon.WeaponType;
-import com.fantasyunlimited.items.entity.Attributes;
 
+import javax.persistence.*;
+
+@MappedSuperclass
 public abstract class BattleParticipant implements Serializable {
+
+	@Id
+	@GeneratedValue
+	private UUID id;
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 4019039035977061367L;
 
-	protected String raceId;
-	protected String charClassId;
+	@Convert(converter = RaceConverter.class)
+	protected Race raceId;
+	@Convert(converter = CharacterClassConverter.class)
+	protected CharacterClass charClassId;
 
 	protected int level;
 	protected int currentHealth;
@@ -42,29 +45,22 @@ public abstract class BattleParticipant implements Serializable {
 	protected float regenPercentage;
 	protected float levelBonus;
 
+	@Embedded
 	protected Attributes attributes;
+	@OneToOne
 	protected BattleEquipment equipment;
 
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<BattleStatus> statusModifiers = new ArrayList<>();
-
-	private final ClassBag classBag;
-	private final RaceBag raceBag;
-	private final ItemUtils itemUtils;
-
-	public BattleParticipant(ClassBag classBag, RaceBag raceBag, ItemUtils itemUtils) {
-		this.classBag = classBag;
-		this.raceBag = raceBag;
-		this.itemUtils = itemUtils;
-	}
 
 	public abstract String getName();
 
-	protected void calculateLevelBonus() {
+	public void calculateLevelBonus() {
 		// Level bonus (y=(5*2^-x/15) * 2)
 		levelBonus = (float) (5 * Math.pow(2, (level / 15)) * 2);
 	}
 
-	protected void calculateRegeneration() {
+	public void calculateRegeneration() {
 		// Y = X ^(1/4) + level bonus
 		calculateLevelBonus();
 		int base = attributes.getWisdom() + getAttributeBonus(Attribute.WISDOM);
@@ -94,7 +90,7 @@ public abstract class BattleParticipant implements Serializable {
 	}
 
 	public void regenAtkResource() {
-		switch (getCharClass().getEnergyType()) {
+		switch (charClassId.getEnergyType()) {
 		case FOCUS:
 			// TODO equipment bonus
 			this.currentAtkResource += 20;
@@ -114,7 +110,7 @@ public abstract class BattleParticipant implements Serializable {
 	}
 
 	public void generateRage(int damage) {
-		switch (getCharClass().getEnergyType()) {
+		switch (charClassId.getEnergyType()) {
 		case FOCUS:
 		case MANA:
 			throw new UnsupportedOperationException("Mana/Focus users should use regenAtkResource() instead!");
@@ -131,11 +127,11 @@ public abstract class BattleParticipant implements Serializable {
 
 	public List<Gear> getCurrentGear() {
 		List<Gear> equip = new ArrayList<>(
-				Arrays.asList(itemUtils.getWeapon(equipment.getMainhand()), itemUtils.getWeapon(equipment.getOffhand()),
-						itemUtils.getEquipment(equipment.getHelmet()), itemUtils.getEquipment(equipment.getChest()),
-						itemUtils.getEquipment(equipment.getGloves()), itemUtils.getEquipment(equipment.getBoots()),
-						itemUtils.getEquipment(equipment.getPants()), itemUtils.getEquipment(equipment.getRing1()),
-						itemUtils.getEquipment(equipment.getRing2()), itemUtils.getEquipment(equipment.getNeck())));
+				Arrays.asList(equipment.getMainhand(), equipment.getOffhand(),
+						equipment.getHelmet(), equipment.getChest(),
+						equipment.getGloves(), equipment.getBoots(),
+						equipment.getPants(), equipment.getRing1(),
+						equipment.getRing2(), equipment.getNeck()));
 		equip.removeAll(Collections.singleton(null));
 		return equip;
 	}
@@ -150,9 +146,9 @@ public abstract class BattleParticipant implements Serializable {
 	public int applyAttributeClassAndRaceBonus(int attribute, Attribute type) {
 		AtomicInteger bonus = new AtomicInteger(100);
 
-		getRace().getBonuses().stream().filter(bon -> bon.getAttribute() == type)
+		raceId.getBonuses().stream().filter(bon -> bon.getAttribute() == type)
 				.forEach(bon -> bonus.addAndGet(bon.getModifier()));
-		getCharClass().getBonuses().stream().filter(bon -> bon.getAttribute() == type)
+		charClassId.getBonuses().stream().filter(bon -> bon.getAttribute() == type)
 				.forEach(bon -> bonus.addAndGet(bon.getModifier()));
 
 		return attribute * bonus.get() / 100;
@@ -192,9 +188,9 @@ public abstract class BattleParticipant implements Serializable {
 			}
 		}
 
-		getRace().getBonuses().stream().filter(bon -> bon.getCombatSkill() == combatSkill)
+		raceId.getBonuses().stream().filter(bon -> bon.getCombatSkill() == combatSkill)
 				.forEach(bon -> bonus.addAndGet(bon.getModifier()));
-		getCharClass().getBonuses().stream().filter(bon -> bon.getCombatSkill() == combatSkill)
+		charClassId.getBonuses().stream().filter(bon -> bon.getCombatSkill() == combatSkill)
 				.forEach(bon -> bonus.addAndGet(bon.getModifier()));
 
 		return bonus.get();
@@ -218,8 +214,8 @@ public abstract class BattleParticipant implements Serializable {
 		return chance >= 0 ? chance : 0;
 	}
 
-	public float calculateBlockChance(WeaponBag weaponBag) {
-		Weapon weapon = weaponBag.getItem(equipment.getOffhand());
+	public float calculateBlockChance() {
+		Weapon weapon = equipment.getOffhand();
 		if (weapon == null || (weapon != null && weapon.getType() != null && weapon.getType() != WeaponType.SHIELD)) {
 			// no block if no shield in offhand!
 			return 0f;
@@ -238,12 +234,40 @@ public abstract class BattleParticipant implements Serializable {
 		return chance >= 0 ? chance : 0;
 	}
 
-	public Race getRace() {
-		return raceBag.getItem(raceId);
+	public Race getRaceId() {
+		return raceId;
 	}
 
-	public CharacterClass getCharClass() {
-		return classBag.getItem(charClassId);
+	public CharacterClass getCharClassId() {
+		return charClassId;
+	}
+
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
+	}
+
+	public void setRaceId(Race raceId) {
+		this.raceId = raceId;
+	}
+
+	public void setCharClassId(CharacterClass charClassId) {
+		this.charClassId = charClassId;
+	}
+
+	public void setRegenPercentage(float regenPercentage) {
+		this.regenPercentage = regenPercentage;
+	}
+
+	public float getLevelBonus() {
+		return levelBonus;
+	}
+
+	public void setLevelBonus(float levelBonus) {
+		this.levelBonus = levelBonus;
 	}
 
 	public int getLevel() {

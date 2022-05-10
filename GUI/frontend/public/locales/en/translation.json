@@ -1,3 +1,4 @@
 {
-  "Foo": "This is a Foo text"
+  "users.search.header": "Find Users",
+  "users.search.placeholder": "Username"
 }

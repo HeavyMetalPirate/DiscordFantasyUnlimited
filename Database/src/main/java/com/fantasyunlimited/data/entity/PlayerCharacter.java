@@ -4,17 +4,20 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import javax.persistence.*;
 
+import com.fantasyunlimited.data.converter.CharacterClassConverter;
+import com.fantasyunlimited.data.converter.LocationConverter;
+import com.fantasyunlimited.data.converter.RaceConverter;
 import com.fantasyunlimited.items.bags.ClassBag;
 import com.fantasyunlimited.items.bags.EquipmentBag;
+import com.fantasyunlimited.items.bags.RaceBag;
 import com.fantasyunlimited.items.bags.WeaponBag;
+import com.fantasyunlimited.items.entity.*;
 import com.fantasyunlimited.items.entity.Attributes.Attribute;
-import com.fantasyunlimited.items.entity.CharacterClass;
 import com.fantasyunlimited.items.entity.CharacterClass.EnergyType;
-import com.fantasyunlimited.items.entity.Equipment;
-import com.fantasyunlimited.items.entity.Weapon;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -39,13 +42,16 @@ public class PlayerCharacter implements Serializable {
 	private String name;
 
 	@Column
-	private String classId;
+	@Convert(converter = CharacterClassConverter.class)
+	private CharacterClass classId;
 
 	@Column
-	private String raceId;
+	@Convert(converter = RaceConverter.class)
+	private Race raceId;
 
 	@Column
-	private String locationId;
+	@Convert(converter = LocationConverter.class)
+	private Location locationId;
 
 	@Column
 	private int currentLevel;
@@ -69,8 +75,12 @@ public class PlayerCharacter implements Serializable {
 	@Embedded
 	private Attributes attributes;
 
+	@Embedded
+	private SecondarySkills secondarySkills;
+
 	public PlayerCharacter() {
 		attributes = new Attributes();
+		secondarySkills = new SecondarySkills();
 		setInventory(new HashMap<String, Integer>());
 	}
 
@@ -98,27 +108,27 @@ public class PlayerCharacter implements Serializable {
 		this.name = name;
 	}
 
-	public String getClassId() {
+	public CharacterClass getClassId() {
 		return classId;
 	}
 
-	public void setClassId(String classId) {
+	public void setClassId(CharacterClass classId) {
 		this.classId = classId;
 	}
 
-	public String getRaceId() {
+	public Race getRaceId() {
 		return raceId;
 	}
 
-	public void setRaceId(String raceId) {
+	public void setRaceId(Race raceId) {
 		this.raceId = raceId;
 	}
 
-	public String getLocationId() {
+	public Location getLocationId() {
 		return locationId;
 	}
 
-	public void setLocationId(String locationId) {
+	public void setLocationId(Location locationId) {
 		this.locationId = locationId;
 	}
 
@@ -150,6 +160,10 @@ public class PlayerCharacter implements Serializable {
 		return attributes;
 	}
 
+	public SecondarySkills getSecondarySkills() {
+		return secondarySkills;
+	}
+
 	public CharacterEquipment getEquipment() {
 		return equipment;
 	}
@@ -165,77 +179,100 @@ public class PlayerCharacter implements Serializable {
 		}
 		this.gold -= amount;
 	}
-	public int getAttributeBonus(Attribute attribute, WeaponBag weaponBag, EquipmentBag equipmentBag) {
+
+	public int getSecondarySkill(SecondarySkill skill, WeaponBag weaponBag, EquipmentBag equipmentBag, RaceBag raceBag) {
+		AtomicInteger skillBonus = new AtomicInteger(0);
+
+		equipment.getGear().stream()
+				.filter(gear -> gear.getSecondarySkillBonuses().stream().anyMatch(bonus -> bonus.getSkill() == skill))
+				.forEach(gear -> {
+					gear.getSecondarySkillBonuses().stream().
+							filter(bonus -> bonus.getSkill() == skill).
+							forEach(bonus -> skillBonus.getAndAdd(bonus.getBonus()));
+				});
+
+		AtomicInteger skillMultiplier = new AtomicInteger(0);
+		raceId.getBonuses().stream()
+				.filter(bonus -> bonus.getSecondarySkill() == skill)
+				.forEach(bonus -> skillMultiplier.getAndAdd(bonus.getModifier()));
+
+		int totalBonus = ((int)(skillBonus.get() * (1 + (skillMultiplier.get() / 100))));
+		return totalBonus;
+	}
+
+	public int getAttributeBonus(Attribute attribute) {
 		AtomicInteger bonus = new AtomicInteger(0);
 
 		if (equipment.getMainhand() != null) {
-			Weapon weapon = weaponBag.getItem(equipment.getMainhand());
+			Weapon weapon = equipment.getMainhand();
 			if (weapon != null)
 				weapon.getAttributeBonuses().stream().filter(atrBon -> atrBon.getAttribute() == attribute)
 						.forEach(atrBon -> bonus.addAndGet(atrBon.getBonus()));
 		}
 		if (equipment.getOffhand() != null) {
-			Weapon weapon = weaponBag.getItem(equipment.getOffhand());
+			Weapon weapon = equipment.getOffhand();
 			if (weapon != null)
 				weapon.getAttributeBonuses().stream().filter(atrBon -> atrBon.getAttribute() == attribute)
 						.forEach(atrBon -> bonus.addAndGet(atrBon.getBonus()));
 		}
 		if (equipment.getHelmet() != null) {
-			Equipment equ = equipmentBag.getItem(equipment.getHelmet());
+			Equipment equ = equipment.getHelmet();
 			if (equ != null)
 				equ.getAttributeBonuses().stream().filter(atrBon -> atrBon.getAttribute() == attribute)
 						.forEach(atrBon -> bonus.addAndGet(atrBon.getBonus()));
 		}
 		if (equipment.getChest() != null) {
-			Equipment equ = equipmentBag.getItem(equipment.getChest());
+			Equipment equ = equipment.getChest();
 			if (equ != null)
 				equ.getAttributeBonuses().stream().filter(atrBon -> atrBon.getAttribute() == attribute)
 						.forEach(atrBon -> bonus.addAndGet(atrBon.getBonus()));
 		}
 		if (equipment.getGloves() != null) {
-			Equipment equ = equipmentBag.getItem(equipment.getGloves());
+			Equipment equ = equipment.getGloves();
 			if (equ != null)
 				equ.getAttributeBonuses().stream().filter(atrBon -> atrBon.getAttribute() == attribute)
 						.forEach(atrBon -> bonus.addAndGet(atrBon.getBonus()));
 		}
 		if (equipment.getPants() != null) {
-			Equipment equ = equipmentBag.getItem(equipment.getPants());
+			Equipment equ = equipment.getPants();
 			if (equ != null)
 				equ.getAttributeBonuses().stream().filter(atrBon -> atrBon.getAttribute() == attribute)
 						.forEach(atrBon -> bonus.addAndGet(atrBon.getBonus()));
 		}
 		if (equipment.getBoots() != null) {
-			Equipment equ = equipmentBag.getItem(equipment.getBoots());
+			Equipment equ = equipment.getBoots();
 			if (equ != null)
 				equ.getAttributeBonuses().stream().filter(atrBon -> atrBon.getAttribute() == attribute)
 						.forEach(atrBon -> bonus.addAndGet(atrBon.getBonus()));
 		}
 		if (equipment.getRing1() != null) {
-			Equipment equ = equipmentBag.getItem(equipment.getRing1());
+			Equipment equ = equipment.getRing1();
 			if (equ != null)
 				equ.getAttributeBonuses().stream().filter(atrBon -> atrBon.getAttribute() == attribute)
 						.forEach(atrBon -> bonus.addAndGet(atrBon.getBonus()));
 		}
 		if (equipment.getRing2() != null) {
-			Equipment equ = equipmentBag.getItem(equipment.getRing2());
+			Equipment equ = equipment.getRing2();
 			if (equ != null)
 				equ.getAttributeBonuses().stream().filter(atrBon -> atrBon.getAttribute() == attribute)
 						.forEach(atrBon -> bonus.addAndGet(atrBon.getBonus()));
 		}
 		if (equipment.getNeck() != null) {
-			Equipment equ = equipmentBag.getItem(equipment.getNeck());
+			Equipment equ = equipment.getNeck();
 			if (equ != null)
 				equ.getAttributeBonuses().stream().filter(atrBon -> atrBon.getAttribute() == attribute)
 						.forEach(atrBon -> bonus.addAndGet(atrBon.getBonus()));
 		}
+
+		// TODO class and racial bonus
 
 		return bonus.get();
 	}
 
 	@Override
 	public String toString() {
-		return "PlayerCharacter [id=" + id + ", name=" + name + ", classId=" + classId + ", raceId=" + raceId
-				+ ", locationId=" + locationId + ", currentLevel=" + currentLevel + ", currentXp=" + currentXp + "]";
+		return "PlayerCharacter [id=" + id + ", name=" + name + ", classId=" + classId.getId() + ", raceId=" + raceId.getId()
+				+ ", locationId=" + locationId.getId() + ", currentLevel=" + currentLevel + ", currentXp=" + currentXp + "]";
 	}
 
 	public int getCurrentHealth() {
@@ -247,32 +284,30 @@ public class PlayerCharacter implements Serializable {
 	}
 
 
-	public int getCurrentAtkResource(ClassBag classBag, WeaponBag weaponBag, EquipmentBag equipmentBag) {
-		if (classBag.getItem(classId).getEnergyType() == EnergyType.RAGE) {
-			return 0;
-		} else {
-			return getMaxAtkResource(classBag, weaponBag, equipmentBag);
-		}
-	}
-	public CharacterClass getCharacterClass(ClassBag classBag) {
-		return classBag.getItem(classId);
+	public int getCurrentAtkResource() {
+		return currentAtkResource;
+//		if (classBag.getItem(classId).getEnergyType() == EnergyType.RAGE) {
+//			return 0;
+//		} else {
+//			return getMaxAtkResource(classBag, weaponBag, equipmentBag);
+//		}
 	}
 
-	public int getMaxHealth(WeaponBag weaponBag, EquipmentBag equipmentBag) {
-		int base = attributes.getEndurance() + getAttributeBonus(Attribute.ENDURANCE, weaponBag, equipmentBag);
+	public int getMaxHealth() {
+		int base = attributes.getEndurance() + getAttributeBonus(Attribute.ENDURANCE);
 		return base * 10 + currentLevel * 15;
 	}
 
-	public int getMaxAtkResource(ClassBag classBag, WeaponBag weaponBag, EquipmentBag equipmentBag) {
+	public int getMaxAtkResource() {
 		AtomicInteger extra = new AtomicInteger(0);
-		equipment.getGear(weaponBag, equipmentBag).stream().filter(equipment -> equipment != null)
+		equipment.getGear().stream().filter(equipment -> equipment != null)
 				.filter(equipment -> equipment.getAtkResourceBonuses() != null)
 				.forEach(equipment -> equipment.getAtkResourceBonuses().stream()
-						.filter(bonus -> bonus.getSkill() == getCharacterClass(classBag).getEnergyType())
+						.filter(bonus -> bonus.getSkill() == classId.getEnergyType())
 						.forEach(bonus -> extra.getAndAdd(bonus.getBonus())));
 
-		if (classBag.getItem(classId).getEnergyType() == EnergyType.MANA) {
-			int base = attributes.getIntelligence() + getAttributeBonus(Attribute.INTELLIGENCE, weaponBag, equipmentBag);
+		if (classId.getEnergyType() == EnergyType.MANA) {
+			int base = attributes.getIntelligence() + getAttributeBonus(Attribute.INTELLIGENCE);
 			base += extra.get();
 			return base * 15 + currentLevel * 20;
 		} else {

@@ -52,6 +52,7 @@ public abstract class GenericsBag<T extends GenericItem> {
 				})
 				.filter(Objects::nonNull)
 				.forEach(stream -> {
+					@SuppressWarnings("unchecked")
 					T item = (T) xstream.fromXML(stream);
 
 					if (items.containsKey(item.getId())) {
@@ -65,6 +66,7 @@ public abstract class GenericsBag<T extends GenericItem> {
 		for (T item : items.values()) {
 			try {
 				passSanityChecks(item);
+				initializeItemFields(item);
 			} catch (SanityException e) {
 				throw new InitializationException("Item Id " + item.getId() + " (" + item.getClass().getName() + ")"
 						+ " didn't pass sanity checks.", e);
@@ -73,6 +75,8 @@ public abstract class GenericsBag<T extends GenericItem> {
 	}
 
 	public abstract boolean passSanityChecks(T item) throws SanityException;
+
+	public abstract void initializeItemFields(T item);
 
 	public Collection<T> getItems() {
 		return items.values();

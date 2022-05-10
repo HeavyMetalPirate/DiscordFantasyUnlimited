@@ -1,5 +1,8 @@
 package com.fantasyunlimited.items.entity;
 
+import com.fantasyunlimited.items.bags.EquipmentBag;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +35,29 @@ public class CharacterClass extends GenericItem {
 
 	private List<ClassBonus> bonuses = new ArrayList<>();
 	private List<String> skills = new ArrayList<>();
+	@XStreamOmitField
 	private List<Skill> skillInstances = new ArrayList<>();
+
+	@XStreamOmitField
+	private Weapon startingMainhandInstance;
+	@XStreamOmitField
+	private Weapon startingOffhandInstance;
+	@XStreamOmitField
+	private Equipment startingHelmetInstance;
+	@XStreamOmitField
+	private Equipment startingChestInstance;
+	@XStreamOmitField
+	private Equipment startingGlovesInstance;
+	@XStreamOmitField
+	private Equipment startingPantsInstance;
+	@XStreamOmitField
+	private Equipment startingBootsInstance;
+	@XStreamOmitField
+	private Equipment startingRing1Instance;
+	@XStreamOmitField
+	private Equipment startingRing2Instance;
+	@XStreamOmitField
+	private Equipment startingNeckInstance;
 
 	public String getLore() {
 		return lore;
@@ -168,6 +193,86 @@ public class CharacterClass extends GenericItem {
 
 	public void setSkillInstances(List<Skill> skillInstances) {
 		this.skillInstances = skillInstances;
+	}
+
+	public Weapon getStartingMainhandInstance() {
+		return startingMainhandInstance;
+	}
+
+	public void setStartingMainhandInstance(Weapon startingMainhandInstance) {
+		this.startingMainhandInstance = startingMainhandInstance;
+	}
+
+	public Weapon getStartingOffhandInstance() {
+		return startingOffhandInstance;
+	}
+
+	public void setStartingOffhandInstance(Weapon startingOffhandInstance) {
+		this.startingOffhandInstance = startingOffhandInstance;
+	}
+
+	public Equipment getStartingHelmetInstance() {
+		return startingHelmetInstance;
+	}
+
+	public void setStartingHelmetInstance(Equipment startingHelmetInstance) {
+		this.startingHelmetInstance = startingHelmetInstance;
+	}
+
+	public Equipment getStartingChestInstance() {
+		return startingChestInstance;
+	}
+
+	public void setStartingChestInstance(Equipment startingChestInstance) {
+		this.startingChestInstance = startingChestInstance;
+	}
+
+	public Equipment getStartingGlovesInstance() {
+		return startingGlovesInstance;
+	}
+
+	public void setStartingGlovesInstance(Equipment startingGlovesInstance) {
+		this.startingGlovesInstance = startingGlovesInstance;
+	}
+
+	public Equipment getStartingPantsInstance() {
+		return startingPantsInstance;
+	}
+
+	public void setStartingPantsInstance(Equipment startingPantsInstance) {
+		this.startingPantsInstance = startingPantsInstance;
+	}
+
+	public Equipment getStartingBootsInstance() {
+		return startingBootsInstance;
+	}
+
+	public void setStartingBootsInstance(Equipment startingBootsInstance) {
+		this.startingBootsInstance = startingBootsInstance;
+	}
+
+	public Equipment getStartingRing1Instance() {
+		return startingRing1Instance;
+	}
+
+	public void setStartingRing1Instance(Equipment startingRing1Instance) {
+		this.startingRing1Instance = startingRing1Instance;
+	}
+
+	public Equipment getStartingRing2Instance() {
+		return startingRing2Instance;
+	}
+
+	public void setStartingRing2Instance(Equipment startingRing2Instance) {
+		this.startingRing2Instance = startingRing2Instance;
+	}
+
+	public Equipment getStartingNeckInstance() {
+		return startingNeckInstance;
+	}
+
+	public void setStartingNeckInstance(Equipment startingNeckInstance) {
+		this.startingNeckInstance = startingNeckInstance;
 	}
 
 	public enum EnergyType {

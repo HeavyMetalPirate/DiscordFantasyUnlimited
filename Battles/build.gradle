@@ -1,5 +1,6 @@
 plugins {
     id 'foo-plugin'
+    id 'fu-spring-jpa'
 }
 
 dependencies {

@@ -17,4 +17,9 @@ public class EquipmentBag extends GenericsBag<Equipment>{
 		}
 		return true;
 	}
+
+	@Override
+	public void initializeItemFields(Equipment item) {
+		// NO OP
+	}
 }

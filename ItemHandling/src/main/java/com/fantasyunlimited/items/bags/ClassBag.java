@@ -135,12 +135,34 @@ public class ClassBag extends GenericsBag<CharacterClass>{
 			if(skill == null) {
 				throw new SanityException("Skill with id '" + id + "' not found in skill bag.");
 			}
-			if(item.getSkillInstances() == null) item.setSkillInstances(new ArrayList<>());
-
-			item.getSkillInstances().add(skill);
 		}
 		
 		return sanity;
 	}
 
+	@Override
+	public void initializeItemFields(CharacterClass item) {
+
+		// Initialize all Starting Items
+		item.setStartingMainhandInstance(weaponBag.getItem(item.getStartingMainhand()));
+		item.setStartingOffhandInstance(weaponBag.getItem(item.getStartingOffhand()));
+
+		item.setStartingHelmetInstance(equipmentBag.getItem(item.getStartingHelmet()));
+		item.setStartingChestInstance(equipmentBag.getItem(item.getStartingChest()));
+		item.setStartingGlovesInstance(equipmentBag.getItem(item.getStartingGloves()));
+		item.setStartingPantsInstance(equipmentBag.getItem(item.getStartingPants()));
+		item.setStartingBootsInstance(equipmentBag.getItem(item.getStartingBoots()));
+		item.setStartingRing1Instance(equipmentBag.getItem(item.getStartingRing1()));
+		item.setStartingRing2Instance(equipmentBag.getItem(item.getStartingRing2()));
+		item.setStartingNeckInstance(equipmentBag.getItem(item.getStartingNeck()));
+
+		// Initialize Skills
+		if(item.getSkillInstances() == null)
+			item.setSkillInstances(new ArrayList<>());
+
+		for(String id: item.getSkills()) {
+			Skill skill = skillBag.getItem(id);
+			item.getSkillInstances().add(skill);
+		}
+	}
 }

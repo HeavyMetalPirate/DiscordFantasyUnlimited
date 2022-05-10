@@ -1,5 +1,7 @@
 package com.fantasyunlimited.items.entity;
 
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,9 @@ public class Race extends GenericItem {
 	private boolean humanPlayable;
 	
 	private List<RacialBonus> bonuses = new ArrayList<>();
+
+	@XStreamOmitField
+	private Location startingLocation;
 	
 	public List<RacialBonus> getBonuses() {
 		return bonuses;
@@ -41,5 +46,13 @@ public class Race extends GenericItem {
 
 	public void setStartingLocationId(String startingLocationId) {
 		this.startingLocationId = startingLocationId;
+	}
+
+	public Location getStartingLocation() {
+		return startingLocation;
+	}
+
+	public void setStartingLocation(Location startingLocation) {
+		this.startingLocation = startingLocation;
 	}
 }

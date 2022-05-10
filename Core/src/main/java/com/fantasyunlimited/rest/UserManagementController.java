@@ -4,9 +4,7 @@ import com.fantasyunlimited.data.entity.FantasyUnlimitedUser;
 import com.fantasyunlimited.data.entity.PlayerCharacter;
 import com.fantasyunlimited.data.enums.UserFoundStatus;
 import com.fantasyunlimited.data.service.FantasyUnlimitedUserService;
-import com.fantasyunlimited.items.bags.ClassBag;
-import com.fantasyunlimited.items.bags.LocationBag;
-import com.fantasyunlimited.items.bags.RaceBag;
+import com.fantasyunlimited.items.bags.*;
 import com.fantasyunlimited.items.entity.CharacterClass;
 import com.fantasyunlimited.items.entity.Location;
 import com.fantasyunlimited.items.entity.Race;
@@ -16,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.stereotype.Controller;
@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,6 +35,11 @@ public class UserManagementController {
     private static final Logger log = LoggerFactory.getLogger(UserManagementController.class);
 
     @Autowired
+    private ControllerUtils utils;
+
+    @Autowired
+    private SessionRegistry sessionRegistry;
+    @Autowired
     private FantasyUnlimitedUserService userService;
     @Autowired
     private LocationBag locationBag;
@@ -41,6 +47,10 @@ public class UserManagementController {
     private ClassBag classBag;
     @Autowired
     private RaceBag raceBag;
+    @Autowired
+    private WeaponBag weaponBag;
+    @Autowired
+    private EquipmentBag equipmentBag;
 
     @RequestMapping(value = "/characters/create", method = RequestMethod.POST, consumes = "application/json")
     public ResponseEntity<String> createCharacter(@RequestBody CharacterCreationBody characterCreationBody, HttpServletRequest request) {
@@ -57,6 +67,56 @@ public class UserManagementController {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("OK!", HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/characters/select")
+    public ResponseEntity<String> selectCharacter(String id, HttpServletRequest request) {
+        request.getSession().setAttribute("selectedCharacterId", id);
+        if("0".equals(id)) {
+            utils.setPlayerCharacterToSession(request, null);
+        }
+        else {
+            PlayerCharacter selectedCharacter = userService.getPlayerCharacterById(Long.parseLong(id));
+            utils.setPlayerCharacterToSession(request, selectedCharacter);
+        }
+        return new ResponseEntity<>("OK!", HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/characters/get")
+    public ResponseEntity<PlayerCharacterItem> getSelectedCharacter(HttpServletRequest request) {
+        PlayerCharacter character = utils.getPlayerCharacterFromSession(request);
+
+        if(character == null) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+        CharacterClass characterClass = character.getClassId();
+        ClassItem classItem = new ClassItem(characterClass.getId(), characterClass.getName(), characterClass.getIconName());
+
+        Race race = character.getRaceId();
+        RaceItem raceItem = new RaceItem(race.getId(), race.getName(), race.getIconName());
+
+        Location location = character.getLocationId();
+        LocationItem locationItem = new LocationItem(location.getId(), location.getName(), location.getIconName());
+
+        BattleResourceItem battleResourceItem = new BattleResourceItem(
+                character.getCurrentHealth(),
+                character.getMaxHealth(),
+                character.getCurrentAtkResource(),
+                character.getMaxAtkResource(),
+                character.getClassId().getEnergyType()
+        );
+
+        PlayerCharacterItem playerCharacterItem = new PlayerCharacterItem(
+                character.getName(),
+                classItem,
+                raceItem,
+                locationItem,
+                character.getCurrentLevel(),
+                character.getCurrentXp(),
+                battleResourceItem
+        );
+        return new ResponseEntity<>(playerCharacterItem, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/characters", method = RequestMethod.GET)
@@ -77,13 +137,13 @@ public class UserManagementController {
 
         List<CharacterListItem> items = user.getCharacters().stream()
                 .map(character -> {
-                    CharacterClass characterClass = classBag.getItem(character.getClassId());
+                    CharacterClass characterClass = character.getClassId();
                     ClassItem classItem = new ClassItem(characterClass.getId(), characterClass.getName(), characterClass.getIconName());
 
-                    Race race = raceBag.getItem(character.getRaceId());
+                    Race race = character.getRaceId();
                     RaceItem raceItem = new RaceItem(race.getId(), race.getName(), race.getIconName());
 
-                    Location location = locationBag.getItem(character.getLocationId());
+                    Location location = character.getLocationId();
                     LocationItem locationItem = new LocationItem(location.getId(), location.getName(), location.getIconName());
 
                     return new CharacterListItem(
@@ -100,7 +160,12 @@ public class UserManagementController {
 
     @RequestMapping(value = "/current", method = RequestMethod.GET)
     public ResponseEntity<UserSessionInformation> currentUserNameSimple(HttpServletRequest request, CsrfToken token) {
-        UserSessionInformation sessionInformation = new UserSessionInformation(request.getUserPrincipal(), token);
+        UserSessionInformation sessionInformation = new UserSessionInformation(
+                request.getUserPrincipal(),
+                token,
+                (String) request.getSession().getAttribute("selectedCharacterId")
+        );
+        log.debug("UserSessionInformation: {}", sessionInformation);
         return new ResponseEntity<>(sessionInformation, HttpStatus.OK);
     }
 
@@ -135,5 +200,19 @@ public class UserManagementController {
         }
     }
 
+    @RequestMapping(value = "/actives", produces = "application/json")
+    public ResponseEntity<List<ActiveUserItem>> getLoggedInUsers() {
+        final List<ActiveUserItem> activeUsers = new ArrayList<>();
+
+        final List<Object> allPrincipals = sessionRegistry.getAllPrincipals();
+        for(final Object principal : allPrincipals) {
+            if(principal instanceof User user) {
+                // Do something with user
+                activeUsers.add(new ActiveUserItem(user.getUsername(), user.getAuthorities().toString()));
+            }
+        }
+
+        return new ResponseEntity<>(activeUsers, HttpStatus.OK);
+    }
 
 }

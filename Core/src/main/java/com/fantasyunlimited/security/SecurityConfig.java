@@ -1,13 +1,17 @@
 package com.fantasyunlimited.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -20,14 +24,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetailsService;
+    @Autowired
+    private SessionRegistry sessionRegistry;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        //http.csrf().disable();
-
         http
+
             .csrf()
                 .ignoringAntMatchers("/api/user/register", "/login", "/perform_login")
+            .and()
+            .sessionManagement()
+                .maximumSessions(1)
+                .sessionRegistry(sessionRegistry).and()
             .and()
             .authorizeRequests()
                 .antMatchers("/", "/content/**").permitAll()

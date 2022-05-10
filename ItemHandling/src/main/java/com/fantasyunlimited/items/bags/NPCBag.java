@@ -1,11 +1,14 @@
 package com.fantasyunlimited.items.bags;
 
 import com.fantasyunlimited.items.entity.CharacterClass;
+import com.fantasyunlimited.items.entity.Dropable;
 import com.fantasyunlimited.items.entity.NPC;
 import com.fantasyunlimited.items.entity.Race;
 import com.fantasyunlimited.items.util.DropableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 @Component
 public class NPCBag extends GenericsBag<NPC> {
@@ -59,5 +62,15 @@ public class NPCBag extends GenericsBag<NPC> {
 		}
 
 		return true;
+	}
+
+	@Override
+	public void initializeItemFields(NPC item) {
+		for (Map.Entry<String, Integer> entry: item.getSelling().entrySet()) {
+			Dropable dropable = dropableUtils.getDropableItem(entry.getKey());
+			item.getSellingItems().put(dropable, entry.getValue());
+		}
+
+		// TODO Quests
 	}
 }

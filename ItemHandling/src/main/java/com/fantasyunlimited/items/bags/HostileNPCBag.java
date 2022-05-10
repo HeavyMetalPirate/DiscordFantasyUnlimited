@@ -3,6 +3,7 @@ package com.fantasyunlimited.items.bags;
 import com.fantasyunlimited.items.entity.CharacterClass;
 import com.fantasyunlimited.items.entity.HostileNPC;
 import com.fantasyunlimited.items.entity.Race;
+import com.fantasyunlimited.items.entity.Weapon;
 import com.fantasyunlimited.items.util.DropableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,10 @@ public class HostileNPCBag extends GenericsBag<HostileNPC> {
 	private ClassBag classBag;
 	@Autowired
 	private RaceBag raceBag;
+	@Autowired
+	private WeaponBag weaponBag;
+	@Autowired
+	private EquipmentBag equipmentBag;
 	@Autowired
 	private DropableUtils dropableUtils;
 
@@ -28,8 +33,6 @@ public class HostileNPCBag extends GenericsBag<HostileNPC> {
 			throw new SanityException("At least one basic data (id, name, description) is missing!");
 		}
 
-		// Starting gear availability check - if this fails, check order of bag
-		// loading!
 		if (classBag.getItems().isEmpty()
 				||raceBag.getItems().isEmpty()) {
 			throw new SanityException(
@@ -61,6 +64,32 @@ public class HostileNPCBag extends GenericsBag<HostileNPC> {
 				throw new SanityException("Loot '" + loot + "' not found in any items bag!");
 			}
 		}
+
+		// TODO gear check!
+
 		return true;
+	}
+
+	@Override
+	public void initializeItemFields(HostileNPC item) {
+		CharacterClass charClass = classBag.getItem(item.getClassId());
+		Race race = raceBag.getItem(item.getRaceId());
+
+		item.setCharacterClass(charClass);
+		item.setRace(race);
+
+		item.setMainhandInstance(weaponBag.getItem(item.getMainhand()));
+		item.setOffhandInstance(weaponBag.getItem(item.getOffhand()));
+
+		item.setHelmetInstance(equipmentBag.getItem(item.getHelmet()));
+		item.setChestInstance(equipmentBag.getItem(item.getChest()));
+		item.setGloveInstance(equipmentBag.getItem(item.getGloves()));
+		item.setPantsInstance(equipmentBag.getItem(item.getPants()));
+		item.setBootsInstance(equipmentBag.getItem(item.getBoots()));
+		item.setRing1Instance(equipmentBag.getItem(item.getRing1()));
+		item.setRing2Instance(equipmentBag.getItem(item.getRing2()));
+		item.setNeckInstance(equipmentBag.getItem(item.getNeck()));
+
+		// TODO maaaaybe loot table also?
 	}
 }

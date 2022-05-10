@@ -1,14 +1,45 @@
 package com.fantasyunlimited.items.configuration;
 
+import com.fantasyunlimited.items.bags.HostileNPCBag;
+import com.fantasyunlimited.items.bags.LocationBag;
+import com.fantasyunlimited.items.bags.RaceBag;
 import com.fantasyunlimited.items.entity.*;
 import com.thoughtworks.xstream.XStream;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.ArrayList;
+
 @Configuration
 @ComponentScan(basePackages = "com.fantasyunlimited.items")
 public class ItemConfiguration {
+
+    @Bean
+    public CommandLineRunner runAdditionalRaceBagConfiguration(@Autowired RaceBag raceBag, @Autowired LocationBag locationBag, @Autowired HostileNPCBag hostileNPCBag) {
+        return (args -> {
+            raceBag.getItems().forEach(item -> item.setStartingLocation(locationBag.getItem(item.getStartingLocationId())));
+
+            locationBag.getItems().forEach(item -> {
+                for (String hostile : item.getHostileNPCIds()) {
+                    HostileNPC hostileNPC = hostileNPCBag.getItem(hostile);
+
+                    if (item.getMinimumLevel() > hostileNPC.getLevel() || item.getMinimumLevel() == 0) {
+                        item.setMinimumLevel(hostileNPC.getLevel());
+                    }
+                    if (item.getMaximumLevel() < hostileNPC.getLevel() || item.getMaximumLevel() == 0) {
+                        item.setMaximumLevel(hostileNPC.getLevel());
+                    }
+
+                    if(item.getHostileNPCs() == null) item.setHostileNPCs(new ArrayList<>());
+
+                    item.getHostileNPCs().add(hostileNPC);
+                }
+            });
+        });
+    }
 
     @Bean
     public XStream getXStream() {
@@ -34,6 +65,7 @@ public class ItemConfiguration {
         xstream.alias("NPC", NPC.class);
         xstream.alias("HostileNPC", HostileNPC.class);
         xstream.alias("Consumable", Consumable.class);
+        xstream.alias("Integer", Integer.class);
         return xstream;
     }
 }
