@@ -7,6 +7,7 @@
   <rarity>COMMON</rarity>
   <value>0</value>
   <duringBattle>false</duringBattle>
+  <fromInventory>true</fromInventory>
   <combatSkillModifiers />
   <attributeModifiers />
   <durationRounds>0</durationRounds>

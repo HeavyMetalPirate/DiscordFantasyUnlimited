@@ -11,6 +11,7 @@ public class Consumable extends RarityClassifiedItem {
 	private static final long serialVersionUID = 1702797342795811772L;
 
 	private boolean duringBattle;
+	private boolean fromInventory;
 	private List<CombatSkillBonus> combatSkillModifiers = new ArrayList<>();
 	private List<AttributeBonus> attributeModifiers = new ArrayList<>();
 	private int durationRounds;
@@ -62,6 +63,14 @@ public class Consumable extends RarityClassifiedItem {
 
 	public void setDurationRounds(int durationRounds) {
 		this.durationRounds = durationRounds;
+	}
+
+	public boolean isFromInventory() {
+		return fromInventory;
+	}
+
+	public void setFromInventory(boolean fromInventory) {
+		this.fromInventory = fromInventory;
 	}
 
 	public static long getSerialversionuid() {

@@ -22,6 +22,20 @@ import {
 } from '@szhsin/react-menu';
 import '@szhsin/react-menu/dist/index.css';
 
+import PropTypes from 'prop-types';
+import Avatar from '@mui/material/Avatar';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemText from '@mui/material/ListItemText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Dialog from '@mui/material/Dialog';
+import PersonIcon from '@mui/icons-material/Person';
+import AddIcon from '@mui/icons-material/Add';
+import Typography from '@mui/material/Typography';
+import { blue } from '@mui/material/colors';
+import RangeSlider from 'react-bootstrap-range-slider';
+
 import { useSetState, useTrackedState } from '../SessionStore';
 
 import './ItemManagement.css'
@@ -149,6 +163,7 @@ const ItemDetailView = (props) => {
         }
         else if(props.item.type === 'consumable') {
             var healthRestore = "", resoureRestore = "";
+            console.log(selectedItem);
 
             if(selectedItem.healthRestored > 0) {
                 healthRestore = <span className="card-header-text">+{selectedItem.healthRestored} {t('items.consumable.restore.health', {ns:'items'})}</span>
@@ -158,11 +173,15 @@ const ItemDetailView = (props) => {
             }
 
             var attributeBonus = "", skillBonus = "", roundsDuration = "";
+            console.log(selectedItem.attributeModifiers);
 
             if(selectedItem.attributeModifiers && selectedItem.attributeModifiers.length > 0) {
+                console.log(selectedItem.attributeModifiers.length);
+
                 attributeBonus = selectedItem.attributeModifiers.map(bonus => {
                     return <li className="buff-text">+{bonus.bonus} {t('character.attributes.' + bonus.attribute, {ns:'character'})}</li>
                 });
+                console.log(attributeBonus);
             }
 
             if(selectedItem.combatSkillModifiers && selectedItem.combatSkillModifiers.length > 0) {
@@ -183,17 +202,16 @@ const ItemDetailView = (props) => {
             }
 
             var bonusDetails = "";
-            if(roundsDuration.length > 0) {
-                bonusDetails = (
-                    <CardText>
-                        <ul style={{paddingLeft: "0", marginTop: "1em"}}>
-                            {attributeBonus}
-                            {skillBonus}
-                            {roundsDuration}
-                        </ul>
-                    </CardText>
-                )
-            }
+            bonusDetails = (
+                <CardText>
+                    <ul style={{paddingLeft: "0", marginTop: "1em"}}>
+                        {attributeBonus}
+                        {skillBonus}
+                        {roundsDuration}
+                    </ul>
+                </CardText>
+            )
+
 
             bodyContent = (
                 <CardBody style={{ textAlign: "left", paddingTop: "0"  }}>
@@ -204,6 +222,7 @@ const ItemDetailView = (props) => {
                     {bonusDetails}
                     <CardText>
                         <span className="card-header-text">{t('items.consumable.usable.battle.' + selectedItem.duringBattle, {ns:'items'})}</span>
+                        <span className="card-header-text">{t('items.consumable.usable.inventory.' + selectedItem.fromInventory, {ns:'items'})}</span>
                     </CardText>
                 </CardBody>
             )
@@ -239,7 +258,74 @@ const ItemDetailView = (props) => {
     )
 }
 
-const InventoryList = ({inventory, t}) => {
+function SimpleDialog(props) {
+    const { onClose, selectedValue, open, t } = props;
+    const [ value1, setValue1 ] = useState(1);
+    const userState = useTrackedState();
+
+    const handleClose = () => {
+        // some graceful stuff? idk
+        setValue1(1);
+        onClose('cancel');
+    };
+
+    const handleListItemClick = () => {
+
+        const dropItemBody = {
+            itemId: selectedValue.item.item.id,
+            count: value1
+        };
+
+        // perform sync drop item call to REST
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN' : userState.token.token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dropItemBody)
+        };
+
+        fetch('/api/game/inventory/drop', requestOptions)
+        .then((response) => {
+            onClose(response.status);
+        });
+
+        setValue1(1);
+    };
+
+    if(!selectedValue || !selectedValue.item) {
+        return <div />
+    }
+
+    return (
+        <Dialog open={open}>
+            <DialogTitle>{t('items.manager.dialog.drop.title', {ns: 'items'})}: {selectedValue.name} (x{selectedValue.item.count})</DialogTitle>
+            <div style={{padding: "0 1em"}}>
+                <RangeSlider
+                    value={value1}
+                    onChange={e => setValue1(e.target.value)}
+                    min={1}
+                    max={selectedValue.item.count}
+                />
+                <span>{value1} / {selectedValue.item.count}</span>
+            </div>
+            <Container fluid>
+                <Button onClick={handleListItemClick}>{t('items.manager.dialog.drop.confirm', {ns:'items'})}</Button>
+                <Button onClick={handleClose}>{t('items.manager.dialog.drop.cancel', {ns:'items'})}</Button>
+            </Container>
+        </Dialog>
+    );
+}
+
+SimpleDialog.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  selectedValue: PropTypes.object.isRequired,
+  t: PropTypes.func.isRequired
+};
+
+const InventoryList = ({inventory, t, onReload}) => {
     const [selectedItem, setSelectedItem] = useState(null);
     const [detailsVisible, setDetailsVisible] = useState(null);
     const [x, setX] = useState(0);
@@ -247,6 +333,7 @@ const InventoryList = ({inventory, t}) => {
     const [menuProps, toggleMenu] = useMenuState();
     const [anchorPoint, setAnchorPoint] = useState({ x: 0, y: 0 });
     const [contextMenuItem, setContextMenuItem] = useState({item: null, name: null});
+    const [dropDialogOpen, setDropDialogOpen] = useState(false);
 
     useEffect(() => {
         if(!selectedItem) {
@@ -279,7 +366,6 @@ const InventoryList = ({inventory, t}) => {
 
     function mouseOverItem(event) {
         event.preventDefault(true);
-        console.log(menuProps);
         setSelectedItem(getItemFromEvent(event));
         setX(event.clientX);
         setY(event.clientY);
@@ -293,8 +379,36 @@ const InventoryList = ({inventory, t}) => {
     }
     function closeContextMenu(event) {
         toggleMenu(false);
-        console.log(menuProps);
     }
+
+    function handleMenuItemClick(e) {
+        const action = e.syntheticEvent.target.getAttribute('action');
+        if(action === 'drop') {
+            setDropDialogOpen(true);
+        }
+
+    }
+
+    const handleDropDialogClose = (value) => {
+        setDropDialogOpen(false);
+
+        if(value === 400) {
+            // item is not an actual known item
+        }
+        else if(value === 404) {
+            // item is not in player inventory
+        }
+        else if(value === 406) {
+            // tried to drop more than in inventory
+        }
+        else if(value === 200) {
+            // item has been dropped
+            onReload();
+        }
+        else {
+            // unknown return code
+        }
+    };
 
     if(!inventory) {
         return <div className="inventory-items-list" />;
@@ -316,12 +430,18 @@ const InventoryList = ({inventory, t}) => {
         if(!contextMenuItem.name || !contextMenuItem.item) {
             return <div/>;
         }
+
+        let useMenuButton = null;
+        if(contextMenuItem.item.type === 'consumable' && contextMenuItem.item.item.fromInventory === true) {
+            useMenuButton = <MenuItem action='use'>{t('items.manager.context.menu.use', {ns:'items'})}</MenuItem>
+        }
+
         return (
-            <ControlledMenu {...menuProps} anchorPoint={anchorPoint} onClose={closeContextMenu}>
-                <MenuHeader>{contextMenuItem.name && contextMenuItem.name}</MenuHeader>
-                <MenuItem>{t('items.manager.context.menu.use', {ns:'items'})}</MenuItem>
-                <MenuItem>{t('items.manager.context.menu.drop', {ns:'items'})}</MenuItem>
-                <MenuItem>{t('items.manager.context.menu.close', {ns:'items'})}</MenuItem>
+            <ControlledMenu {...menuProps} anchorPoint={anchorPoint} onClose={closeContextMenu} onItemClick={(e) => handleMenuItemClick(e)}>
+                <MenuHeader>{contextMenuItem.name && contextMenuItem.name + ' (x' + contextMenuItem.item.count + ')'}</MenuHeader>
+                {useMenuButton}
+                <MenuItem action='drop'>{t('items.manager.context.menu.drop', {ns:'items'})}</MenuItem>
+                <MenuItem action='close'>{t('items.manager.context.menu.close', {ns:'items'})}</MenuItem>
             </ControlledMenu>
         )
     }
@@ -333,6 +453,12 @@ const InventoryList = ({inventory, t}) => {
             </CardGroup>
             <ItemDetailView translation={t} visible={detailsVisible} item={selectedItem} x={x} y={y} />
             {contextMenu()}
+            <SimpleDialog
+                selectedValue={contextMenuItem}
+                open={dropDialogOpen}
+                onClose={handleDropDialogClose}
+                t={t}
+            />
         </div>
     );
 // <ItemContextMenu onMenuClosing={removeClickedItem} translation={t} item={clickedItem} x={x} y={y} />
@@ -344,21 +470,33 @@ export const InventoryManager = (props) => {
     const [inventory, setInventory] = useState(null);
     const [searchField, setSearchField] = useState("");
     const [sortMode, setSortMode] = useState("");
+    const [reload, setReload] = useState(null);
 
     useEffect(() => {
         const getInventory = async() => {
             const resp = await fetch('/api/game/inventory');
             const data = await resp.json();
-
             setInventory(data);
         };
         getInventory();
-    }, []);
+    }, [reload]);
+
+    function reloadInventory() {
+        if(!reload) {
+            setReload(1);
+        }
+        else {
+            setReload(reload + 1);
+        }
+    }
 
     let filteredItems = null;
     if(inventory) {
         filteredItems = inventory.items.filter(
             entry => {
+                if(entry.count === 0) {
+                    return false;
+                }
                 const translatedName = t(entry.item.name, {ns:'items'});
                 return (
                     translatedName.toLowerCase().includes(searchField.toLowerCase())
@@ -449,7 +587,7 @@ export const InventoryManager = (props) => {
                 </Input>
             </InputGroup>
 
-            <InventoryList inventory={filteredItems} t={t} />
+            <InventoryList inventory={filteredItems} t={t} onReload={reloadInventory} />
         </div>
     )
 }

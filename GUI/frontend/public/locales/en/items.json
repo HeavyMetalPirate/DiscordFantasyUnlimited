@@ -9,6 +9,9 @@
   "items.manager.context.menu.use": "Use item",
   "items.manager.context.menu.drop": "Drop item",
   "items.manager.context.menu.close": "Close menu",
+  "items.manager.dialog.drop.title": "Drop how many of item",
+  "items.manager.dialog.drop.confirm": "Drop items",
+  "items.manager.dialog.drop.cancel": "Cancel",
   "items.value": "Value",
   "items.rarity.common": "Common item",
   "items.rarity.uncommon": "Uncommon item",
@@ -47,7 +50,9 @@
   "items.consumable.restore.resource.MANA": "Mana restored",
   "items.consumable.usable.battle.false": "Not usable during battle",
   "items.consumable.usable.battle.true": "Usable during battle",
+  "items.consumable.usable.inventory.false": "Not usable from inventory",
+  "items.consumable.usable.inventory.true": "Usable from inventory",
   "items.consumable.duration": "Duration of effects",
   "items.consumable.duration.rounds": "rounds",
-  "items.consumable.duration.full": "Rest of battle"
+  "items.consumable.duration.rounds.full": "End of battle"
 }

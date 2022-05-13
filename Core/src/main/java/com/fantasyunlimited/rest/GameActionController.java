@@ -1,6 +1,7 @@
 package com.fantasyunlimited.rest;
 
 import com.fantasyunlimited.data.entity.PlayerCharacter;
+import com.fantasyunlimited.data.service.PlayerCharacterService;
 import com.fantasyunlimited.items.bags.EquipmentBag;
 import com.fantasyunlimited.items.bags.LocationBag;
 import com.fantasyunlimited.items.bags.RaceBag;
@@ -11,18 +12,22 @@ import com.fantasyunlimited.items.entity.Location;
 import com.fantasyunlimited.items.entity.Weapon;
 import com.fantasyunlimited.items.util.DropableUtils;
 import com.fantasyunlimited.rest.dto.*;
+import com.fantasyunlimited.util.InventoryAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Controller
@@ -41,6 +46,56 @@ public class GameActionController {
     private RaceBag raceBag;
     @Autowired
     private DropableUtils dropableUtils;
+    @Autowired
+    private PlayerCharacterService characterService;
+
+    @RequestMapping(value = "/inventory/use", consumes = "application/json", method = RequestMethod.POST)
+    public ResponseEntity<Void> useItem(@RequestBody UseItemDetails useItemDetails, HttpServletRequest request) {
+        PlayerCharacter selectedCharacter = utils.getPlayerCharacterFromSession(request);
+
+        return performInventoryAction(
+                useItemDetails.itemId(),
+                1,
+                request,
+                () -> characterService.useItemsFromInventory(selectedCharacter, useItemDetails.itemId())
+        );
+    }
+    @RequestMapping(value = "/inventory/drop", consumes = "application/json", method = RequestMethod.POST)
+    public ResponseEntity<Void> dropItem(@RequestBody DropItemDetails useItemDetails, HttpServletRequest request) {
+        PlayerCharacter selectedCharacter = utils.getPlayerCharacterFromSession(request);
+
+        return performInventoryAction(
+                useItemDetails.itemId(),
+                useItemDetails.count(),
+                request,
+                () -> characterService.dropItems(selectedCharacter, useItemDetails.itemId(), useItemDetails.count())
+        );
+    }
+    private ResponseEntity<Void> performInventoryAction(String itemId, int count, HttpServletRequest request, InventoryAction action) {
+        PlayerCharacter selectedCharacter = utils.getPlayerCharacterFromSession(request);
+        Map<String, Integer> inventory = selectedCharacter.getInventory();
+
+        // check if requested item is an actual item
+        Dropable dropable = dropableUtils.getDropableItem(itemId);
+        if(dropable == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
+        // check if inventory contains requested item
+        if(inventory.containsKey(itemId) == false) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+        // check if requested count is greater than actual item count
+        if(inventory.get(itemId) < count) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        // Perform action and set result to session
+        PlayerCharacter character = action.performAction();
+        utils.setPlayerCharacterToSession(request, character);
+        return new ResponseEntity<>(null,HttpStatus.OK);
+    }
 
     @RequestMapping(value = "/inventory", produces = "application/json", method = RequestMethod.GET)
     public ResponseEntity<InventoryManagementDetails> getInventory(HttpServletRequest request) {
