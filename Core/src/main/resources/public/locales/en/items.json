@@ -54,5 +54,5 @@
   "items.consumable.usable.inventory.true": "Usable from inventory",
   "items.consumable.duration": "Duration of effects",
   "items.consumable.duration.rounds": "rounds",
-  "items.consumable.duration.full": "Rest of battle"
+  "items.consumable.duration.rounds.full": "End of battle"
 }

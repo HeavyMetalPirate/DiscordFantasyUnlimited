@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {ChangeEvent, MouseEventHandler, useEffect, useState} from 'react';
 import {
     Button,
     Card,
@@ -18,74 +18,62 @@ import {
     ControlledMenu,
     MenuItem,
     MenuHeader,
-    useMenuState
+    useMenuState, ClickEvent, MenuCloseEvent
 } from '@szhsin/react-menu';
 import '@szhsin/react-menu/dist/index.css';
 
-import PropTypes from 'prop-types';
-import Avatar from '@mui/material/Avatar';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemText from '@mui/material/ListItemText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
-import PersonIcon from '@mui/icons-material/Person';
-import AddIcon from '@mui/icons-material/Add';
-import Typography from '@mui/material/Typography';
-import { blue } from '@mui/material/colors';
-import RangeSlider from 'react-bootstrap-range-slider';
 
-import { useSetState, useTrackedState } from '../SessionStore';
+import { useTrackedState } from '../SessionStore';
 
 import './ItemManagement.css'
 
-export const EquipmentManager = (props) => {
-    const t = props.translation;
+export const EquipmentManager = ({translation}: TranslationAsProperty) => {
+    const t = translation;
 
     return (
         <div>EquipmentManager TODO</div>
     )
 }
 
-const ItemDetailView = (props) => {
-    const t = props.translation;
-    const [selectedItem, setSelectedItem] = useState(null);
-    const [x, setX] = useState(0);
-    const [y, setY] = useState(0);
+const ItemDetailView = ({translation, item, visible, x, y}: ItemDetailView) => {
+    const t = translation;
+    const [selectedItem, setSelectedItem] = useState<DropableItem | null>(null);
 
     useEffect(() => {
-        if(!props.item) {
+        if(!item) {
             return;
         }
-        setSelectedItem(props.item.item);
-        setX(props.x);
-        setY(props.y);
-    }, [props.item]);
+        setSelectedItem(item.item);
+    }, [item]);
 
     function getGearBonuses() {
-        var attributeBonus = "", skillBonus = "", secondarySkillBonus = "", attackResourceBonus = "";
+        let attributeBonus: JSX.Element[] = [];
+        let skillBonus: JSX.Element[]  = [];
+        let secondarySkillBonus: JSX.Element[]  = [];
+        let attackResourceBonus: JSX.Element[]  = [];
 
-        if(selectedItem.attributeBonuses && selectedItem.attributeBonuses.length > 0) {
-            attributeBonus = selectedItem.attributeBonuses.map(bonus => {
+        if(selectedItem && selectedItem.attributeBonuses && selectedItem.attributeBonuses.length > 0) {
+            attributeBonus = selectedItem.attributeBonuses.map((bonus: AttributeBonus) => {
                 return <li className="buff-text">+{bonus.bonus} {t('character.attributes.' + bonus.attribute, {ns:'character'})}</li>
             });
         }
 
-        if(selectedItem.skillBonuses && selectedItem.skillBonuses.length > 0) {
-            skillBonus = selectedItem.skillBonuses.map(bonus => {
+        if(selectedItem && selectedItem.skillBonuses && selectedItem.skillBonuses.length > 0) {
+            skillBonus = selectedItem.skillBonuses.map((bonus: CombatSkillBonus) => {
                 return <li className="buff-text">+{bonus.bonus}% {t('character.skills.' + bonus.skill, {ns:'character'})}</li>
             });
         }
 
-        if(selectedItem.secondarySkillBonuses && selectedItem.secondarySkillBonuses.length > 0) {
+        if(selectedItem && selectedItem.secondarySkillBonuses && selectedItem.secondarySkillBonuses.length > 0) {
             secondarySkillBonus = selectedItem.secondarySkillBonuses.map(bonus => {
                 return <li className="buff-text">+{bonus.bonus} {t('character.secondary.skills.' + bonus.skill, {ns:'character'})}</li>
             });
         }
-        if(selectedItem.atkResourceBonuses && selectedItem.atkResourceBonuses.length > 0) {
+        if(selectedItem && selectedItem.atkResourceBonuses && selectedItem.atkResourceBonuses.length > 0) {
             attackResourceBonus = selectedItem.atkResourceBonuses.map(bonus => {
-                return <li className="buff-text">+{bonus.bonus} {t('character.energy.type.' + bonus.skill, {ns:'character'})}</li>
+                return <li className="buff-text">+{bonus.bonus} {t('character.energy.type.' + bonus.energyType, {ns:'character'})}</li>
             });
         }
 
@@ -100,14 +88,15 @@ const ItemDetailView = (props) => {
     }
 
     function getDetailsContainer() {
-        if(!props.item) return <div/>
+        if(!item) return <div/>
         if(!selectedItem) return <div/>
 
-        var bodyContent = null;
+        let bodyContent = null;
 
-        if(props.item.type === 'weapon') {
+        let classExclusiveElement: JSX.Element = <span />;
+        let raceExclusiveElement: JSX.Element = <span />;
 
-            var classExclusiveElement = "", raceExclusiveElement = "";
+        if(item.type === 'weapon') {
 
             if(selectedItem.classExclusive) {
                 classExclusiveElement = <span className="card-header-text">{t('items.weapon.exclusive.class.' + selectedItem.classExclusive, {ns:'items'})}</span>
@@ -133,8 +122,7 @@ const ItemDetailView = (props) => {
 
             )
         }
-        else if(props.item.type === 'equipment') {
-            var classExclusiveElement = "", raceExclusiveElement = "";
+        else if(item.type === 'equipment') {
 
             if(selectedItem.classExclusive) {
                 classExclusiveElement = <span className="card-header-text">{t('items.weapon.exclusive.class.' + selectedItem.classExclusive, {ns:'items'})}</span>
@@ -161,23 +149,22 @@ const ItemDetailView = (props) => {
                 </CardBody>
             )
         }
-        else if(props.item.type === 'consumable') {
-            var healthRestore = "", resoureRestore = "";
-            console.log(selectedItem);
+        else if(item.type === 'consumable') {
+            let healthRestore: JSX.Element = <span />;
+            let resoureRestore: JSX.Element = <span />;
 
-            if(selectedItem.healthRestored > 0) {
+            if(selectedItem.healthRestored && selectedItem.healthRestored > 0) {
                 healthRestore = <span className="card-header-text">+{selectedItem.healthRestored} {t('items.consumable.restore.health', {ns:'items'})}</span>
             }
-            if(selectedItem.atkResourceRestored > 0) {
+            if(selectedItem.atkResourceRestored && selectedItem.atkResourceRestored > 0) {
                 resoureRestore = <span className="card-header-text">+{selectedItem.atkResourceRestored} {t('items.consumable.restore.resource.' + selectedItem.resourceType, {ns:'items'})}</span>
             }
 
-            var attributeBonus = "", skillBonus = "", roundsDuration = "";
-            console.log(selectedItem.attributeModifiers);
+            let attributeBonus: JSX.Element[] = [];
+            let skillBonus: JSX.Element[] = [];
+            let roundsDuration: JSX.Element = <li />;
 
             if(selectedItem.attributeModifiers && selectedItem.attributeModifiers.length > 0) {
-                console.log(selectedItem.attributeModifiers.length);
-
                 attributeBonus = selectedItem.attributeModifiers.map(bonus => {
                     return <li className="buff-text">+{bonus.bonus} {t('character.attributes.' + bonus.attribute, {ns:'character'})}</li>
                 });
@@ -191,8 +178,8 @@ const ItemDetailView = (props) => {
             }
 
             if(skillBonus.length > 0 || attributeBonus.length > 0) {
-                var consumableDuration = "";
-                if(selectedItem.durationRounds > 0) {
+                let consumableDuration = "";
+                if(selectedItem.durationRounds && selectedItem.durationRounds > 0) {
                     consumableDuration = selectedItem.durationRounds + " " + t('items.consumable.duration.rounds', {ns: 'items'})
                 }
                 else {
@@ -201,7 +188,7 @@ const ItemDetailView = (props) => {
                 roundsDuration = <li>{t('items.consumable.duration', {ns: 'items'})}: {consumableDuration}</li>
             }
 
-            var bonusDetails = "";
+            let bonusDetails: JSX.Element = <div/>;
             bonusDetails = (
                 <CardText>
                     <ul style={{paddingLeft: "0", marginTop: "1em"}}>
@@ -211,7 +198,6 @@ const ItemDetailView = (props) => {
                     </ul>
                 </CardText>
             )
-
 
             bodyContent = (
                 <CardBody style={{ textAlign: "left", paddingTop: "0"  }}>
@@ -228,7 +214,7 @@ const ItemDetailView = (props) => {
             )
         }
         else {
-            return <div>Unknown item type {props.item.type}</div>
+            return <div>Unknown item type {item.type}</div>
         }
 
         return (
@@ -251,17 +237,21 @@ const ItemDetailView = (props) => {
         )
     }
 
+    if(visible === 'hidden') {
+        return null;
+    }
+
     return (
-        <Container className="item-detail-view" style={{visibility: props.visible, left: x, top: y}}>
+        <div className="item-detail-view" style={{visibility: 'visible', left: x, top: y}}>
             {getDetailsContainer()}
-        </Container>
+        </div>
     )
 }
 
-function SimpleDialog(props) {
-    const { onClose, selectedValue, open, t } = props;
-    const [ value1, setValue1 ] = useState(1);
-    const userState = useTrackedState();
+function SimpleDialog({translation, selectedValue, onClose, open}: SimpleDialogProps) {
+    const t = translation;
+    const [value1, setValue1] = useState(1);
+    const [userState, setUserState] = useTrackedState();
 
     const handleClose = () => {
         // some graceful stuff? idk
@@ -272,7 +262,7 @@ function SimpleDialog(props) {
     const handleListItemClick = () => {
 
         const dropItemBody = {
-            itemId: selectedValue.item.item.id,
+            itemId: selectedValue!.item.id,
             count: value1
         };
 
@@ -280,7 +270,7 @@ function SimpleDialog(props) {
         const requestOptions = {
             method: 'POST',
             headers: {
-                'X-CSRF-TOKEN' : userState.token.token,
+                'X-CSRF-TOKEN' : userState.token!.token,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(dropItemBody)
@@ -288,7 +278,7 @@ function SimpleDialog(props) {
 
         fetch('/api/game/inventory/drop', requestOptions)
         .then((response) => {
-            onClose(response.status);
+            onClose(response.status.toString());
         });
 
         setValue1(1);
@@ -298,17 +288,24 @@ function SimpleDialog(props) {
         return <div />
     }
 
+    function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+        event.preventDefault();
+        let valueAsString: string = event.currentTarget.value;
+        let value: number = parseInt(valueAsString);
+        setValue1(value);
+    }
+
     return (
         <Dialog open={open}>
-            <DialogTitle>{t('items.manager.dialog.drop.title', {ns: 'items'})}: {selectedValue.name} (x{selectedValue.item.count})</DialogTitle>
+            <DialogTitle>{t('items.manager.dialog.drop.title', {ns: 'items'})}: {selectedValue.item.name} (x{selectedValue.count})</DialogTitle>
             <div style={{padding: "0 1em"}}>
-                <RangeSlider
-                    value={value1}
-                    onChange={e => setValue1(e.target.value)}
+                <Input type={"range"}
                     min={1}
-                    max={selectedValue.item.count}
+                    max={selectedValue.count}
+                    onChange={handleChange}
+                    value={value1}
                 />
-                <span>{value1} / {selectedValue.item.count}</span>
+                <span>{value1} / {selectedValue.count}</span>
             </div>
             <Container fluid>
                 <Button onClick={handleListItemClick}>{t('items.manager.dialog.drop.confirm', {ns:'items'})}</Button>
@@ -318,21 +315,15 @@ function SimpleDialog(props) {
     );
 }
 
-SimpleDialog.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired,
-  selectedValue: PropTypes.object.isRequired,
-  t: PropTypes.func.isRequired
-};
-
-const InventoryList = ({inventory, t, onReload}) => {
-    const [selectedItem, setSelectedItem] = useState(null);
-    const [detailsVisible, setDetailsVisible] = useState(null);
+const InventoryList = ({inventory, translation, onReload}: InventoryListProperties) => {
+    const t = translation;
+    const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null);
+    const [detailsVisible, setDetailsVisible] = useState("");
     const [x, setX] = useState(0);
     const [y, setY] = useState(0);
     const [menuProps, toggleMenu] = useMenuState();
     const [anchorPoint, setAnchorPoint] = useState({ x: 0, y: 0 });
-    const [contextMenuItem, setContextMenuItem] = useState({item: null, name: null});
+    const [contextMenuItem, setContextMenuItem] = useState<ContextMenuItemSelection>({item: null, name: null});
     const [dropDialogOpen, setDropDialogOpen] = useState(false);
 
     useEffect(() => {
@@ -344,64 +335,70 @@ const InventoryList = ({inventory, t, onReload}) => {
         }
     }, [selectedItem, x, y]);
 
-    function mouseLeftItem(event) {
+    function mouseLeftItem(event: React.SyntheticEvent) {
         event.preventDefault();
         setSelectedItem(null);
     }
 
-    function getItemFromEvent(event) {
-        var card = event.target;
+    function getItemFromEvent(event: React.MouseEvent<HTMLElement>) {
+        let card: HTMLElement | null = event.currentTarget;
 
-        while(!card.attributes.foo) {
+        while(!card.attributes.getNamedItem("foo")) {
             if(!card.parentElement) {
                 card = null;
                 return;
             }
             card = card.parentElement;
         }
-        const itemId = card.attributes.foo.value;
 
-        return inventory.find(element => element.item.id === itemId);
+        const itemId = card.attributes.getNamedItem("foo")!.value;
+
+        return inventory!.find(element => element.item.id === itemId);
     }
 
-    function mouseOverItem(event) {
-        event.preventDefault(true);
-        setSelectedItem(getItemFromEvent(event));
+    function mouseOverItem(event: React.MouseEvent<HTMLElement>) {
+        event.preventDefault();
+        let selectedItem = getItemFromEvent(event);
+        if(!selectedItem) {
+            setSelectedItem(null);
+        }
+        else {
+            setSelectedItem(selectedItem);
+        }
         setX(event.clientX);
         setY(event.clientY);
     }
 
-    function mouseClickOnItem(event) {
-        event.preventDefault(true);
+    function mouseClickOnItem(event: React.MouseEvent<HTMLElement>) {
+        event.preventDefault();
+
         setAnchorPoint({ x: event.clientX, y: event.clientY });
-        setContextMenuItem({item: selectedItem, name: t(selectedItem.item.name, {ns: 'items'})})
+        setContextMenuItem({item: selectedItem, name: t(selectedItem!.item.name, {ns: 'items'})})
         toggleMenu(true);
     }
-    function closeContextMenu(event) {
+    function closeContextMenu(event: MenuCloseEvent) {
         toggleMenu(false);
     }
 
-    function handleMenuItemClick(e) {
-        const action = e.syntheticEvent.target.getAttribute('action');
+    function handleMenuItemClick(action: string) {
         if(action === 'drop') {
             setDropDialogOpen(true);
         }
-
     }
 
-    const handleDropDialogClose = (value) => {
+    const handleDropDialogClose = (value: string) => {
         setDropDialogOpen(false);
 
-        if(value === 400) {
+        if(value === '400') {
             // item is not an actual known item
         }
-        else if(value === 404) {
+        else if(value === '404') {
             // item is not in player inventory
         }
-        else if(value === 406) {
+        else if(value === '406') {
             // tried to drop more than in inventory
         }
-        else if(value === 200) {
+        else if(value === '200') {
             // item has been dropped
             onReload();
         }
@@ -416,7 +413,12 @@ const InventoryList = ({inventory, t, onReload}) => {
     const itemCards = inventory.map(
         entry => {
           return (
-              <Card foo={entry.item.id} onClick={mouseClickOnItem} onMouseOver={mouseOverItem} onMouseLeave={mouseLeftItem} className="item-card" key={entry.item.id}>
+              <Card foo={entry.item.id}
+                    onClick={mouseClickOnItem}
+                    onMouseOver={mouseOverItem}
+                    onMouseLeave={mouseLeftItem}
+                    className="item-card"
+                    key={entry.item.id}>
                   <CardBody className="item-card-body">
                       <CardImg className={"item-icon " + entry.item.rarity.toLowerCase()} top src={entry.item.iconName} />
                       <CardTitle tag="p">{t(entry.item.name, {ns: 'items'})}</CardTitle>
@@ -431,17 +433,19 @@ const InventoryList = ({inventory, t, onReload}) => {
             return <div/>;
         }
 
-        let useMenuButton = null;
+        let useMenuButton: JSX.Element | null = null;
         if(contextMenuItem.item.type === 'consumable' && contextMenuItem.item.item.fromInventory === true) {
-            useMenuButton = <MenuItem action='use'>{t('items.manager.context.menu.use', {ns:'items'})}</MenuItem>
+            useMenuButton = <MenuItem onClick={() => handleMenuItemClick('use')}>{t('items.manager.context.menu.use', {ns:'items'})}</MenuItem>
         }
 
         return (
-            <ControlledMenu {...menuProps} anchorPoint={anchorPoint} onClose={closeContextMenu} onItemClick={(e) => handleMenuItemClick(e)}>
+            <ControlledMenu {...menuProps}
+                anchorPoint={anchorPoint}
+                onClose={closeContextMenu}>
                 <MenuHeader>{contextMenuItem.name && contextMenuItem.name + ' (x' + contextMenuItem.item.count + ')'}</MenuHeader>
                 {useMenuButton}
-                <MenuItem action='drop'>{t('items.manager.context.menu.drop', {ns:'items'})}</MenuItem>
-                <MenuItem action='close'>{t('items.manager.context.menu.close', {ns:'items'})}</MenuItem>
+                <MenuItem onClick={() => handleMenuItemClick('drop')}>{t('items.manager.context.menu.drop', {ns:'items'})}</MenuItem>
+                <MenuItem onClick={() => handleMenuItemClick('close')}>{t('items.manager.context.menu.close', {ns:'items'})}</MenuItem>
             </ControlledMenu>
         )
     }
@@ -454,23 +458,23 @@ const InventoryList = ({inventory, t, onReload}) => {
             <ItemDetailView translation={t} visible={detailsVisible} item={selectedItem} x={x} y={y} />
             {contextMenu()}
             <SimpleDialog
-                selectedValue={contextMenuItem}
+                selectedValue={contextMenuItem.item}
                 open={dropDialogOpen}
                 onClose={handleDropDialogClose}
-                t={t}
+                translation={t}
             />
         </div>
     );
 // <ItemContextMenu onMenuClosing={removeClickedItem} translation={t} item={clickedItem} x={x} y={y} />
 }
 
-export const InventoryManager = (props) => {
-    const t = props.translation;
+export const InventoryManager = ({translation}: TranslationAsProperty) => {
+    const t = translation;
 
-    const [inventory, setInventory] = useState(null);
+    const [inventory, setInventory] = useState<InventoryType | null>(null);
     const [searchField, setSearchField] = useState("");
     const [sortMode, setSortMode] = useState("");
-    const [reload, setReload] = useState(null);
+    const [reload, setReload] = useState(0);
 
     useEffect(() => {
         const getInventory = async() => {
@@ -564,11 +568,11 @@ export const InventoryManager = (props) => {
         });
     }
 
-    const handleFilterChange = e => {
+    const handleFilterChange = (e: ChangeEvent<HTMLInputElement>) => {
         setSearchField(e.target.value);
     };
 
-    const handleSortModeChange = e => {
+    const handleSortModeChange = (e: ChangeEvent<HTMLInputElement>) => {
         setSortMode(e.target.value);
     }
 
@@ -587,7 +591,7 @@ export const InventoryManager = (props) => {
                 </Input>
             </InputGroup>
 
-            <InventoryList inventory={filteredItems} t={t} onReload={reloadInventory} />
+            <InventoryList inventory={filteredItems} translation={t} onReload={reloadInventory} />
         </div>
     )
 }

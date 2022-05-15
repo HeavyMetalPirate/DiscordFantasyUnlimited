@@ -16,39 +16,47 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Trans } from 'react-i18next';
 import { useTranslation } from "react-i18next";
 
-import { useSetState, useTrackedState } from '../SessionStore';
+import { useTrackedState } from '../SessionStore';
 
-export const LoginForm = (props) => {
+export const LoginForm = (): JSX.Element => {
     let navigate = useNavigate();
-    const setUserState = useSetState();
-    const fooState = useTrackedState();
+    const [fooState, setFooState] = useTrackedState();
 
-    function submitForm(event) {
+    function submitForm(event: React.SyntheticEvent) {
         event.preventDefault();
-        const data = new FormData(event.target);
+        //const data = new FormData(event.target);
+
+        const target = event.target as typeof event.target & {
+              username: { value: string };
+              password: { value: string };
+        };
+        const username = target.username.value; // typechecks!
+        const password = target.password.value; // typechecks!
 
         const requestOptions = {
             method: 'POST'
         };
 
-        fetch('/login?alias=' + data.get('username') + "&password=" + data.get('password'), requestOptions)
+        fetch('/login?alias=' + username + "&password=" + password, requestOptions)
                 .then((response) => {
-                    setUserState({stateChanged: true})
+                    setFooState((prev) => ({ ...prev, stateChanged: true}));
                     window.location.href = response.url;
                 });
     }
 
-    function logout(event) {
+    function logout(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
+        let token = fooState.token!.token;
+
         const requestOptions = {
             method: 'POST',
             headers: {
-                'X-CSRF-TOKEN' : fooState.token.token
+                'X-CSRF-TOKEN' : token
             }
         };
         fetch('/logout', requestOptions)
                 .then((response) => {
-                    setUserState({user: null, token: null, selectedCharacter: null, stateChanged: true});
+                    setFooState({user: null, token: null, selectedCharacter: null, stateChanged: true, characterData: null});
                     window.location.href = '/';
                 });
     }

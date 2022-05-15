@@ -1,58 +1,65 @@
 import React, { Component, useEffect, useState } from 'react';
 import { Button, Table } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { withTranslation } from "react-i18next";
+import {TFunction, withTranslation, WithTranslation} from "react-i18next";
 
 import { useTrackedState } from '../SessionStore';
-import logo from '../logo.svg';
 import './GamePanel.css'
 
 import { CharacterSelection, CurrentCharacterPanel } from './CharacterManagement'
 import { EquipmentManager, InventoryManager } from './ItemManagement'
 
-const GamePanel = (props) => {
-    const state = useTrackedState();
-    const t = props.translation;
-    const [actions, setActions] = useState(null);
+const { default: logo } = require('../logo.svg') as { default: string };
+
+const GamePanel = ({translation}: TranslationAsProperty) => {
+    const [state, setState] = useTrackedState();
+    const [actions, setActions] = useState<LocationActionList | null>(null);
+    const t = translation;
 
     useEffect(() => {
         if(!state.characterData || !state.selectedCharacter) return;
 
+        let foo = state.characterData.name;
+
         const getActions = async() => {
-            const res = await fetch('/api/game/location/' + state.characterData.location.id + '/actions')
+            const res = await fetch('/api/game/location/' + state.characterData!.location.id + '/actions')
             // await the json data in the response
             const data = await res.json();
             // set the state of the const 'skill'
-            setActions(data);
+            let actionList: LocationActionList = {
+                list: data
+            }
+            setActions(actionList);
         };
         getActions();
     }, [state.characterData]);
 
     function getTravelActions() {
         if(!actions) return;
-        const travelActions = actions.filter(action => action.type === 'TRAVEL')
-                                             .map(action => {
-                                                if(action.requirementMet === false) {
-                                                    return (
-                                                        <tr key={action.text}>
-                                                            <td>{t(action.text, {ns:'location'})}</td>
-                                                            <td>{action.details.duration} {t('location.travel.duration', {ns: 'location'})}</td>
-                                                            <td>{action.details.toll} {t('character.stats.gold', {ns: 'character'})}</td>
-                                                            <td className="actionNotAllowed">{t(action.reason, {ns: 'location'})}</td>
-                                                        </tr>
-                                                    )
-                                                }
-                                                else {
-                                                    return (
-                                                        <tr key={action.text}>
-                                                            <td>{t(action.text, {ns:'location'})}</td>
-                                                            <td>{action.details.duration} {t('location.travel.duration')}</td>
-                                                            <td>{action.details.toll} {t('character.stats.gold', {ns: 'character'})}</td>
-                                                            <td><Button>{t('location.action.perform', {ns:'location'})}</Button></td>
-                                                        </tr>
-                                                    )
-                                                }
-                                             });
+        const travelActions = actions.list
+            .filter((action: LocationAction) => action.type === 'TRAVEL')
+            .map((action: LocationAction) => {
+                if(action.requirementMet === false) {
+                    return (
+                        <tr key={action.text}>
+                            <td>{t(action.text, {ns:'location'})}</td>
+                            <td>{action.details.duration} {t('location.travel.duration', {ns: 'location'})}</td>
+                            <td>{action.details.toll} {t('character.stats.gold', {ns: 'character'})}</td>
+                            <td className="actionNotAllowed">{t(action.reason, {ns: 'location'})}</td>
+                        </tr>
+                    )
+                }
+                else {
+                    return (
+                        <tr key={action.text}>
+                            <td>{t(action.text, {ns:'location'})}</td>
+                            <td>{action.details.duration} {t('location.travel.duration')}</td>
+                            <td>{action.details.toll} {t('character.stats.gold', {ns: 'character'})}</td>
+                            <td><Button>{t('location.action.perform', {ns:'location'})}</Button></td>
+                        </tr>
+                    )
+                }
+            });
         return (
             <div className='travel-actions'>
                 <h3>{t('game.actions.travel', {ns:'game'})}</h3>
@@ -68,27 +75,28 @@ const GamePanel = (props) => {
     function getSecondarySkills() {
         if(!actions) return;
 
-        const secondarySkillActions = actions.filter(action => action.type === 'SECONDARY_SKILL')
-                                             .map(action => {
-                                                if(action.requirementMet === false) {
-                                                    return (
-                                                        <tr key={action.text}>
-                                                            <td>{t(action.text, {ns:'location'})}</td>
-                                                            <td>{action.details.minimumLevel}</td>
-                                                            <td className="actionNotAllowed">{t(action.reason, {ns: 'location'})}</td>
-                                                        </tr>
-                                                    )
-                                                }
-                                                else {
-                                                    return (
-                                                        <tr key={action.text}>
-                                                            <td>{t(action.text, {ns:'location'})}</td>
-                                                            <td>{action.details.minimumLevel}</td>
-                                                            <td><Button>{t('location.action.perform', {ns:'location'})}</Button></td>
-                                                        </tr>
-                                                    )
-                                                }
-                                             });
+        const secondarySkillActions = actions.list
+            .filter((action: LocationAction) => action.type === 'SECONDARY_SKILL')
+            .map((action: LocationAction) => {
+                if(action.requirementMet === false) {
+                    return (
+                        <tr key={action.text}>
+                            <td>{t(action.text, {ns:'location'})}</td>
+                            <td>{action.details.minimumLevel}</td>
+                            <td className="actionNotAllowed">{t(action.reason, {ns: 'location'})}</td>
+                        </tr>
+                    )
+                }
+                else {
+                    return (
+                        <tr key={action.text}>
+                            <td>{t(action.text, {ns:'location'})}</td>
+                            <td>{action.details.minimumLevel}</td>
+                            <td><Button>{t('location.action.perform', {ns:'location'})}</Button></td>
+                        </tr>
+                    )
+                }
+            });
         return (
             <div className='skills-actions'>
                 <h3>{t('game.actions.skills', {ns:'game'})}</h3>
@@ -103,9 +111,9 @@ const GamePanel = (props) => {
 
     function getTradingActions() {
         if(!actions) return;
-        const tradingActions = actions
-            .filter(action => (action.type === 'GLOBAL_TRADING' || action.type === 'TRADING'))
-            .map(action => {
+        const tradingActions = actions.list
+            .filter((action: LocationAction) => (action.type === 'GLOBAL_TRADING' || action.type === 'TRADING'))
+            .map((action: LocationAction) => {
                 if(action.requirementMet === false) {
                     return (
                         <tr key={action.text}>
@@ -137,9 +145,9 @@ const GamePanel = (props) => {
 
     function getCombatActions() {
         if(!actions) return;
-        const combatActions = actions
-            .filter(action => (action.type === 'COMBAT'))
-            .map(action => {
+        const combatActions = actions.list
+            .filter((action: LocationAction) => (action.type === 'COMBAT'))
+            .map((action: LocationAction) => {
                 return (
                     <tr key={action.text}>
                         <td>{t(action.text, {ns:'location'})}</td>
@@ -162,9 +170,9 @@ const GamePanel = (props) => {
 
     function getMiscActions() {
         if(!actions) return;
-        const miscActions = actions
-            .filter(action => (action.type === 'OTHER'))
-            .map(action => {
+        const miscActions = actions.list
+            .filter((action: LocationAction) => (action.type === 'OTHER'))
+            .map((action: LocationAction) => {
                 if(action.requirementMet === false) {
                     return (
                         <tr key={action.text}>
@@ -218,24 +226,27 @@ const GamePanel = (props) => {
     )
 }
 
-const GameMainPanel = (props) => {
+interface MainPanelProps {
+    t: TFunction<"translation", undefined>;
+    currentPanel: string;
+}
+
+const GameMainPanel = ({t, currentPanel}: MainPanelProps) => {
     const state = useTrackedState();
-    const t = props.translation;
-    const currentPanel = props.currentPanel;
-    const [component, setComponent] = useState(null);
+    const [currentComponent, setCurrentComponent] = useState<JSX.Element>(<div />);
 
     useEffect(() => {
         if(currentPanel === 'GamePanel') {
-            setComponent(<GamePanel translation={t} />);
+            setCurrentComponent(<GamePanel translation={t} />);
         }
         else if(currentPanel === 'InventoryPanel') {
-            setComponent(<InventoryManager translation={t} />);
+            setCurrentComponent(<InventoryManager translation={t} />);
         }
         else if(currentPanel === 'EquipmentPanel') {
-            setComponent(<EquipmentManager translation={t} />);
+            setCurrentComponent(<EquipmentManager translation={t} />);
         }
         else {
-            setComponent(<div>Unknown Panel: '{currentPanel}'</div>);
+            setCurrentComponent(<div>Unknown Panel: '{currentPanel}'</div>);
         }
     }, [currentPanel]);
 
@@ -245,21 +256,25 @@ const GameMainPanel = (props) => {
                 <header>
                     <img src={logo} className="App-logo" alt="logo" />
                 </header>
-                {component}
+                {currentComponent}
             </div>
         </div>
     );
 }
 
-class GameHome extends Component {
+interface GameHomeProps extends TranslationAsProperty {
+    currentPanel: string;
+}
+
+class GameHome extends Component<GameHomeProps> {
     componentDidMount() {
     }
 
     render() {
-        const t = this.props.t;
+        const t = this.props.translation;
         const currentPanel = this.props.currentPanel;
         return (
-            <GameMainPanel currentPanel={currentPanel} translation={t} />
+            <GameMainPanel currentPanel={currentPanel} t={t} />
         );
     }
 };

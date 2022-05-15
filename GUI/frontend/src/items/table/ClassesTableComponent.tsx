@@ -2,11 +2,17 @@ import React, { Component } from 'react';
 import { Container, Table, Button } from 'reactstrap';
 import { Link } from 'react-router-dom'
 
-class ClassesTableComponent extends Component {
+interface ClassesProps {
 
-    constructor(props) {
+}
+interface ClassesState {
+    classes: CharacterClass[];
+}
+
+class ClassesTableComponent extends Component<ClassesProps, ClassesState> {
+
+    constructor(props: ClassesProps | Readonly<ClassesProps>) {
         super(props);
-        this.state = {classes: []};
     }
 
     componentDidMount() {
@@ -16,9 +22,14 @@ class ClassesTableComponent extends Component {
     }
 
     render() {
-        const {classes} = this.state;
+        console.log("classes:");
+        console.log(this.state);
 
-        const classesList = classes
+        if(!this.state) {
+            return <div />
+        }
+
+        const classesList = this.state.classes!
                                 .sort((a, b) => a.name > b.name ? 1 : -1)
                                 .map(characterClass => {
             return <tr key={characterClass.id}>
@@ -35,7 +46,7 @@ class ClassesTableComponent extends Component {
         });
 
         return (
-            <Container>
+            <Container style={{marginRight: "250px"}}>
                 <div>
                     <Container fluid>
                         <h3>Character classes</h3>

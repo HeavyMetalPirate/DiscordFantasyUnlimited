@@ -1,250 +1,98 @@
-2022-05-12 10:29:08,067 INFO org.springframework.boot.StartupInfoLogger [main] Starting FantasyUnlimited using Java 17.0.2 on DESKTOP-MG8DQCF with PID 18204 (F:\Java Projects\IntelliJ\DiscordFantasyUnlimited\Core\build\classes\java\main started by patri in F:\Java Projects\IntelliJ\DiscordFantasyUnlimited)
-2022-05-12 10:29:08,080 DEBUG org.springframework.boot.StartupInfoLogger [main] Running with Spring Boot v2.6.7, Spring v5.3.19
-2022-05-12 10:29:08,081 INFO org.springframework.boot.SpringApplication [main] The following 1 profile is active: "DEV"
-2022-05-12 10:29:08,552 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2022-05-12 10:29:08,579 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 22 ms. Found 2 JPA repository interfaces.
-2022-05-12 10:29:08,920 INFO org.eclipse.jetty.util.log.Log [main] Logging initialized @1678ms to org.eclipse.jetty.util.log.Slf4jLog
-2022-05-12 10:29:09,047 INFO org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory [main] Server initialized with port: 6060
-2022-05-12 10:29:09,049 INFO org.eclipse.jetty.server.Server [main] jetty-9.4.46.v20220331; built: 2022-03-31T16:38:08.030Z; git: bc17a0369a11ecf40bb92c839b9ef0a8ac50ea18; jvm 17.0.2+8
-2022-05-12 10:29:09,071 INFO org.eclipse.jetty.server.handler.ContextHandler$Context [main] Initializing Spring embedded WebApplicationContext
-2022-05-12 10:29:09,071 INFO org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 964 ms
-2022-05-12 10:29:09,143 INFO org.eclipse.jetty.server.session.DefaultSessionIdManager [main] DefaultSessionIdManager workerName=node0
-2022-05-12 10:29:09,144 INFO org.eclipse.jetty.server.session.DefaultSessionIdManager [main] No SessionScavenger set, using defaults
-2022-05-12 10:29:09,145 INFO org.eclipse.jetty.server.session.HouseKeeper [main] node0 Scavenging every 600000ms
-2022-05-12 10:29:09,150 INFO org.eclipse.jetty.server.handler.ContextHandler [main] Started o.s.b.w.e.j.JettyEmbeddedWebAppContext@7f353a0f{application,/,[file:///C:/Users/patri/AppData/Local/Temp/jetty-docbase.6060.1947470444081609199/, jar:file:/C:/Users/patri/.gradle/caches/modules-2/files-2.1/org.webjars/swagger-ui/4.10.3/c770b50a519df6a17100300fe035a5a7f1673342/swagger-ui-4.10.3.jar!/META-INF/resources],AVAILABLE}
-2022-05-12 10:29:09,150 INFO org.eclipse.jetty.server.Server [main] Started @1909ms
-2022-05-12 10:29:09,236 INFO org.hibernate.jpa.internal.util.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [name: default]
-2022-05-12 10:29:09,269 INFO org.hibernate.Version [main] HHH000412: Hibernate ORM core version 5.6.8.Final
-2022-05-12 10:29:09,372 INFO org.hibernate.annotations.common.reflection.java.JavaReflectionManager [main] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-2022-05-12 10:29:09,435 INFO com.zaxxer.hikari.HikariDataSource [main] HikariPool-1 - Starting...
-2022-05-12 10:29:09,668 INFO com.zaxxer.hikari.HikariDataSource [main] HikariPool-1 - Start completed.
-2022-05-12 10:29:09,682 INFO org.hibernate.dialect.Dialect [main] HHH000400: Using dialect: org.hibernate.dialect.MariaDB103Dialect
-2022-05-12 10:29:11,027 INFO org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [main] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2022-05-12 10:29:11,032 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
-2022-05-12 10:29:11,516 WARN org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2022-05-12 10:29:11,634 INFO org.springframework.security.web.DefaultSecurityFilterChain [main] Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4b74a4d, org.springframework.security.web.context.SecurityContextPersistenceFilter@135f160e, org.springframework.security.web.header.HeaderWriterFilter@4d0e6424, org.springframework.security.web.csrf.CsrfFilter@174aabb2, org.springframework.security.web.authentication.logout.LogoutFilter@cbea0df, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@2e2546bf, org.springframework.security.web.session.ConcurrentSessionFilter@3fae357f, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@7a41f4a7, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@7adde776, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@63df2eb8, org.springframework.security.web.session.SessionManagementFilter@5a5024eb, org.springframework.security.web.access.ExceptionTranslationFilter@5c8d685e, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@785477e5]
-2022-05-12 10:29:11,769 INFO org.springframework.boot.autoconfigure.web.servlet.WelcomePageHandlerMapping [main] Adding welcome page: class path resource [public/index.html]
-2022-05-12 10:29:12,247 INFO org.eclipse.jetty.server.handler.ContextHandler$Context [main] Initializing Spring DispatcherServlet 'dispatcherServlet'
-2022-05-12 10:29:12,247 INFO org.springframework.web.servlet.FrameworkServlet [main] Initializing Servlet 'dispatcherServlet'
-2022-05-12 10:29:12,248 INFO org.springframework.web.servlet.FrameworkServlet [main] Completed initialization in 1 ms
-2022-05-12 10:29:12,498 INFO org.eclipse.jetty.server.AbstractConnector [main] Started ServerConnector@6b63e6ad{HTTP/1.1, (http/1.1)}{0.0.0.0:6060}
-2022-05-12 10:29:12,499 INFO org.springframework.boot.web.embedded.jetty.JettyWebServer [main] Jetty started on port(s) 6060 (http/1.1) with context path '/'
-2022-05-12 10:29:12,506 INFO org.springframework.boot.StartupInfoLogger [main] Started FantasyUnlimited in 4.734 seconds (JVM running for 5.264)
-2022-05-12 10:29:39,501 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-150] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
-2022-05-12 10:29:39,501 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-151] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
-2022-05-12 10:29:39,501 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-19] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
-2022-05-12 10:29:39,501 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-21] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
-2022-05-12 10:29:39,501 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-24] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
-2022-05-12 10:29:39,501 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-149] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
-2022-05-12 10:29:39,967 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-153] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
-2022-05-12 10:29:39,967 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-152] Error: HTTP 404 - Not Found - /locales/de/items.json
-2022-05-12 10:29:40,012 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-150] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
-2022-05-12 10:29:40,076 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-154] Error: HTTP 404 - Not Found - /login
-2022-05-12 10:29:52,963 INFO com.fantasyunlimited.security.UserDetailsServiceImpl [qtp266843824-150] Found user com.fantasyunlimited.data.entity.FantasyUnlimitedUser@58541cb1
-2022-05-12 10:29:57,309 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-146] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
-2022-05-12 10:29:57,309 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-152] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
-2022-05-12 10:29:57,563 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-147] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
-2022-05-12 10:29:57,563 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-24] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
-2022-05-12 10:29:57,563 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-150] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
-2022-05-12 10:29:57,563 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-26] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
-2022-05-12 10:29:57,619 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-146] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
-2022-05-12 10:29:57,619 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-152] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
-2022-05-12 10:29:57,876 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-153] Error: HTTP 404 - Not Found - /locales/de/items.json
-2022-05-12 10:29:57,928 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp266843824-150] Found characters for user patrick: [PlayerCharacter [id=1, name=Elron McBong, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=2, name=Elron McBong2, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=3, name=Elron McBong3, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=5, name=Balls McGee, classId=12, raceId=2, locationId=testbox, currentLevel=1, currentXp=0]]
-2022-05-12 10:29:57,909 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp266843824-151] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node01ws41trq1ks3u13mq34ohx3r1p0], Granted Authorities=[USER]], csrf=SaveOnAccessCsrfToken [delegate=org.springframework.security.web.csrf.DefaultCsrfToken@75ff7d5a], character=null]
-2022-05-12 10:29:58,006 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp266843824-146] Found characters for user patrick: [PlayerCharacter [id=1, name=Elron McBong, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=2, name=Elron McBong2, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=3, name=Elron McBong3, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=5, name=Balls McGee, classId=12, raceId=2, locationId=testbox, currentLevel=1, currentXp=0]]
-2022-05-12 10:31:03,138 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp266843824-150] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node01ws41trq1ks3u13mq34ohx3r1p0], Granted Authorities=[USER]], csrf=org.springframework.security.web.csrf.DefaultCsrfToken@75ff7d5a, character=5]
-2022-05-12 10:31:07,353 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-151] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
-2022-05-12 10:31:07,355 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-26] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
-2022-05-12 10:31:07,355 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-150] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
-2022-05-12 10:31:07,600 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-153] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
-2022-05-12 10:31:07,600 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-152] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
-2022-05-12 10:31:07,600 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-146] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
-2022-05-12 10:31:07,661 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-151] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
-2022-05-12 10:31:07,662 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-21] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
-2022-05-12 10:31:07,662 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-26] Error: HTTP 404 - Not Found - /locales/de/items.json
-2022-05-12 10:31:07,936 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp266843824-23] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node01ws41trq1ks3u13mq34ohx3r1p0], Granted Authorities=[USER]], csrf=org.springframework.security.web.csrf.DefaultCsrfToken@75ff7d5a, character=5]
-2022-05-12 10:31:32,778 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp266843824-153] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node01ws41trq1ks3u13mq34ohx3r1p0], Granted Authorities=[USER]], csrf=org.springframework.security.web.csrf.DefaultCsrfToken@75ff7d5a, character=5]
-2022-05-12 10:31:37,864 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-151] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
-2022-05-12 10:31:37,864 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-146] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
-2022-05-12 10:31:38,123 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-152] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
-2022-05-12 10:31:38,123 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-26] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
-2022-05-12 10:31:38,123 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-21] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
-2022-05-12 10:31:38,123 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-153] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
-2022-05-12 10:31:38,174 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-146] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
-2022-05-12 10:31:38,174 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-151] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
-2022-05-12 10:31:38,433 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-23] Error: HTTP 404 - Not Found - /locales/de/items.json
-2022-05-12 10:31:38,459 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp266843824-24] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node01ws41trq1ks3u13mq34ohx3r1p0], Granted Authorities=[USER]], csrf=org.springframework.security.web.csrf.DefaultCsrfToken@75ff7d5a, character=5]
-2022-05-12 10:31:56,558 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp266843824-151] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node01ws41trq1ks3u13mq34ohx3r1p0], Granted Authorities=[USER]], csrf=org.springframework.security.web.csrf.DefaultCsrfToken@75ff7d5a, character=5]
-2022-05-12 10:31:57,124 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-153] Error: HTTP 403 - Forbidden - /game/images/fu.png
-2022-05-12 10:41:23,409 DEBUG com.fantasyunlimited.data.service.PlayerCharacterService [qtp266843824-152] Dropping item smallHealthPot; old count: 5, new count: 0
-2022-05-12 10:41:23,410 DEBUG com.fantasyunlimited.data.service.PlayerCharacterService [qtp266843824-152] Inventory: {broken-sword=3, smallHealthPot=0, torn-shirt=1}
-2022-05-12 10:41:41,543 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-161] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
-2022-05-12 10:41:41,543 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-23] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
-2022-05-12 10:41:41,543 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-154] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
-2022-05-12 10:41:41,791 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-151] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
-2022-05-12 10:41:41,791 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-153] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
-2022-05-12 10:41:41,791 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-26] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
-2022-05-12 10:41:41,853 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-152] Error: HTTP 404 - Not Found - /locales/de/items.json
-2022-05-12 10:41:41,853 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-23] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
-2022-05-12 10:41:41,853 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-154] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
-2022-05-12 10:41:42,124 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp266843824-151] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node01ws41trq1ks3u13mq34ohx3r1p0], Granted Authorities=[USER]], csrf=org.springframework.security.web.csrf.DefaultCsrfToken@75ff7d5a, character=5]
-2022-05-12 10:41:42,217 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-154] Error: HTTP 403 - Forbidden - /game/images/fu.png
-2022-05-12 10:43:29,571 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-151] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
-2022-05-12 10:43:29,571 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-161] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
-2022-05-12 10:43:29,572 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-26] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
-2022-05-12 10:43:29,814 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-21] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
-2022-05-12 10:43:29,814 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-153] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
-2022-05-12 10:43:29,814 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-154] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
-2022-05-12 10:43:29,882 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-24] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
-2022-05-12 10:43:29,882 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-151] Error: HTTP 404 - Not Found - /locales/de/items.json
-2022-05-12 10:43:29,882 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-160] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
-2022-05-12 10:43:30,153 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp266843824-21] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node01ws41trq1ks3u13mq34ohx3r1p0], Granted Authorities=[USER]], csrf=org.springframework.security.web.csrf.DefaultCsrfToken@75ff7d5a, character=5]
-2022-05-12 10:43:30,206 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp266843824-24] Error: HTTP 403 - Forbidden - /game/images/fu.png
-2022-05-12 10:44:35,916 INFO org.springframework.boot.StartupInfoLogger [main] Starting FantasyUnlimited using Java 17.0.2 on DESKTOP-MG8DQCF with PID 8096 (F:\Java Projects\IntelliJ\DiscordFantasyUnlimited\Core\build\classes\java\main started by patri in F:\Java Projects\IntelliJ\DiscordFantasyUnlimited)
-2022-05-12 10:44:35,918 DEBUG org.springframework.boot.StartupInfoLogger [main] Running with Spring Boot v2.6.7, Spring v5.3.19
-2022-05-12 10:44:35,919 INFO org.springframework.boot.SpringApplication [main] The following 1 profile is active: "DEV"
-2022-05-12 10:44:36,305 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2022-05-12 10:44:36,332 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 21 ms. Found 2 JPA repository interfaces.
-2022-05-12 10:44:36,642 INFO org.eclipse.jetty.util.log.Log [main] Logging initialized @1244ms to org.eclipse.jetty.util.log.Slf4jLog
-2022-05-12 10:44:36,762 INFO org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory [main] Server initialized with port: 6060
-2022-05-12 10:44:36,764 INFO org.eclipse.jetty.server.Server [main] jetty-9.4.46.v20220331; built: 2022-03-31T16:38:08.030Z; git: bc17a0369a11ecf40bb92c839b9ef0a8ac50ea18; jvm 17.0.2+8
-2022-05-12 10:44:36,787 INFO org.eclipse.jetty.server.handler.ContextHandler$Context [main] Initializing Spring embedded WebApplicationContext
-2022-05-12 10:44:36,787 INFO org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 838 ms
-2022-05-12 10:44:36,851 INFO org.eclipse.jetty.server.session.DefaultSessionIdManager [main] DefaultSessionIdManager workerName=node0
-2022-05-12 10:44:36,851 INFO org.eclipse.jetty.server.session.DefaultSessionIdManager [main] No SessionScavenger set, using defaults
-2022-05-12 10:44:36,852 INFO org.eclipse.jetty.server.session.HouseKeeper [main] node0 Scavenging every 660000ms
-2022-05-12 10:44:36,857 INFO org.eclipse.jetty.server.handler.ContextHandler [main] Started o.s.b.w.e.j.JettyEmbeddedWebAppContext@c7f4457{application,/,[file:///C:/Users/patri/AppData/Local/Temp/jetty-docbase.6060.4641723613319882533/, jar:file:/C:/Users/patri/.gradle/caches/modules-2/files-2.1/org.webjars/swagger-ui/4.10.3/c770b50a519df6a17100300fe035a5a7f1673342/swagger-ui-4.10.3.jar!/META-INF/resources],AVAILABLE}
-2022-05-12 10:44:36,857 INFO org.eclipse.jetty.server.Server [main] Started @1460ms
-2022-05-12 10:44:36,934 INFO org.hibernate.jpa.internal.util.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [name: default]
-2022-05-12 10:44:36,965 INFO org.hibernate.Version [main] HHH000412: Hibernate ORM core version 5.6.8.Final
-2022-05-12 10:44:37,070 INFO org.hibernate.annotations.common.reflection.java.JavaReflectionManager [main] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-2022-05-12 10:44:37,133 INFO com.zaxxer.hikari.HikariDataSource [main] HikariPool-1 - Starting...
-2022-05-12 10:44:37,176 INFO com.zaxxer.hikari.HikariDataSource [main] HikariPool-1 - Start completed.
-2022-05-12 10:44:37,185 INFO org.hibernate.dialect.Dialect [main] HHH000400: Using dialect: org.hibernate.dialect.MariaDB103Dialect
-2022-05-12 10:44:37,893 INFO org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [main] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2022-05-12 10:44:37,898 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
-2022-05-12 10:44:38,243 WARN org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2022-05-12 10:44:38,324 INFO org.springframework.security.web.DefaultSecurityFilterChain [main] Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@72321701, org.springframework.security.web.context.SecurityContextPersistenceFilter@39ee07a9, org.springframework.security.web.header.HeaderWriterFilter@570ede3b, org.springframework.security.web.csrf.CsrfFilter@12a7515b, org.springframework.security.web.authentication.logout.LogoutFilter@492a220e, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@63df2eb8, org.springframework.security.web.session.ConcurrentSessionFilter@230e163b, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@7adde776, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@1cdb290c, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@2f83467, org.springframework.security.web.session.SessionManagementFilter@25630ede, org.springframework.security.web.access.ExceptionTranslationFilter@476dc0af, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@2e2546bf]
-2022-05-12 10:44:38,452 INFO org.springframework.boot.autoconfigure.web.servlet.WelcomePageHandlerMapping [main] Adding welcome page: class path resource [public/index.html]
-2022-05-12 10:44:38,855 INFO org.eclipse.jetty.server.handler.ContextHandler$Context [main] Initializing Spring DispatcherServlet 'dispatcherServlet'
-2022-05-12 10:44:38,855 INFO org.springframework.web.servlet.FrameworkServlet [main] Initializing Servlet 'dispatcherServlet'
-2022-05-12 10:44:38,856 INFO org.springframework.web.servlet.FrameworkServlet [main] Completed initialization in 0 ms
-2022-05-12 10:44:38,887 INFO org.eclipse.jetty.server.AbstractConnector [main] Started ServerConnector@40a72ecd{HTTP/1.1, (http/1.1)}{0.0.0.0:6060}
-2022-05-12 10:44:38,887 INFO org.springframework.boot.web.embedded.jetty.JettyWebServer [main] Jetty started on port(s) 6060 (http/1.1) with context path '/'
-2022-05-12 10:44:38,893 INFO org.springframework.boot.StartupInfoLogger [main] Started FantasyUnlimited in 3.248 seconds (JVM running for 3.495)
-2022-05-12 10:45:04,726 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-151] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
-2022-05-12 10:45:04,726 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-150] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
-2022-05-12 10:45:04,726 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-149] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
-2022-05-12 10:45:04,845 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-149] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
-2022-05-12 10:45:04,845 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-20] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
-2022-05-12 10:45:04,845 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-23] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
-2022-05-12 10:45:05,052 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-146] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
-2022-05-12 10:45:05,052 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-26] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
-2022-05-12 10:45:05,061 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-147] Error: HTTP 404 - Not Found - /locales/de/items.json
-2022-05-12 10:45:05,171 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-26] Error: HTTP 404 - Not Found - /login
-2022-05-12 10:45:09,175 INFO com.fantasyunlimited.security.UserDetailsServiceImpl [qtp914293025-146] Found user com.fantasyunlimited.data.entity.FantasyUnlimitedUser@1366899e
-2022-05-12 10:45:13,232 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-147] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
-2022-05-12 10:45:13,367 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-20] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
-2022-05-12 10:45:13,477 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-150] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
-2022-05-12 10:45:13,477 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-146] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
-2022-05-12 10:45:13,477 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-152] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
-2022-05-12 10:45:13,477 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-151] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
-2022-05-12 10:45:13,540 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-147] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
-2022-05-12 10:45:13,676 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-20] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
-2022-05-12 10:45:13,788 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-150] Error: HTTP 404 - Not Found - /locales/de/items.json
-2022-05-12 10:45:13,818 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp914293025-23] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node0u2k6pbwgr2iywfyueq3bkm4p0], Granted Authorities=[USER]], csrf=SaveOnAccessCsrfToken [delegate=org.springframework.security.web.csrf.DefaultCsrfToken@73529a71], character=null]
-2022-05-12 10:45:13,833 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp914293025-21] Found characters for user patrick: [PlayerCharacter [id=1, name=Elron McBong, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=2, name=Elron McBong2, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=3, name=Elron McBong3, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=5, name=Balls McGee, classId=12, raceId=2, locationId=testbox, currentLevel=1, currentXp=0]]
-2022-05-12 10:45:13,853 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp914293025-147] Found characters for user patrick: [PlayerCharacter [id=1, name=Elron McBong, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=2, name=Elron McBong2, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=3, name=Elron McBong3, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=5, name=Balls McGee, classId=12, raceId=2, locationId=testbox, currentLevel=1, currentXp=0]]
-2022-05-12 10:45:24,405 DEBUG com.fantasyunlimited.data.service.PlayerCharacterService [qtp914293025-21] Dropping item smallHealthPot; old count: 50, new count: 0
-2022-05-12 10:45:24,406 DEBUG com.fantasyunlimited.data.service.PlayerCharacterService [qtp914293025-21] Inventory: {broken-sword=3, smallHealthPot=0, torn-shirt=1}
-2022-05-12 10:45:32,202 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-147] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
-2022-05-12 10:45:32,214 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-20] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
-2022-05-12 10:45:32,304 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-150] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
-2022-05-12 10:45:32,460 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-21] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
-2022-05-12 10:45:32,460 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-152] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
-2022-05-12 10:45:32,460 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-23] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
-2022-05-12 10:45:32,511 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-147] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
-2022-05-12 10:45:32,521 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-20] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
-2022-05-12 10:45:32,614 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-150] Error: HTTP 404 - Not Found - /locales/de/items.json
-2022-05-12 10:45:32,791 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp914293025-21] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node0u2k6pbwgr2iywfyueq3bkm4p0], Granted Authorities=[USER]], csrf=org.springframework.security.web.csrf.DefaultCsrfToken@73529a71, character=5]
-2022-05-12 10:45:32,833 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-20] Error: HTTP 403 - Forbidden - /game/images/fu.png
-2022-05-12 10:49:47,712 INFO org.springframework.boot.StartupInfoLogger [main] Starting FantasyUnlimited using Java 17.0.2 on DESKTOP-MG8DQCF with PID 21604 (F:\Java Projects\IntelliJ\DiscordFantasyUnlimited\Core\build\classes\java\main started by patri in F:\Java Projects\IntelliJ\DiscordFantasyUnlimited)
-2022-05-12 10:49:47,713 DEBUG org.springframework.boot.StartupInfoLogger [main] Running with Spring Boot v2.6.7, Spring v5.3.19
-2022-05-12 10:49:47,714 INFO org.springframework.boot.SpringApplication [main] The following 1 profile is active: "DEV"
-2022-05-12 10:49:48,089 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2022-05-12 10:49:48,113 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 19 ms. Found 2 JPA repository interfaces.
-2022-05-12 10:49:48,426 INFO org.eclipse.jetty.util.log.Log [main] Logging initialized @1218ms to org.eclipse.jetty.util.log.Slf4jLog
-2022-05-12 10:49:48,547 INFO org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory [main] Server initialized with port: 6060
-2022-05-12 10:49:48,549 INFO org.eclipse.jetty.server.Server [main] jetty-9.4.46.v20220331; built: 2022-03-31T16:38:08.030Z; git: bc17a0369a11ecf40bb92c839b9ef0a8ac50ea18; jvm 17.0.2+8
-2022-05-12 10:49:48,568 INFO org.eclipse.jetty.server.handler.ContextHandler$Context [main] Initializing Spring embedded WebApplicationContext
-2022-05-12 10:49:48,569 INFO org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 826 ms
-2022-05-12 10:49:48,630 INFO org.eclipse.jetty.server.session.DefaultSessionIdManager [main] DefaultSessionIdManager workerName=node0
-2022-05-12 10:49:48,631 INFO org.eclipse.jetty.server.session.DefaultSessionIdManager [main] No SessionScavenger set, using defaults
-2022-05-12 10:49:48,632 INFO org.eclipse.jetty.server.session.HouseKeeper [main] node0 Scavenging every 600000ms
-2022-05-12 10:49:48,637 INFO org.eclipse.jetty.server.handler.ContextHandler [main] Started o.s.b.w.e.j.JettyEmbeddedWebAppContext@c7f4457{application,/,[file:///C:/Users/patri/AppData/Local/Temp/jetty-docbase.6060.513645820171765801/, jar:file:/C:/Users/patri/.gradle/caches/modules-2/files-2.1/org.webjars/swagger-ui/4.10.3/c770b50a519df6a17100300fe035a5a7f1673342/swagger-ui-4.10.3.jar!/META-INF/resources],AVAILABLE}
-2022-05-12 10:49:48,638 INFO org.eclipse.jetty.server.Server [main] Started @1430ms
-2022-05-12 10:49:48,720 INFO org.hibernate.jpa.internal.util.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [name: default]
-2022-05-12 10:49:48,752 INFO org.hibernate.Version [main] HHH000412: Hibernate ORM core version 5.6.8.Final
-2022-05-12 10:49:48,850 INFO org.hibernate.annotations.common.reflection.java.JavaReflectionManager [main] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-2022-05-12 10:49:48,911 INFO com.zaxxer.hikari.HikariDataSource [main] HikariPool-1 - Starting...
-2022-05-12 10:49:48,957 INFO com.zaxxer.hikari.HikariDataSource [main] HikariPool-1 - Start completed.
-2022-05-12 10:49:48,967 INFO org.hibernate.dialect.Dialect [main] HHH000400: Using dialect: org.hibernate.dialect.MariaDB103Dialect
-2022-05-12 10:49:49,637 INFO org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [main] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2022-05-12 10:49:49,642 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
-2022-05-12 10:49:49,981 WARN org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2022-05-12 10:49:50,065 INFO org.springframework.security.web.DefaultSecurityFilterChain [main] Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@72321701, org.springframework.security.web.context.SecurityContextPersistenceFilter@39ee07a9, org.springframework.security.web.header.HeaderWriterFilter@570ede3b, org.springframework.security.web.csrf.CsrfFilter@12a7515b, org.springframework.security.web.authentication.logout.LogoutFilter@492a220e, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@63df2eb8, org.springframework.security.web.session.ConcurrentSessionFilter@230e163b, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@7adde776, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@1cdb290c, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@2f83467, org.springframework.security.web.session.SessionManagementFilter@25630ede, org.springframework.security.web.access.ExceptionTranslationFilter@476dc0af, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@2e2546bf]
-2022-05-12 10:49:50,192 INFO org.springframework.boot.autoconfigure.web.servlet.WelcomePageHandlerMapping [main] Adding welcome page: class path resource [public/index.html]
-2022-05-12 10:49:50,650 INFO org.eclipse.jetty.server.handler.ContextHandler$Context [main] Initializing Spring DispatcherServlet 'dispatcherServlet'
-2022-05-12 10:49:50,650 INFO org.springframework.web.servlet.FrameworkServlet [main] Initializing Servlet 'dispatcherServlet'
-2022-05-12 10:49:50,651 INFO org.springframework.web.servlet.FrameworkServlet [main] Completed initialization in 1 ms
-2022-05-12 10:49:50,679 INFO org.eclipse.jetty.server.AbstractConnector [main] Started ServerConnector@40a72ecd{HTTP/1.1, (http/1.1)}{0.0.0.0:6060}
-2022-05-12 10:49:50,680 INFO org.springframework.boot.web.embedded.jetty.JettyWebServer [main] Jetty started on port(s) 6060 (http/1.1) with context path '/'
-2022-05-12 10:49:50,685 INFO org.springframework.boot.StartupInfoLogger [main] Started FantasyUnlimited in 3.239 seconds (JVM running for 3.478)
-2022-05-12 10:50:00,372 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-151] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
-2022-05-12 10:50:00,372 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-150] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
-2022-05-12 10:50:00,372 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-149] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
-2022-05-12 10:50:00,551 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-20] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
-2022-05-12 10:50:00,551 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-19] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
-2022-05-12 10:50:00,551 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-149] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
-2022-05-12 10:50:00,696 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-146] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
-2022-05-12 10:50:00,696 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-26] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
-2022-05-12 10:50:00,701 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-147] Error: HTTP 404 - Not Found - /locales/de/items.json
-2022-05-12 10:50:00,901 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-20] Error: HTTP 404 - Not Found - /login
-2022-05-12 10:50:05,062 INFO com.fantasyunlimited.security.UserDetailsServiceImpl [qtp914293025-146] Found user com.fantasyunlimited.data.entity.FantasyUnlimitedUser@1ef5831e
-2022-05-12 10:50:06,466 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-147] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
-2022-05-12 10:50:06,511 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-151] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
-2022-05-12 10:50:06,697 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-23] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
-2022-05-12 10:50:06,697 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-152] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
-2022-05-12 10:50:06,697 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-146] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
-2022-05-12 10:50:06,697 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-26] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
-2022-05-12 10:50:06,776 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-147] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
-2022-05-12 10:50:06,819 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-151] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
-2022-05-12 10:50:07,012 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-20] Error: HTTP 404 - Not Found - /locales/de/items.json
-2022-05-12 10:50:07,041 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp914293025-19] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node0kk9jk64oe8bk3er0za2a1zhm0], Granted Authorities=[USER]], csrf=SaveOnAccessCsrfToken [delegate=org.springframework.security.web.csrf.DefaultCsrfToken@660685bd], character=null]
-2022-05-12 10:50:07,057 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp914293025-152] Found characters for user patrick: [PlayerCharacter [id=1, name=Elron McBong, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=2, name=Elron McBong2, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=3, name=Elron McBong3, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=5, name=Balls McGee, classId=12, raceId=2, locationId=testbox, currentLevel=1, currentXp=0]]
-2022-05-12 10:50:07,092 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp914293025-147] Found characters for user patrick: [PlayerCharacter [id=1, name=Elron McBong, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=2, name=Elron McBong2, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=3, name=Elron McBong3, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=5, name=Balls McGee, classId=12, raceId=2, locationId=testbox, currentLevel=1, currentXp=0]]
-2022-05-12 10:50:28,263 DEBUG com.fantasyunlimited.data.service.PlayerCharacterService [qtp914293025-152] Dropping 10 of item smallHealthPot; old count: 50, new count: 40
-2022-05-12 10:50:28,264 DEBUG com.fantasyunlimited.data.service.PlayerCharacterService [qtp914293025-152] Inventory: {broken-sword=3, smallHealthPot=40, torn-shirt=1}
-2022-05-12 10:51:25,327 DEBUG com.fantasyunlimited.data.service.PlayerCharacterService [qtp914293025-151] Dropping 5 of item smallHealthPot; old count: 40, new count: 35
-2022-05-12 10:51:25,328 DEBUG com.fantasyunlimited.data.service.PlayerCharacterService [qtp914293025-151] Inventory: {broken-sword=3, smallHealthPot=35, torn-shirt=1}
-2022-05-12 10:53:05,316 DEBUG com.fantasyunlimited.data.service.PlayerCharacterService [qtp914293025-147] Dropping 3 of item smallHealthPot; old count: 35, new count: 32
-2022-05-12 10:53:05,316 DEBUG com.fantasyunlimited.data.service.PlayerCharacterService [qtp914293025-147] Inventory: {broken-sword=3, smallHealthPot=32, torn-shirt=1}
-2022-05-12 10:54:31,812 DEBUG com.fantasyunlimited.data.service.PlayerCharacterService [qtp914293025-19] Dropping 32 of item smallHealthPot; old count: 32, new count: 0
-2022-05-12 10:54:31,812 DEBUG com.fantasyunlimited.data.service.PlayerCharacterService [qtp914293025-19] Inventory: {broken-sword=3, smallHealthPot=0, torn-shirt=1}
-2022-05-12 10:54:50,377 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-152] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
-2022-05-12 10:54:50,377 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-147] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
-2022-05-12 10:54:50,631 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-155] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
-2022-05-12 10:54:50,631 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-151] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
-2022-05-12 10:54:50,631 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-26] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
-2022-05-12 10:54:50,631 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-19] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
-2022-05-12 10:54:50,686 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-152] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
-2022-05-12 10:54:50,686 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-147] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
-2022-05-12 10:54:50,940 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-151] Error: HTTP 404 - Not Found - /locales/de/items.json
-2022-05-12 10:54:50,967 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp914293025-146] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node0kk9jk64oe8bk3er0za2a1zhm0], Granted Authorities=[USER]], csrf=org.springframework.security.web.csrf.DefaultCsrfToken@660685bd, character=5]
-2022-05-12 10:54:51,008 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-23] Error: HTTP 403 - Forbidden - /game/images/fu.png
-2022-05-12 10:54:59,192 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp914293025-26] Found characters for user patrick: [PlayerCharacter [id=1, name=Elron McBong, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=2, name=Elron McBong2, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=3, name=Elron McBong3, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=5, name=Balls McGee, classId=12, raceId=2, locationId=testbox, currentLevel=1, currentXp=0]]
-2022-05-12 14:07:57,936 WARN org.eclipse.jetty.server.HttpChannel [qtp914293025-239] /api/game/inventory
+2022-05-15 13:58:42,945 INFO org.springframework.boot.StartupInfoLogger [main] Starting FantasyUnlimited using Java 17.0.2 on DESKTOP-MG8DQCF with PID 1048 (F:\Java Projects\IntelliJ\DiscordFantasyUnlimited\Core\build\classes\java\main started by patri in F:\Java Projects\IntelliJ\DiscordFantasyUnlimited)
+2022-05-15 13:58:42,947 DEBUG org.springframework.boot.StartupInfoLogger [main] Running with Spring Boot v2.6.7, Spring v5.3.19
+2022-05-15 13:58:42,948 INFO org.springframework.boot.SpringApplication [main] The following 1 profile is active: "DEV"
+2022-05-15 13:58:45,202 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-05-15 13:58:45,241 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 27 ms. Found 2 JPA repository interfaces.
+2022-05-15 13:58:45,525 INFO org.eclipse.jetty.util.log.Log [main] Logging initialized @6514ms to org.eclipse.jetty.util.log.Slf4jLog
+2022-05-15 13:58:45,598 INFO org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory [main] Server initialized with port: 6060
+2022-05-15 13:58:45,599 INFO org.eclipse.jetty.server.Server [main] jetty-9.4.46.v20220331; built: 2022-03-31T16:38:08.030Z; git: bc17a0369a11ecf40bb92c839b9ef0a8ac50ea18; jvm 17.0.2+8
+2022-05-15 13:58:45,618 INFO org.eclipse.jetty.server.handler.ContextHandler$Context [main] Initializing Spring embedded WebApplicationContext
+2022-05-15 13:58:45,619 INFO org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 2638 ms
+2022-05-15 13:58:45,674 INFO org.eclipse.jetty.server.session.DefaultSessionIdManager [main] DefaultSessionIdManager workerName=node0
+2022-05-15 13:58:45,674 INFO org.eclipse.jetty.server.session.DefaultSessionIdManager [main] No SessionScavenger set, using defaults
+2022-05-15 13:58:45,675 INFO org.eclipse.jetty.server.session.HouseKeeper [main] node0 Scavenging every 600000ms
+2022-05-15 13:58:45,679 INFO org.eclipse.jetty.server.handler.ContextHandler [main] Started o.s.b.w.e.j.JettyEmbeddedWebAppContext@36ab3814{application,/,[file:///C:/Users/patri/AppData/Local/Temp/jetty-docbase.6060.6311038606883854813/, jar:file:/C:/Users/patri/.gradle/caches/modules-2/files-2.1/org.webjars/swagger-ui/4.10.3/c770b50a519df6a17100300fe035a5a7f1673342/swagger-ui-4.10.3.jar!/META-INF/resources],AVAILABLE}
+2022-05-15 13:58:45,680 INFO org.eclipse.jetty.server.Server [main] Started @6669ms
+2022-05-15 13:58:45,749 INFO org.hibernate.jpa.internal.util.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-05-15 13:58:45,775 INFO org.hibernate.Version [main] HHH000412: Hibernate ORM core version 5.6.8.Final
+2022-05-15 13:58:45,857 INFO org.hibernate.annotations.common.reflection.java.JavaReflectionManager [main] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2022-05-15 13:58:45,912 INFO com.zaxxer.hikari.HikariDataSource [main] HikariPool-1 - Starting...
+2022-05-15 13:58:46,052 INFO com.zaxxer.hikari.HikariDataSource [main] HikariPool-1 - Start completed.
+2022-05-15 13:58:46,061 INFO org.hibernate.dialect.Dialect [main] HHH000400: Using dialect: org.hibernate.dialect.MariaDB103Dialect
+2022-05-15 13:58:46,903 INFO org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [main] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-05-15 13:58:46,910 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-05-15 13:58:47,213 WARN org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-05-15 13:58:47,294 INFO org.springframework.security.web.DefaultSecurityFilterChain [main] Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@22fe90df, org.springframework.security.web.context.SecurityContextPersistenceFilter@32bae609, org.springframework.security.web.header.HeaderWriterFilter@6dadcf58, org.springframework.security.web.csrf.CsrfFilter@522f74a1, org.springframework.security.web.authentication.logout.LogoutFilter@4964d801, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@7077ae9c, org.springframework.security.web.session.ConcurrentSessionFilter@2267b0bb, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@6dde913e, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@90c01ab, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@2604940, org.springframework.security.web.session.SessionManagementFilter@eb09112, org.springframework.security.web.access.ExceptionTranslationFilter@3958db82, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@571903ff]
+2022-05-15 13:58:47,408 INFO org.springframework.boot.autoconfigure.web.servlet.WelcomePageHandlerMapping [main] Adding welcome page: class path resource [public/index.html]
+2022-05-15 13:58:47,836 INFO org.eclipse.jetty.server.handler.ContextHandler$Context [main] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-05-15 13:58:47,836 INFO org.springframework.web.servlet.FrameworkServlet [main] Initializing Servlet 'dispatcherServlet'
+2022-05-15 13:58:47,837 INFO org.springframework.web.servlet.FrameworkServlet [main] Completed initialization in 1 ms
+2022-05-15 13:58:48,160 INFO org.eclipse.jetty.server.AbstractConnector [main] Started ServerConnector@15d42ccb{HTTP/1.1, (http/1.1)}{0.0.0.0:6060}
+2022-05-15 13:58:48,161 INFO org.springframework.boot.web.embedded.jetty.JettyWebServer [main] Jetty started on port(s) 6060 (http/1.1) with context path '/'
+2022-05-15 13:58:48,172 INFO org.springframework.boot.StartupInfoLogger [main] Started FantasyUnlimited in 5.519 seconds (JVM running for 9.161)
+2022-05-15 14:01:45,148 INFO org.eclipse.jetty.server.AbstractConnector [SpringApplicationShutdownHook] Stopped ServerConnector@15d42ccb{HTTP/1.1, (http/1.1)}{0.0.0.0:6060}
+2022-05-15 14:01:45,148 INFO org.eclipse.jetty.server.session.HouseKeeper [SpringApplicationShutdownHook] node0 Stopped scavenging
+2022-05-15 14:01:45,149 INFO org.eclipse.jetty.server.handler.ContextHandler$Context [SpringApplicationShutdownHook] Destroying Spring FrameworkServlet 'dispatcherServlet'
+2022-05-15 14:01:45,149 INFO org.eclipse.jetty.server.handler.ContextHandler [SpringApplicationShutdownHook] Stopped o.s.b.w.e.j.JettyEmbeddedWebAppContext@36ab3814{application,/,[file:///C:/Users/patri/AppData/Local/Temp/jetty-docbase.6060.6311038606883854813/, jar:file:/C:/Users/patri/.gradle/caches/modules-2/files-2.1/org.webjars/swagger-ui/4.10.3/c770b50a519df6a17100300fe035a5a7f1673342/swagger-ui-4.10.3.jar!/META-INF/resources],STOPPED}
+2022-05-15 14:01:45,158 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [SpringApplicationShutdownHook] Closing JPA EntityManagerFactory for persistence unit 'default'
+2022-05-15 14:01:45,159 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2022-05-15 14:01:45,163 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2022-05-15 14:02:41,792 INFO org.springframework.boot.StartupInfoLogger [main] Starting FantasyUnlimited using Java 17.0.2 on DESKTOP-MG8DQCF with PID 1748 (F:\Java Projects\IntelliJ\DiscordFantasyUnlimited\Core\build\classes\java\main started by patri in F:\Java Projects\IntelliJ\DiscordFantasyUnlimited)
+2022-05-15 14:02:41,794 DEBUG org.springframework.boot.StartupInfoLogger [main] Running with Spring Boot v2.6.7, Spring v5.3.19
+2022-05-15 14:02:41,794 INFO org.springframework.boot.SpringApplication [main] The following 1 profile is active: "DEV"
+2022-05-15 14:02:42,316 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-05-15 14:02:42,347 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 24 ms. Found 2 JPA repository interfaces.
+2022-05-15 14:02:42,715 INFO org.eclipse.jetty.util.log.Log [main] Logging initialized @1761ms to org.eclipse.jetty.util.log.Slf4jLog
+2022-05-15 14:02:42,815 INFO org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory [main] Server initialized with port: 6060
+2022-05-15 14:02:42,817 INFO org.eclipse.jetty.server.Server [main] jetty-9.4.46.v20220331; built: 2022-03-31T16:38:08.030Z; git: bc17a0369a11ecf40bb92c839b9ef0a8ac50ea18; jvm 17.0.2+8
+2022-05-15 14:02:42,834 INFO org.eclipse.jetty.server.handler.ContextHandler$Context [main] Initializing Spring embedded WebApplicationContext
+2022-05-15 14:02:42,835 INFO org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 1014 ms
+2022-05-15 14:02:42,908 INFO org.eclipse.jetty.server.session.DefaultSessionIdManager [main] DefaultSessionIdManager workerName=node0
+2022-05-15 14:02:42,908 INFO org.eclipse.jetty.server.session.DefaultSessionIdManager [main] No SessionScavenger set, using defaults
+2022-05-15 14:02:42,909 INFO org.eclipse.jetty.server.session.HouseKeeper [main] node0 Scavenging every 600000ms
+2022-05-15 14:02:42,916 INFO org.eclipse.jetty.server.handler.ContextHandler [main] Started o.s.b.w.e.j.JettyEmbeddedWebAppContext@fe87ddd{application,/,[file:///C:/Users/patri/AppData/Local/Temp/jetty-docbase.6060.15144714894311399627/, jar:file:/C:/Users/patri/.gradle/caches/modules-2/files-2.1/org.webjars/swagger-ui/4.10.3/c770b50a519df6a17100300fe035a5a7f1673342/swagger-ui-4.10.3.jar!/META-INF/resources],AVAILABLE}
+2022-05-15 14:02:42,916 INFO org.eclipse.jetty.server.Server [main] Started @1963ms
+2022-05-15 14:02:43,002 INFO org.hibernate.jpa.internal.util.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-05-15 14:02:43,032 INFO org.hibernate.Version [main] HHH000412: Hibernate ORM core version 5.6.8.Final
+2022-05-15 14:02:43,114 INFO org.hibernate.annotations.common.reflection.java.JavaReflectionManager [main] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2022-05-15 14:02:43,172 INFO com.zaxxer.hikari.HikariDataSource [main] HikariPool-1 - Starting...
+2022-05-15 14:02:43,204 INFO com.zaxxer.hikari.HikariDataSource [main] HikariPool-1 - Start completed.
+2022-05-15 14:02:43,213 INFO org.hibernate.dialect.Dialect [main] HHH000400: Using dialect: org.hibernate.dialect.MariaDB103Dialect
+2022-05-15 14:02:44,377 INFO org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [main] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-05-15 14:02:44,384 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-05-15 14:02:44,685 WARN org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-05-15 14:02:44,770 INFO org.springframework.security.web.DefaultSecurityFilterChain [main] Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@33986be7, org.springframework.security.web.context.SecurityContextPersistenceFilter@4f6a5cc9, org.springframework.security.web.header.HeaderWriterFilter@5003c114, org.springframework.security.web.csrf.CsrfFilter@20505460, org.springframework.security.web.authentication.logout.LogoutFilter@7a79d99c, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@31daf094, org.springframework.security.web.session.ConcurrentSessionFilter@643a73fa, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@4ef10d3b, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@7d49fe37, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@748fa354, org.springframework.security.web.session.SessionManagementFilter@2487b621, org.springframework.security.web.access.ExceptionTranslationFilter@36696821, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@3458be63]
+2022-05-15 14:02:44,901 INFO org.springframework.boot.autoconfigure.web.servlet.WelcomePageHandlerMapping [main] Adding welcome page: class path resource [public/index.html]
+2022-05-15 14:02:45,302 INFO org.eclipse.jetty.server.handler.ContextHandler$Context [main] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-05-15 14:02:45,302 INFO org.springframework.web.servlet.FrameworkServlet [main] Initializing Servlet 'dispatcherServlet'
+2022-05-15 14:02:45,303 INFO org.springframework.web.servlet.FrameworkServlet [main] Completed initialization in 1 ms
+2022-05-15 14:02:45,331 INFO org.eclipse.jetty.server.AbstractConnector [main] Started ServerConnector@1d247525{HTTP/1.1, (http/1.1)}{0.0.0.0:6060}
+2022-05-15 14:02:45,332 INFO org.springframework.boot.web.embedded.jetty.JettyWebServer [main] Jetty started on port(s) 6060 (http/1.1) with context path '/'
+2022-05-15 14:02:45,339 INFO org.springframework.boot.StartupInfoLogger [main] Started FantasyUnlimited in 3.877 seconds (JVM running for 4.385)
+2022-05-15 14:02:54,458 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-167] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
+2022-05-15 14:02:54,458 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-169] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
+2022-05-15 14:02:54,458 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-168] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
+2022-05-15 14:02:54,642 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-27] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
+2022-05-15 14:02:54,642 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-169] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
+2022-05-15 14:02:54,642 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-24] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
+2022-05-15 14:02:54,801 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-165] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
+2022-05-15 14:02:54,802 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-31] Error: HTTP 404 - Not Found - /locales/de/items.json
+2022-05-15 14:02:54,813 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-164] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
+2022-05-15 14:02:55,025 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-167] Error: HTTP 404 - Not Found - /login
+2022-05-15 14:18:05,309 INFO com.fantasyunlimited.security.UserDetailsServiceImpl [qtp1252138909-172] Found user com.fantasyunlimited.data.entity.FantasyUnlimitedUser@7b609d53
+2022-05-15 14:18:10,436 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-31] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
+2022-05-15 14:18:10,436 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-27] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
+2022-05-15 14:18:10,436 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-170] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
+2022-05-15 14:18:10,689 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-26] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
+2022-05-15 14:18:10,689 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-168] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
+2022-05-15 14:18:10,689 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-164] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
+2022-05-15 14:18:10,745 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-170] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
+2022-05-15 14:18:10,745 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-31] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
+2022-05-15 14:18:10,751 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-173] Error: HTTP 404 - Not Found - /locales/de/items.json
+2022-05-15 14:18:11,047 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp1252138909-164] Found characters for user patrick: [PlayerCharacter [id=1, name=Elron McBong, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=2, name=Elron McBong2, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=3, name=Elron McBong3, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=5, name=Balls McGee, classId=12, raceId=2, locationId=testbox, currentLevel=1, currentXp=0]]
+2022-05-15 14:18:11,029 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp1252138909-26] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node01xouw1lgy2ws81xuvdkry8s6w70], Granted Authorities=[USER]], csrf=SaveOnAccessCsrfToken [delegate=org.springframework.security.web.csrf.DefaultCsrfToken@4755077e], character=null]
+2022-05-15 14:18:11,121 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp1252138909-31] Found characters for user patrick: [PlayerCharacter [id=1, name=Elron McBong, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=2, name=Elron McBong2, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=3, name=Elron McBong3, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=5, name=Balls McGee, classId=12, raceId=2, locationId=testbox, currentLevel=1, currentXp=0]]
+2022-05-15 15:34:11,475 WARN org.eclipse.jetty.server.HttpChannel [qtp1252138909-220] /api/game/inventory
 org.springframework.web.util.NestedServletException: Request processing failed; nested exception is java.lang.NullPointerException: Cannot invoke "com.fantasyunlimited.data.entity.PlayerCharacter.getInventory()" because "selectedCharacter" is null
 	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
 	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:898)
@@ -339,7 +187,7 @@ org.springframework.web.util.NestedServletException: Request processing failed; 
 	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.run(QueuedThreadPool.java:1034)
 	at java.base/java.lang.Thread.run(Thread.java:833)
 Caused by: java.lang.NullPointerException: Cannot invoke "com.fantasyunlimited.data.entity.PlayerCharacter.getInventory()" because "selectedCharacter" is null
-	at com.fantasyunlimited.rest.GameActionController.getInventory(GameActionController.java:83)
+	at com.fantasyunlimited.rest.GameActionController.getInventory(GameActionController.java:106)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -354,199 +202,438 @@ Caused by: java.lang.NullPointerException: Cannot invoke "com.fantasyunlimited.d
 	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:963)
 	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006)
 	... 91 common frames omitted
-2022-05-12 14:07:57,937 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-239] Error: HTTP 500 - org.springframework.web.util.NestedServletException: Request processing failed; nested exception is java.lang.NullPointerException: Cannot invoke "com.fantasyunlimited.data.entity.PlayerCharacter.getInventory()" because "selectedCharacter" is null - /api/game/inventory
-2022-05-12 14:08:04,452 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-146] Error: HTTP 403 - Forbidden - /logout
-2022-05-12 14:08:04,453 WARN org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver [qtp914293025-146] Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'POST' not supported]
-2022-05-12 14:08:05,191 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-26] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
-2022-05-12 14:08:05,191 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-147] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
-2022-05-12 14:08:05,191 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-20] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
-2022-05-12 14:08:05,440 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-23] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
-2022-05-12 14:08:05,440 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-21] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
-2022-05-12 14:08:05,440 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-146] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
-2022-05-12 14:08:05,497 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-20] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
-2022-05-12 14:08:05,498 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-26] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
-2022-05-12 14:08:05,498 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-147] Error: HTTP 404 - Not Found - /locales/de/items.json
-2022-05-12 14:08:05,784 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-146] Error: HTTP 404 - Not Found - /login
-2022-05-12 14:08:10,084 INFO com.fantasyunlimited.security.UserDetailsServiceImpl [qtp914293025-20] Found user com.fantasyunlimited.data.entity.FantasyUnlimitedUser@10b57f54
-2022-05-12 14:08:14,646 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-23] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
-2022-05-12 14:08:14,647 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-26] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
-2022-05-12 14:08:14,647 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-240] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
-2022-05-12 14:08:14,896 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-146] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
-2022-05-12 14:08:14,896 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-20] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
-2022-05-12 14:08:14,896 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-239] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
-2022-05-12 14:08:14,957 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-21] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
-2022-05-12 14:08:14,957 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-240] Error: HTTP 404 - Not Found - /locales/de/items.json
-2022-05-12 14:08:14,957 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-26] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
-2022-05-12 14:08:15,233 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp914293025-147] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node011fy0kyl7r8vkbq4msfhrm4lt3], Granted Authorities=[USER]], csrf=SaveOnAccessCsrfToken [delegate=org.springframework.security.web.csrf.DefaultCsrfToken@34f25759], character=null]
-2022-05-12 14:08:15,248 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp914293025-151] Found characters for user patrick: [PlayerCharacter [id=1, name=Elron McBong, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=2, name=Elron McBong2, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=3, name=Elron McBong3, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=5, name=Balls McGee, classId=12, raceId=2, locationId=testbox, currentLevel=1, currentXp=0]]
-2022-05-12 14:08:15,271 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp914293025-146] Found characters for user patrick: [PlayerCharacter [id=1, name=Elron McBong, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=2, name=Elron McBong2, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=3, name=Elron McBong3, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=5, name=Balls McGee, classId=12, raceId=2, locationId=testbox, currentLevel=1, currentXp=0]]
-2022-05-12 14:10:30,175 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-242] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
-2022-05-12 14:10:30,176 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-241] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
-2022-05-12 14:10:30,176 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-26] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
-2022-05-12 14:10:30,422 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-20] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
-2022-05-12 14:10:30,422 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-242] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
-2022-05-12 14:10:30,422 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-21] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
-2022-05-12 14:10:30,484 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-26] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
-2022-05-12 14:10:30,484 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-146] Error: HTTP 404 - Not Found - /locales/de/items.json
-2022-05-12 14:10:30,484 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-151] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
-2022-05-12 14:10:30,756 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp914293025-23] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node011fy0kyl7r8vkbq4msfhrm4lt3], Granted Authorities=[USER]], csrf=org.springframework.security.web.csrf.DefaultCsrfToken@34f25759, character=5]
-2022-05-12 14:10:30,850 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-151] Error: HTTP 403 - Forbidden - /game/images/fu.png
-2022-05-12 14:12:53,530 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-23] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
-2022-05-12 14:12:53,530 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-245] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
-2022-05-12 14:12:53,530 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-20] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
-2022-05-12 14:12:53,780 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-151] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
-2022-05-12 14:12:53,780 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-239] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
-2022-05-12 14:12:53,780 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-26] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
-2022-05-12 14:12:53,840 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-20] Error: HTTP 404 - Not Found - /locales/de/items.json
-2022-05-12 14:12:53,840 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-147] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
-2022-05-12 14:12:53,840 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-23] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
-2022-05-12 14:12:54,119 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp914293025-241] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node011fy0kyl7r8vkbq4msfhrm4lt3], Granted Authorities=[USER]], csrf=org.springframework.security.web.csrf.DefaultCsrfToken@34f25759, character=5]
-2022-05-12 14:12:54,161 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-26] Error: HTTP 403 - Forbidden - /game/images/fu.png
-2022-05-12 14:13:49,729 DEBUG com.fantasyunlimited.data.service.PlayerCharacterService [qtp914293025-241] Dropping 3 of item smallHealthPot; old count: 25, new count: 22
-2022-05-12 14:13:49,729 DEBUG com.fantasyunlimited.data.service.PlayerCharacterService [qtp914293025-241] Inventory: {broken-sword=3, smallHealthPot=22, torn-shirt=1}
-2022-05-12 14:17:22,419 DEBUG com.fantasyunlimited.data.service.PlayerCharacterService [qtp914293025-21] Dropping 1 of item broken-sword; old count: 3, new count: 2
-2022-05-12 14:17:22,419 DEBUG com.fantasyunlimited.data.service.PlayerCharacterService [qtp914293025-21] Inventory: {broken-sword=2, smallHealthPot=22, torn-shirt=1}
-2022-05-12 14:17:55,875 DEBUG com.fantasyunlimited.data.service.PlayerCharacterService [qtp914293025-20] Dropping 4 of item smallHealthPot; old count: 22, new count: 18
-2022-05-12 14:17:55,875 DEBUG com.fantasyunlimited.data.service.PlayerCharacterService [qtp914293025-20] Inventory: {broken-sword=2, smallHealthPot=18, torn-shirt=1}
-2022-05-12 14:18:40,677 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp914293025-246] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node011fy0kyl7r8vkbq4msfhrm4lt3], Granted Authorities=[USER]], csrf=org.springframework.security.web.csrf.DefaultCsrfToken@34f25759, character=5]
-2022-05-12 14:18:40,995 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-20] Error: HTTP 403 - Forbidden - /game/images/fu.png
-2022-05-12 15:55:16,922 INFO org.springframework.boot.StartupInfoLogger [main] Starting FantasyUnlimited using Java 17.0.2 on DESKTOP-MG8DQCF with PID 1804 (F:\Java Projects\IntelliJ\DiscordFantasyUnlimited\Core\build\classes\java\main started by patri in F:\Java Projects\IntelliJ\DiscordFantasyUnlimited)
-2022-05-12 15:55:16,924 DEBUG org.springframework.boot.StartupInfoLogger [main] Running with Spring Boot v2.6.7, Spring v5.3.19
-2022-05-12 15:55:16,927 INFO org.springframework.boot.SpringApplication [main] The following 1 profile is active: "DEV"
-2022-05-12 15:55:17,334 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2022-05-12 15:55:17,360 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 19 ms. Found 2 JPA repository interfaces.
-2022-05-12 15:55:17,679 INFO org.eclipse.jetty.util.log.Log [main] Logging initialized @1270ms to org.eclipse.jetty.util.log.Slf4jLog
-2022-05-12 15:55:17,820 INFO org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory [main] Server initialized with port: 6060
-2022-05-12 15:55:17,821 INFO org.eclipse.jetty.server.Server [main] jetty-9.4.46.v20220331; built: 2022-03-31T16:38:08.030Z; git: bc17a0369a11ecf40bb92c839b9ef0a8ac50ea18; jvm 17.0.2+8
-2022-05-12 15:55:17,839 INFO org.eclipse.jetty.server.handler.ContextHandler$Context [main] Initializing Spring embedded WebApplicationContext
-2022-05-12 15:55:17,839 INFO org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 886 ms
-2022-05-12 15:55:17,904 INFO org.eclipse.jetty.server.session.DefaultSessionIdManager [main] DefaultSessionIdManager workerName=node0
-2022-05-12 15:55:17,905 INFO org.eclipse.jetty.server.session.DefaultSessionIdManager [main] No SessionScavenger set, using defaults
-2022-05-12 15:55:17,906 INFO org.eclipse.jetty.server.session.HouseKeeper [main] node0 Scavenging every 600000ms
-2022-05-12 15:55:17,911 INFO org.eclipse.jetty.server.handler.ContextHandler [main] Started o.s.b.w.e.j.JettyEmbeddedWebAppContext@c7f4457{application,/,[file:///C:/Users/patri/AppData/Local/Temp/jetty-docbase.6060.9374978678817090855/, jar:file:/C:/Users/patri/.gradle/caches/modules-2/files-2.1/org.webjars/swagger-ui/4.10.3/c770b50a519df6a17100300fe035a5a7f1673342/swagger-ui-4.10.3.jar!/META-INF/resources],AVAILABLE}
-2022-05-12 15:55:17,911 INFO org.eclipse.jetty.server.Server [main] Started @1501ms
-2022-05-12 15:55:17,990 INFO org.hibernate.jpa.internal.util.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [name: default]
-2022-05-12 15:55:18,020 INFO org.hibernate.Version [main] HHH000412: Hibernate ORM core version 5.6.8.Final
-2022-05-12 15:55:18,124 INFO org.hibernate.annotations.common.reflection.java.JavaReflectionManager [main] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-2022-05-12 15:55:18,190 INFO com.zaxxer.hikari.HikariDataSource [main] HikariPool-1 - Starting...
-2022-05-12 15:55:18,237 INFO com.zaxxer.hikari.HikariDataSource [main] HikariPool-1 - Start completed.
-2022-05-12 15:55:18,247 INFO org.hibernate.dialect.Dialect [main] HHH000400: Using dialect: org.hibernate.dialect.MariaDB103Dialect
-2022-05-12 15:55:18,951 INFO org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [main] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2022-05-12 15:55:18,955 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
-2022-05-12 15:55:19,293 WARN org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2022-05-12 15:55:19,382 INFO org.springframework.security.web.DefaultSecurityFilterChain [main] Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@62aefc75, org.springframework.security.web.context.SecurityContextPersistenceFilter@3feb93a, org.springframework.security.web.header.HeaderWriterFilter@399acce3, org.springframework.security.web.csrf.CsrfFilter@47b71556, org.springframework.security.web.authentication.logout.LogoutFilter@299cddbf, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@68024e57, org.springframework.security.web.session.ConcurrentSessionFilter@6a827b0c, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@7f69c4c0, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@7ff40324, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@c6653e, org.springframework.security.web.session.SessionManagementFilter@206de1f, org.springframework.security.web.access.ExceptionTranslationFilter@c22cf4d, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@a3e458]
-2022-05-12 15:55:19,518 INFO org.springframework.boot.autoconfigure.web.servlet.WelcomePageHandlerMapping [main] Adding welcome page: class path resource [public/index.html]
-2022-05-12 15:55:19,930 INFO org.eclipse.jetty.server.handler.ContextHandler$Context [main] Initializing Spring DispatcherServlet 'dispatcherServlet'
-2022-05-12 15:55:19,930 INFO org.springframework.web.servlet.FrameworkServlet [main] Initializing Servlet 'dispatcherServlet'
-2022-05-12 15:55:19,930 INFO org.springframework.web.servlet.FrameworkServlet [main] Completed initialization in 0 ms
-2022-05-12 15:55:19,962 INFO org.eclipse.jetty.server.AbstractConnector [main] Started ServerConnector@40a72ecd{HTTP/1.1, (http/1.1)}{0.0.0.0:6060}
-2022-05-12 15:55:19,963 INFO org.springframework.boot.web.embedded.jetty.JettyWebServer [main] Jetty started on port(s) 6060 (http/1.1) with context path '/'
-2022-05-12 15:55:19,969 INFO org.springframework.boot.StartupInfoLogger [main] Started FantasyUnlimited in 3.319 seconds (JVM running for 3.56)
-2022-05-12 15:55:30,960 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-149] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
-2022-05-12 15:55:30,960 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-148] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
-2022-05-12 15:55:31,151 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-23] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
-2022-05-12 15:55:31,151 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-148] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
-2022-05-12 15:55:31,151 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-20] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
-2022-05-12 15:55:31,152 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-24] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
-2022-05-12 15:55:31,282 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-146] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
-2022-05-12 15:55:31,282 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-21] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
-2022-05-12 15:55:31,466 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-148] Error: HTTP 404 - Not Found - /locales/de/items.json
-2022-05-12 15:55:31,510 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-146] Error: HTTP 404 - Not Found - /login
-2022-05-12 15:55:34,073 INFO com.fantasyunlimited.security.UserDetailsServiceImpl [qtp914293025-21] Found user com.fantasyunlimited.data.entity.FantasyUnlimitedUser@562bcdc
-2022-05-12 15:55:36,623 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-148] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
-2022-05-12 15:55:36,684 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-149] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
-2022-05-12 15:55:36,858 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-150] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
-2022-05-12 15:55:36,858 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-21] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
-2022-05-12 15:55:36,858 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-25] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
-2022-05-12 15:55:36,858 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-19] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
-2022-05-12 15:55:36,932 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-148] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
-2022-05-12 15:55:36,994 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-149] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
-2022-05-12 15:55:37,172 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-21] Error: HTTP 404 - Not Found - /locales/de/items.json
-2022-05-12 15:55:37,202 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp914293025-25] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node04bd0hrk5cjb9118wnvj3dxiyv0], Granted Authorities=[USER]], csrf=SaveOnAccessCsrfToken [delegate=org.springframework.security.web.csrf.DefaultCsrfToken@7486dba4], character=null]
-2022-05-12 15:55:37,221 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp914293025-24] Found characters for user patrick: [PlayerCharacter [id=1, name=Elron McBong, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=2, name=Elron McBong2, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=3, name=Elron McBong3, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=5, name=Balls McGee, classId=12, raceId=2, locationId=testbox, currentLevel=1, currentXp=0]]
-2022-05-12 15:55:37,244 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp914293025-148] Found characters for user patrick: [PlayerCharacter [id=1, name=Elron McBong, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=2, name=Elron McBong2, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=3, name=Elron McBong3, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=5, name=Balls McGee, classId=12, raceId=2, locationId=testbox, currentLevel=1, currentXp=0]]
-2022-05-12 15:55:42,312 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-24] Error: HTTP 404 - Not Found - /images/items/memberEnlargingPotion.jpg
-2022-05-12 15:55:44,150 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-148] Error: HTTP 404 - Not Found - /images/items/memberEnlargingPotion.jpg
-2022-05-12 15:55:56,503 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-149] Error: HTTP 404 - Not Found - /images/items/memberEnlargingPotion.jpg
-2022-05-12 15:55:57,021 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-21] Error: HTTP 404 - Not Found - /images/items/memberEnlargingPotion.jpg
-2022-05-12 15:56:22,927 INFO org.springframework.boot.StartupInfoLogger [main] Starting FantasyUnlimited using Java 17.0.2 on DESKTOP-MG8DQCF with PID 9640 (F:\Java Projects\IntelliJ\DiscordFantasyUnlimited\Core\build\classes\java\main started by patri in F:\Java Projects\IntelliJ\DiscordFantasyUnlimited)
-2022-05-12 15:56:22,929 DEBUG org.springframework.boot.StartupInfoLogger [main] Running with Spring Boot v2.6.7, Spring v5.3.19
-2022-05-12 15:56:22,929 INFO org.springframework.boot.SpringApplication [main] The following 1 profile is active: "DEV"
-2022-05-12 15:56:23,302 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2022-05-12 15:56:23,329 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 21 ms. Found 2 JPA repository interfaces.
-2022-05-12 15:56:23,644 INFO org.eclipse.jetty.util.log.Log [main] Logging initialized @1216ms to org.eclipse.jetty.util.log.Slf4jLog
-2022-05-12 15:56:23,767 INFO org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory [main] Server initialized with port: 6060
-2022-05-12 15:56:23,769 INFO org.eclipse.jetty.server.Server [main] jetty-9.4.46.v20220331; built: 2022-03-31T16:38:08.030Z; git: bc17a0369a11ecf40bb92c839b9ef0a8ac50ea18; jvm 17.0.2+8
-2022-05-12 15:56:23,789 INFO org.eclipse.jetty.server.handler.ContextHandler$Context [main] Initializing Spring embedded WebApplicationContext
-2022-05-12 15:56:23,789 INFO org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 830 ms
-2022-05-12 15:56:23,854 INFO org.eclipse.jetty.server.session.DefaultSessionIdManager [main] DefaultSessionIdManager workerName=node0
-2022-05-12 15:56:23,854 INFO org.eclipse.jetty.server.session.DefaultSessionIdManager [main] No SessionScavenger set, using defaults
-2022-05-12 15:56:23,855 INFO org.eclipse.jetty.server.session.HouseKeeper [main] node0 Scavenging every 600000ms
-2022-05-12 15:56:23,860 INFO org.eclipse.jetty.server.handler.ContextHandler [main] Started o.s.b.w.e.j.JettyEmbeddedWebAppContext@c7f4457{application,/,[file:///C:/Users/patri/AppData/Local/Temp/jetty-docbase.6060.7815636967507628171/, jar:file:/C:/Users/patri/.gradle/caches/modules-2/files-2.1/org.webjars/swagger-ui/4.10.3/c770b50a519df6a17100300fe035a5a7f1673342/swagger-ui-4.10.3.jar!/META-INF/resources],AVAILABLE}
-2022-05-12 15:56:23,861 INFO org.eclipse.jetty.server.Server [main] Started @1433ms
-2022-05-12 15:56:23,941 INFO org.hibernate.jpa.internal.util.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [name: default]
-2022-05-12 15:56:23,971 INFO org.hibernate.Version [main] HHH000412: Hibernate ORM core version 5.6.8.Final
-2022-05-12 15:56:24,071 INFO org.hibernate.annotations.common.reflection.java.JavaReflectionManager [main] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-2022-05-12 15:56:24,132 INFO com.zaxxer.hikari.HikariDataSource [main] HikariPool-1 - Starting...
-2022-05-12 15:56:24,177 INFO com.zaxxer.hikari.HikariDataSource [main] HikariPool-1 - Start completed.
-2022-05-12 15:56:24,188 INFO org.hibernate.dialect.Dialect [main] HHH000400: Using dialect: org.hibernate.dialect.MariaDB103Dialect
-2022-05-12 15:56:24,825 INFO org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [main] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2022-05-12 15:56:24,830 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
-2022-05-12 15:56:25,163 WARN org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2022-05-12 15:56:25,248 INFO org.springframework.security.web.DefaultSecurityFilterChain [main] Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@62aefc75, org.springframework.security.web.context.SecurityContextPersistenceFilter@3feb93a, org.springframework.security.web.header.HeaderWriterFilter@399acce3, org.springframework.security.web.csrf.CsrfFilter@47b71556, org.springframework.security.web.authentication.logout.LogoutFilter@299cddbf, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@68024e57, org.springframework.security.web.session.ConcurrentSessionFilter@6a827b0c, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@7f69c4c0, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@7ff40324, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@c6653e, org.springframework.security.web.session.SessionManagementFilter@206de1f, org.springframework.security.web.access.ExceptionTranslationFilter@c22cf4d, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@a3e458]
-2022-05-12 15:56:25,368 INFO org.springframework.boot.autoconfigure.web.servlet.WelcomePageHandlerMapping [main] Adding welcome page: class path resource [public/index.html]
-2022-05-12 15:56:25,761 INFO org.eclipse.jetty.server.handler.ContextHandler$Context [main] Initializing Spring DispatcherServlet 'dispatcherServlet'
-2022-05-12 15:56:25,761 INFO org.springframework.web.servlet.FrameworkServlet [main] Initializing Servlet 'dispatcherServlet'
-2022-05-12 15:56:25,762 INFO org.springframework.web.servlet.FrameworkServlet [main] Completed initialization in 1 ms
-2022-05-12 15:56:25,790 INFO org.eclipse.jetty.server.AbstractConnector [main] Started ServerConnector@40a72ecd{HTTP/1.1, (http/1.1)}{0.0.0.0:6060}
-2022-05-12 15:56:25,791 INFO org.springframework.boot.web.embedded.jetty.JettyWebServer [main] Jetty started on port(s) 6060 (http/1.1) with context path '/'
-2022-05-12 15:56:25,797 INFO org.springframework.boot.StartupInfoLogger [main] Started FantasyUnlimited in 3.132 seconds (JVM running for 3.37)
-2022-05-12 15:56:31,678 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-147] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
-2022-05-12 15:56:31,709 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-20] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
-2022-05-12 15:56:31,858 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-21] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
-2022-05-12 15:56:31,858 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-24] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
-2022-05-12 15:56:31,858 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-22] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
-2022-05-12 15:56:31,858 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-19] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
-2022-05-12 15:56:31,999 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-23] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
-2022-05-12 15:56:32,019 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-148] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
-2022-05-12 15:56:32,168 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-151] Error: HTTP 404 - Not Found - /locales/de/items.json
-2022-05-12 15:56:32,217 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-26] Error: HTTP 404 - Not Found - /login
-2022-05-12 15:56:34,689 INFO com.fantasyunlimited.security.UserDetailsServiceImpl [qtp914293025-148] Found user com.fantasyunlimited.data.entity.FantasyUnlimitedUser@741ee026
-2022-05-12 15:56:37,551 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-151] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
-2022-05-12 15:56:37,668 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-24] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
-2022-05-12 15:56:37,796 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-150] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
-2022-05-12 15:56:37,796 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-149] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
-2022-05-12 15:56:37,796 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-147] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
-2022-05-12 15:56:37,796 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-148] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
-2022-05-12 15:56:37,859 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-151] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
-2022-05-12 15:56:37,976 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-24] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
-2022-05-12 15:56:38,109 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-150] Error: HTTP 404 - Not Found - /locales/de/items.json
-2022-05-12 15:56:38,137 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp914293025-20] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node011pz4zvaegipl13k0fwkhs1u2k0], Granted Authorities=[USER]], csrf=SaveOnAccessCsrfToken [delegate=org.springframework.security.web.csrf.DefaultCsrfToken@450c4e8d], character=null]
-2022-05-12 15:56:38,155 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp914293025-23] Found characters for user patrick: [PlayerCharacter [id=1, name=Elron McBong, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=2, name=Elron McBong2, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=3, name=Elron McBong3, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=5, name=Balls McGee, classId=12, raceId=2, locationId=testbox, currentLevel=1, currentXp=0]]
-2022-05-12 15:56:38,176 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp914293025-151] Found characters for user patrick: [PlayerCharacter [id=1, name=Elron McBong, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=2, name=Elron McBong2, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=3, name=Elron McBong3, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=5, name=Balls McGee, classId=12, raceId=2, locationId=testbox, currentLevel=1, currentXp=0]]
-2022-05-12 16:00:19,696 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp914293025-150] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node011pz4zvaegipl13k0fwkhs1u2k0], Granted Authorities=[USER]], csrf=org.springframework.security.web.csrf.DefaultCsrfToken@450c4e8d, character=5]
-2022-05-12 16:00:20,016 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-154] Error: HTTP 403 - Forbidden - /game/images/fu.png
-2022-05-12 16:02:01,676 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp914293025-147] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node011pz4zvaegipl13k0fwkhs1u2k0], Granted Authorities=[USER]], csrf=org.springframework.security.web.csrf.DefaultCsrfToken@450c4e8d, character=5]
-2022-05-12 16:02:02,298 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-150] Error: HTTP 403 - Forbidden - /game/images/fu.png
-2022-05-12 16:03:35,074 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-147] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
-2022-05-12 16:03:35,074 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-149] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
-2022-05-12 16:03:35,306 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-154] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
-2022-05-12 16:03:35,306 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-150] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
-2022-05-12 16:03:35,306 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-23] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
-2022-05-12 16:03:35,306 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-24] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
-2022-05-12 16:03:35,383 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-149] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
-2022-05-12 16:03:35,383 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-147] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
-2022-05-12 16:03:35,617 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-148] Error: HTTP 404 - Not Found - /locales/de/items.json
-2022-05-12 16:03:35,642 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp914293025-24] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node011pz4zvaegipl13k0fwkhs1u2k0], Granted Authorities=[USER]], csrf=org.springframework.security.web.csrf.DefaultCsrfToken@450c4e8d, character=5]
-2022-05-12 16:03:35,762 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-151] Error: HTTP 403 - Forbidden - /game/images/fu.png
-2022-05-12 16:03:47,834 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-23] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
-2022-05-12 16:03:47,834 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-148] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
-2022-05-12 16:03:47,834 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-24] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
-2022-05-12 16:03:47,834 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-150] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
-2022-05-12 16:03:48,070 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-151] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
-2022-05-12 16:03:48,070 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-147] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
-2022-05-12 16:03:48,146 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-154] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
-2022-05-12 16:03:48,146 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-23] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
-2022-05-12 16:03:48,149 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-20] Error: HTTP 404 - Not Found - /locales/de/items.json
-2022-05-12 16:03:48,180 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp914293025-150] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node011pz4zvaegipl13k0fwkhs1u2k0], Granted Authorities=[USER]], csrf=org.springframework.security.web.csrf.DefaultCsrfToken@450c4e8d, character=5]
-2022-05-12 16:03:48,499 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp914293025-23] Error: HTTP 403 - Forbidden - /game/images/fu.png
+2022-05-15 15:34:11,478 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-220] Error: HTTP 500 - org.springframework.web.util.NestedServletException: Request processing failed; nested exception is java.lang.NullPointerException: Cannot invoke "com.fantasyunlimited.data.entity.PlayerCharacter.getInventory()" because "selectedCharacter" is null - /api/game/inventory
+2022-05-15 15:41:47,376 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-224] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
+2022-05-15 15:41:47,376 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-222] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
+2022-05-15 15:41:47,376 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-173] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
+2022-05-15 15:41:47,662 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-26] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
+2022-05-15 15:41:47,662 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-27] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
+2022-05-15 15:41:47,662 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-174] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
+2022-05-15 15:41:47,687 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-165] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
+2022-05-15 15:41:47,688 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-173] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
+2022-05-15 15:41:47,693 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-31] Error: HTTP 404 - Not Found - /locales/de/items.json
+2022-05-15 15:41:48,190 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-220] Error: HTTP 404 - Not Found - /login
+2022-05-15 15:41:54,696 INFO com.fantasyunlimited.security.UserDetailsServiceImpl [qtp1252138909-26] Found user com.fantasyunlimited.data.entity.FantasyUnlimitedUser@4b51714e
+2022-05-15 15:41:57,891 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-31] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
+2022-05-15 15:41:57,891 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-173] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
+2022-05-15 15:41:58,183 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-225] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
+2022-05-15 15:41:58,183 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-26] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
+2022-05-15 15:41:58,183 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-165] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
+2022-05-15 15:41:58,183 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-220] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
+2022-05-15 15:41:58,199 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-223] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
+2022-05-15 15:41:58,199 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-173] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
+2022-05-15 15:41:58,495 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-174] Error: HTTP 404 - Not Found - /locales/de/items.json
+2022-05-15 15:41:58,521 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp1252138909-225] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node0107dym9d43kn66ifwmx6cdxfd3], Granted Authorities=[USER]], csrf=SaveOnAccessCsrfToken [delegate=org.springframework.security.web.csrf.DefaultCsrfToken@38b1a92], character=null]
+2022-05-15 15:41:58,536 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp1252138909-220] Found characters for user patrick: [PlayerCharacter [id=1, name=Elron McBong, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=2, name=Elron McBong2, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=3, name=Elron McBong3, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=5, name=Balls McGee, classId=12, raceId=2, locationId=testbox, currentLevel=1, currentXp=0]]
+2022-05-15 15:41:58,547 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp1252138909-173] Found characters for user patrick: [PlayerCharacter [id=1, name=Elron McBong, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=2, name=Elron McBong2, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=3, name=Elron McBong3, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=5, name=Balls McGee, classId=12, raceId=2, locationId=testbox, currentLevel=1, currentXp=0]]
+2022-05-15 15:46:56,959 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-173] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
+2022-05-15 15:46:56,959 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-27] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
+2022-05-15 15:46:56,959 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-31] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
+2022-05-15 15:46:57,216 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-224] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
+2022-05-15 15:46:57,216 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-174] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
+2022-05-15 15:46:57,216 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-223] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
+2022-05-15 15:46:57,268 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-226] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
+2022-05-15 15:46:57,268 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-173] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
+2022-05-15 15:46:57,268 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-27] Error: HTTP 404 - Not Found - /locales/de/items.json
+2022-05-15 15:46:57,543 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp1252138909-220] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node0107dym9d43kn66ifwmx6cdxfd3], Granted Authorities=[USER]], csrf=org.springframework.security.web.csrf.DefaultCsrfToken@38b1a92, character=5]
+2022-05-15 15:46:57,588 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-224] Error: HTTP 403 - Forbidden - /game/images/fu.png
+2022-05-15 15:50:44,121 DEBUG com.fantasyunlimited.data.service.PlayerCharacterService [qtp1252138909-220] Dropping 6 of item smallHealthPot; old count: 18, new count: 12
+2022-05-15 15:50:44,121 DEBUG com.fantasyunlimited.data.service.PlayerCharacterService [qtp1252138909-220] Inventory: {broken-sword=2, smallHealthPot=12, memberEnlargingPotion=15, torn-shirt=1}
+2022-05-15 16:01:13,984 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-220] Error: HTTP 404 - Not Found - /locales/en-US/translation.json
+2022-05-15 16:01:13,984 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-244] Error: HTTP 404 - Not Found - /locales/en-US/location.json
+2022-05-15 16:01:13,985 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-224] Error: HTTP 404 - Not Found - /locales/en-US/skills.json
+2022-05-15 16:01:13,985 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-226] Error: HTTP 404 - Not Found - /locales/en-US/character.json
+2022-05-15 16:01:13,995 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-227] Error: HTTP 404 - Not Found - /locales/en-US/race.json
+2022-05-15 16:01:13,995 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-242] Error: HTTP 404 - Not Found - /locales/en-US/characterClass.json
+2022-05-15 16:01:13,995 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-245] Error: HTTP 404 - Not Found - /locales/en-US/items.json
+2022-05-15 16:01:14,435 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-223] Error: HTTP 404 - Not Found - /locales/en-US/game.json
+2022-05-15 16:28:28,142 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-232] Error: HTTP 404 - Not Found - /login
+2022-05-15 16:28:28,460 WARN org.eclipse.jetty.server.HttpChannel [qtp1252138909-245] /api/game/inventory
+org.springframework.web.util.NestedServletException: Request processing failed; nested exception is java.lang.NullPointerException: Cannot invoke "com.fantasyunlimited.data.entity.PlayerCharacter.getInventory()" because "selectedCharacter" is null
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:898)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:497)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:584)
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:799)
+	at org.eclipse.jetty.servlet.ServletHandler$ChainEnd.doFilter(ServletHandler.java:1631)
+	at org.eclipse.jetty.websocket.server.WebSocketUpgradeFilter.doFilter(WebSocketUpgradeFilter.java:292)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:193)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1601)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:327)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.invoke(FilterSecurityInterceptor.java:115)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.doFilter(FilterSecurityInterceptor.java:81)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:122)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:126)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:81)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:109)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:149)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)
+	at org.springframework.security.web.session.ConcurrentSessionFilter.doFilter(ConcurrentSessionFilter.java:147)
+	at org.springframework.security.web.session.ConcurrentSessionFilter.doFilter(ConcurrentSessionFilter.java:125)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:219)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:213)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:103)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:89)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)
+	at org.springframework.security.web.csrf.CsrfFilter.doFilterInternal(CsrfFilter.java:117)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:110)
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:80)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:55)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:211)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:183)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:354)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:267)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:193)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1601)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:193)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1601)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:193)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1601)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:193)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1601)
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:548)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:143)
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:600)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:127)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:235)
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:1624)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:233)
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1440)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:188)
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:501)
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:1594)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:186)
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1355)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:141)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:127)
+	at org.eclipse.jetty.server.Server.handle(Server.java:516)
+	at org.eclipse.jetty.server.HttpChannel.lambda$handle$1(HttpChannel.java:487)
+	at org.eclipse.jetty.server.HttpChannel.dispatch(HttpChannel.java:732)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:479)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:277)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:311)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:105)
+	at org.eclipse.jetty.io.ChannelEndPoint$1.run(ChannelEndPoint.java:104)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.runTask(EatWhatYouKill.java:338)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.doProduce(EatWhatYouKill.java:315)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.tryProduce(EatWhatYouKill.java:173)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.run(EatWhatYouKill.java:131)
+	at org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:409)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:883)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.run(QueuedThreadPool.java:1034)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+Caused by: java.lang.NullPointerException: Cannot invoke "com.fantasyunlimited.data.entity.PlayerCharacter.getInventory()" because "selectedCharacter" is null
+	at com.fantasyunlimited.rest.GameActionController.getInventory(GameActionController.java:106)
+	at jdk.internal.reflect.GeneratedMethodAccessor132.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:895)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:808)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1067)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006)
+	... 96 common frames omitted
+2022-05-15 16:28:28,461 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-245] Error: HTTP 500 - org.springframework.web.util.NestedServletException: Request processing failed; nested exception is java.lang.NullPointerException: Cannot invoke "com.fantasyunlimited.data.entity.PlayerCharacter.getInventory()" because "selectedCharacter" is null - /api/game/inventory
+2022-05-15 17:38:52,219 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-245] Error: HTTP 404 - Not Found - /login
+2022-05-15 17:38:52,439 WARN org.eclipse.jetty.server.HttpChannel [qtp1252138909-264] /api/game/inventory
+org.springframework.web.util.NestedServletException: Request processing failed; nested exception is java.lang.NullPointerException: Cannot invoke "com.fantasyunlimited.data.entity.PlayerCharacter.getInventory()" because "selectedCharacter" is null
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:898)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:497)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:584)
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:799)
+	at org.eclipse.jetty.servlet.ServletHandler$ChainEnd.doFilter(ServletHandler.java:1631)
+	at org.eclipse.jetty.websocket.server.WebSocketUpgradeFilter.doFilter(WebSocketUpgradeFilter.java:292)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:193)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1601)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:327)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.invoke(FilterSecurityInterceptor.java:115)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.doFilter(FilterSecurityInterceptor.java:81)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:122)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:126)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:81)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:109)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:149)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)
+	at org.springframework.security.web.session.ConcurrentSessionFilter.doFilter(ConcurrentSessionFilter.java:147)
+	at org.springframework.security.web.session.ConcurrentSessionFilter.doFilter(ConcurrentSessionFilter.java:125)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:219)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:213)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:103)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:89)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)
+	at org.springframework.security.web.csrf.CsrfFilter.doFilterInternal(CsrfFilter.java:117)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:110)
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:80)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:55)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:211)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:183)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:354)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:267)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:193)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1601)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:193)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1601)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:193)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1601)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:193)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1601)
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:548)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:143)
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:600)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:127)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:235)
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:1624)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:233)
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1440)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:188)
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:501)
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:1594)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:186)
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1355)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:141)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:127)
+	at org.eclipse.jetty.server.Server.handle(Server.java:516)
+	at org.eclipse.jetty.server.HttpChannel.lambda$handle$1(HttpChannel.java:487)
+	at org.eclipse.jetty.server.HttpChannel.dispatch(HttpChannel.java:732)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:479)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:277)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:311)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:105)
+	at org.eclipse.jetty.io.ChannelEndPoint$1.run(ChannelEndPoint.java:104)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.runTask(EatWhatYouKill.java:338)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.doProduce(EatWhatYouKill.java:315)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.tryProduce(EatWhatYouKill.java:173)
+	at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.run(EatWhatYouKill.java:131)
+	at org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:409)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:883)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.run(QueuedThreadPool.java:1034)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+Caused by: java.lang.NullPointerException: Cannot invoke "com.fantasyunlimited.data.entity.PlayerCharacter.getInventory()" because "selectedCharacter" is null
+	at com.fantasyunlimited.rest.GameActionController.getInventory(GameActionController.java:106)
+	at jdk.internal.reflect.GeneratedMethodAccessor132.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:895)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:808)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1067)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006)
+	... 96 common frames omitted
+2022-05-15 17:38:52,440 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-264] Error: HTTP 500 - org.springframework.web.util.NestedServletException: Request processing failed; nested exception is java.lang.NullPointerException: Cannot invoke "com.fantasyunlimited.data.entity.PlayerCharacter.getInventory()" because "selectedCharacter" is null - /api/game/inventory
+2022-05-15 18:06:26,569 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-326] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
+2022-05-15 18:06:26,569 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-232] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
+2022-05-15 18:06:26,569 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-262] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
+2022-05-15 18:06:26,818 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-230] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
+2022-05-15 18:06:26,818 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-264] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
+2022-05-15 18:06:26,818 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-245] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
+2022-05-15 18:06:26,881 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-220] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
+2022-05-15 18:06:26,881 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-232] Error: HTTP 404 - Not Found - /locales/de/items.json
+2022-05-15 18:06:26,881 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-262] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
+2022-05-15 18:06:27,160 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-230] Error: HTTP 404 - Not Found - /login
+2022-05-15 18:07:14,722 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-220] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
+2022-05-15 18:07:14,723 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-232] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
+2022-05-15 18:07:14,723 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-264] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
+2022-05-15 18:07:14,962 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-310] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
+2022-05-15 18:07:14,962 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-230] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
+2022-05-15 18:07:14,962 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-245] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
+2022-05-15 18:07:15,032 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-232] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
+2022-05-15 18:07:15,032 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-262] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
+2022-05-15 18:07:15,033 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-324] Error: HTTP 404 - Not Found - /locales/de/items.json
+2022-05-15 18:07:31,976 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-220] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
+2022-05-15 18:07:31,976 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-245] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
+2022-05-15 18:07:31,976 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-325] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
+2022-05-15 18:07:32,230 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-262] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
+2022-05-15 18:07:32,230 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-264] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
+2022-05-15 18:07:32,230 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-324] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
+2022-05-15 18:07:32,285 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-310] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
+2022-05-15 18:07:32,285 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-220] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
+2022-05-15 18:07:32,285 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-230] Error: HTTP 404 - Not Found - /locales/de/items.json
+2022-05-15 18:08:02,357 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-245] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
+2022-05-15 18:08:02,357 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-262] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
+2022-05-15 18:08:02,357 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-232] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
+2022-05-15 18:08:02,602 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-220] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
+2022-05-15 18:08:02,602 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-264] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
+2022-05-15 18:08:02,602 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-310] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
+2022-05-15 18:08:02,665 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-232] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
+2022-05-15 18:08:02,665 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-245] Error: HTTP 404 - Not Found - /locales/de/items.json
+2022-05-15 18:08:02,665 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-230] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
+2022-05-15 18:08:34,923 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-230] Error: HTTP 404 - Not Found - /login
+2022-05-15 18:11:13,519 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-324] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
+2022-05-15 18:11:13,519 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-310] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
+2022-05-15 18:11:13,519 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-264] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
+2022-05-15 18:11:13,769 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-245] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
+2022-05-15 18:11:13,769 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-327] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
+2022-05-15 18:11:13,769 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-325] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
+2022-05-15 18:11:13,827 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-329] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
+2022-05-15 18:11:13,829 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-262] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
+2022-05-15 18:11:13,829 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-220] Error: HTTP 404 - Not Found - /locales/de/items.json
+2022-05-15 18:11:14,108 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-329] Error: HTTP 404 - Not Found - /login
+2022-05-15 18:11:14,599 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-325] Error: HTTP 404 - Not Found - /content/images/fu.png
+2022-05-15 18:11:19,725 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-325] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
+2022-05-15 18:11:19,725 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-262] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
+2022-05-15 18:11:19,962 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-264] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
+2022-05-15 18:11:19,962 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-327] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
+2022-05-15 18:11:19,962 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-220] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
+2022-05-15 18:11:19,962 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-245] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
+2022-05-15 18:11:20,032 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-325] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
+2022-05-15 18:11:20,032 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-262] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
+2022-05-15 18:11:20,275 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-310] Error: HTTP 404 - Not Found - /locales/de/items.json
+2022-05-15 18:11:20,304 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-230] Error: HTTP 404 - Not Found - /content/images/fu.png
+2022-05-15 18:11:20,307 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-245] Error: HTTP 404 - Not Found - /login
+2022-05-15 19:18:15,952 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-363] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
+2022-05-15 19:18:15,952 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-362] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
+2022-05-15 19:18:15,952 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-361] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
+2022-05-15 19:18:16,174 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-324] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
+2022-05-15 19:18:16,174 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-262] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
+2022-05-15 19:18:16,174 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-264] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
+2022-05-15 19:18:16,261 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-310] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
+2022-05-15 19:18:16,261 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-359] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
+2022-05-15 19:18:16,261 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-360] Error: HTTP 404 - Not Found - /locales/de/items.json
+2022-05-15 19:18:16,507 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-245] Error: HTTP 404 - Not Found - /content/images/fu.png
+2022-05-15 19:18:16,509 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-324] Error: HTTP 404 - Not Found - /login
+2022-05-15 19:20:13,133 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-324] Error: HTTP 404 - Not Found - /content/images/fu.png
+2022-05-15 19:20:13,143 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-262] Error: HTTP 404 - Not Found - /login
+2022-05-15 19:22:25,132 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-264] Error: HTTP 404 - Not Found - /content/images/fu.png
+2022-05-15 19:22:25,141 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-362] Error: HTTP 404 - Not Found - /login
+2022-05-15 19:23:47,132 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-363] Error: HTTP 404 - Not Found - /content/images/fu.png
+2022-05-15 19:23:47,308 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-364] Error: HTTP 404 - Not Found - /login
+2022-05-15 19:24:39,132 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-362] Error: HTTP 404 - Not Found - /content/images/fu.png
+2022-05-15 19:24:39,138 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-230] Error: HTTP 404 - Not Found - /login
+2022-05-15 19:25:04,688 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-362] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
+2022-05-15 19:25:04,688 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-364] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
+2022-05-15 19:25:04,930 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-363] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
+2022-05-15 19:25:04,938 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-245] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
+2022-05-15 19:25:04,938 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-262] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
+2022-05-15 19:25:04,938 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-359] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
+2022-05-15 19:25:04,996 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-230] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
+2022-05-15 19:25:04,996 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-364] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
+2022-05-15 19:25:05,237 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-363] Error: HTTP 404 - Not Found - /locales/de/items.json
+2022-05-15 19:25:05,278 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-359] Error: HTTP 404 - Not Found - /login
+2022-05-15 19:25:09,279 INFO com.fantasyunlimited.security.UserDetailsServiceImpl [qtp1252138909-310] Found user com.fantasyunlimited.data.entity.FantasyUnlimitedUser@683707b0
+2022-05-15 19:25:13,250 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-245] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
+2022-05-15 19:25:13,250 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-363] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
+2022-05-15 19:25:13,250 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-364] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
+2022-05-15 19:25:13,487 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-359] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
+2022-05-15 19:25:13,487 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-310] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
+2022-05-15 19:25:13,487 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-360] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
+2022-05-15 19:25:13,560 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-262] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
+2022-05-15 19:25:13,560 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-230] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
+2022-05-15 19:25:13,568 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-364] Error: HTTP 404 - Not Found - /locales/de/items.json
+2022-05-15 19:25:13,820 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp1252138909-245] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node0fntq9p6icnynd5t1hiz1ltv19], Granted Authorities=[USER]], csrf=SaveOnAccessCsrfToken [delegate=org.springframework.security.web.csrf.DefaultCsrfToken@37bbd09f], character=null]
+2022-05-15 19:26:09,484 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp1252138909-362] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node0fntq9p6icnynd5t1hiz1ltv19], Granted Authorities=[USER]], csrf=org.springframework.security.web.csrf.DefaultCsrfToken@37bbd09f, character=null]
+2022-05-15 19:26:13,628 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-230] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
+2022-05-15 19:26:13,628 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-310] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
+2022-05-15 19:26:13,630 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-364] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
+2022-05-15 19:26:13,873 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-245] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
+2022-05-15 19:26:13,873 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-359] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
+2022-05-15 19:26:13,873 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-262] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
+2022-05-15 19:26:13,937 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-230] Error: HTTP 404 - Not Found - /locales/de/items.json
+2022-05-15 19:26:13,937 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-364] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
+2022-05-15 19:26:13,937 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-362] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
+2022-05-15 19:26:14,206 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp1252138909-359] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node0fntq9p6icnynd5t1hiz1ltv19], Granted Authorities=[USER]], csrf=org.springframework.security.web.csrf.DefaultCsrfToken@37bbd09f, character=null]
+2022-05-15 19:27:07,854 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp1252138909-262] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node0fntq9p6icnynd5t1hiz1ltv19], Granted Authorities=[USER]], csrf=org.springframework.security.web.csrf.DefaultCsrfToken@37bbd09f, character=null]
+2022-05-15 19:27:11,241 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-363] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
+2022-05-15 19:27:11,241 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-230] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
+2022-05-15 19:27:11,483 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-368] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
+2022-05-15 19:27:11,483 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-262] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
+2022-05-15 19:27:11,483 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-359] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
+2022-05-15 19:27:11,483 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-245] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
+2022-05-15 19:27:11,549 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-363] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
+2022-05-15 19:27:11,549 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-230] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
+2022-05-15 19:27:11,791 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-364] Error: HTTP 404 - Not Found - /locales/de/items.json
+2022-05-15 19:27:11,819 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp1252138909-359] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node0fntq9p6icnynd5t1hiz1ltv19], Granted Authorities=[USER]], csrf=org.springframework.security.web.csrf.DefaultCsrfToken@37bbd09f, character=null]
+2022-05-15 19:29:41,130 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp1252138909-366] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node0fntq9p6icnynd5t1hiz1ltv19], Granted Authorities=[USER]], csrf=org.springframework.security.web.csrf.DefaultCsrfToken@37bbd09f, character=null]
+2022-05-15 19:29:41,445 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp1252138909-362] Found characters for user patrick: [PlayerCharacter [id=1, name=Elron McBong, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=2, name=Elron McBong2, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=3, name=Elron McBong3, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=5, name=Balls McGee, classId=12, raceId=2, locationId=testbox, currentLevel=1, currentXp=0]]
+2022-05-15 19:29:41,756 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp1252138909-364] Found characters for user patrick: [PlayerCharacter [id=1, name=Elron McBong, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=2, name=Elron McBong2, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=3, name=Elron McBong3, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=5, name=Balls McGee, classId=12, raceId=2, locationId=testbox, currentLevel=1, currentXp=0]]
+2022-05-15 20:06:59,359 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-359] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
+2022-05-15 20:06:59,359 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-402] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
+2022-05-15 20:06:59,359 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-399] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
+2022-05-15 20:06:59,661 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-230] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
+2022-05-15 20:06:59,661 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-362] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
+2022-05-15 20:06:59,661 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-364] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
+2022-05-15 20:06:59,666 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-262] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
+2022-05-15 20:06:59,666 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-359] Error: HTTP 404 - Not Found - /locales/de/items.json
+2022-05-15 20:06:59,666 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-365] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
+2022-05-15 20:07:00,000 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-364] Error: HTTP 404 - Not Found - /login
+2022-05-15 20:16:56,242 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-368] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
+2022-05-15 20:16:56,242 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-401] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
+2022-05-15 20:16:56,242 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-403] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
+2022-05-15 20:16:56,525 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-364] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
+2022-05-15 20:16:56,525 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-362] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
+2022-05-15 20:16:56,526 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-365] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
+2022-05-15 20:16:56,551 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-230] Error: HTTP 404 - Not Found - /locales/de/items.json
+2022-05-15 20:16:56,551 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-359] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
+2022-05-15 20:16:56,551 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-368] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
+2022-05-15 20:16:57,201 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-401] Error: HTTP 404 - Not Found - /login
+2022-05-15 20:18:25,603 INFO com.fantasyunlimited.security.UserDetailsServiceImpl [qtp1252138909-401] Found user com.fantasyunlimited.data.entity.FantasyUnlimitedUser@25f308ab
+2022-05-15 20:18:29,270 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-362] Error: HTTP 404 - Not Found - /locales/de-DE/location.json
+2022-05-15 20:18:29,270 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-230] Error: HTTP 404 - Not Found - /locales/de-DE/translation.json
+2022-05-15 20:18:29,270 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-405] Error: HTTP 404 - Not Found - /locales/de-DE/game.json
+2022-05-15 20:18:29,546 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-404] Error: HTTP 404 - Not Found - /locales/de-DE/skills.json
+2022-05-15 20:18:29,546 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-365] Error: HTTP 404 - Not Found - /locales/de-DE/race.json
+2022-05-15 20:18:29,546 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-401] Error: HTTP 404 - Not Found - /locales/de-DE/character.json
+2022-05-15 20:18:29,579 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-406] Error: HTTP 404 - Not Found - /locales/de/items.json
+2022-05-15 20:18:29,579 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-364] Error: HTTP 404 - Not Found - /locales/de-DE/items.json
+2022-05-15 20:18:29,579 DEBUG com.fantasyunlimited.rest.FantasyUnlimitedErrorController [qtp1252138909-362] Error: HTTP 404 - Not Found - /locales/de-DE/characterClass.json
+2022-05-15 20:18:29,882 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp1252138909-405] UserSessionInformation: UserSessionInformation[principal=UsernamePasswordAuthenticationToken [Principal=org.springframework.security.core.userdetails.User [Username=patrick, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true, AccountNonLocked=true, Granted Authorities=[USER]], Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=127.0.0.1, SessionId=node01nutc5ckzpr0yqwqawzy4f51s12], Granted Authorities=[USER]], csrf=SaveOnAccessCsrfToken [delegate=org.springframework.security.web.csrf.DefaultCsrfToken@3672bf80], character=null]
+2022-05-15 20:18:29,900 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp1252138909-401] Found characters for user patrick: [PlayerCharacter [id=1, name=Elron McBong, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=2, name=Elron McBong2, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=3, name=Elron McBong3, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=5, name=Balls McGee, classId=12, raceId=2, locationId=testbox, currentLevel=1, currentXp=0]]
+2022-05-15 20:18:29,912 DEBUG com.fantasyunlimited.rest.UserManagementController [qtp1252138909-365] Found characters for user patrick: [PlayerCharacter [id=1, name=Elron McBong, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=2, name=Elron McBong2, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=3, name=Elron McBong3, classId=11, raceId=11, locationId=testbox, currentLevel=1, currentXp=0], PlayerCharacter [id=5, name=Balls McGee, classId=12, raceId=2, locationId=testbox, currentLevel=1, currentXp=0]]

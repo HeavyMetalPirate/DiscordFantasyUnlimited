@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ListGroup, ListGroupItem } from 'reactstrap';
 
-export function SearchList({ filteredUsers }) {
+export function SearchList({filteredUsers}: FilteredUserList) {
     const filtered = filteredUsers.map(user =>  {
         return (
             <ListGroupItem key={user.name}>{user.name}</ListGroupItem>
@@ -13,7 +13,7 @@ export function SearchList({ filteredUsers }) {
     );
 }
 
-export function UserSearch({ details }) {
+export function UserSearch({details}: UserList) {
     const { t, i18n } = useTranslation();
     const [searchField, setSearchField] = useState("");
 
@@ -28,7 +28,7 @@ export function UserSearch({ details }) {
         }
     );
 
-    const handleChange = e => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchField(e.target.value);
     };
 

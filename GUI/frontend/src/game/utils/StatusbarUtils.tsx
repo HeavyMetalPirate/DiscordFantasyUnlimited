@@ -1,9 +1,10 @@
 
-export function convert_color(c){
+export function convert_color(c: string){
    var color;
+   var colorValue: number[] = [];
    if(c.indexOf('rgb') == -1){
       color = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(c);
-      color = color ? [
+      colorValue = color ? [
         parseInt(color[1], 16),
         parseInt(color[2], 16),
         parseInt(color[3], 16)
@@ -11,27 +12,32 @@ export function convert_color(c){
    } else {
       color = c.split('(')[1].split(')')[0].split(',');
       for(var i = 0; i < color.length; i++){
-         color[i] = parseInt(color[i]);
+         colorValue[i] = parseInt(color[i]);
       }
    }
-   return color;
+   return colorValue;
 };
 
-export function get_steps(c1, c2, st){
-   c1 = convert_color(c1);
-   c2 = convert_color(c2);
+type StepType = {
+    hex: string;
+    rgb: string;
+}
+
+export function get_steps(c1_string:string, c2_string: string, st: number){
+   var c1 = convert_color(c1_string);
+   var c2 = convert_color(c2_string);
    var s_r = Math.floor((c1[0] - c2[0]) / st);
    var s_g = Math.floor((c1[1] - c2[1]) / st);
    var s_b = Math.floor((c1[2] - c2[2]) / st);
-   var steps = {};
-   var cth = function(c) {
+   var steps: {[id: string] : StepType} = {};
+   var cth = function(c: number) {
       var h = c.toString(16);
       return h.length == 1 ? "0" + h : h;
    };
-   var toHEX = function(v){
+   var toHEX = function(v: number[]){
       return "#" + cth(v[0]) + cth(v[1]) + cth(v[2]);
    };
-   var toRGB = function(v){
+   var toRGB = function(v: number[]){
       return 'rgb(' + v.join(',') +  ')';
    };
    steps[toRGB(c1)] = {
@@ -45,20 +51,22 @@ export function get_steps(c1, c2, st){
       c1[0] = (c1[0] > 255) ? 255 : c1[0];
       c1[1] = (c1[1] > 255) ? 255 : c1[1];
       c1[2] = (c1[2] > 255) ? 255 : c1[2];
-      if(!steps[toRGB(c1)]) steps[toRGB(c1)] = {
-         hex : toHEX(c1).toUpperCase(),
-         rgb : toRGB(c1)
-      };
+      if(!steps[toRGB(c1)]) {
+          steps[toRGB(c1)] = {
+             hex : toHEX(c1).toUpperCase(),
+             rgb : toRGB(c1)
+          };
+      }
    }
    return steps;
 };
 
-export function calculateHealthPercentage(character){
-    var p = (character.resources.currentHealth / character.resources.maxHealth) * 100;
+export function calculateHealthPercentage({resources}: PlayerCharacterData){
+    var p = (resources.currentHealth / resources.maxHealth) * 100;
     return p;
 };
 
-export function calculateResourcePercentage(character){
-    var p = (character.resources.currentResource / character.resources.maxResource) * 100;
+export function calculateResourcePercentage({resources}: PlayerCharacterData){
+    var p = (resources.currentResource / resources.maxResource) * 100;
     return p;
 };

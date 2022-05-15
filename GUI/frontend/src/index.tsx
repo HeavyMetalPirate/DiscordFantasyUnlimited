@@ -5,7 +5,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import App from './App';
 import './i18n';
 import reportWebVitals from './reportWebVitals';
-import 'bootstrap/dist/css/bootstrap.css'; // or include from a CDN
+
+import 'bootstrap/dist/css/bootstrap.css';
 import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
 
 ReactDOM.render(

@@ -4,8 +4,15 @@ import { Link } from 'react-router-dom';
 import { push as Menu } from 'react-burger-menu'
 import { LoginForm } from '../user/LoginForm'
 
-export default class AppNavbar extends Component {
-    constructor(props) {
+interface NavbarProps {
+
+}
+interface NavbarState {
+    isOpen: boolean;
+}
+
+export default class AppNavbar extends Component<NavbarProps, NavbarState> {
+    constructor(props: NavbarProps) {
         super(props);
         this.state = {isOpen: false};
         this.toggle = this.toggle.bind(this);

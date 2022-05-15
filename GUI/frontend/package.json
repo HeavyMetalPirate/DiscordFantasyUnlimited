@@ -12,6 +12,11 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.1",
+    "@types/node": "^17.0.33",
+    "@types/react": "^18.0.9",
+    "@types/react-burger-menu": "^2.8.3",
+    "@types/react-dom": "^18.0.4",
     "bootstrap": "5.1",
     "i18next": "^21.6.16",
     "i18next-browser-languagedetector": "^6.1.4",
@@ -27,6 +32,7 @@
     "react-tracked": "^1.7.9",
     "reactstrap": "^8.10.1",
     "scheduler": "^0.22.0",
+    "typescript": "^4.6.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

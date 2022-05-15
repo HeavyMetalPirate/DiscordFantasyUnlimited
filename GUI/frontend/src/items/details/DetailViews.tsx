@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 // https://overreacted.io/a-complete-guide-to-useeffect/
 
 // Little helper to get the bonus text value
-function foo(bonus) {
+function getBonusType(bonus: ClassBonus) {
     // TODO right now it reads the enums directly
     // so do some i18n voodoo I guess
     if(bonus.combatSkill) {
@@ -20,13 +20,13 @@ function foo(bonus) {
     }
 }
 
-export const SkillsDetailView = (props) => {
+export const SkillsDetailView = () => {
     // React Router Dom Hook
     const { id } = useParams();
     // React i18n Hook
     const { t, i18n } = useTranslation();
 
-    const [skill, setSkill] = useState(null);
+    const [skill, setSkill] = useState<Skill |null >(null);
 
     useEffect(() => {
         // Define getSkill method as async
@@ -50,14 +50,14 @@ export const SkillsDetailView = (props) => {
     )
 }
 
-export const ClassesDetailView = (props) => {
+export const ClassesDetailView = () => {
 
     // React Router Dom Hook
     const { id } = useParams();
     // React i18n Hook
     const { t, i18n } = useTranslation();
 
-    const [state, setState] = useState(null);
+    const [state, setState] = useState<CharacterClass | null>(null);
     const [skillsList, setSkillsList] = useState(null);
     const [bonusList, setBonusList] = useState(null);
 
@@ -68,17 +68,17 @@ export const ClassesDetailView = (props) => {
             setState(data);
 
             setBonusList(data.bonuses
-                .map(bonus  =>  {
+                .map((bonus: ClassBonus)  =>  {
                     return (
                         <tr key={bonus.id}>
-                            <td>{foo(bonus)}</td>
+                            <td>{getBonusType(bonus)}</td>
                             <td>{bonus.modifier}</td>
                             <td>{bonus.name}</td>
                         </tr>
                     )
             }));
             setSkillsList(data.skillInstances
-                .map(skill => {
+                .map((skill: Skill) => {
                     return (
                         <tr key={skill.id}>
                             <td>{skill.iconName}</td>
@@ -95,25 +95,30 @@ export const ClassesDetailView = (props) => {
         getState();
     }, [id]);
 
+    let bonusCount = 0;
+    if(state && state.bonuses) {
+        bonusCount = state.bonuses.length;
+    }
+
     return (
-        <Container>
+        <Container style={{marginRight: "250px"}}>
             <h2>Information</h2>
                 <Table className="classDetails detailsTable">
                   <tbody>
                       <tr>
-                          <td rowSpan="2">{state && state.iconName}</td>
+                          <td rowSpan={2}>{state && state.iconName}</td>
                           <td>Class:</td>
-                          <td colSpan="2">{state && state.name}</td>
+                          <td colSpan={2}>{state && state.name}</td>
                       </tr>
                       <tr>
                           <td>Description:</td>
-                          <td colSpan="2">{state && state.description}</td>
+                          <td colSpan={2}>{state && state.description}</td>
                       </tr>
                       <tr>
-                          <td colSpan="4">{state && state.lore}</td>
+                          <td colSpan={4}>{state && state.lore}</td>
                       </tr>
                       <tr>
-                          <td rowSpan={state && state.bonuses.length + 1} style={{verticalAlign: "top"}}>Bonus</td>
+                          <td rowSpan={bonusCount + 1} style={{verticalAlign: "top"}}>Bonus</td>
                       </tr>
                       {bonusList}
                   </tbody>

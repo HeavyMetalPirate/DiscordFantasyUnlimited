@@ -18,11 +18,11 @@ import { useNavigate, Link } from 'react-router-dom';
 
 import './GamePanel.css'
 import { get_steps, calculateHealthPercentage, calculateResourcePercentage } from './utils/StatusbarUtils'
-import { useSetState, useTrackedState } from '../SessionStore';
+import { useTrackedState } from '../SessionStore';
 import { UserSearch } from '../user/UserComponents'
 
-const ManaBar = ({character}) => {
-    var steps;
+const ManaBar = ({character}: CharacterInformation) => {
+    let steps;
 
     if(character.resources.energyType === 'RAGE') {
         // Red
@@ -52,7 +52,7 @@ const ManaBar = ({character}) => {
     )
 }
 
-const HealthBar = ({character}) => {
+const HealthBar = ({character}: CharacterInformation) => {
 
     const steps = get_steps('rgb(255, 0, 0)', 'rgb(0, 128, 0)' , 100);
     const p = calculateHealthPercentage(character);
@@ -70,14 +70,13 @@ const HealthBar = ({character}) => {
     )
 }
 
-export const CurrentCharacterPanel = (props) => {
-    const t = props.translation;
-    const setState = useSetState();
-    const state = useTrackedState();
+export const CurrentCharacterPanel = ({translation}: TranslationAsProperty) => {
+    const t = translation;
+    const [state, setState] = useTrackedState();
     const navigate = useNavigate();
 
-    const [character, setCharacter] = useState(null);
-    const [currentActiveUsers, setCurrentActiveUsers] = useState(null);
+    const [character, setCharacter] = useState<PlayerCharacterData | null>(null);
+    const [currentActiveUsers, setCurrentActiveUsers] = useState<User[]>([]);
 
     useEffect(() => {
         const getCharacter = async() => {
@@ -103,12 +102,9 @@ export const CurrentCharacterPanel = (props) => {
     useEffect(() => {
         const getActiveUsers = async() => {
             const res = await fetch('/api/user/actives')
-            // await the json data in the response
             const data = await res.json();
-            // set the state of the const 'skill'
-            setCurrentActiveUsers(data.map( user => {
-                return user
-            }));
+
+            setCurrentActiveUsers(data);
         };
         getActiveUsers();
     }, []); // TODO how to refresh? https://stackoverflow.com/questions/59667278/react-hooks-periodic-run-useeffect
@@ -126,7 +122,7 @@ export const CurrentCharacterPanel = (props) => {
     function goToSelection() {
         setState((prev) => ({ ...prev, selectedCharacter: null, stateChanged: true}));
         fetch('/api/user/characters/select?id=0')
-            .then(navigate('/game'));
+            .then(response => navigate('/game'));
     }
 
     function goToEquipment() {
@@ -166,18 +162,19 @@ export const CurrentCharacterPanel = (props) => {
     );
 }
 
-export const CharacterSelection = (props) => {
-    // React i18n Hook
-    const t = props.translation;
-    const setState = useSetState();
-    const state = useTrackedState();
+export const CharacterSelection = ({translation}: TranslationAsProperty) => {
+    console.log("Translation:");
+    console.log(translation);
+
+    const t = translation;
+    const [state, setState] = useTrackedState();
     const navigate = useNavigate();
 
     // Variables
-    const [characters, setCharacters] = useState(null);
+    const [characters, setCharacters] = useState<PlayerCharacterData[]>([]);
     const [characterList, setCharacterList] = useState(null);
 
-    function selectCharacter(id) {
+    function selectCharacter(id: string) {
         fetch('/api/user/characters/select?id=' + id)
             .then(() => {
                 setState((prevState) => ({ ...prevState, selectedCharacter: id, stateChanged: true}))
@@ -197,7 +194,7 @@ export const CharacterSelection = (props) => {
             setCharacters(data);
 
             setCharacterList(
-                data.map(character => {
+                data.map((character: PlayerCharacterData) => {
                     return (
                         <tr key={character.id}>
                             <td>{character.name}</td>
@@ -241,17 +238,16 @@ export const CharacterSelection = (props) => {
         </Container>
     )
 }
-export const CharacterCreation = (props) => {
-    // React i18n Hook
-    const t = props.translation;
-    const userState = useTrackedState();
+export const CharacterCreation = ({translation}: TranslationAsProperty) => {
+    const t = translation;
+    const [userState, setUserState] = useTrackedState();
     const navigate = useNavigate();
 
     // Variables
     const [classes, setClasses] = useState(null);
     const [races, setRaces] = useState(null);
 
-    const [nameTaken, setNameTaken] = useState(null);
+    const [nameTaken, setNameTaken] = useState<boolean>(false);
 
     useEffect(() => {
         // Define getCharacters method as async
@@ -262,7 +258,7 @@ export const CharacterCreation = (props) => {
             const data = await res.json();
 
             setClasses(
-                data.map(clazz => {
+                data.map((clazz: CharacterClassInfo) => {
                     return (
                         <option key={clazz.id} value={clazz.id}>{t(clazz.name, {ns: 'characterClass'})}</option>
                     )
@@ -277,7 +273,7 @@ export const CharacterCreation = (props) => {
             const data = await res.json();
 
             setRaces(
-                data.map(race => {
+                data.map((race: CharacterRaceInfo) => {
                     return (
                         <option key={race.id} value={race.id}>{t(race.name, {ns: 'race'})}</option>
                     )
@@ -290,15 +286,25 @@ export const CharacterCreation = (props) => {
         getRaces();
     }, []);
 
-    function createCharacter(event) {
+    function createCharacter(event: React.SyntheticEvent) {
         event.preventDefault();
-        const data = new FormData(event.target);
-        const creationBody = {name: data.get('name'), classId: data.get('class'), raceId: data.get('race')}
 
+        const target = event.target as typeof event.target & {
+            name: { value: string };
+            class: { value: string };
+            race: { value: string };
+        };
+        const creationBody = {
+            name: target.name.value,
+            classId: target.class.value,
+            raceId: target.race.value
+        }
+
+        let token = userState.token!.token;
         const requestOptions = {
             method: 'POST',
             headers: {
-                'X-CSRF-TOKEN' : userState.token.token,
+                'X-CSRF-TOKEN' : token,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(creationBody)
@@ -307,12 +313,12 @@ export const CharacterCreation = (props) => {
         fetch('/api/user/characters/create', requestOptions)
             .then((response) => {
                 console.log(response);
-                if(response.status === '409') {
+                if(response.status === 409) {
                     // conflict because of name
                     console.log('Character exists by name!');
                     setNameTaken(true);
                 }
-                else if (response.status === '200') {
+                else if (response.status === 200) {
                     // success
                     console.log('Character created successfully!');
                     setNameTaken(false);

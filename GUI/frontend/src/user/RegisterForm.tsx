@@ -2,15 +2,21 @@ import React, { Component } from 'react';
 import { Container, Button, Form, FormGroup, Col, Input, Label } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { Trans } from 'react-i18next';
-import { withTranslation } from "react-i18next";
+import { withTranslation, WithTranslation } from "react-i18next";
 
-function submitForm(event) {
+function submitForm(event: React.SyntheticEvent) {
     event.preventDefault();
-    const data = new FormData(event.target);
-    console.log(data.get('username'));
-    console.log(data.get('email'));
-    console.log(data.get('password'));
-    const registerRequestBody = {username: data.get('username'), email: data.get('email'), password: data.get('password')};
+    const target = event.target as typeof event.target & {
+        username: { value: string };
+        email: { value: string };
+        password: { value: string };
+    };
+
+    const registerRequestBody = {
+        username: target.username.value,
+        email: target.email.value,
+        password: target.password.value
+    };
 
     (async () => {
         const requestOptions = {
@@ -24,7 +30,7 @@ function submitForm(event) {
     })();
 }
 
-class RegisterForm extends Component {
+class RegisterForm extends Component<WithTranslation> {
     state = {};
 
     render() {
