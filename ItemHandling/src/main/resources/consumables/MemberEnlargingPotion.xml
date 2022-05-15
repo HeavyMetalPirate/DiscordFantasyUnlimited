@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Consumable>
+  <id>memberEnlargingPotion</id>
+  <name>Member Enlarging Potion</name>
+  <iconName>../images/items/memberEnlargingPotion.png</iconName>
+  <description>A potion that will enlarge your member. Seek a medic if it lasts for more than four hours.</description>
+  <rarity>EPIC</rarity>
+  <value>150</value>
+  <duringBattle>true</duringBattle>
+  <fromInventory>false</fromInventory>
+  <combatSkillModifiers />
+  <attributeModifiers>
+    <AttributeBonus>
+      <attribute>ENDURANCE</attribute>
+      <bonus>5</bonus>
+    </AttributeBonus>
+  </attributeModifiers>
+  <durationRounds>0</durationRounds>
+  <healthRestored>0</healthRestored>
+  <atkResourceRestored>0</atkResourceRestored>
+  <resourceType>RAGE</resourceType>
+</Consumable>

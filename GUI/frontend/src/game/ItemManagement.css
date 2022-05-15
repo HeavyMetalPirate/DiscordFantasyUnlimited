@@ -1,0 +1,118 @@
+img.item-icon {
+    width: 4em;
+    height: 4em;
+    border: 2px solid black;
+    border-radius: 8px !important;
+    margin-bottom: 0.5em;
+}
+
+img.item-icon.common {
+    border: 2px solid darkgrey;
+}
+img.item-icon.uncommon {
+    border: 2px solid green;
+}
+img.item-icon.rare {
+    border: 2px solid blue;
+}
+img.item-icon.epic {
+    border: 2px solid purple;
+}
+img.item-icon.legendary {
+    border: 2px solid orange;
+}
+img.item-icon.artifact {
+    border: 2px solid red;
+}
+
+div.item-card {
+    width: 8em;
+    height: 8em;
+    flex: unset !important;
+}
+
+div.item-card-body {
+    position: relative;
+}
+
+p.item-count, p.card-title {
+    text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+    font-family: Monospace, sans-serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: #FFF;
+}
+
+p.item-count {
+    position: absolute;
+    top: 5.75em;
+    left: 3em;
+    font-size: 11px;
+    background: black;
+    width: 2em;
+    border-bottom-left-radius: 8px;
+}
+
+div.item-detail-view, div.item-context-menu, div.item-context-menu-drop {
+    width: 25em;
+    background: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    position: fixed;
+    padding: 0;
+
+    text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+    font-family: Monospace, sans-serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: #FFF;
+}
+
+div.item-detail-view > div.card > div.card-header {
+    text-align: left;
+}
+
+div.item-detail-view > div.card > div.card-header > img.item-icon {
+    margin-right: 1.5em;
+}
+
+div.card-header-text {
+    position: absolute;
+    top: -0.25em;
+    left: 6em;
+}
+span.card-header-text:before
+{
+    content:"\A"; white-space:pre;
+}
+
+span.text-break:before
+{
+    content:"\A"; white-space:pre;
+}
+
+span.card-footer-text
+{
+    font-family: serif;
+    font-size: 12px;
+    text-shadow: none;
+    letter-spacing: unset;
+    color: #000;
+    font-style: italic;
+}
+
+.buff-text {
+    color: lightgreen;
+    list-style-type: none;
+}
+
+div.item-detail-view > div.card > div.card-body > p.card-text {
+    margin-bottom: 0;
+}
+
+div.item-context-header {
+    font-size: 1rem;
+}
+div.item-context-menu div button {
+    width: 100%;
+}

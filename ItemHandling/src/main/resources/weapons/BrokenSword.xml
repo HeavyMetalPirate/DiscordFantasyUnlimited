@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Weapon>
+  <id>broken-sword</id>
+  <name>Broken Sword</name>
+  <description>It has seen better days for sure, but at least it is somewhat pointy and rusty...</description>
+  <iconName>../images/items/brknSwrd.png</iconName>
+  <rarity>ARTIFACT</rarity>
+  <value>10</value>
+  <type>SWORD</type>
+  <hand>RIGHT</hand>
+  <minDamage>1</minDamage>
+  <maxDamage>2</maxDamage>
+  <skillBonuses/>
+  <attributeBonuses/>
+  <secondarySkillBonuses>
+    <SecondarySkillBonus>
+      <skill>WOODCUTTING</skill>
+      <bonus>5</bonus>
+    </SecondarySkillBonus>
+  </secondarySkillBonuses>
+</Weapon>

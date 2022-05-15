@@ -1,0 +1,21 @@
+plugins {
+    id "com.github.node-gradle.node" version "3.0.1"
+}
+
+node {
+     download = true
+    // Version of node to download and install (only used if download is true)
+    // It will be unpacked in the workDir
+    version = "16.14.2"
+    // Version of npm to use
+    // If specified, installs it in the npmWorkDir
+    // If empty, the plugin will use the npm command bundled with Node.js
+    npmVersion = "8.7.0"
+
+    nodeModulesDir = file('frontend/')
+}
+
+npm_run_build {
+    dependsOn npmInstall
+
+}

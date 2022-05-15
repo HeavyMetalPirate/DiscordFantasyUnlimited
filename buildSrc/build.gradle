@@ -1,0 +1,14 @@
+plugins {
+    id 'groovy-gradle-plugin'
+}
+
+repositories {
+    gradlePluginPortal() // so that external plugins can be resolved in dependencies section
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-gradle-plugin
+    implementation 'org.springframework.boot:spring-boot-gradle-plugin:2.6.7'
+    // https://mvnrepository.com/artifact/io.spring.dependency-management/io.spring.dependency-management.gradle.plugin
+    implementation 'io.spring.dependency-management:io.spring.dependency-management.gradle.plugin:1.0.11.RELEASE'
+}

@@ -1,0 +1,41 @@
+<Skill>
+    <id>2</id>
+    <name>Drink blood</name>
+    <description>Heals you by drinking the blood of your enemy.</description>
+    <iconName>blood</iconName>
+    <iconId>445278317461897227</iconId>
+    <attribute>ENDURANCE</attribute>
+    <type>DEFENSIVE</type>
+    <targetType>OWN</targetType>
+    <weaponModifier>NONE</weaponModifier>
+    <minDamage>100</minDamage>
+    <maxDamage>100</maxDamage>
+    <costOfExecution>0</costOfExecution>
+    <preparationRounds>0</preparationRounds>
+    <ranks>
+        <SkillRank>
+            <rank>1</rank>
+            <damageModifier>0</damageModifier>
+            <costModifier>0</costModifier>
+            <requiredAttributeValue>1</requiredAttributeValue>
+            <requiredPlayerLevel>1</requiredPlayerLevel>
+        </SkillRank>
+        <SkillRank>
+            <rank>2</rank>
+            <damageModifier>0</damageModifier>
+            <costModifier>0</costModifier>
+            <requiredAttributeValue>1</requiredAttributeValue>
+            <requiredPlayerLevel>1</requiredPlayerLevel>
+        </SkillRank>
+        <SkillRank>
+            <rank>3</rank>
+            <damageModifier>50</damageModifier>
+            <costModifier>0</costModifier>
+            <requiredAttributeValue>1</requiredAttributeValue>
+            <requiredPlayerLevel>2</requiredPlayerLevel>
+        </SkillRank>
+    </ranks>
+    <requirements />
+    <buffModifier>0</buffModifier>
+    <durationInTurns>0</durationInTurns>
+</Skill>

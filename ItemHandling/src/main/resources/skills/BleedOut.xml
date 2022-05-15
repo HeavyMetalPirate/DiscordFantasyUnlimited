@@ -1,0 +1,28 @@
+<Skill>
+    <id>4</id>
+    <name>Bleed out</name>
+    <description>I BLEED IT OUT, DIGGING DEEPER JUST TO THROW IT AWAY.</description>
+    <iconName>bleed</iconName>
+    <iconId>447805251865542668</iconId>
+    <attribute>STRENGTH</attribute>
+    <type>DEBUFF</type>
+    <targetType>ENEMY</targetType>
+    <weaponModifier>NONE</weaponModifier>
+    <minDamage>2</minDamage>
+    <maxDamage>4</maxDamage>
+    <costOfExecution>0</costOfExecution>
+    <preparationRounds>0</preparationRounds>
+    <ranks>
+        <SkillRank>
+            <rank>1</rank>
+            <damageModifier>0</damageModifier>
+            <costModifier>0</costModifier>
+            <requiredAttributeValue>1</requiredAttributeValue>
+            <requiredPlayerLevel>1</requiredPlayerLevel>
+        </SkillRank>
+    </ranks>
+    <requirements />
+    <skillIncapacitates>true</skillIncapacitates>
+    <buffModifier>0</buffModifier>
+    <durationInTurns>3</durationInTurns>
+</Skill>

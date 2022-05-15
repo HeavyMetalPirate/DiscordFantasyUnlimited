@@ -1,0 +1,11 @@
+plugins {
+    id 'foo-plugin'
+    id 'fu-spring-jpa'
+}
+
+dependencies {
+    api project(':Database')
+    api project(':ItemHandling')
+}
+
+bootJar.enabled = false

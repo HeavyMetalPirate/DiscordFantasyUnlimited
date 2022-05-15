@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Class>
+	<id>12</id>
+	<name>Twelve</name>
+	<description>Depraved have it hard.</description>
+	<iconName>depraved.png</iconName>
+	<lore>The depraved is depraved. Depraving, huh? This time in blue!
+	</lore>
+  <humanPlayable>true</humanPlayable>
+	<energyType>RAGE</energyType>
+	<attributes>
+		<endurance>1</endurance>
+		<strength>1</strength>
+		<dexterity>1</dexterity>
+		<wisdom>1</wisdom>
+		<intelligence>1</intelligence>
+		<defense>1</defense>
+		<luck>1</luck>
+		<enduranceGrowth>1</enduranceGrowth>
+		<strengthGrowth>2</strengthGrowth>
+		<dexterityGrowth>0</dexterityGrowth>
+		<wisdomGrowth>0</wisdomGrowth>
+		<intelligenceGrowth>0</intelligenceGrowth>
+		<defenseGrowth>1</defenseGrowth>
+		<luckGrowth>1</luckGrowth>
+	</attributes>
+	<startingMainhand>broken-sword</startingMainhand>
+	<startingOffhand>-1</startingOffhand>
+	<startingHelmet>-1</startingHelmet>
+	<startingChest>torn-shirt</startingChest>
+	<startingGloves>-1</startingGloves>
+	<startingPants>-1</startingPants>
+	<startingBoots>-1</startingBoots>
+	<startingRing1>-1</startingRing1>
+	<startingRing2>-1</startingRing2>
+	<startingNeck>-1</startingNeck>
+	<bonuses>
+		<ClassBonus>
+			<id>1</id>
+			<name>Depraved Power</name>
+			<description>Who knew depraved could bear any
+				strength at all?</description>
+			<iconName>dprStr.png</iconName>
+			<attribute>STRENGTH</attribute>
+			<modifier>5</modifier>
+		</ClassBonus>
+	</bonuses>
+	<skills>
+		<string>0</string>
+		<string>1</string>
+		<string>2</string>
+		<string>3</string>
+		<string>4</string>
+	</skills>
+</Class>

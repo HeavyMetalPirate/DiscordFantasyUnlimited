@@ -1,0 +1,40 @@
+<Skill>
+    <id>1</id>
+    <name>Powerful attack 5000</name>
+    <description>Attack with your mainhand weapon equipped.</description>
+    <iconName>foobar</iconName>
+    <iconId>442281913860882436</iconId>
+    <attribute>STRENGTH</attribute>
+    <type>OFFENSIVE</type>
+    <weaponModifier>WEAPON_MAINHAND</weaponModifier>
+    <minDamage>100</minDamage>
+    <maxDamage>100</maxDamage>
+    <costOfExecution>35</costOfExecution>
+    <preparationRounds>0</preparationRounds>
+    <ranks>
+        <SkillRank>
+            <rank>1</rank>
+            <damageModifier>0</damageModifier>
+            <costModifier>0</costModifier>
+            <requiredAttributeValue>1</requiredAttributeValue>
+            <requiredPlayerLevel>1</requiredPlayerLevel>
+        </SkillRank>
+        <SkillRank>
+            <rank>2</rank>
+            <damageModifier>0</damageModifier>
+            <costModifier>0</costModifier>
+            <requiredAttributeValue>1</requiredAttributeValue>
+            <requiredPlayerLevel>1</requiredPlayerLevel>
+        </SkillRank>
+        <SkillRank>
+            <rank>3</rank>
+            <damageModifier>0</damageModifier>
+            <costModifier>0</costModifier>
+            <requiredAttributeValue>1</requiredAttributeValue>
+            <requiredPlayerLevel>2</requiredPlayerLevel>
+        </SkillRank>
+    </ranks>
+    <requirements />
+    <buffModifier>0</buffModifier>
+    <durationInTurns>0</durationInTurns>
+</Skill>

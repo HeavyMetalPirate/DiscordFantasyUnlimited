@@ -1,0 +1,25 @@
+plugins {
+    id 'fu-spring-web'
+    id 'fu-spring-jpa'
+}
+
+dependencies {
+    implementation project(":Database")
+    implementation project(":ItemHandling")
+    implementation project(":Battles")
+}
+
+task cleanPublicFolder(type: Delete) {
+    outputs.upToDateWhen { false }
+    finalizedBy ":GUI:npm_run_build"
+    delete fileTree("${project.projectDir}/src/main/resources/public/")
+}
+
+task copyWebapp(type: Copy) {
+    outputs.upToDateWhen { false }
+    dependsOn cleanPublicFolder
+    from project(":GUI").projectDir.toString() + "/frontend/build"
+    into "${project.projectDir}/src/main/resources/public"
+}
+
+classes.dependsOn copyWebapp
