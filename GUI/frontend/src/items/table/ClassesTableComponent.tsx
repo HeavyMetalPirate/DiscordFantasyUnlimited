@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { Container, Table, Button } from 'reactstrap';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+
+import {Items} from "../../types/itemhandling";
 
 interface ClassesProps {
 
 }
 interface ClassesState {
-    classes: CharacterClass[];
+    classes: Items.CharacterClass[];
 }
 
 class ClassesTableComponent extends Component<ClassesProps, ClassesState> {

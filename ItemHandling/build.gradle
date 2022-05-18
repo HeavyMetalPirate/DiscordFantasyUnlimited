@@ -1,6 +1,16 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'cz.habarta.typescript-generator', name: 'typescript-generator-gradle-plugin', version: '2.36.1070'
+    }
+}
+
 plugins {
     id 'foo-plugin'
 }
+apply plugin: 'cz.habarta.typescript-generator'
 
 dependencies {
     // https://mvnrepository.com/artifact/com.thoughtworks.xstream/xstream
@@ -8,3 +18,14 @@ dependencies {
 }
 
 bootJar.enabled = false
+
+generateTypeScript {
+    jsonLibrary = 'jackson2'
+    classPatterns = [
+        'com.fantasyunlimited.items.entity.*'
+    ]
+    outputFile = project(":GUI").projectDir.toString() + '/frontend/src/types/itemhandling.ts'
+    outputKind = 'module'
+    outputFileType = "implementationFile"
+    namespace = 'Items'
+}

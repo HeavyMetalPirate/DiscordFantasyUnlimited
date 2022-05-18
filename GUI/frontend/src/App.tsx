@@ -23,14 +23,10 @@ export const UserInformation = () => {
 
     useEffect(() => {
         const userState = async() => {
-            console.log("Fetching current user...");
             const resp = await fetch('/api/user/current');
             try {
                 // will only return json if logged in
                 const data = await resp.json();
-
-                console.log("Current User Data");
-                console.log(data);
 
                 let principal: UserPrincipal = {
                     name: data.principal.name

@@ -1,38 +1,45 @@
-interface SimpleDialogProps extends TranslationAsProperty {
+import * as EntityTypes from "../../types/itemhandling";
+
+import CombatSkillBonus = EntityTypes.Items.CombatSkillBonus;
+import AttributeBonus = EntityTypes.Items.AttributeBonus;
+import SecondarySkillBonus = EntityTypes.Items.SecondarySkillBonus;
+import AttackResourceBonus = EntityTypes.Items.AttackResourceBonus;
+
+export interface SimpleDialogProps extends TranslationAsProperty {
     selectedValue: InventoryItem | null;
     open: boolean;
     onClose(value: string): void;
 }
 
-interface InventoryListProperties extends TranslationAsProperty {
+export interface InventoryListProperties extends TranslationAsProperty {
     inventory: InventoryItem[] | null;
     onReload(): void;
 }
 
-interface ContextMenuItemSelection {
+export interface ContextMenuItemSelection {
     item: InventoryItem | null;
     name: string | null;
 }
 
-interface ItemDetailView extends TranslationAsProperty {
+export interface ItemDetailViewProperties extends TranslationAsProperty {
     item: InventoryItem | null;
     visible: string;
     x: number;
     y: number;
 }
 
-type InventoryType = {
+export type InventoryType = {
     items: InventoryItem[];
     gold: number;
 }
 
-type InventoryItem = {
+export type InventoryItem = {
     type: string;
     count: number;
     item: DropableItem;
 }
 
-type DropableItem = {
+export type DropableItem = {
     // Generic Item
     id: string;
     name: string;

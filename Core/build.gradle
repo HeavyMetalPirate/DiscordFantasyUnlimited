@@ -1,13 +1,35 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'cz.habarta.typescript-generator', name: 'typescript-generator-gradle-plugin', version: '2.36.1070'
+    }
+}
+
 plugins {
     id 'fu-spring-web'
     id 'fu-spring-jpa'
 }
+apply plugin: 'cz.habarta.typescript-generator'
 
 dependencies {
     implementation project(":Database")
     implementation project(":ItemHandling")
     implementation project(":Battles")
 }
+
+generateTypeScript {
+    jsonLibrary = 'jackson2'
+    classPatterns = [
+            'com.fantasyunlimited.rest.dto.*'
+    ]
+    outputFile = project(":GUI").projectDir.toString() + '/frontend/src/types/rest-entities.ts'
+    outputKind = 'module'
+    outputFileType = "implementationFile"
+    namespace = 'REST'
+}
+
 
 task cleanPublicFolder(type: Delete) {
     outputs.upToDateWhen { false }

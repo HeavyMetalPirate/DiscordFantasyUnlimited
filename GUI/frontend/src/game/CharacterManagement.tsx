@@ -163,8 +163,6 @@ export const CurrentCharacterPanel = ({translation}: TranslationAsProperty) => {
 }
 
 export const CharacterSelection = ({translation}: TranslationAsProperty) => {
-    console.log("Translation:");
-    console.log(translation);
 
     const t = translation;
     const [state, setState] = useTrackedState();

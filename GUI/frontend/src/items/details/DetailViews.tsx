@@ -3,10 +3,13 @@ import { Container, Table, Button } from 'reactstrap';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
+
+import { Items } from '../../types/itemhandling';
+
 // https://overreacted.io/a-complete-guide-to-useeffect/
 
 // Little helper to get the bonus text value
-function getBonusType(bonus: ClassBonus) {
+function getBonusType(bonus: Items.ClassBonus) {
     // TODO right now it reads the enums directly
     // so do some i18n voodoo I guess
     if(bonus.combatSkill) {
@@ -26,7 +29,7 @@ export const SkillsDetailView = () => {
     // React i18n Hook
     const { t, i18n } = useTranslation();
 
-    const [skill, setSkill] = useState<Skill |null >(null);
+    const [skill, setSkill] = useState<Items.Skill |null >(null);
 
     useEffect(() => {
         // Define getSkill method as async
@@ -57,7 +60,7 @@ export const ClassesDetailView = () => {
     // React i18n Hook
     const { t, i18n } = useTranslation();
 
-    const [state, setState] = useState<CharacterClass | null>(null);
+    const [state, setState] = useState<Items.CharacterClass | null>(null);
     const [skillsList, setSkillsList] = useState(null);
     const [bonusList, setBonusList] = useState(null);
 
@@ -68,7 +71,7 @@ export const ClassesDetailView = () => {
             setState(data);
 
             setBonusList(data.bonuses
-                .map((bonus: ClassBonus)  =>  {
+                .map((bonus: Items.ClassBonus)  =>  {
                     return (
                         <tr key={bonus.id}>
                             <td>{getBonusType(bonus)}</td>
@@ -78,7 +81,7 @@ export const ClassesDetailView = () => {
                     )
             }));
             setSkillsList(data.skillInstances
-                .map((skill: Skill) => {
+                .map((skill: Items.Skill) => {
                     return (
                         <tr key={skill.id}>
                             <td>{skill.iconName}</td>

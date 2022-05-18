@@ -21,13 +21,22 @@ import {
     useMenuState, ClickEvent, MenuCloseEvent
 } from '@szhsin/react-menu';
 import '@szhsin/react-menu/dist/index.css';
-
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
-
 import { useTrackedState } from '../SessionStore';
-
 import './ItemManagement.css'
+
+import {
+    ItemDetailViewProperties,
+    DropableItem,
+    SimpleDialogProps,
+    InventoryListProperties,
+    InventoryItem,
+    InventoryType,
+    ContextMenuItemSelection
+} from './utils/ItemTypes';
+
+import { Items } from '../types/itemhandling';
 
 export const EquipmentManager = ({translation}: TranslationAsProperty) => {
     const t = translation;
@@ -37,7 +46,7 @@ export const EquipmentManager = ({translation}: TranslationAsProperty) => {
     )
 }
 
-const ItemDetailView = ({translation, item, visible, x, y}: ItemDetailView) => {
+const ItemDetailView = ({translation, item, visible, x, y}: ItemDetailViewProperties) => {
     const t = translation;
     const [selectedItem, setSelectedItem] = useState<DropableItem | null>(null);
 
@@ -55,13 +64,13 @@ const ItemDetailView = ({translation, item, visible, x, y}: ItemDetailView) => {
         let attackResourceBonus: JSX.Element[]  = [];
 
         if(selectedItem && selectedItem.attributeBonuses && selectedItem.attributeBonuses.length > 0) {
-            attributeBonus = selectedItem.attributeBonuses.map((bonus: AttributeBonus) => {
+            attributeBonus = selectedItem.attributeBonuses.map((bonus: Items.AttributeBonus) => {
                 return <li className="buff-text">+{bonus.bonus} {t('character.attributes.' + bonus.attribute, {ns:'character'})}</li>
             });
         }
 
         if(selectedItem && selectedItem.skillBonuses && selectedItem.skillBonuses.length > 0) {
-            skillBonus = selectedItem.skillBonuses.map((bonus: CombatSkillBonus) => {
+            skillBonus = selectedItem.skillBonuses.map((bonus: Items.CombatSkillBonus) => {
                 return <li className="buff-text">+{bonus.bonus}% {t('character.skills.' + bonus.skill, {ns:'character'})}</li>
             });
         }
@@ -73,7 +82,7 @@ const ItemDetailView = ({translation, item, visible, x, y}: ItemDetailView) => {
         }
         if(selectedItem && selectedItem.atkResourceBonuses && selectedItem.atkResourceBonuses.length > 0) {
             attackResourceBonus = selectedItem.atkResourceBonuses.map(bonus => {
-                return <li className="buff-text">+{bonus.bonus} {t('character.energy.type.' + bonus.energyType, {ns:'character'})}</li>
+                return <li className="buff-text">+{bonus.bonus} {t('character.energy.type.' + bonus.skill, {ns:'character'})}</li>
             });
         }
 
