@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Equipment>
+  <id>pitbull-headband</id>
+  <name>Pitbull's Headband</name>
+  <description>It should have been a neckband, but have you seen just how thick these heads are?</description>
+  <iconName>../images/items/pitbull-headband.jpg</iconName>
+  <rarity>EPIC</rarity>
+  <value>10</value>
+  <type>HELMET</type>
+  <armor>100</armor>
+  <raceExclusive>1</raceExclusive>
+  <skillBonuses />
+  <attributeBonuses>
+  	<AttributeBonus>
+  		<attribute>DEXTERITY</attribute>
+  		<bonus>1</bonus>
+  	</AttributeBonus>
+  </attributeBonuses>
+  <secondarySkillBonuses/>
+  <atkResourceBonuses />
+</Equipment>

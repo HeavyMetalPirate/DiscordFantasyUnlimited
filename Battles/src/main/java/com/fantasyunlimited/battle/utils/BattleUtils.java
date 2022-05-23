@@ -66,7 +66,6 @@ public class BattleUtils {
         int level = base.getLevel();
         battleNPC.setLevel(level);
 
-
         com.fantasyunlimited.data.entity.Attributes attributes = new com.fantasyunlimited.data.entity.Attributes();
 
         int defense = charClass.getAttributes().getDefense() + (charClass.getAttributes().getDefenseGrowth() * level);

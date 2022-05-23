@@ -1,6 +1,8 @@
 package com.fantasyunlimited.items.entity;
 
-public class SecondarySkillBonus {
+import java.io.Serializable;
+
+public class SecondarySkillBonus implements Serializable {
 	private SecondarySkill skill;
 	private int bonus;
 	public SecondarySkill getSkill() {

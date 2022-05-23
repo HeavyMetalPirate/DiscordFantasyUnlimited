@@ -1,8 +1,11 @@
 import {TFunction} from "react-i18next";
+import {ActiveUserItem, LocationAction, REST} from "./rest-entities";
 
 export {};
 
 declare global {
+
+    import PlayerCharacterItem = REST.PlayerCharacterItem;
 
     interface TranslationAsProperty {
         translation: TFunction<"translation", undefined>;
@@ -16,80 +19,26 @@ declare global {
         character: PlayerCharacterData;
     }
 
-    interface User {
-        name: string;
-        role: string;
-    }
-
     interface FilteredUserList {
-        filteredUsers: User[];
+        filteredUsers: ActiveUserItem[];
     }
 
     interface UserList {
-        details: User[];
-    }
-
-    type CsrfToken = {
-        token: string;
-        headerName: string;
-        parameterName: string;
-    }
-
-    type UserPrincipal = {
-        name: string;
-    }
-
-    type CharacterClassInfo = {
-        id: string;
-        name: string;
-        icon: string;
-    }
-
-    type CharacterRaceInfo = {
-        id: string;
-        name: string;
-        icon: string;
-    }
-
-    type CharacterLocationInfo = {
-        id: string;
-        name: string;
-        icon: string;
-    }
-
-    type CharacterBattleResourceInfo = {
-        currentHealth: number;
-        maxHealth: number;
-        currentResource: number;
-        maxResource: number;
-        energyType: string;
+        details: ActiveUserItem[];
     }
 
     type PlayerCharacterData = {
-        id: string;
-        name: string;
-        level: number;
-        exp: number;
-        characterClass: CharacterClassInfo;
-        race: CharacterRaceInfo;
-        location: CharacterLocationInfo;
-        resources: CharacterBattleResourceInfo;
+        character: PlayerCharacterItem;
     }
 
-    type LocationActionDetails = {
+    interface LocationActionDetails {
         minimumLevel?: number;
         maximumLevel?: number;
         duration?: number;
         toll?: number;
     }
 
-    type LocationAction = {
-        type: string;
-        text: string;
-        iconName: string;
-        endpoint: string;
-        requirementMet: boolean;
-        reason: string;
+    interface LocationAction extends REST.LocationAction {
         details: LocationActionDetails;
     }
 }

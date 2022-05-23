@@ -62,7 +62,17 @@ public class Attributes implements Serializable {
 	public void raiseUnspent(int amount) {
 		unspent += amount;
 	}
-	
+
+	public void raiseAll(int amount) {
+		raiseEndurance(amount);
+		raiseStrength(amount);
+		raiseDexterity(amount);
+		raiseWisdom(amount);
+		raiseIntelligence(amount);
+		raiseDefense(amount);
+		raiseLuck(amount);
+	}
+
 	public int getEndurance() {
 		return endurance;
 	}

@@ -11,6 +11,22 @@ public class SecondarySkills implements Serializable {
     private int alchemy;
     private int enchanting;
 
+    public void inreaseWoodcutting(int amount) {
+        woodcutting += amount;
+    }
+    public void increaseFishing(int amount) {
+        fishing += amount;
+    }
+    public void increaseMining(int amount) {
+        mining += amount;
+    }
+    public void increaseAlchemy(int amount) {
+        alchemy += amount;
+    }
+    public void increaseEnchanting(int amount) {
+        enchanting += amount;
+    }
+
     public int getWoodcutting() {
         return woodcutting;
     }

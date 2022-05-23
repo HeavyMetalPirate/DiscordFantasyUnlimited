@@ -12,13 +12,14 @@ import {
     Container,
     InputGroup,
     Input,
-    Label
+    Label,
+    Table
 } from 'reactstrap';
 import {
     ControlledMenu,
     MenuItem,
     MenuHeader,
-    useMenuState, ClickEvent, MenuCloseEvent
+    useMenuState, ClickEvent, MenuCloseEvent, SubMenu
 } from '@szhsin/react-menu';
 import '@szhsin/react-menu/dist/index.css';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -37,12 +38,437 @@ import {
 } from './utils/ItemTypes';
 
 import { Items } from '../types/itemhandling';
+import { REST } from "../types/rest-entities";
+import {TFunction} from "react-i18next";
+
+function itemTypeSort(a:InventoryItem, b:InventoryItem) {
+    return a.type > b.type ? 1 : -1;
+}
+function itemQuantitySort(a: InventoryItem, b:InventoryItem) {
+    return a.count > b.count ? -1 : 1;
+}
+function itemValueSort(a:InventoryItem, b:InventoryItem) {
+    return a.item.value > b.item.value ? -1 : 1;
+}
+function itemNameSort(a:InventoryItem, b: InventoryItem, t: TFunction) {
+    const aTranslatedName = t(a.item.name, {ns:'items'});
+    const bTranslatedName = t(b.item.name, {ns:'items'});
+    return aTranslatedName > bTranslatedName ? 1 : -1;
+}
+function itemRaritySort(a: InventoryItem, b: InventoryItem) {
+    if(a.item.rarity === b.item.rarity) {
+        // Both same rarity: use value
+        return a.item.value > b.item.value ? -1 : 1;
+    }
+    // Artifacts
+    if(a.item.rarity === 'ARTIFACT') {
+        return -1;
+    }
+    if(b.item.rarity === 'ARTIFACT') {
+        return 1;
+    }
+    // Legendary
+    if(a.item.rarity === 'LEGENDARY') {
+        return -1;
+    }
+    if(b.item.rarity === 'LEGENDARY') {
+        return 1;
+    }
+    // Epic
+    if(a.item.rarity === 'EPIC') {
+        return -1;
+    }
+    if(b.item.rarity === 'EPIC') {
+        return 1;
+    }
+    // Rare
+    if(a.item.rarity === 'RARE') {
+        return -1;
+    }
+    if(b.item.rarity === 'RARE') {
+        return 1;
+    }
+    // Uncommon
+    if(a.item.rarity === 'UNCOMMON') {
+        return -1;
+    }
+    if(b.item.rarity === 'UNCOMMON') {
+        return 1;
+    }
+    // Common: value again but should be dead code really...
+    return a.item.value > b.item.value ? -1 : 1;
+}
 
 export const EquipmentManager = ({translation}: TranslationAsProperty) => {
     const t = translation;
+    const [state, setState] = useTrackedState();
+    const [inventory, setInventory] = useState<InventoryItem[] | null>(null);
+    const [equipmentStats, setEquipmentStats] = useState<REST.PlayerEquipmentDetails | null>(null);
+    const [reload, setReload] = useState(0);
+    const [searchField, setSearchField] = useState("");
+    const [sortMode, setSortMode] = useState("");
+
+    useEffect(() => {
+        const getInventory = async() => {
+            const resp = await fetch('/api/game/inventory');
+            const data = await resp.json();
+
+            const inventoryData: InventoryType = data;
+            const inventoryItems: InventoryItem[] = inventoryData.items;
+
+            const gearInventoryItems: InventoryItem[] = inventoryItems
+                .filter((item) => {
+                   if(item.type === 'weapon') return true;
+                   if(item.type === 'equipment') return true;
+                   return false;
+                })
+                .sort((a,b) => itemRaritySort(a,b));
+
+            setInventory(gearInventoryItems);
+        };
+        const getCharacterStats = async() => {
+            const resp = await fetch('/api/game/player/equipment');
+            const data = await resp.json();
+            setEquipmentStats(data);
+        };
+
+        getInventory();
+        getCharacterStats();
+
+    }, [reload]);
+
+    function reloadInventory() {
+        if(!reload) {
+            setReload(1);
+        }
+        else {
+            setReload(reload + 1);
+        }
+    }
+
+    const handleFilterChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setSearchField(e.target.value);
+    };
+
+    const handleSortModeChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setSortMode(e.target.value);
+    }
+
+    let filteredItems: InventoryItem[] | null = null;
+    if(inventory) {
+        filteredItems = inventory.filter(
+            entry => {
+                if(entry.count === 0) {
+                    return false;
+                }
+                const translatedName = t(entry.item.name, {ns:'items'});
+                return (
+                    translatedName.toLowerCase().includes(searchField.toLowerCase())
+                );
+            }
+        );
+    }
+    if(filteredItems) {
+        filteredItems.sort((a, b) => {
+            switch(sortMode) {
+                case 'type':
+                    return itemTypeSort(a,b);
+                case 'name':
+                    return itemNameSort(a,b,t);
+                case 'value':
+                    return itemValueSort(a,b);
+                case 'quantity':
+                    return itemQuantitySort(a,b);
+                case 'rarity':
+                default:
+                    return itemRaritySort(a,b);
+            }
+        });
+    }
+
+    let characterStatsBlock, equipmentBlock;
+    if(!equipmentStats || !equipmentStats.stats) {
+        characterStatsBlock = <div />
+    }
+    else {
+        characterStatsBlock = (
+            <CharacterStatsBlock
+                stats={equipmentStats.stats}
+                secondarySkills={equipmentStats.secondaryStats}
+                combatSkills={equipmentStats.combatSkills}
+                t={t}
+            />
+        )
+    }
+
+    if(!equipmentStats || !equipmentStats.equipment) {
+        equipmentBlock = <div />
+    }
+    else {
+        equipmentBlock = <CurrentCharacterEquipment onRefresh={reloadInventory} t={t} equipment={equipmentStats.equipment} />
+    }
+
 
     return (
-        <div>EquipmentManager TODO</div>
+        <Container>
+            <div style={{width: "33%", display: "inline-grid"}}>
+                {equipmentBlock}
+            </div>
+            <div style={{width: "33%", display: "inline-grid"}}>
+                {characterStatsBlock}
+            </div>
+            <div style={{width: "33%", maxWidth: "24em", display: "inline-grid"}}>
+                <InputGroup>
+                    <Input name="inventoryFilter" onChange={handleFilterChange} style={{width: "70%"}} placeholder={t('items.manager.filter.text', {ns: 'items'})} />
+                    <Input name="inventorySortMode" onChange={handleSortModeChange} type="select">
+                        <option value="rarity">{t('items.manager.sort.rarity', {ns: 'items'})}</option>
+                        <option value="type">{t('items.manager.sort.type', {ns: 'items'})}</option>
+                        <option value="name">{t('items.manager.sort.name', {ns: 'items'})}</option>
+                        <option value="value">{t('items.manager.sort.value', {ns: 'items'})}</option>
+                        <option value="quantity">{t('items.manager.sort.quantity', {ns: 'items'})}</option>
+                    </Input>
+                </InputGroup>
+                <InventoryList inventory={filteredItems} translation={t} onReload={reloadInventory} />
+            </div>
+        </Container>
+    )
+}
+
+interface EquipmentProps {
+    equipment: REST.PlayerEquipment;
+    t: TFunction<"translation", undefined>;
+    onRefresh(): void;
+}
+
+const CurrentCharacterEquipment = ({equipment, t, onRefresh}: EquipmentProps) => {
+    if(!equipment) {
+        return <div/>
+    }
+
+    return (
+        <div className={"item-equipment-slot"}>
+            <EquipmentSlotItem onReload={onRefresh} t={t} equipment={equipment.helmet} slot={"HELMET"} />
+            <EquipmentSlotItem onReload={onRefresh} t={t} equipment={equipment.chest} slot={"CHEST"} />
+            <EquipmentSlotItem onReload={onRefresh} t={t} equipment={equipment.gloves} slot={"GLOVES"} />
+            <EquipmentSlotItem onReload={onRefresh} t={t} equipment={equipment.pants} slot={"PANTS"} />
+            <EquipmentSlotItem onReload={onRefresh} t={t} equipment={equipment.boots} slot={"BOOTS"} />
+            <EquipmentSlotItem onReload={onRefresh} t={t} equipment={equipment.ring1} slot={"RING1"} />
+            <EquipmentSlotItem onReload={onRefresh} t={t} equipment={equipment.ring2} slot={"RING2"} />
+            <EquipmentSlotItem onReload={onRefresh} t={t} equipment={equipment.neck} slot={"NECK"} />
+            <EquipmentSlotItem onReload={onRefresh} t={t} equipment={equipment.mainhand} slot={"MAINHAND"} />
+            <EquipmentSlotItem onReload={onRefresh} t={t} equipment={equipment.offhand} slot={"OFFHAND"} />
+        </div>
+    )
+}
+
+interface EquipmentSlotProps {
+    equipment: REST.Equipment | REST.Weapon | null | undefined;
+    slot: REST.EquipmentSlot;
+    t: TFunction<"translation", undefined>;
+    onReload(): void;
+}
+
+const EquipmentSlotItem = ({equipment, slot, t, onReload}: EquipmentSlotProps) => {
+    const [userState, setUserState] = useTrackedState();
+
+    let emptySlot: JSX.Element = (
+        <Card>
+            <CardHeader>
+                <CardImg className={"item-icon"} left src="../images/emptySlotIcon.png" />
+                <div className="card-header-text">
+                    <span className="card-header-text">{t('items.equipment.slot.' + slot, {ns: 'items'})}</span>
+                    <span className="card-header-text">{t('items.equipment.slot.empty', {ns: 'items'})}</span>
+                </div>
+            </CardHeader>
+        </Card>
+    );
+
+    function unequipItem() {
+        const unequipRequestBody: REST.UnequipRequest = {
+            slot: slot
+        };
+
+        // perform sync drop item call to REST
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN' : userState.token!.token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(unequipRequestBody)
+        };
+
+        fetch('/api/game/character/unequip', requestOptions)
+            .then((response) => {
+                if(response.status === 200) {
+                    onReload();
+                }
+            });
+
+        // TODO refresh character panel
+
+    }
+
+    if(!equipment) {
+        return emptySlot;
+    }
+
+    return (
+        <Card>
+            <CardHeader>
+                <CardImg className={"item-icon " + equipment.rarity.toLowerCase()} left src={equipment.iconName} />
+                <div className="card-header-text">
+                    <span className="card-header-text">{t('items.equipment.slot.' + slot, {ns: 'items'})}</span>
+                    <span className="card-header-text">{t(equipment.name, {ns: 'items'})}</span>
+                </div>
+            </CardHeader>
+            <Button onClick={unequipItem} className={"item-unequip"}>{t('items.equipment.slot.button.unequip', {ns:'items'})}</Button>
+        </Card>
+    );
+}
+
+interface CharacterStatsProps {
+    stats: REST.PlayerStats;
+    secondarySkills: REST.PlayerSecondaryStats;
+    combatSkills: REST.PlayerCombatSkills;
+    t: TFunction<"translation", undefined>;
+}
+
+const CharacterStatsBlock = ({stats, secondarySkills, combatSkills, t} :CharacterStatsProps) => {
+
+    return(
+        <div>
+            <Table>
+                <thead>
+                    <tr>
+                        <th>{t('character.attributes.header', {ns:'character'})}</th>
+                        <th>{t('character.attributes.header.allocated', {ns:'character'})}</th>
+                        <th>{t('character.attributes.header.gear', {ns:'character'})}</th>
+                        <th>{t('character.attributes.header.total', {ns:'character'})}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{t('character.attributes.ENDURANCE', {ns: 'character'})}</td>
+                        <td>{stats.characterAttributes.endurance}</td>
+                        <td>+{stats.equipmentAttributes.endurance}</td>
+                        <td>{stats.characterAttributes.endurance + stats.equipmentAttributes.endurance}</td>
+                    </tr>
+                    <tr>
+                        <td>{t('character.attributes.STRENGTH', {ns: 'character'})}</td>
+                        <td>{stats.characterAttributes.strength}</td>
+                        <td>+{stats.equipmentAttributes.strength}</td>
+                        <td>{stats.characterAttributes.strength + stats.equipmentAttributes.strength}</td>
+                    </tr>
+                    <tr>
+                        <td>{t('character.attributes.DEXTERITY', {ns: 'character'})}</td>
+                        <td>{stats.characterAttributes.dexterity}</td>
+                        <td>+{stats.equipmentAttributes.dexterity}</td>
+                        <td>{stats.characterAttributes.dexterity + stats.equipmentAttributes.dexterity}</td>
+                    </tr>
+                    <tr>
+                        <td>{t('character.attributes.WISDOM', {ns: 'character'})}</td>
+                        <td>{stats.characterAttributes.wisdom}</td>
+                        <td>+{stats.equipmentAttributes.wisdom}</td>
+                        <td>{stats.characterAttributes.wisdom + stats.equipmentAttributes.wisdom}</td>
+                    </tr>
+                    <tr>
+                        <td>{t('character.attributes.INTELLIGENCE', {ns: 'character'})}</td>
+                        <td>{stats.characterAttributes.intelligence}</td>
+                        <td>+{stats.equipmentAttributes.intelligence}</td>
+                        <td>{stats.characterAttributes.intelligence + stats.equipmentAttributes.intelligence}</td>
+                    </tr>
+                    <tr>
+                        <td>{t('character.attributes.DEFENSE', {ns: 'character'})}</td>
+                        <td>{stats.characterAttributes.defense}</td>
+                        <td>+{stats.equipmentAttributes.defense}</td>
+                        <td>{stats.characterAttributes.defense + stats.equipmentAttributes.defense}</td>
+                    </tr>
+                    <tr>
+                        <td>{t('character.attributes.LUCK', {ns: 'character'})}</td>
+                        <td>{stats.characterAttributes.luck}</td>
+                        <td>+{stats.equipmentAttributes.luck}</td>
+                        <td>{stats.characterAttributes.luck + stats.equipmentAttributes.luck}</td>
+                    </tr>
+                </tbody>
+            </Table>
+            <Table>
+                <thead>
+                    <tr>
+                        <th>{t('character.attributes.header', {ns:'character'})}</th>
+                        <th>{t('character.attributes.header.total', {ns:'character'})}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{t('character.skills.DODGE', {ns: 'character'})}</td>
+                        <td>{combatSkills.dodge}%</td>
+                    </tr>
+                    <tr>
+                        <td>{t('character.skills.CRITICAL', {ns: 'character'})}</td>
+                        <td>{combatSkills.critical}%</td>
+                    </tr>
+                    <tr>
+                        <td>{t('character.skills.BLOCK', {ns: 'character'})}</td>
+                        <td>{combatSkills.block}%</td>
+                    </tr>
+                    <tr>
+                        <td>{t('character.skills.PARRY', {ns: 'character'})}</td>
+                        <td>{combatSkills.parry}%</td>
+                    </tr>
+                    <tr>
+                        <td>{t('character.skills.SPELLPOWER', {ns: 'character'})}</td>
+                        <td>+{combatSkills.spellpower}</td>
+                    </tr>
+                    <tr>
+                        <td>{t('character.skills.HEALPOWER', {ns: 'character'})}</td>
+                        <td>+{combatSkills.healpower}</td>
+                    </tr>
+                </tbody>
+            </Table>
+            <Table>
+                <thead>
+                    <tr>
+                        <th>{t('character.attributes.header', {ns:'character'})}</th>
+                        <th>{t('character.attributes.header.allocated', {ns:'character'})}</th>
+                        <th>{t('character.attributes.header.gear', {ns:'character'})}</th>
+                        <th>{t('character.attributes.header.total', {ns:'character'})}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{t('character.secondary.skills.WOODCUTTING', {ns: 'character'})}</td>
+                        <td>{secondarySkills.playerSkills.woodcutting}</td>
+                        <td>+{secondarySkills.equipmentSkills.woodcutting}</td>
+                        <td>{secondarySkills.playerSkills.woodcutting + secondarySkills.equipmentSkills.woodcutting}</td>
+                    </tr>
+                    <tr>
+                        <td>{t('character.secondary.skills.FISHING', {ns: 'character'})}</td>
+                        <td>{secondarySkills.playerSkills.fishing}</td>
+                        <td>+{secondarySkills.equipmentSkills.fishing}</td>
+                        <td>{secondarySkills.playerSkills.fishing + secondarySkills.equipmentSkills.fishing}</td>
+                    </tr>
+                    <tr>
+                        <td>{t('character.secondary.skills.MINING', {ns: 'character'})}</td>
+                        <td>{secondarySkills.playerSkills.mining}</td>
+                        <td>+{secondarySkills.equipmentSkills.mining}</td>
+                        <td>{secondarySkills.playerSkills.mining + secondarySkills.equipmentSkills.mining}</td>
+                    </tr>
+                    <tr>
+                        <td>{t('character.secondary.skills.ALCHEMY', {ns: 'character'})}</td>
+                        <td>{secondarySkills.playerSkills.alchemy}</td>
+                        <td>+{secondarySkills.equipmentSkills.alchemy}</td>
+                        <td>{secondarySkills.playerSkills.alchemy + secondarySkills.equipmentSkills.alchemy}</td>
+                    </tr>
+                    <tr>
+                        <td>{t('character.secondary.skills.ENCHANTING', {ns: 'character'})}</td>
+                        <td>{secondarySkills.playerSkills.enchanting}</td>
+                        <td>+{secondarySkills.equipmentSkills.enchanting}</td>
+                        <td>{secondarySkills.playerSkills.enchanting + secondarySkills.equipmentSkills.enchanting}</td>
+                    </tr>
+                </tbody>
+            </Table>
+        </div>
     )
 }
 
@@ -108,10 +534,10 @@ const ItemDetailView = ({translation, item, visible, x, y}: ItemDetailViewProper
         if(item.type === 'weapon') {
 
             if(selectedItem.classExclusive) {
-                classExclusiveElement = <span className="card-header-text">{t('items.weapon.exclusive.class.' + selectedItem.classExclusive, {ns:'items'})}</span>
+                classExclusiveElement = <span className="card-header-text">{t('items.gear.exclusive.class.' + selectedItem.classExclusive, {ns:'items'})}</span>
             }
             if(selectedItem.raceExclusive) {
-                raceExclusiveElement = <span className="card-header-text">{t('items.weapon.exclusive.race.' + selectedItem.raceExclusive, {ns:'items'})}</span>
+                raceExclusiveElement = <span className="card-header-text">{t('items.gear.exclusive.race.' + selectedItem.raceExclusive, {ns:'items'})}</span>
             }
 
             bodyContent = (
@@ -270,7 +696,7 @@ function SimpleDialog({translation, selectedValue, onClose, open}: SimpleDialogP
 
     const handleListItemClick = () => {
 
-        const dropItemBody = {
+        const dropItemBody: REST.DropItemDetails = {
             itemId: selectedValue!.item.id,
             count: value1
         };
@@ -326,6 +752,7 @@ function SimpleDialog({translation, selectedValue, onClose, open}: SimpleDialogP
 
 const InventoryList = ({inventory, translation, onReload}: InventoryListProperties) => {
     const t = translation;
+    const [userState, setUserState] = useTrackedState();
     const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null);
     const [detailsVisible, setDetailsVisible] = useState("");
     const [x, setX] = useState(0);
@@ -389,10 +816,105 @@ const InventoryList = ({inventory, translation, onReload}: InventoryListProperti
         toggleMenu(false);
     }
 
-    function handleMenuItemClick(action: string) {
+    function performUseItem(item: InventoryItem) {
+        const useItemBody: REST.UseItemDetails = {
+            itemId: item!.item.id
+        };
+
+        // perform sync drop item call to REST
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN' : userState.token!.token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(useItemBody)
+        };
+
+        fetch('/api/game/inventory/use', requestOptions)
+            .then((response) => {
+                toggleMenu(false);
+                onReload();
+            });
+    }
+
+    function performEquipItem(item: InventoryItem) {
+        // figure out the slot based on the item if you can..
+        if(item.item.hand) {
+            // it's a weapon
+            let hand: string = item.item.hand;
+            switch (hand) {
+                case 'RIGHT':
+                case 'TWOHANDED':
+                    performEquipItemWithSlot(item, 'MAINHAND');
+                    break;
+                case 'LEFT':
+                    performEquipItemWithSlot(item, 'OFFHAND');
+                    break;
+                case 'BOTH':
+                default:
+                    console.log('method not allowed for hand ' + hand);
+            }
+        }
+        else {
+            let type: string = item.item.type!;
+            switch (type) {
+                case 'HELMET':
+                case 'CHEST':
+                case 'GLOVES':
+                case 'PANTS':
+                case 'BOOTS':
+                case 'NECK':
+                    performEquipItemWithSlot(item, type);
+                    break;
+                default:
+                    console.log('method not allowed for type ' + type);
+            }
+        }
+    }
+
+    function performEquipItemWithSlot(item:InventoryItem, slot: REST.EquipmentSlot) {
+        const equipItemBody: REST.EquipRequest = {
+            itemId: item.item.id,
+            slot: slot
+        }
+
+        // perform sync drop item call to REST
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN' : userState.token!.token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(equipItemBody)
+        };
+
+        fetch('/api/game/character/equip', requestOptions)
+            .then((response) => {
+                toggleMenu(false);
+                onReload();
+            });
+
+        // TODO refresh character panel
+    }
+
+    function handleMenuItemClick(action: 'drop' | 'use' | 'equip' | 'close') {
         if(action === 'drop') {
             setDropDialogOpen(true);
         }
+        else if(action === 'use') {
+            performUseItem(contextMenuItem.item!);
+        }
+        else if(action === 'equip') {
+            performEquipItem(contextMenuItem.item!)
+        }
+        else {
+            toggleMenu(false);
+        }
+    }
+
+    function handleEquipSubMenuItemClick(slot: REST.EquipmentSlot) {
+        performEquipItemWithSlot(contextMenuItem.item!, slot);
     }
 
     const handleDropDialogClose = (value: string) => {
@@ -447,11 +969,39 @@ const InventoryList = ({inventory, translation, onReload}: InventoryListProperti
             useMenuButton = <MenuItem onClick={() => handleMenuItemClick('use')}>{t('items.manager.context.menu.use', {ns:'items'})}</MenuItem>
         }
 
+        let equipMenuButton: JSX.Element | null = null;
+        // Context menu 'equip' for standard items
+        // = non rings (2 slots) and weapons that can go in both hands
+        // plus check on race and class restrictions
+        if((contextMenuItem.item.type === 'weapon' || contextMenuItem.item.type === 'equipment')
+            && (contextMenuItem.item.item.type !== 'RING' && contextMenuItem.item.item.hand !== 'BOTH')
+            && (contextMenuItem.item.item.classExclusive == null || contextMenuItem.item.item.classExclusive === userState.characterData!.characterClass.id)
+            && (contextMenuItem.item.item.raceExclusive == null || contextMenuItem.item.item.raceExclusive === userState.characterData!.race.id)) {
+            equipMenuButton = <MenuItem onClick={() => handleMenuItemClick('equip')}>{t('items.manager.context.menu.equip', {ns:'items'})}</MenuItem>
+        }
+        else if(contextMenuItem.item.item.type === 'RING') {
+            equipMenuButton = (
+                <SubMenu label={t('items.manager.context.menu.equip', {ns:'items'})}>
+                    <MenuItem onClick={() => handleEquipSubMenuItemClick('RING1')}>{t('items.manager.context.menu.slot.ring1', {ns:'items'})}</MenuItem>
+                    <MenuItem onClick={() => handleEquipSubMenuItemClick('RING2')}>{t('items.manager.context.menu.slot.ring2', {ns:'items'})}</MenuItem>
+                </SubMenu>
+            )
+        }
+        else if(contextMenuItem.item.item.hand == 'BOTH') {
+            equipMenuButton = (
+                <SubMenu label={t('items.manager.context.menu.equip', {ns:'items'})}>
+                    <MenuItem onClick={() => handleEquipSubMenuItemClick('MAINHAND')}>{t('items.manager.context.menu.slot.mainhand', {ns:'items'})}</MenuItem>
+                    <MenuItem onClick={() => handleEquipSubMenuItemClick('OFFHAND')}>{t('items.manager.context.menu.slot.offhand', {ns:'items'})}</MenuItem>
+                </SubMenu>
+            )
+        }
+
         return (
             <ControlledMenu {...menuProps}
                 anchorPoint={anchorPoint}
                 onClose={closeContextMenu}>
                 <MenuHeader>{contextMenuItem.name && contextMenuItem.name + ' (x' + contextMenuItem.item.count + ')'}</MenuHeader>
+                {equipMenuButton}
                 {useMenuButton}
                 <MenuItem onClick={() => handleMenuItemClick('drop')}>{t('items.manager.context.menu.drop', {ns:'items'})}</MenuItem>
                 <MenuItem onClick={() => handleMenuItemClick('close')}>{t('items.manager.context.menu.close', {ns:'items'})}</MenuItem>
@@ -521,58 +1071,16 @@ export const InventoryManager = ({translation}: TranslationAsProperty) => {
         filteredItems.sort((a, b) => {
             switch(sortMode) {
                 case 'type':
-                    return a.type > b.type ? 1 : -1;
+                    return itemTypeSort(a,b);
                 case 'name':
-                    const aTranslatedName = t(a.item.name, {ns:'items'});
-                    const bTranslatedName = t(b.item.name, {ns:'items'});
-                    return aTranslatedName > bTranslatedName ? 1 : -1;
+                    return itemNameSort(a,b,t);
                 case 'value':
-                    return a.item.value > b.item.value ? -1 : 1;
+                    return itemValueSort(a,b);
                 case 'quantity':
-                    return a.count > b.count ? -1 : 1;
+                    return itemQuantitySort(a,b);
                 case 'rarity':
                 default:
-                    if(a.item.rarity === b.item.rarity) {
-                        // Both same rarity: use value
-                        return a.item.value > b.item.value ? -1 : 1;
-                    }
-                    // Artifacts
-                    if(a.item.rarity === 'ARTIFACT') {
-                        return -1;
-                    }
-                    if(b.item.rarity === 'ARTIFACT') {
-                        return 1;
-                    }
-                    // Legendary
-                    if(a.item.rarity === 'LEGENDARY') {
-                        return -1;
-                    }
-                    if(b.item.rarity === 'LEGENDARY') {
-                        return 1;
-                    }
-                    // Epic
-                    if(a.item.rarity === 'EPIC') {
-                        return -1;
-                    }
-                    if(b.item.rarity === 'EPIC') {
-                        return 1;
-                    }
-                    // Rare
-                    if(a.item.rarity === 'RARE') {
-                        return -1;
-                    }
-                    if(b.item.rarity === 'RARE') {
-                        return 1;
-                    }
-                    // Uncommon
-                    if(a.item.rarity === 'UNCOMMON') {
-                        return -1;
-                    }
-                    if(b.item.rarity === 'UNCOMMON') {
-                        return 1;
-                    }
-                    // Common: value again but should be dead code really...
-                    return a.item.value > b.item.value ? -1 : 1;
+                    return itemRaritySort(a,b);
             }
         });
     }
@@ -587,7 +1095,6 @@ export const InventoryManager = ({translation}: TranslationAsProperty) => {
 
     return (
         <div>
-            <span>InventoryManager TODO</span>
             <InputGroup>
                 <Input name="inventoryFilter" onChange={handleFilterChange} style={{width: "70%"}} placeholder={t('items.manager.filter.text', {ns: 'items'})} />
                 <Label style={{margin: "auto", paddingLeft: "1em", paddingRight: "0.25em"}} for="inventorySortMode">{t('items.manager.sort', {ns: 'items'})}:</Label>

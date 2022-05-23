@@ -1,6 +1,8 @@
 package com.fantasyunlimited.items.entity;
 
-public class AttributeBonus {
+import java.io.Serializable;
+
+public class AttributeBonus implements Serializable {
 	private Attributes.Attribute attribute;
 	private int bonus;
 	public Attributes.Attribute getAttribute() {

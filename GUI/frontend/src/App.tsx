@@ -17,6 +17,7 @@ import { LoginForm } from './user/LoginForm'
 import AppNavbar from './items/AppNavBar';
 import ClassesTableComponent from './items/table/ClassesTableComponent'
 import { ClassesDetailView, SkillsDetailView } from './items/details/DetailViews'
+import * as FantasyUnlimited from "./types/rest-entities";
 
 export const UserInformation = () => {
     const [fooState, setState] = useTrackedState();
@@ -28,10 +29,10 @@ export const UserInformation = () => {
                 // will only return json if logged in
                 const data = await resp.json();
 
-                let principal: UserPrincipal = {
+                let principal: FantasyUnlimited.REST.Principal = {
                     name: data.principal.name
                 }
-                let csrfToken: CsrfToken = {
+                let csrfToken: FantasyUnlimited.REST.CsrfToken = {
                     token: data.csrf.token,
                     headerName: data.csrf.headerName,
                     parameterName: data.csrf.parameterName

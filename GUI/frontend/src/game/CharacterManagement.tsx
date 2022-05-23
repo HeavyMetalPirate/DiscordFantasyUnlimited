@@ -15,13 +15,15 @@ import {
     CardSubtitle
 } from 'reactstrap';
 import { useNavigate, Link } from 'react-router-dom';
+import * as FantasyUnlimited from "../types/rest-entities";
+import * as ItemTypes from "../types/itemhandling"
 
 import './GamePanel.css'
 import { get_steps, calculateHealthPercentage, calculateResourcePercentage } from './utils/StatusbarUtils'
 import { useTrackedState } from '../SessionStore';
 import { UserSearch } from '../user/UserComponents'
 
-const ManaBar = ({character}: CharacterInformation) => {
+const ManaBar = ({character}: PlayerCharacterData) => {
     let steps;
 
     if(character.resources.energyType === 'RAGE') {
@@ -52,7 +54,7 @@ const ManaBar = ({character}: CharacterInformation) => {
     )
 }
 
-const HealthBar = ({character}: CharacterInformation) => {
+const HealthBar = ({character}: PlayerCharacterData) => {
 
     const steps = get_steps('rgb(255, 0, 0)', 'rgb(0, 128, 0)' , 100);
     const p = calculateHealthPercentage(character);
@@ -75,8 +77,8 @@ export const CurrentCharacterPanel = ({translation}: TranslationAsProperty) => {
     const [state, setState] = useTrackedState();
     const navigate = useNavigate();
 
-    const [character, setCharacter] = useState<PlayerCharacterData | null>(null);
-    const [currentActiveUsers, setCurrentActiveUsers] = useState<User[]>([]);
+    const [character, setCharacter] = useState<FantasyUnlimited.REST.PlayerCharacterItem | null>(null);
+    const [currentActiveUsers, setCurrentActiveUsers] = useState<FantasyUnlimited.REST.ActiveUserItem[]>([]);
 
     useEffect(() => {
         const getCharacter = async() => {
@@ -172,10 +174,10 @@ export const CharacterSelection = ({translation}: TranslationAsProperty) => {
     const [characters, setCharacters] = useState<PlayerCharacterData[]>([]);
     const [characterList, setCharacterList] = useState(null);
 
-    function selectCharacter(id: string) {
+    function selectCharacter(id: number) {
         fetch('/api/user/characters/select?id=' + id)
             .then(() => {
-                setState((prevState) => ({ ...prevState, selectedCharacter: id, stateChanged: true}))
+                setState((prevState) => ({ ...prevState, selectedCharacter: '' + id, stateChanged: true}))
                 navigate('/game');
             });
 
@@ -192,7 +194,7 @@ export const CharacterSelection = ({translation}: TranslationAsProperty) => {
             setCharacters(data);
 
             setCharacterList(
-                data.map((character: PlayerCharacterData) => {
+                data.map((character: FantasyUnlimited.REST.CharacterListItem) => {
                     return (
                         <tr key={character.id}>
                             <td>{character.name}</td>
@@ -256,7 +258,7 @@ export const CharacterCreation = ({translation}: TranslationAsProperty) => {
             const data = await res.json();
 
             setClasses(
-                data.map((clazz: CharacterClassInfo) => {
+                data.map((clazz: FantasyUnlimited.REST.ClassItem) => {
                     return (
                         <option key={clazz.id} value={clazz.id}>{t(clazz.name, {ns: 'characterClass'})}</option>
                     )
@@ -271,7 +273,7 @@ export const CharacterCreation = ({translation}: TranslationAsProperty) => {
             const data = await res.json();
 
             setRaces(
-                data.map((race: CharacterRaceInfo) => {
+                data.map((race: FantasyUnlimited.REST.RaceItem) => {
                     return (
                         <option key={race.id} value={race.id}>{t(race.name, {ns: 'race'})}</option>
                     )
@@ -292,13 +294,13 @@ export const CharacterCreation = ({translation}: TranslationAsProperty) => {
             class: { value: string };
             race: { value: string };
         };
-        const creationBody = {
+        const creationBody: FantasyUnlimited.REST.CharacterCreationBody = {
             name: target.name.value,
             classId: target.class.value,
             raceId: target.race.value
         }
 
-        let token = userState.token!.token;
+        let token: string = userState.token!.token;
         const requestOptions = {
             method: 'POST',
             headers: {

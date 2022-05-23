@@ -1,6 +1,10 @@
 {
   "character.foo": "This is another Foo text",
   "character.stats.gold": "Gold",
+  "character.attributes.header": "Attribute",
+  "character.attributes.header.allocated": "Allocated",
+  "character.attributes.header.gear": "Equipment",
+  "character.attributes.header.total": "Total",
   "character.attributes.STRENGTH": "Strength",
   "character.attributes.ENDURANCE": "Endurance",
   "character.attributes.DEXTERITY": "Dexterity",

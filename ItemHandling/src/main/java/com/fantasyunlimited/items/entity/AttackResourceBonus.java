@@ -1,6 +1,8 @@
 package com.fantasyunlimited.items.entity;
 
-public class AttackResourceBonus {
+import java.io.Serializable;
+
+public class AttackResourceBonus implements Serializable {
 	private CharacterClass.EnergyType energyType;
 	private int bonus;
 	public CharacterClass.EnergyType getSkill() {

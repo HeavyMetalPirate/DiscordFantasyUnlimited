@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Weapon>
+  <id>depraved-stick</id>
+  <name>Depraved Stick</name>
+  <description>A stick fitting for your lifestyle.</description>
+  <iconName>../images/items/depraved-stick.jpg</iconName>
+  <rarity>UNCOMMON</rarity>
+  <value>15</value>
+  <type>SWORD</type>
+  <hand>BOTH</hand>
+  <minDamage>3</minDamage>
+  <maxDamage>5</maxDamage>
+  <classExclusive>1</classExclusive>
+  <skillBonuses/>
+  <attributeBonuses/>
+  <secondarySkillBonuses/>
+</Weapon>

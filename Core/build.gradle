@@ -28,6 +28,7 @@ generateTypeScript {
     outputKind = 'module'
     outputFileType = "implementationFile"
     namespace = 'REST'
+
 }
 
 

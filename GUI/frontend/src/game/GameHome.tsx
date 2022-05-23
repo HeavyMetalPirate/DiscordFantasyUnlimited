@@ -9,6 +9,8 @@ import './GamePanel.css'
 import { CharacterSelection, CurrentCharacterPanel } from './CharacterManagement'
 import { EquipmentManager, InventoryManager } from './ItemManagement'
 
+import * as FantasyUnlimited from "../types/rest-entities";
+
 const { default: logo } = require('../logo.svg') as { default: string };
 
 const GamePanel = ({translation}: TranslationAsProperty) => {

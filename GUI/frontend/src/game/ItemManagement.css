@@ -68,12 +68,31 @@ div.item-detail-view, div.item-context-menu, div.item-context-menu-drop {
     color: #FFF;
 }
 
-div.item-detail-view > div.card > div.card-header {
+div.item-equipment-slot {
+    position: unset;
+
+    text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+    font-family: Monospace, sans-serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: #FFF;
+}
+
+div.item-detail-view > div.card > div.card-header,
+div.item-equipment-slot > div.card > div.card-header {
     text-align: left;
 }
 
-div.item-detail-view > div.card > div.card-header > img.item-icon {
+div.item-detail-view > div.card > div.card-header > img.item-icon,
+div.item-equipment-slot > div.card > div.card-header > img.item-icon {
     margin-right: 1.5em;
+}
+
+div.item-equipment-slot > div.card > button.item-unequip {
+    position: absolute;
+    height: 100%;
+    width: 25%;
+    margin-left: 75%;
 }
 
 div.card-header-text {

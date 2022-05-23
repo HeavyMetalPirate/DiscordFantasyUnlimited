@@ -7,12 +7,16 @@ import com.fantasyunlimited.items.entity.CharacterClass;
 import com.fantasyunlimited.items.entity.Skill;
 import com.fantasyunlimited.items.entity.SkillRank;
 import com.fantasyunlimited.items.entity.Weapon;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 @Component
 public class BattleActionHandler {
+
+    @Autowired
+    private BattleStatsUtils statsUtils;
 
     /*
      *public static final Integer DODGED = -2 ^ 22;
@@ -59,7 +63,7 @@ public class BattleActionHandler {
         }
 
         float chance = ThreadLocalRandom.current().nextFloat();
-        float crit = action.getExecuting().calculateCritChance() / 100;
+        float crit = statsUtils.calculateCritChance(action.getExecuting()) / 100;
         if (chance < crit) {
             action.setCritical(true);
             actionAmount *= 2;
@@ -186,7 +190,7 @@ public class BattleActionHandler {
         BattleParticipant target = action.getTarget();
 
         float chance = ThreadLocalRandom.current().nextFloat();
-        float dodge = target.calculateDodgeChance() / 100;
+        float dodge = statsUtils.calculateDodgeChance(target) / 100;
 
         if (chance < dodge) {
             action.setDodged(true);
@@ -194,14 +198,14 @@ public class BattleActionHandler {
         }
 
         chance = ThreadLocalRandom.current().nextFloat();
-        float block = target.calculateBlockChance() / 100;
+        float block = statsUtils.calculateBlockChance(target) / 100;
         if (chance < block) {
             action.setBlocked(true);
             return true;
         }
 
         chance = ThreadLocalRandom.current().nextFloat();
-        float parry = target.calculateParryChance() / 100;
+        float parry = statsUtils.calculateParryChance(target) / 100;
         if (chance < parry) {
             action.setParried(true);
             return true;

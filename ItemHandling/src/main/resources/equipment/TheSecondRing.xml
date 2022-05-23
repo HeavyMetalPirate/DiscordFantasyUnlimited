@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Equipment>
+  <id>second-ring</id>
+  <name>The Second Ring</name>
+  <description>The One Ring wasn't in store, so we got you the next best thing.</description>
+  <iconName>../images/items/second-ring.png</iconName>
+  <rarity>RARE</rarity>
+  <value>99</value>
+  <type>RING</type>
+  <armor>5</armor>
+  <skillBonuses>
+    <CombatSkillBonus>
+      <skill>CRITICAL</skill>
+      <bonus>1</bonus>
+    </CombatSkillBonus>
+  </skillBonuses>
+  <attributeBonuses>
+  	<AttributeBonus>
+  		<attribute>INTELLIGENCE</attribute>
+  		<bonus>3</bonus>
+  	</AttributeBonus>
+  </attributeBonuses>
+  <secondarySkillBonuses/>
+  <atkResourceBonuses/>
+</Equipment>
