@@ -18,6 +18,8 @@ public class BattleActionHandler {
     @Autowired
     private BattleStatsUtils statsUtils;
 
+
+
     /*
      *public static final Integer DODGED = -2 ^ 22;
      *public static final Integer BLOCKED = -2 ^ 23;
@@ -27,17 +29,29 @@ public class BattleActionHandler {
         if (action.isExecuted()) {
             return action;
         }
-
         action.setExecuted(true);
-        if (action.isPass()) {
-            performAtkUsageAndRegen(0, action);
-            return action;
-        }
+
         // if you die in that round, don't do actions because u ded
         if (action.getExecuting().isDefeated()) {
             return action;
         }
-        if (action.getExecuting().getStatusModifiers().parallelStream().anyMatch(BattleStatus::isIncapacitated)) {
+
+        if(action.isFlee()) {
+            BattleStatus fleeStatus = new BattleStatus();
+            fleeStatus.setIncapacitated(true);
+            fleeStatus.setStatusName("battle.status.flee");
+            fleeStatus.setRoundsRemaining(-1);
+            action.getExecuting().getStatusModifiers().add(fleeStatus);
+            return action;
+        }
+
+        if (action.isPass()) {
+            performAtkUsageAndRegen(0, action);
+            return action;
+        }
+
+        if (action.getExecuting().getStatusModifiers().parallelStream()
+                .anyMatch(BattleStatus::isIncapacitated)) {
             action.setIncapacitated(true);
             return action;
         }
@@ -45,9 +59,11 @@ public class BattleActionHandler {
         // plus one to get to the actual max
         SkillRank rank = getSkillRank(usedSkill, action.getExecuting());
 
+        int minDamage = usedSkill.getMinDamage() + rank.getDamageModifier();
+        int maxDamage = usedSkill.getMaxDamage() + rank.getDamageModifier();
+
         int actionAmount;
-        actionAmount = ThreadLocalRandom.current().nextInt(usedSkill.getMinDamage(), usedSkill.getMaxDamage() + 1);
-        actionAmount += rank.getDamageModifier();
+        actionAmount = ThreadLocalRandom.current().nextInt(minDamage, maxDamage + 1);
 
         Weapon weaponId = null;
         if (usedSkill.getWeaponModifier() != null) {

@@ -3,7 +3,7 @@
 	<id>12</id>
 	<name>Twelve</name>
 	<description>Depraved have it hard.</description>
-	<iconName>depraved.png</iconName>
+	<iconName>/images/classes/twelve.png</iconName>
 	<lore>The depraved is depraved. Depraving, huh? This time in blue!
 	</lore>
   <humanPlayable>true</humanPlayable>

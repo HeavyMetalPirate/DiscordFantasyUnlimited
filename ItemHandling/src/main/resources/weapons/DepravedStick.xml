@@ -3,7 +3,7 @@
   <id>depraved-stick</id>
   <name>Depraved Stick</name>
   <description>A stick fitting for your lifestyle.</description>
-  <iconName>../images/items/depraved-stick.jpg</iconName>
+  <iconName>/images/items/depraved-stick.jpg</iconName>
   <rarity>UNCOMMON</rarity>
   <value>15</value>
   <type>SWORD</type>

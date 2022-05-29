@@ -3,7 +3,7 @@
   <id>pitbull-headband</id>
   <name>Pitbull's Headband</name>
   <description>It should have been a neckband, but have you seen just how thick these heads are?</description>
-  <iconName>../images/items/pitbull-headband.jpg</iconName>
+  <iconName>/images/items/pitbull-headband.jpg</iconName>
   <rarity>EPIC</rarity>
   <value>10</value>
   <type>HELMET</type>

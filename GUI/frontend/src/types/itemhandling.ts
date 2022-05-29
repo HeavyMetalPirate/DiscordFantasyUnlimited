@@ -1,15 +1,15 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.36.1070 on 2022-05-22 15:41:05.
+// Generated using typescript-generator version 2.36.1070 on 2022-05-29 18:30:57.
 
 export namespace Items {
 
-    export interface AttackResourceBonus {
+    export interface AttackResourceBonus extends Serializable {
         bonus: number;
         skill: EnergyType;
     }
 
-    export interface AttributeBonus {
+    export interface AttributeBonus extends Serializable {
         attribute: Attribute;
         bonus: number;
     }
@@ -68,7 +68,7 @@ export namespace Items {
         modifier: number;
     }
 
-    export interface CombatSkillBonus {
+    export interface CombatSkillBonus extends Serializable {
         skill: CombatSkill;
         bonus: number;
     }
@@ -144,6 +144,7 @@ export namespace Items {
     export interface Location extends GenericItem {
         marketAccess: boolean;
         globalMarketAccess: boolean;
+        bannerImage: string;
         allowedSecondarySkills: { [P in SecondarySkill]?: number };
         connections: TravelConnection[];
         npcIds: string[];
@@ -190,7 +191,7 @@ export namespace Items {
         rarity: ItemRarity;
     }
 
-    export interface SecondarySkillBonus {
+    export interface SecondarySkillBonus extends Serializable {
         skill: SecondarySkill;
         bonus: number;
     }

@@ -66,6 +66,8 @@ div.item-detail-view, div.item-context-menu, div.item-context-menu-drop {
     font-size: 12px;
     letter-spacing: 1px;
     color: #FFF;
+
+    z-index: 9999;
 }
 
 div.item-equipment-slot {
@@ -79,50 +81,32 @@ div.item-equipment-slot {
 }
 
 div.item-detail-view > div.card > div.card-header,
-div.item-equipment-slot > div.card > div.card-header {
+div.item-equipment-slot > div > div.card > div.card-header {
     text-align: left;
 }
 
 div.item-detail-view > div.card > div.card-header > img.item-icon,
-div.item-equipment-slot > div.card > div.card-header > img.item-icon {
+div.item-equipment-slot > div > div.card > div.card-header > img.item-icon {
     margin-right: 1.5em;
 }
 
-div.item-equipment-slot > div.card > button.item-unequip {
+div.item-equipment-slot > div > div.card > button.item-unequip {
     position: absolute;
     height: 100%;
-    width: 25%;
+    min-width: 25%;
     margin-left: 75%;
-}
-
-div.card-header-text {
-    position: absolute;
-    top: -0.25em;
-    left: 6em;
-}
-span.card-header-text:before
-{
-    content:"\A"; white-space:pre;
-}
-
-span.text-break:before
-{
-    content:"\A"; white-space:pre;
-}
-
-span.card-footer-text
-{
-    font-family: serif;
-    font-size: 12px;
-    text-shadow: none;
-    letter-spacing: unset;
-    color: #000;
-    font-style: italic;
 }
 
 .buff-text {
     color: lightgreen;
     list-style-type: none;
+}
+
+.item-exclusive-denied {
+    color: red;
+}
+.item-exclusive-allowed {
+    color: lightgreen;
 }
 
 div.item-detail-view > div.card > div.card-body > p.card-text {
@@ -134,4 +118,59 @@ div.item-context-header {
 }
 div.item-context-menu div button {
     width: 100%;
+}
+
+.inventory-manager > .input-group,
+.inventory-manager > .inventory-items-list {
+    width: 64em;
+}
+
+.inventory-manager > .input-group > select {
+    min-width: 8em;
+    max-width: 8em;
+}
+
+
+.inventory-manager > .input-group > .currency {
+    min-width: 8em;
+    max-width: 8em;
+    text-align: right;
+    display: inline-block;
+    margin: auto;
+}
+
+.inventory-manager > .input-group > .currency > .gold-icon {
+    max-width: 2em;
+    max-height: 2em;
+}
+
+.equipment-manager {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.equipment-manager > .equipment-manager-column.equipment {
+    min-width: 24em;
+    max-width: 30em;
+}
+
+.equipment-manager > .equipment-manager-column.stats {
+    min-width: 24em;
+    max-width: 30em;
+}
+
+.equipment-manager > .equipment-manager-column.inventory {
+    min-width: 24em;
+    max-width: 24em;
+}
+@media (max-width: 1100px){
+    .equipment-manager {
+        grid-template-columns: 1fr;
+    }
+}
+@media (max-width: 1400px){
+    .equipment-manager {
+        grid-template-columns: 1fr 1fr;
+    }
 }

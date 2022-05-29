@@ -3,14 +3,14 @@ package com.fantasyunlimited.battle.entity;
 import java.io.Serializable;
 import java.util.UUID;
 
+import com.fantasyunlimited.data.converter.EquipmentConverter;
+import com.fantasyunlimited.data.converter.WeaponConverter;
 import com.fantasyunlimited.data.entity.CharacterEquipment;
 import com.fantasyunlimited.items.entity.Equipment;
 import com.fantasyunlimited.items.entity.Weapon;
+import org.hibernate.annotations.Type;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 @Entity
 public class BattleEquipment implements Serializable {
@@ -22,17 +22,28 @@ public class BattleEquipment implements Serializable {
 
 	@Id
 	@GeneratedValue
+	@Type(type="org.hibernate.type.UUIDCharType")
 	private UUID id;
 
+	@Convert(converter = WeaponConverter.class)
 	private Weapon mainhand;
+	@Convert(converter = WeaponConverter.class)
 	private Weapon offhand;
+	@Convert(converter = EquipmentConverter.class)
 	private Equipment helmet;
+	@Convert(converter = EquipmentConverter.class)
 	private Equipment chest;
+	@Convert(converter = EquipmentConverter.class)
 	private Equipment gloves;
+	@Convert(converter = EquipmentConverter.class)
 	private Equipment pants;
+	@Convert(converter = EquipmentConverter.class)
 	private Equipment boots;
+	@Convert(converter = EquipmentConverter.class)
 	private Equipment ring1;
+	@Convert(converter = EquipmentConverter.class)
 	private Equipment ring2;
+	@Convert(converter = EquipmentConverter.class)
 	private Equipment neck;
 	
 	public BattleEquipment() {}

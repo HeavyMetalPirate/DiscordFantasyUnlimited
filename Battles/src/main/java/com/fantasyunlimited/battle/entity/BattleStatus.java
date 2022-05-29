@@ -2,6 +2,7 @@ package com.fantasyunlimited.battle.entity;
 
 import com.fantasyunlimited.items.entity.Attributes.Attribute;
 import com.fantasyunlimited.items.entity.CombatSkill;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +15,7 @@ public class BattleStatus {
 
 	@Id
 	@GeneratedValue
+	@Type(type="org.hibernate.type.UUIDCharType")
 	private UUID statusId;
 
 	private String statusName;

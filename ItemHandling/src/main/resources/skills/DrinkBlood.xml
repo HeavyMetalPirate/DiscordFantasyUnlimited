@@ -3,7 +3,7 @@
     <name>Drink blood</name>
     <description>Heals you by drinking the blood of your enemy.</description>
     <iconName>blood</iconName>
-    <iconId>445278317461897227</iconId>
+    <iconId>/images/skills/drink-blood.png</iconId>
     <attribute>ENDURANCE</attribute>
     <type>DEFENSIVE</type>
     <targetType>OWN</targetType>

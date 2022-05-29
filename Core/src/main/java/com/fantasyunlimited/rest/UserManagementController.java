@@ -90,33 +90,7 @@ public class UserManagementController {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
 
-        CharacterClass characterClass = character.getClassId();
-        ClassItem classItem = new ClassItem(characterClass.getId(), characterClass.getName(), characterClass.getIconName());
-
-        Race race = character.getRaceId();
-        RaceItem raceItem = new RaceItem(race.getId(), race.getName(), race.getIconName());
-
-        Location location = character.getLocationId();
-        LocationItem locationItem = new LocationItem(location.getId(), location.getName(), location.getIconName());
-
-        BattleResourceItem battleResourceItem = new BattleResourceItem(
-                character.getCurrentHealth(),
-                character.getMaxHealth(),
-                character.getCurrentAtkResource(),
-                character.getMaxAtkResource(),
-                character.getClassId().getEnergyType()
-        );
-
-        PlayerCharacterItem playerCharacterItem = new PlayerCharacterItem(
-                character.getName(),
-                classItem,
-                raceItem,
-                locationItem,
-                character.getCurrentLevel(),
-                character.getCurrentXp(),
-                battleResourceItem
-        );
-        return new ResponseEntity<>(playerCharacterItem, HttpStatus.OK);
+        return new ResponseEntity<>(utils.buildPlayerCharacterItem(character), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/characters", method = RequestMethod.GET)
@@ -137,14 +111,9 @@ public class UserManagementController {
 
         List<CharacterListItem> items = user.getCharacters().stream()
                 .map(character -> {
-                    CharacterClass characterClass = character.getClassId();
-                    ClassItem classItem = new ClassItem(characterClass.getId(), characterClass.getName(), characterClass.getIconName());
-
-                    Race race = character.getRaceId();
-                    RaceItem raceItem = new RaceItem(race.getId(), race.getName(), race.getIconName());
-
-                    Location location = character.getLocationId();
-                    LocationItem locationItem = new LocationItem(location.getId(), location.getName(), location.getIconName());
+                    ClassItem classItem = utils.buildClassItem(character.getClassId());
+                    RaceItem raceItem = utils.buildRaceItem(character.getRaceId());
+                    LocationItem locationItem = utils.buildLocationItem(character.getLocationId());
 
                     return new CharacterListItem(
                                     character.getId(),

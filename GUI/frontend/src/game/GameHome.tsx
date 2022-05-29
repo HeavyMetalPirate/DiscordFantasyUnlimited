@@ -10,6 +10,7 @@ import { CharacterSelection, CurrentCharacterPanel } from './CharacterManagement
 import { EquipmentManager, InventoryManager } from './ItemManagement'
 
 import * as FantasyUnlimited from "../types/rest-entities";
+import {REST} from "../types/rest-entities";
 
 const { default: logo } = require('../logo.svg') as { default: string };
 
@@ -20,9 +21,6 @@ const GamePanel = ({translation}: TranslationAsProperty) => {
 
     useEffect(() => {
         if(!state.characterData || !state.selectedCharacter) return;
-
-        let foo = state.characterData.name;
-
         const getActions = async() => {
             const res = await fetch('/api/game/location/' + state.characterData!.location.id + '/actions')
             // await the json data in the response
@@ -154,7 +152,7 @@ const GamePanel = ({translation}: TranslationAsProperty) => {
                     <tr key={action.text}>
                         <td>{t(action.text, {ns:'location'})}</td>
                         <td>{action.details.minimumLevel} - {action.details.maximumLevel}</td>
-                        <td><Button>{t('location.action.combat.perform', {ns:'location'})}</Button></td>
+                        <td><Button onClick={searchForCombat}>{t('location.action.combat.perform', {ns:'location'})}</Button></td>
                     </tr>
                 )
             });
@@ -204,6 +202,25 @@ const GamePanel = ({translation}: TranslationAsProperty) => {
         )
     }
 
+    function searchForCombat() {
+        const getBattle = async() => {
+            let response = await fetch('/api/game/location/' + state.characterData!.location.id + '/battle');
+            let battle: REST.BattleBasicInfo = await response.json();
+            return battle;
+        }
+        getBattle()
+            .then(battle => {
+                console.log(battle);
+
+                if(battle === null || battle.id === null) {
+                    console.log("Battle was null.");
+                    return;
+                }
+
+
+            });
+    }
+
     if(!state.selectedCharacter || state.selectedCharacter === '0') {
         return(
             <div>
@@ -218,7 +235,6 @@ const GamePanel = ({translation}: TranslationAsProperty) => {
 
     return(
         <div>
-            <h2>{t(state.characterData.location.name, {ns: 'location'})}</h2>
             {getCombatActions()}
             {getTravelActions()}
             {getSecondarySkills()}
@@ -252,12 +268,28 @@ const GameMainPanel = ({t, currentPanel}: MainPanelProps) => {
         }
     }, [currentPanel]);
 
+    let bannerElement : JSX.Element;
+    if(state[0].characterData === null || state[0].characterData.location === null) {
+        bannerElement = (
+            <header>
+                <img src={logo} className="App-logo" alt="logo" />
+            </header>
+        )
+    }
+    else {
+        let location : REST.LocationItem = state[0].characterData.location;
+        bannerElement = (
+            <header className={"location-banner"}>
+                <img src={location.banner} className="location-banner-image" alt={t(location.name, {ns:'location'})} />
+                <h1 className={"location-banner-title"}>{t(location.name, {ns:'location'})}</h1>
+            </header>
+        )
+    }
+
     return (
         <div>
             <div className="App Game MainPanel">
-                <header>
-                    <img src={logo} className="App-logo" alt="logo" />
-                </header>
+                {bannerElement}
                 {currentComponent}
             </div>
         </div>

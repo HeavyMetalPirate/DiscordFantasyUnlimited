@@ -3,6 +3,7 @@
   <id>2</id>
   <name>Pitbull 2</name>
   <description>Pitbull is deadly.</description>
+  <iconName>/images/races/pitbull-2.png</iconName>
   <lore>It&apos;s a fucking pitbull, what else do you need to know?</lore>
   <humanPlayable>true</humanPlayable>
   <startingLocationId>testbox</startingLocationId>

@@ -3,5 +3,8 @@
   "game.actions.skills": "Activities",
   "game.actions.trading": "Trading",
   "game.actions.combat": "Combat",
-  "game.actions.misc": "Miscellaneous activities"
+  "game.actions.misc": "Miscellaneous activities",
+  "game.battle.active.header": "Battle in progress!",
+  "game.battle.active.text": "Your hero is still participating in combat.",
+  "game.battle.active.button": "Go to battle page"
 }

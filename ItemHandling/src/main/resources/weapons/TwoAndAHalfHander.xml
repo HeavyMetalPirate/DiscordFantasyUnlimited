@@ -3,7 +3,7 @@
   <id>2.5-hander</id>
   <name>Two-And-A-Half-Hander</name>
   <description>The size of this sword is so big you need an extra hand to swing it properly.</description>
-  <iconName>../images/items/twoandahalfhander.jpg</iconName>
+  <iconName>/images/items/twoandahalfhander.jpg</iconName>
   <rarity>EPIC</rarity>
   <value>99</value>
   <type>SWORD</type>

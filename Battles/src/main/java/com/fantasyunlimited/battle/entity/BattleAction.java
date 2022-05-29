@@ -25,6 +25,7 @@ public class BattleAction implements Serializable {
 	@ManyToOne
 	private BattleInformation battle;
 
+	private boolean isFlee;
 	private boolean isArea;
 	private boolean isPass;
 	private boolean isIncapacitated;
@@ -91,6 +92,14 @@ public class BattleAction implements Serializable {
 
 	public void setTarget(BattleParticipant target) {
 		this.target = target;
+	}
+
+	public boolean isFlee() {
+		return isFlee;
+	}
+
+	public void setFlee(boolean flee) {
+		isFlee = flee;
 	}
 
 	public boolean isArea() {

@@ -15,6 +15,7 @@ import com.fantasyunlimited.items.entity.Race;
 import com.fantasyunlimited.items.entity.Weapon;
 import com.fantasyunlimited.items.entity.Attributes.Attribute;
 import com.fantasyunlimited.items.entity.Weapon.WeaponType;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 
@@ -23,7 +24,11 @@ public abstract class BattleParticipant implements Serializable {
 
 	@Id
 	@GeneratedValue
+	@Type(type="org.hibernate.type.UUIDCharType")
 	private UUID id;
+
+	@ManyToOne
+	private BattleInformation battleInformation;
 
 	/**
 	 * 
@@ -47,7 +52,7 @@ public abstract class BattleParticipant implements Serializable {
 
 	@Embedded
 	protected Attributes attributes;
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	protected BattleEquipment equipment;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -273,5 +278,13 @@ public abstract class BattleParticipant implements Serializable {
 
 	public void setStatusModifiers(List<BattleStatus> statusModifiers) {
 		this.statusModifiers = statusModifiers;
+	}
+
+	public BattleInformation getBattleInformation() {
+		return battleInformation;
+	}
+
+	public void setBattleInformation(BattleInformation battleInformation) {
+		this.battleInformation = battleInformation;
 	}
 }

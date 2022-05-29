@@ -16,7 +16,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Trans } from 'react-i18next';
 import { useTranslation } from "react-i18next";
 
-import { useTrackedState } from '../SessionStore';
+import {initialState, useTrackedState} from '../SessionStore';
 
 export const LoginForm = (): JSX.Element => {
     let navigate = useNavigate();
@@ -56,7 +56,7 @@ export const LoginForm = (): JSX.Element => {
         };
         fetch('/logout', requestOptions)
                 .then((response) => {
-                    setFooState({user: null, token: null, selectedCharacter: null, stateChanged: true, characterData: null});
+                    setFooState(initialState);
                     window.location.href = '/';
                 });
     }

@@ -4,6 +4,7 @@
   <name>Magical Testbox</name>
   <description>A small, yet simple box to test stuff.</description>
   <iconName>testbox.png</iconName>
+  <bannerImage>/images/locations/banners/magical-testbox.png</bannerImage>
   <marketAccess>false</marketAccess>
   <globalMarketAccess>false</globalMarketAccess>
   <allowedSecondarySkills>

@@ -3,7 +3,7 @@
   <id>broccoli-cane</id>
   <name>Broccoli Cane</name>
   <description>For the not so festive season of the year.</description>
-  <iconName>../images/items/broccoli-cane.jpg</iconName>
+  <iconName>/images/items/broccoli-cane.jpg</iconName>
   <rarity>COMMON</rarity>
   <value>15</value>
   <type>SWORD</type>

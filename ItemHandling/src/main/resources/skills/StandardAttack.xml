@@ -3,7 +3,7 @@
     <name>Ultra Standard Attack 9000</name>
     <description>Attack with your mainhand weapon equipped.</description>
     <iconName>test</iconName>
-    <iconId>435013539535519755</iconId>
+    <iconId>/images/skills/standardattack.png</iconId>
     <attribute>STRENGTH</attribute>
     <type>OFFENSIVE</type>
     <minDamage>1</minDamage>

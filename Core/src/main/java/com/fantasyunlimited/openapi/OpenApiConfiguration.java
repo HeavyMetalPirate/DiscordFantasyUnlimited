@@ -21,6 +21,15 @@ public class OpenApiConfiguration {
     }
 
     @Bean
+    public GroupedOpenApi battleOperations() {
+        return GroupedOpenApi.builder()
+                .group("Battle")
+                .pathsToMatch("/api/battle/**")
+                .packagesToScan("com.fantasyunlimited.rest")
+                .build();
+    }
+
+    @Bean
     public GroupedOpenApi userOperations() {
         return GroupedOpenApi.builder()
                 .group("User Operations")

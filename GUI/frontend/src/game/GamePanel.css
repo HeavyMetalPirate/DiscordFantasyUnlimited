@@ -1,5 +1,26 @@
-.Game.MainPanel {
-    margin-right: 250px;
+.location-banner {
+   position: relative;
+   text-align: center;
+   color: white;
+}
+
+img.location-banner-image {
+   max-height: 20em;
+   width: 100%;
+}
+.location-banner-title {
+   position: absolute;
+   top: 80%;
+   left: 50%;
+   transform: translate(-50%, 0%);
+
+   text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+   font-family: Monospace, sans-serif;
+   width: 100%;
+   font-size: 48px;
+   letter-spacing: 1px;
+   z-index: 1;
+   color: #FFF;
 }
 
 .game-sidebar {

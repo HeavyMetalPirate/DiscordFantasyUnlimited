@@ -99,7 +99,7 @@ export const CurrentCharacterPanel = ({translation}: TranslationAsProperty) => {
         if(state.selectedCharacter && state.selectedCharacter !== null && state.selectedCharacter !== '0') {
             getCharacter();
         }
-    }, [state.selectedCharacter]);
+    }, [state.selectedCharacter, state.characterEquipmentChange]);
 
     useEffect(() => {
         const getActiveUsers = async() => {
@@ -122,7 +122,12 @@ export const CurrentCharacterPanel = ({translation}: TranslationAsProperty) => {
     }
 
     function goToSelection() {
-        setState((prev) => ({ ...prev, selectedCharacter: null, stateChanged: true}));
+        setState((prev) => ({ ...prev,
+            selectedCharacter: null,
+            characterData: null,
+            stateChanged: true,
+            activeBattleId: null
+        }));
         fetch('/api/user/characters/select?id=0')
             .then(response => navigate('/game'));
     }

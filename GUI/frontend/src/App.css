@@ -121,3 +121,32 @@ table, tr, th, td {
 span.bannerLogin {
     margin-left: auto;
 }
+
+main#page-wrap {
+  margin-right: 250px;
+}
+
+div.card-header-text {
+  position: absolute;
+  top: -0.25em;
+  left: 6em;
+}
+span.card-header-text:before
+{
+  content:"\A"; white-space:pre;
+}
+
+span.text-break:before
+{
+  content:"\A"; white-space:pre;
+}
+
+span.card-footer-text
+{
+  font-family: serif;
+  font-size: 12px;
+  text-shadow: none;
+  letter-spacing: unset;
+  color: #000;
+  font-style: italic;
+}

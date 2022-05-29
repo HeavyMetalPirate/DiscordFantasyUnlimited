@@ -7,6 +7,11 @@ declare global {
 
     import PlayerCharacterItem = REST.PlayerCharacterItem;
 
+    interface ErrorMessage {
+        header: string;
+        body: string;
+    }
+
     interface TranslationAsProperty {
         translation: TFunction<"translation", undefined>;
     }

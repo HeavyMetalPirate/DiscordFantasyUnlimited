@@ -1,5 +1,7 @@
 package com.fantasyunlimited.rest;
 
+import com.fantasyunlimited.battle.entity.BattleInformation;
+import com.fantasyunlimited.battle.service.BattleService;
 import com.fantasyunlimited.battle.utils.BattleStatsUtils;
 import com.fantasyunlimited.data.entity.Attributes;
 import com.fantasyunlimited.data.entity.PlayerCharacter;
@@ -9,10 +11,7 @@ import com.fantasyunlimited.items.bags.EquipmentBag;
 import com.fantasyunlimited.items.bags.LocationBag;
 import com.fantasyunlimited.items.bags.RaceBag;
 import com.fantasyunlimited.items.bags.WeaponBag;
-import com.fantasyunlimited.items.entity.Dropable;
-import com.fantasyunlimited.items.entity.Equipment;
-import com.fantasyunlimited.items.entity.Location;
-import com.fantasyunlimited.items.entity.Weapon;
+import com.fantasyunlimited.items.entity.*;
 import com.fantasyunlimited.items.util.DropableUtils;
 import com.fantasyunlimited.rest.dto.*;
 import com.fantasyunlimited.util.InventoryAction;
@@ -52,6 +51,113 @@ public class GameActionController {
     private PlayerCharacterService characterService;
     @Autowired
     private BattleStatsUtils battleStatsUtils;
+
+    @Autowired
+    private BattleService battleService;
+
+    @RequestMapping(value = "/battle/{id}", produces = "application/json", method = RequestMethod.GET)
+    public ResponseEntity<BattleDetailInfo> getBattleInformation(@PathVariable("id") String battleId, HttpServletRequest request) {
+        PlayerCharacter selectedCharacter = utils.getPlayerCharacterFromSession(request);
+
+        /*
+         * TODOS:
+         * - Fetch Battle from Database
+         * - Check if current Player is participant or not
+         * -- Depending on Participation status, build the toolbar or not
+         * - Build the BattleDetailInfo according to the battle
+         */
+        UUID battleUUID = UUID.fromString(battleId);
+        BattleInformation battleInformation = battleService.getBattleInformation(battleUUID);
+
+        if(battleInformation == null) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+        LocationItem location = new LocationItem(
+                battleInformation.getLocation().getId(),
+                battleInformation.getLocation().getName(),
+                battleInformation.getLocation().getIconName(),
+                battleInformation.getLocation().getBannerImage()
+        );
+
+        List<BattleSkill> toolbarSkills = new ArrayList<>();
+        selectedCharacter.getClassId().getSkillInstances().stream()
+                .map(skill -> utils.buildBattleSkill(skill, selectedCharacter))
+                .forEach(toolbarSkills::add);
+
+        int missingSkills = toolbarSkills.size() % 10;
+        if(missingSkills > 0) {
+            for(int i = 0; i < missingSkills; i++) {
+                toolbarSkills.add(new BattleSkill(
+                    "empty",
+                    "empty",
+                    "empty",
+                    "/images/emptySlotIcon.png",
+                    null,
+                    null,
+                    null,
+                    null,
+                    0,
+                    0,
+                    false,
+                    0,
+                    0,
+                    0,
+                    0
+                ));
+            }
+        }
+
+        List<InventoryItem> consumables = new ArrayList<>();
+        selectedCharacter.getInventory().entrySet().stream()
+                .map(entry -> {
+                    String itemId = entry.getKey();
+                    int itemCount = entry.getValue();
+                    Dropable item = dropableUtils.getDropableItem(itemId);
+                    if(item instanceof Consumable consumable && consumable.isDuringBattle()) {
+                        return new InventoryItem(item, "consumable", itemCount);
+                    }
+                    else {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .forEach(consumables::add);
+
+        BattlePlayerDetails playerDetails = new BattlePlayerDetails(
+                selectedCharacter.getId(),
+                battleService.isParticipating(selectedCharacter, battleInformation),
+                toolbarSkills,
+                consumables
+        );
+
+        List<BattleParticipantDetails> players = new ArrayList<>();
+        battleInformation.getPlayers().stream()
+                .map(player -> utils.buildBattleParticipantDetails(player))
+                .forEach(players::add);
+
+        List<BattleParticipantDetails> hostiles = new ArrayList<>();
+        battleInformation.getHostiles().stream()
+                .map(hostile -> utils.buildBattleParticipantDetails(hostile))
+                .forEach(hostiles::add);
+
+        List<BattleLogItem> battleLog = new ArrayList<>();
+        battleInformation.getActions().stream()
+                .map(action -> utils.buildBattleLogItem(action))
+                .forEach(battleLog::add);
+
+        BattleDetailInfo detailInfo = new BattleDetailInfo(
+                battleInformation.getBattleId().toString(),
+                battleService.isBattleActive(battleInformation),
+                location,
+                playerDetails,
+                players,
+                hostiles,
+                battleLog
+        );
+
+        return new ResponseEntity<>(detailInfo, HttpStatus.OK);
+    }
 
     @RequestMapping(value = "/character/equip", consumes = "application/json", method = RequestMethod.POST)
     public ResponseEntity<Void> equipItem(@RequestBody EquipRequest equipRequest, HttpServletRequest request) {
@@ -244,12 +350,56 @@ public class GameActionController {
         UUID battleId = utils.getBattleIdFromSession(request);
 
         if(battleId != null) {
-            // TODO find and build response entity for battle
+            BattleInformation battleInformation = battleService.getBattleInformation(battleId);
+
+            BattleBasicInfo battleInfo = new BattleBasicInfo(
+                    battleInformation.getBattleId().toString()
+            );
+
+            return new ResponseEntity<>(battleInfo, HttpStatus.FOUND);
+        }
+
+        // read from the database if there is a battle from last session
+        // TODO group handling? here?
+        BattleInformation existingBattle = battleService.findActiveBattleForPlayer(selectedCharacter);
+        if(existingBattle != null) {
+            BattleBasicInfo battleInfo = new BattleBasicInfo(
+                    existingBattle.getBattleId().toString()
+            );
+            return new ResponseEntity<>(battleInfo, HttpStatus.FOUND);
         }
 
         // find a new battle, create and store it, then return basic information for display
+        BattleInformation battleInformation = battleService.initializeBattle(Arrays.asList(selectedCharacter), locationId);
 
-        return new ResponseEntity<>(new BattleBasicInfo(null), HttpStatus.OK);
+        utils.setBattleIdFromSession(request, battleInformation.getBattleId());
+
+        BattleBasicInfo battleInfo = new BattleBasicInfo(
+                battleInformation.getBattleId().toString()
+        );
+
+        return new ResponseEntity<>(battleInfo, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/battle/current", produces = "application/json", method = RequestMethod.GET)
+    public ResponseEntity<BattleBasicInfo> getCurrentActiveBattle(HttpServletRequest request) {
+        UUID battleId = utils.getBattleIdFromSession(request);
+        if(battleId != null) {
+            BattleBasicInfo battleInfo = new BattleBasicInfo(
+                    battleId.toString()
+            );
+            return new ResponseEntity<>(battleInfo, HttpStatus.OK);
+        }
+        PlayerCharacter selectedCharacter = utils.getPlayerCharacterFromSession(request);
+        BattleInformation existingBattle = battleService.findActiveBattleForPlayer(selectedCharacter);
+        if(existingBattle != null) {
+            BattleBasicInfo battleInfo = new BattleBasicInfo(
+                    existingBattle.getBattleId().toString()
+            );
+            return new ResponseEntity<>(battleInfo, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/location/{id}/actions", produces = "application/json", method = RequestMethod.GET)

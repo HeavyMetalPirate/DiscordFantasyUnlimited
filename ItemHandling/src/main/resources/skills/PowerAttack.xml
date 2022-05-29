@@ -3,7 +3,7 @@
     <name>Powerful attack 5000</name>
     <description>Attack with your mainhand weapon equipped.</description>
     <iconName>foobar</iconName>
-    <iconId>442281913860882436</iconId>
+    <iconId>/images/skills/powerattack.png</iconId>
     <attribute>STRENGTH</attribute>
     <type>OFFENSIVE</type>
     <weaponModifier>WEAPON_MAINHAND</weaponModifier>

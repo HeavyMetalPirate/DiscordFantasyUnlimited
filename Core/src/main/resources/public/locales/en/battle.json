@@ -1,0 +1,6 @@
+{
+  "battle.stats.level": "LvL",
+  "battle.button.start.valid": "Perform selected action",
+  "battle.button.start.invalid": "Selection invalid",
+  "battle.button.start.no.selection": "No selection made"
+}

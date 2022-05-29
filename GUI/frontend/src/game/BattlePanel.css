@@ -1,0 +1,134 @@
+div.battle-container {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr 1fr;
+}
+
+div.battle-container > div {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+img.icon-character {
+    max-height: 2.5em;
+    min-height: 2.5em;
+    min-width: 2.5em;
+    max-width: 2.5em;
+
+    border: 2px solid black;
+    border-radius: 8px !important;
+    margin-bottom: 0.5em;
+}
+
+div.card-header-text {
+    transform: translate(0.5em, -1em);
+
+    text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+    font-family: Monospace, sans-serif;
+    font-size: 16px;
+    letter-spacing: 1px;
+    color: #FFF;
+}
+
+div > div.card.player-card > div.card-header {
+    text-align: left;
+}
+div > div.card.hostile-card > div.card-header {
+    text-align: right;
+}
+
+div > div.card.hostile-card > div.card-header > div.card-header-text {
+    left: unset;
+    right: 7em;
+}
+
+div > div.card > div.card-header > img.item-icon {
+     margin-right: 1.5em;
+}
+
+div.toolbar-container {
+    margin-top: 1em;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+div.toolbar-container > * {
+    border:3px double black;
+}
+
+div.toolbar-skills-container {
+    width: 42em;
+    display: grid;
+    gap: unset;
+    grid-template-columns: repeat(10, 1fr);
+}
+
+div.toolbar-skill-card, div.toolbar-skill-card > div.card-body > img.toolbar-skill-icon,
+div.toolbar-consumable-card, div.toolbar-consumable-card > div.card-body > img.toolbar-consumable-icon {
+    max-height: 4em;
+    min-height: 4em;
+    max-width: 4em;
+    min-width: 4em;
+}
+
+div.toolbar-skill-card > div.card-body,
+div.toolbar-consumable-card > div.card-body {
+    padding: unset !important;
+}
+
+img.toolbar-skill-icon, img.toolbar-consumable-icon {
+    border: black 3px double;
+}
+
+p.toolbar-icon-text {
+    font-family: Monospace, sans-serif;
+    letter-spacing: 1px;
+    color: #FFF;
+
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    font-size: 0.75em;
+    background: black;
+    min-width: 2em;
+    border-top-left-radius: calc(0.25rem - 1px);
+    border: white 3px double;
+}
+
+div.skill-detail-view {
+    width: 25em;
+    background: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    position: fixed;
+    padding: 0;
+
+    text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+    font-family: Monospace, sans-serif;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: #FFF;
+
+    z-index: 9999;
+}
+
+div.skill-detail-view > div.card > div.card-header > div.card-header-text,
+div.skill-detail-view > div.card > div.card-body > div.card-body-text{
+    position:relative;
+    left: unset;
+    top: unset;
+    text-align: left;
+    transform: translateY(-1em);
+}
+
+div > div.hostile-card.target {
+    border: 2px red dotted;
+}
+div > div.player-card.target {
+    border: 2px green dotted;
+}
+
+div.toolbar-skills-container > div.toolbar-skill-card.select > div > img.toolbar-skill-icon,
+div.toolbar-consumables-container > div.toolbar-consumable-card.select > div > img.toolbar-consumable-icon {
+    border: 3px darkgoldenrod solid;
+}

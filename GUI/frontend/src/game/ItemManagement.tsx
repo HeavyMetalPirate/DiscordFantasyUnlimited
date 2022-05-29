@@ -108,6 +108,11 @@ export const EquipmentManager = ({translation}: TranslationAsProperty) => {
     const [searchField, setSearchField] = useState("");
     const [sortMode, setSortMode] = useState("");
 
+    const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null);
+    const [detailsVisible, setDetailsVisible] = useState("");
+    const [x, setX] = useState(0);
+    const [y, setY] = useState(0);
+
     useEffect(() => {
         const getInventory = async() => {
             const resp = await fetch('/api/game/inventory');
@@ -208,19 +213,47 @@ export const EquipmentManager = ({translation}: TranslationAsProperty) => {
         equipmentBlock = <CurrentCharacterEquipment onRefresh={reloadInventory} t={t} equipment={equipmentStats.equipment} />
     }
 
+    function mouseOverItem(event: React.MouseEvent<HTMLElement>) {
+        event.preventDefault();
+        setDetailsVisible('hidden');
+
+        let itemId : string | null = document.elementsFromPoint(event.clientX, event.clientY)
+            .filter(element => element.getAttribute('foo') != null)
+            .at(0)!
+            .getAttribute('foo');
+
+        let selectedInventoryItems: InventoryItem[] | undefined
+            = inventory?.filter(item => item.item.id === itemId);
+
+        if(!selectedInventoryItems || selectedInventoryItems.length === 0) {
+            setSelectedItem(null);
+            setDetailsVisible('hidden');
+            return;
+        }
+        else {
+            setSelectedItem(selectedInventoryItems[0]);
+        }
+        setX(event.clientX);
+        setY(event.clientY);
+        setDetailsVisible('visible');
+    }
+    function mouseLeftItem(event: React.SyntheticEvent) {
+        event.preventDefault();
+        setSelectedItem(null);
+        setDetailsVisible('hidden');
+    }
 
     return (
-        <Container>
-            <div style={{width: "33%", display: "inline-grid"}}>
+        <Container className={"equipment-manager"}>
+            <div className={"equipment-manager-column equipment"}
+                onMouseOver={mouseOverItem}
+                onMouseLeave={mouseLeftItem}>
                 {equipmentBlock}
             </div>
-            <div style={{width: "33%", display: "inline-grid"}}>
-                {characterStatsBlock}
-            </div>
-            <div style={{width: "33%", maxWidth: "24em", display: "inline-grid"}}>
+            <div className={"equipment-manager-column inventory"}>
                 <InputGroup>
-                    <Input name="inventoryFilter" onChange={handleFilterChange} style={{width: "70%"}} placeholder={t('items.manager.filter.text', {ns: 'items'})} />
-                    <Input name="inventorySortMode" onChange={handleSortModeChange} type="select">
+                    <Input name="inventoryFilter" onChange={handleFilterChange} style={{width: "16em"}} placeholder={t('items.manager.filter.text', {ns: 'items'})} />
+                    <Input name="inventorySortMode" onChange={handleSortModeChange} style={{minWidth: "8em"}} type="select">
                         <option value="rarity">{t('items.manager.sort.rarity', {ns: 'items'})}</option>
                         <option value="type">{t('items.manager.sort.type', {ns: 'items'})}</option>
                         <option value="name">{t('items.manager.sort.name', {ns: 'items'})}</option>
@@ -230,9 +263,14 @@ export const EquipmentManager = ({translation}: TranslationAsProperty) => {
                 </InputGroup>
                 <InventoryList inventory={filteredItems} translation={t} onReload={reloadInventory} />
             </div>
+            <div className={"equipment-manager-column stats"}>
+                {characterStatsBlock}
+            </div>
+            <ItemDetailView translation={t} visible={detailsVisible} item={selectedItem} x={x} y={y} />
         </Container>
     )
 }
+
 
 interface EquipmentProps {
     equipment: REST.PlayerEquipment;
@@ -272,15 +310,17 @@ const EquipmentSlotItem = ({equipment, slot, t, onReload}: EquipmentSlotProps) =
     const [userState, setUserState] = useTrackedState();
 
     let emptySlot: JSX.Element = (
-        <Card>
-            <CardHeader>
-                <CardImg className={"item-icon"} left src="../images/emptySlotIcon.png" />
-                <div className="card-header-text">
-                    <span className="card-header-text">{t('items.equipment.slot.' + slot, {ns: 'items'})}</span>
-                    <span className="card-header-text">{t('items.equipment.slot.empty', {ns: 'items'})}</span>
-                </div>
-            </CardHeader>
-        </Card>
+        <div>
+            <Card>
+                <CardHeader>
+                    <CardImg className={"item-icon"} left src="../images/emptySlotIcon.png" />
+                    <div className="card-header-text">
+                        <span className="card-header-text">{t('items.equipment.slot.' + slot, {ns: 'items'})}</span>
+                        <span className="card-header-text">{t('items.equipment.slot.empty', {ns: 'items'})}</span>
+                    </div>
+                </CardHeader>
+            </Card>
+        </div>
     );
 
     function unequipItem() {
@@ -302,11 +342,17 @@ const EquipmentSlotItem = ({equipment, slot, t, onReload}: EquipmentSlotProps) =
             .then((response) => {
                 if(response.status === 200) {
                     onReload();
+                    setUserState((prevState) => ({...prevState, characterEquipmentChange: userState.characterEquipmentChange + 1, globalErrorMessage: null}));
+                }
+                else {
+                    setUserState((prevState) => ({...prevState,
+                        globalErrorMessage: {
+                            header: t('items.unequip.error.header', {ns:'items'}),
+                            body: t('items.unequip.error.generic', {ns: 'items'})
+                        }
+                    }));
                 }
             });
-
-        // TODO refresh character panel
-
     }
 
     if(!equipment) {
@@ -314,16 +360,18 @@ const EquipmentSlotItem = ({equipment, slot, t, onReload}: EquipmentSlotProps) =
     }
 
     return (
-        <Card>
-            <CardHeader>
-                <CardImg className={"item-icon " + equipment.rarity.toLowerCase()} left src={equipment.iconName} />
-                <div className="card-header-text">
-                    <span className="card-header-text">{t('items.equipment.slot.' + slot, {ns: 'items'})}</span>
-                    <span className="card-header-text">{t(equipment.name, {ns: 'items'})}</span>
-                </div>
-            </CardHeader>
-            <Button onClick={unequipItem} className={"item-unequip"}>{t('items.equipment.slot.button.unequip', {ns:'items'})}</Button>
-        </Card>
+        <div>
+            <Card foo={equipment.id}>
+                <CardHeader>
+                    <CardImg className={"item-icon " + equipment.rarity.toLowerCase()} left src={equipment.iconName} />
+                    <div className="card-header-text">
+                        <span className="card-header-text">{t('items.equipment.slot.' + slot, {ns: 'items'})}</span>
+                        <span className="card-header-text">{t(equipment.name, {ns: 'items'})}</span>
+                    </div>
+                </CardHeader>
+                <Button onClick={unequipItem} className={"item-unequip"}>{t('items.equipment.slot.button.unequip', {ns:'items'})}</Button>
+            </Card>
+        </div>
     );
 }
 
@@ -475,6 +523,7 @@ const CharacterStatsBlock = ({stats, secondarySkills, combatSkills, t} :Characte
 const ItemDetailView = ({translation, item, visible, x, y}: ItemDetailViewProperties) => {
     const t = translation;
     const [selectedItem, setSelectedItem] = useState<DropableItem | null>(null);
+    const state = useTrackedState();
 
     useEffect(() => {
         if(!item) {
@@ -530,16 +579,28 @@ const ItemDetailView = ({translation, item, visible, x, y}: ItemDetailViewProper
 
         let classExclusiveElement: JSX.Element = <span />;
         let raceExclusiveElement: JSX.Element = <span />;
+        let exclusiveClass;
 
         if(item.type === 'weapon') {
-
             if(selectedItem.classExclusive) {
-                classExclusiveElement = <span className="card-header-text">{t('items.gear.exclusive.class.' + selectedItem.classExclusive, {ns:'items'})}</span>
+                if(selectedItem.classExclusive === state[0].characterData!.characterClass.id) {
+                    exclusiveClass = 'item-exclusive-allowed';
+                }
+                else {
+                    exclusiveClass = 'item-exclusive-denied';
+                }
+                classExclusiveElement = <span className={"card-header-text " + exclusiveClass}>{t('items.gear.exclusive.class.' + selectedItem.classExclusive, {ns:'characterClass'})}</span>
             }
             if(selectedItem.raceExclusive) {
-                raceExclusiveElement = <span className="card-header-text">{t('items.gear.exclusive.race.' + selectedItem.raceExclusive, {ns:'items'})}</span>
-            }
+                if(selectedItem.raceExclusive === state[0].characterData!.race.id) {
+                    exclusiveClass = 'item-exclusive-allowed';
+                }
+                else {
+                    exclusiveClass = 'item-exclusive-denied';
+                }
 
+                raceExclusiveElement = <span className={"card-header-text " + exclusiveClass}>{t('items.gear.exclusive.race.' + selectedItem.raceExclusive, {ns:'race'})}</span>
+            }
             bodyContent = (
                 <CardBody style={{ textAlign: "left", paddingTop: "0" }}>
                     <CardText>
@@ -558,14 +619,24 @@ const ItemDetailView = ({translation, item, visible, x, y}: ItemDetailViewProper
             )
         }
         else if(item.type === 'equipment') {
-
             if(selectedItem.classExclusive) {
-                classExclusiveElement = <span className="card-header-text">{t('items.weapon.exclusive.class.' + selectedItem.classExclusive, {ns:'items'})}</span>
+                if(selectedItem.classExclusive === state[0].characterData!.characterClass.id) {
+                    exclusiveClass = 'item-exclusive-allowed';
+                }
+                else {
+                    exclusiveClass = 'item-exclusive-denied';
+                }
+                classExclusiveElement = <span className={"card-header-text " + exclusiveClass}>{t('items.gear.exclusive.class.' + selectedItem.classExclusive, {ns:'characterClass'})}</span>
             }
             if(selectedItem.raceExclusive) {
-                raceExclusiveElement = <span className="card-header-text">{t('items.weapon.exclusive.race.' + selectedItem.raceExclusive, {ns:'items'})}</span>
+                if(selectedItem.raceExclusive === state[0].characterData!.race.id) {
+                    exclusiveClass = 'item-exclusive-allowed';
+                }
+                else {
+                    exclusiveClass = 'item-exclusive-denied';
+                }
+                raceExclusiveElement = <span className={"card-header-text " + exclusiveClass}>{t('items.gear.exclusive.race.' + selectedItem.raceExclusive, {ns:'race'})}</span>
             }
-
             bodyContent = (
                 <CardBody style={{ textAlign: "left", paddingTop: "0"  }}>
 
@@ -835,6 +906,42 @@ const InventoryList = ({inventory, translation, onReload}: InventoryListProperti
             .then((response) => {
                 toggleMenu(false);
                 onReload();
+
+                if(response.status === 400) {
+                    setUserState((prevState) => ({...prevState,
+                        globalErrorMessage: {
+                            header: t('items.use.error.header', {ns: 'items'}),
+                            body: t('items.use.error.invalid.item', {ns: 'items'})
+                        }
+                    }));
+                }
+                if(response.status === 404) {
+                    setUserState((prevState) => ({...prevState,
+                        globalErrorMessage: {
+                            header: t('items.use.error.header', {ns: 'items'}),
+                            body: t('items.use.error.missing.item', {ns: 'items'})
+                        }
+                    }));
+                }
+                if(response.status === 406) {
+                    setUserState((prevState) => ({...prevState,
+                        globalErrorMessage: {
+                            header: t('items.use.error.header', {ns: 'items'}),
+                            body: t('items.use.error.too.many', {ns: 'items'})
+                        }
+                    }));
+                }
+                else if(response.status === 500) {
+                    setUserState((prevState) => ({...prevState,
+                        globalErrorMessage: {
+                            header: t('items.use.error.header', {ns: 'items'}),
+                            body: t('items.use.error.server', {ns: 'items'})
+                        }
+                    }));
+                }
+                else {
+                    setUserState((prevState) => ({...prevState, characterEquipmentChange: userState.characterEquipmentChange + 1 ,globalErrorMessage: null}));
+                }
             });
     }
 
@@ -893,6 +1000,25 @@ const InventoryList = ({inventory, translation, onReload}: InventoryListProperti
             .then((response) => {
                 toggleMenu(false);
                 onReload();
+                if(response.status === 400) {
+                    setUserState((prevState) => ({...prevState,
+                        globalErrorMessage: {
+                            header: t('items.equip.error.header', {ns: 'items'}),
+                            body: t('items.equip.error.generic', {ns: 'items'})
+                        }
+                    }));
+                }
+                else if(response.status === 500) {
+                    setUserState((prevState) => ({...prevState,
+                        globalErrorMessage: {
+                            header: t('items.equip.error.header', {ns: 'items'}),
+                            body: t('items.equip.error.server', {ns: 'items'})
+                        }
+                    }));
+                }
+                else {
+                    setUserState((prevState) => ({...prevState, characterEquipmentChange: userState.characterEquipmentChange + 1 ,globalErrorMessage: null}));
+                }
             });
 
         // TODO refresh character panel
@@ -922,19 +1048,44 @@ const InventoryList = ({inventory, translation, onReload}: InventoryListProperti
 
         if(value === '400') {
             // item is not an actual known item
+            setUserState((prevState) => ({...prevState,
+                globalErrorMessage: {
+                    header: t('items.drop.error.header', {ns:'items'}),
+                    body: t('items.drop.error.invalid.item', {ns:'items'})
+                }
+            }));
         }
         else if(value === '404') {
             // item is not in player inventory
+            setUserState((prevState) => ({...prevState,
+                globalErrorMessage: {
+                    header: t('items.drop.error.header', {ns:'items'}),
+                    body: t('items.drop.error.missing.inventory', {ns:'items'})
+                }
+            }));
         }
         else if(value === '406') {
             // tried to drop more than in inventory
+            setUserState((prevState) => ({...prevState,
+                globalErrorMessage: {
+                    header: t('items.drop.error.header', {ns:'items'}),
+                    body: t('items.drop.error.too.many', {ns:'items'})
+                }
+            }));
         }
         else if(value === '200') {
             // item has been dropped
+            setUserState((prevState) => ({...prevState, globalErrorMessage: null}));
             onReload();
         }
         else {
             // unknown return code
+            setUserState((prevState) => ({...prevState,
+                globalErrorMessage: {
+                    header: t('items.drop.error.header', {ns:'items'}),
+                    body: t('items.drop.error.unknown', {ns:'items'})
+                }
+            }));
         }
     };
 
@@ -999,7 +1150,8 @@ const InventoryList = ({inventory, translation, onReload}: InventoryListProperti
         return (
             <ControlledMenu {...menuProps}
                 anchorPoint={anchorPoint}
-                onClose={closeContextMenu}>
+                onClose={closeContextMenu}
+                menuStyle={{zIndex:9999}}>
                 <MenuHeader>{contextMenuItem.name && contextMenuItem.name + ' (x' + contextMenuItem.item.count + ')'}</MenuHeader>
                 {equipMenuButton}
                 {useMenuButton}
@@ -1093,11 +1245,16 @@ export const InventoryManager = ({translation}: TranslationAsProperty) => {
         setSortMode(e.target.value);
     }
 
+    let currency: number = 0;
+    if(inventory !== null) {
+        currency = inventory.gold;
+    }
+
     return (
-        <div>
+        <div className={"inventory-manager"}>
             <InputGroup>
-                <Input name="inventoryFilter" onChange={handleFilterChange} style={{width: "70%"}} placeholder={t('items.manager.filter.text', {ns: 'items'})} />
-                <Label style={{margin: "auto", paddingLeft: "1em", paddingRight: "0.25em"}} for="inventorySortMode">{t('items.manager.sort', {ns: 'items'})}:</Label>
+                <Input name="inventoryFilter" onChange={handleFilterChange} placeholder={t('items.manager.filter.text', {ns: 'items'})} />
+                <Label style={{margin: "auto", paddingLeft: "1.25em", paddingRight: "0.5em"}} for="inventorySortMode">{t('items.manager.sort', {ns: 'items'})}:</Label>
                 <Input name="inventorySortMode" onChange={handleSortModeChange} type="select">
                     <option value="rarity">{t('items.manager.sort.rarity', {ns: 'items'})}</option>
                     <option value="type">{t('items.manager.sort.type', {ns: 'items'})}</option>
@@ -1105,6 +1262,9 @@ export const InventoryManager = ({translation}: TranslationAsProperty) => {
                     <option value="value">{t('items.manager.sort.value', {ns: 'items'})}</option>
                     <option value="quantity">{t('items.manager.sort.quantity', {ns: 'items'})}</option>
                 </Input>
+                <div className={"currency"}>
+                    <img className={"gold-icon"} src={"../images/gold-icon.png"}/> {currency}
+                </div>
             </InputGroup>
 
             <InventoryList inventory={filteredItems} translation={t} onReload={reloadInventory} />

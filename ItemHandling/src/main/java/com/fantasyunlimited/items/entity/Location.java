@@ -15,6 +15,8 @@ public class Location extends GenericItem {
 	private static final long serialVersionUID = 6683436248656781739L;
 	private boolean marketAccess;
 	private boolean globalMarketAccess;
+
+	private String bannerImage;
 	
 	private Map<SecondarySkill, Integer> allowedSecondarySkills = new HashMap<>();
 	
@@ -95,5 +97,13 @@ public class Location extends GenericItem {
 	}
 	public void setHostileNPCs(List<HostileNPC> hostileNPCs) {
 		this.hostileNPCs = hostileNPCs;
+	}
+
+	public String getBannerImage() {
+		return bannerImage;
+	}
+
+	public void setBannerImage(String bannerImage) {
+		this.bannerImage = bannerImage;
 	}
 }

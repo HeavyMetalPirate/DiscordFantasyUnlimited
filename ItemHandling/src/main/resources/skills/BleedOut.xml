@@ -3,7 +3,7 @@
     <name>Bleed out</name>
     <description>I BLEED IT OUT, DIGGING DEEPER JUST TO THROW IT AWAY.</description>
     <iconName>bleed</iconName>
-    <iconId>447805251865542668</iconId>
+    <iconId>/images/skills/bleedout.png</iconId>
     <attribute>STRENGTH</attribute>
     <type>DEBUFF</type>
     <targetType>ENEMY</targetType>

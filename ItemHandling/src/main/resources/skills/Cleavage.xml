@@ -3,7 +3,7 @@
     <name>Cleavage</name>
     <description>Pretty nice, since it's an actual typo.</description>
     <iconName>cleave</iconName>
-    <iconId>445280337409474571</iconId>
+    <iconId>/images/skills/cleavage.png</iconId>
     <attribute>STRENGTH</attribute>
     <type>OFFENSIVE</type>
     <targetType>AREA</targetType>

@@ -3,7 +3,7 @@
   <id>broken-sword</id>
   <name>Broken Sword</name>
   <description>It has seen better days for sure, but at least it is somewhat pointy and rusty...</description>
-  <iconName>../images/items/brknSwrd.png</iconName>
+  <iconName>/images/items/brknSwrd.png</iconName>
   <rarity>ARTIFACT</rarity>
   <value>10</value>
   <type>SWORD</type>
