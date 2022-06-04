@@ -1,22 +1,25 @@
 package com.fantasyunlimited.rest;
 
-import com.fantasyunlimited.battle.entity.BattleAction;
-import com.fantasyunlimited.battle.entity.BattleParticipant;
-import com.fantasyunlimited.battle.entity.BattlePlayer;
-import com.fantasyunlimited.battle.entity.BattleStatus;
+import com.fantasyunlimited.battle.entity.*;
+import com.fantasyunlimited.battle.service.BattleService;
 import com.fantasyunlimited.data.entity.PlayerCharacter;
 import com.fantasyunlimited.items.entity.*;
+import com.fantasyunlimited.items.util.DropableUtils;
 import com.fantasyunlimited.rest.dto.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpUpgradeHandler;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Component
 public class ControllerUtils {
+
+    @Autowired
+    private BattleService battleService;
+    @Autowired
+    private DropableUtils dropableUtils;
 
     public UUID getBattleIdFromSession(HttpServletRequest request) {
         return (UUID) request.getSession().getAttribute("battleId");
@@ -124,7 +127,11 @@ public class ControllerUtils {
         BattleActionStatus status;
         BattleActionOutcome outcome;
 
-        if(action.isFlee()) {
+        if(action.isExecuted() == false) {
+            status = BattleActionStatus.WAITING;
+            outcome = BattleActionOutcome.NONE;
+        }
+        else if(action.isFlee()) {
             status = BattleActionStatus.FLEE;
             outcome = BattleActionOutcome.NONE;
         }
@@ -159,7 +166,9 @@ public class ControllerUtils {
 
         return new BattleLogItem(
                 action.getSequence(),
+                action.getOrdinal(),
                 action.getRound(),
+                action.getActionDate().toInstant().toEpochMilli(),
                 action.isExecuted(),
                 status,
                 outcome,
@@ -248,6 +257,104 @@ public class ControllerUtils {
             }
         }
         return highest;
+    }
+
+    public BattleDetailInfo buildBattleDetailInfo(BattleInformation battleInformation, PlayerCharacter selectedCharacter) {
+        LocationItem location = new LocationItem(
+                battleInformation.getLocation().getId(),
+                battleInformation.getLocation().getName(),
+                battleInformation.getLocation().getIconName(),
+                battleInformation.getLocation().getBannerImage()
+        );
+
+        BattlePlayerDetails playerDetails;
+        if(selectedCharacter != null) {
+
+            List<BattleSkill> toolbarSkills = new ArrayList<>();
+            selectedCharacter.getClassId().getSkillInstances().stream()
+                    .map(skill -> buildBattleSkill(skill, selectedCharacter))
+                    .forEach(toolbarSkills::add);
+
+            int missingSkills = toolbarSkills.size() % 10;
+            if (missingSkills > 0) {
+                for (int i = 0; i < missingSkills; i++) {
+                    toolbarSkills.add(new BattleSkill(
+                            "empty",
+                            "empty",
+                            "empty",
+                            "/images/emptySlotIcon.png",
+                            null,
+                            null,
+                            null,
+                            null,
+                            0,
+                            0,
+                            false,
+                            0,
+                            0,
+                            0,
+                            0
+                    ));
+                }
+            }
+
+            List<InventoryItem> consumables = new ArrayList<>();
+            selectedCharacter.getInventory().entrySet().stream()
+                    .map(entry -> {
+                        String itemId = entry.getKey();
+                        int itemCount = entry.getValue();
+                        Dropable item = dropableUtils.getDropableItem(itemId);
+                        if (item instanceof Consumable consumable && consumable.isDuringBattle()) {
+                            return new InventoryItem(item, "consumable", itemCount);
+                        } else {
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull)
+                    .forEach(consumables::add);
+
+            playerDetails =new BattlePlayerDetails(
+                    selectedCharacter.getId(),
+                    battleService.isParticipating(selectedCharacter, battleInformation),
+                    toolbarSkills,
+                    consumables
+            );
+        }
+        else {
+            playerDetails = null;
+        }
+
+        List<BattleParticipantDetails> players = new ArrayList<>();
+        battleInformation.getPlayers().stream()
+                .map(player -> buildBattleParticipantDetails(player))
+                .forEach(players::add);
+
+        List<BattleParticipantDetails> hostiles = new ArrayList<>();
+        battleInformation.getHostiles().stream()
+                .map(hostile -> buildBattleParticipantDetails(hostile))
+                .forEach(hostiles::add);
+
+        Map<Integer, List<BattleLogItem>> battleLog = new HashMap<>();
+        battleInformation.getActions().stream()
+                .sorted((log1, log2) -> Integer.compare(log2.getRound(), log1.getRound()))
+                .map(action -> buildBattleLogItem(action))
+                .forEach(log -> {
+                    if(battleLog.containsKey(log.round()) == false) {
+                        battleLog.put(log.round(), new ArrayList<>());
+                    }
+                    battleLog.get(log.round()).add(log);
+                });
+
+
+        return new BattleDetailInfo(
+                battleInformation.getBattleId().toString(),
+                battleService.isBattleActive(battleInformation),
+                location,
+                playerDetails,
+                players,
+                hostiles,
+                new BattleLog(battleLog)
+        );
     }
 
     public BattleParticipantDetails buildBattleParticipantDetails(BattleParticipant participant) {

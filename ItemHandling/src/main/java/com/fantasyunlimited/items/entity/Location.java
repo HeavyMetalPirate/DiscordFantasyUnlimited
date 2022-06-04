@@ -1,5 +1,6 @@
 package com.fantasyunlimited.items.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 import java.util.ArrayList;

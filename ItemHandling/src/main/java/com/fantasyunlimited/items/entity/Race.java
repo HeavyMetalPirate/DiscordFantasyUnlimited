@@ -1,5 +1,6 @@
 package com.fantasyunlimited.items.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class Race extends GenericItem {
 	private List<RacialBonus> bonuses = new ArrayList<>();
 
 	@XStreamOmitField
+	@JsonIgnore
 	private Location startingLocation;
 	
 	public List<RacialBonus> getBonuses() {

@@ -18,8 +18,6 @@ public class BattleActionHandler {
     @Autowired
     private BattleStatsUtils statsUtils;
 
-
-
     /*
      *public static final Integer DODGED = -2 ^ 22;
      *public static final Integer BLOCKED = -2 ^ 23;
@@ -135,8 +133,6 @@ public class BattleActionHandler {
     private void executeStatusChanging(BattleAction action) {
         switch (action.getUsedSkill().getTargetType()) {
             case AREA:
-                // TODO foo
-                break;
             case ENEMY:
                 if (hasEvadedAttack(action)) {
                     action.setActionAmount(0);
@@ -184,15 +180,6 @@ public class BattleActionHandler {
 
         switch (action.getUsedSkill().getTargetType()) {
             case AREA:
-                // TODO understand this thing
-//                for (Long targetId : areaTargets.keySet()) {
-//                    BattleParticipant target = areaTargets.get(targetId);
-//                    if (hasEvadedAttack(targetId, target)) {
-//                        continue;
-//                    }
-//                    target.getStatusModifiers().add(status);
-//                }
-                break;
             case ENEMY:
             case FRIEND:
             case OWN:
@@ -230,13 +217,13 @@ public class BattleActionHandler {
     }
     private void executeHealthChanging(BattleAction action) {
         switch (action.getUsedSkill().getTargetType()) {
+            case AREA:
             case ENEMY:
                 if (hasEvadedAttack(action)) {
                     action.setActionAmount(0);
                     return;
                 }
                 break;
-            case AREA:
             case FRIEND:
             case OWN:
             default:
@@ -246,18 +233,6 @@ public class BattleActionHandler {
 
         switch (action.getUsedSkill().getTargetType()) {
             case AREA:
-                // TODO try and understand what this thing did in the first place
-//                for (Long targetId : areaTargets.keySet()) {
-//                    BattleParticipant target = areaTargets.get(targetId);
-//                    if (hasEvadedAttack(targetId, target)) {
-//                        continue;
-//                    }
-//                    // TODO target defensive calulations
-//                    applyDefensiveModifiers(target);
-//                    areaDamage.put(targetId, actionAmount);
-//                    target.applyDamage(actionAmount);
-//                }
-                break;
             case ENEMY:
                 applyDefensiveModifiers(action.getTarget());
                 action.getTarget().applyDamage(action.getActionAmount());

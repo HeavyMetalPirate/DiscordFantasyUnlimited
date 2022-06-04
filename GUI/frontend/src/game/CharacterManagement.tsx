@@ -22,6 +22,7 @@ import './GamePanel.css'
 import { get_steps, calculateHealthPercentage, calculateResourcePercentage } from './utils/StatusbarUtils'
 import { useTrackedState } from '../SessionStore';
 import { UserSearch } from '../user/UserComponents'
+import {useStompClient} from "../WebsocketClient";
 
 const ManaBar = ({character}: PlayerCharacterData) => {
     let steps;
@@ -74,11 +75,10 @@ const HealthBar = ({character}: PlayerCharacterData) => {
 
 export const CurrentCharacterPanel = ({translation}: TranslationAsProperty) => {
     const t = translation;
+    const client = useStompClient();
     const [state, setState] = useTrackedState();
     const navigate = useNavigate();
-
     const [character, setCharacter] = useState<FantasyUnlimited.REST.PlayerCharacterItem | null>(null);
-    const [currentActiveUsers, setCurrentActiveUsers] = useState<FantasyUnlimited.REST.ActiveUserItem[]>([]);
 
     useEffect(() => {
         const getCharacter = async() => {
@@ -102,14 +102,13 @@ export const CurrentCharacterPanel = ({translation}: TranslationAsProperty) => {
     }, [state.selectedCharacter, state.characterEquipmentChange]);
 
     useEffect(() => {
-        const getActiveUsers = async() => {
-            const res = await fetch('/api/user/actives')
-            const data = await res.json();
-
-            setCurrentActiveUsers(data);
-        };
-        getActiveUsers();
-    }, []); // TODO how to refresh? https://stackoverflow.com/questions/59667278/react-hooks-periodic-run-useeffect
+        client.subscribe('/topic/updates/character/' + state.selectedCharacter,
+                msg => {
+                    let playerCharacter: FantasyUnlimited.REST.PlayerCharacterItem = JSON.parse(msg.body);
+                    setCharacter(playerCharacter);
+                    setState((prev) => ({...prev, characterData: playerCharacter}));
+                })
+    }, [state.selectedCharacter])
 
     if(!character) {
         return (
@@ -162,7 +161,7 @@ export const CurrentCharacterPanel = ({translation}: TranslationAsProperty) => {
                 <Button style={{"margin": "5px"}} onClick={() => goToSelection()}>{t('character.current.panel.select', {ns: 'character'})}</Button>
 
                 <CardBody>
-                    <UserSearch details={currentActiveUsers} />
+                    <UserSearch  />
                 </CardBody>
             </Card>
         </Container>

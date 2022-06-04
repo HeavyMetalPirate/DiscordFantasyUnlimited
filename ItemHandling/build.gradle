@@ -15,6 +15,9 @@ apply plugin: 'cz.habarta.typescript-generator'
 dependencies {
     // https://mvnrepository.com/artifact/com.thoughtworks.xstream/xstream
     api 'com.thoughtworks.xstream:xstream:1.4.19'
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.3'
+
 }
 
 bootJar.enabled = false

@@ -23,6 +23,24 @@ public class PlayerCharacterService {
     private DropableUtils dropableUtils;
 
     @Transactional
+    public PlayerCharacter updateHealthAndAtk(long characterId, int newHealth, int newAtk) {
+        PlayerCharacter character = repository.findById(characterId).get();
+        character.setCurrentHealth(newHealth);
+        if(character.getCurrentHealth() < 0)
+            character.setCurrentHealth(0);
+        else if(character.getCurrentHealth() > character.getMaxHealth())
+            character.setCurrentHealth(character.getMaxHealth());
+
+        character.setCurrentAtkResource(newAtk);
+        if(character.getCurrentAtkResource() < 0)
+            character.setCurrentAtkResource(0);
+        else if(character.getCurrentAtkResource() > character.getMaxAtkResource())
+            character.setCurrentAtkResource(character.getMaxAtkResource());
+
+        return repository.save(character);
+    }
+
+    @Transactional
     public PlayerCharacter equipItem(PlayerCharacter selectedCharacter, String itemId, EquipmentSlot slot) throws IllegalArgumentException {
         PlayerCharacter character = repository.findById(selectedCharacter.getId()).get();
 

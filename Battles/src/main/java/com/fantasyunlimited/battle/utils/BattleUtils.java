@@ -1,6 +1,7 @@
 package com.fantasyunlimited.battle.utils;
 
 import com.fantasyunlimited.battle.entity.BattleEquipment;
+import com.fantasyunlimited.battle.entity.BattleInformation;
 import com.fantasyunlimited.battle.entity.BattleNPC;
 import com.fantasyunlimited.battle.entity.BattlePlayer;
 import com.fantasyunlimited.data.entity.PlayerCharacter;
@@ -8,6 +9,7 @@ import com.fantasyunlimited.items.bags.HostileNPCBag;
 import com.fantasyunlimited.items.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,24 @@ public class BattleUtils {
     private HostileNPCBag hostileNPCBag;
 
     private Random random = new Random();
+
+
+    @Transactional
+    public boolean isParticipating(PlayerCharacter character, BattleInformation battleInformation) {
+        return battleInformation.getPlayers().stream().anyMatch(player -> player.getCharacterId().longValue() == character.getId());
+    }
+    @Transactional(readOnly = true)
+    public boolean isBattleActive(BattleInformation battleInformation) {
+        boolean anyPlayersAlive = false;
+        boolean anyHostilesAlive = false;
+
+        anyPlayersAlive = battleInformation.getPlayers().stream()
+                .anyMatch(player -> player.isDefeated() == false);
+        anyHostilesAlive = battleInformation.getHostiles().stream()
+                .anyMatch(hostile -> hostile.isDefeated() == false);
+
+        return anyPlayersAlive && anyHostilesAlive;
+    }
 
     public BattlePlayer initializeBattlePlayer(PlayerCharacter base) {
         BattlePlayer battlePlayer = new BattlePlayer();

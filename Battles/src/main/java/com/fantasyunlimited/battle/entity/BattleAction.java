@@ -1,9 +1,14 @@
 package com.fantasyunlimited.battle.entity;
 
 import java.io.Serializable;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
+import com.fantasyunlimited.battle.converter.BattleParticipantConverter;
 import com.fantasyunlimited.data.converter.SkillConverter;
 import com.fantasyunlimited.items.entity.Skill;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
@@ -20,7 +25,10 @@ public class BattleAction implements Serializable {
 	@Id
 	private int sequence;
 
+	private ZonedDateTime actionDate = ZonedDateTime.now(ZoneId.of("UTC"));
+
 	private int round;
+    private int ordinal;
 
 	@ManyToOne
 	private BattleInformation battle;
@@ -36,7 +44,9 @@ public class BattleAction implements Serializable {
 	private boolean critical;
 	private boolean parried;
 
+	@Convert(converter = BattleParticipantConverter.class)
 	private BattleParticipant executing;
+	@Convert(converter = BattleParticipantConverter.class)
 	private BattleParticipant target;
 
 	@Convert(converter = SkillConverter.class)
@@ -181,4 +191,20 @@ public class BattleAction implements Serializable {
 	public void setIncapacitated(boolean isIncapacitated) {
 		this.isIncapacitated = isIncapacitated;
 	}
+
+	public ZonedDateTime getActionDate() {
+		return actionDate;
+	}
+
+	public void setActionDate(ZonedDateTime actionDate) {
+		this.actionDate = actionDate;
+	}
+
+	public int getOrdinal() {
+        return ordinal;
+    }
+
+    public void setOrdinal(int ordinal) {
+        this.ordinal = ordinal;
+    }
 }

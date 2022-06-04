@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.36.1070 on 2022-05-29 18:30:56.
+// Generated using typescript-generator version 2.36.1070 on 2022-06-03 17:35:37.
 
 export namespace REST {
 
@@ -25,12 +25,18 @@ export namespace REST {
         playerDetails: BattlePlayerDetails;
         players: BattleParticipantDetails[];
         hostiles: BattleParticipantDetails[];
-        battleLog: BattleLogItem[];
+        battleLog: BattleLog;
+    }
+
+    export interface BattleLog {
+        rounds: { [index: string]: BattleLogItem[] };
     }
 
     export interface BattleLogItem {
         sequence: number;
+        ordinal: number;
         round: number;
+        timestamp: number;
         executed: boolean;
         status: BattleActionStatus;
         outcome: BattleActionOutcome;
@@ -88,6 +94,11 @@ export namespace REST {
         maxDamage: number;
         cost: number;
         rank: number;
+    }
+
+    export interface BattleUpdate {
+        hasUpdate: boolean;
+        battleInfo: BattleDetailInfo;
     }
 
     export interface CharacterCreationBody {
@@ -329,7 +340,7 @@ export namespace REST {
 
     export type BattleActionOutcome = "HIT" | "MISS" | "DODGED" | "CRITICAL" | "BLOCKED" | "PARRIED" | "NONE";
 
-    export type BattleActionStatus = "FLEE" | "PASS" | "INCAPACITATED" | "EXECUTED";
+    export type BattleActionStatus = "FLEE" | "PASS" | "INCAPACITATED" | "EXECUTED" | "WAITING";
 
     export type BattleActionType = "SKILL" | "CONSUMABLE" | "PASS" | "FLEE";
 

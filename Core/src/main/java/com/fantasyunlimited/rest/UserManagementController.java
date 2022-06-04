@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.csrf.CsrfToken;
@@ -168,20 +170,4 @@ public class UserManagementController {
                     HttpStatus.OK);
         }
     }
-
-    @RequestMapping(value = "/actives", produces = "application/json")
-    public ResponseEntity<List<ActiveUserItem>> getLoggedInUsers() {
-        final List<ActiveUserItem> activeUsers = new ArrayList<>();
-
-        final List<Object> allPrincipals = sessionRegistry.getAllPrincipals();
-        for(final Object principal : allPrincipals) {
-            if(principal instanceof User user) {
-                // Do something with user
-                activeUsers.add(new ActiveUserItem(user.getUsername(), user.getAuthorities().toString()));
-            }
-        }
-
-        return new ResponseEntity<>(activeUsers, HttpStatus.OK);
-    }
-
 }

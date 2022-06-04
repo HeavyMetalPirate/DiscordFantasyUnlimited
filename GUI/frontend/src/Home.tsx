@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import { Container, Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { Trans } from 'react-i18next';
 import { withTranslation, WithTranslation } from "react-i18next";
 
 const { default: logo } = require('./logo.svg') as { default: string };
 
+
+
 class Home extends Component<WithTranslation> {
     state = {};
     render() {
-    console.log(logo);
         const { t } = this.props;
         return (
             <div className="App">

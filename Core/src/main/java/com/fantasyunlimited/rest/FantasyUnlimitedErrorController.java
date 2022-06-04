@@ -27,6 +27,10 @@ public class FantasyUnlimitedErrorController implements ErrorController {
             Object errorMessage = request.getAttribute("javax.servlet.error.message");
 
             log.debug("Error: HTTP {} - {} - {}", errorCode, errorMessage, originUrl);
+
+            if(originUrl == null || originUrl.toString().startsWith("/gs-guide-websocket")){
+                return null;
+            }
         }
         catch(Exception e) {
             log.error("Error while handling HTTP error.", e);

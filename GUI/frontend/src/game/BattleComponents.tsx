@@ -5,19 +5,42 @@ import {
 } from 'react-bootstrap'
 import {useParams} from "react-router-dom";
 import {REST} from "../types/rest-entities";
-import {Button, CardBody, CardFooter, CardHeader, CardImg, CardText} from "reactstrap";
+import {
+    Button,
+    CardBody,
+    CardFooter, CardGroup,
+    CardHeader,
+    CardImg,
+    CardText
+} from "reactstrap";
 
 import './BattlePanel.css';
-import {calculateHealthPercentage, calculateResourcePercentage, get_steps} from "./utils/StatusbarUtils";
+import {
+    calculateHealthPercentage,
+    calculateResourcePercentage,
+    get_steps
+} from "./utils/StatusbarUtils";
 import {useTrackedState} from "../SessionStore";
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Typography
+} from "@mui/material";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import {useStompClient} from "../WebsocketClient";
+import {IMessage} from "@stomp/stompjs";
 
 interface BattlePanelProperties extends TranslationAsProperty {
 
 }
 export const BattleMainPanel = ({translation}: BattlePanelProperties) => {
     const { id } = useParams();
-    const state = useTrackedState();
     const t = translation;
+
+    const [state, setState] = useTrackedState();
+    const client = useStompClient();
+
     const [battleInfo, setBattleInfo] = useState<REST.BattleDetailInfo>();
     const [target, setTarget] = useState<REST.BattleParticipantDetails>();
     const [skill, setSkill] = useState<REST.BattleSkill>();
@@ -37,12 +60,33 @@ export const BattleMainPanel = ({translation}: BattlePanelProperties) => {
 
         getBattleInfo()
             .then(data => setBattleInfo(data));
+        client.subscribe('/topic/battle/' + id, onMessageReceived);
 
     }, [id]);
 
     useEffect(() => {
         checkValidAction();
+    }, [battleInfo]);
+
+    useEffect(() => {
+        checkValidAction();
     }, [consumable, target, skill]);
+
+    const onMessageReceived = (msg: IMessage) => {
+        let battleUpdate: REST.BattleUpdate = JSON.parse(msg.body);
+        if(battleUpdate.hasUpdate && battleInfo !== undefined) {
+            // only update battleLog, participants and active flag
+            setBattleInfo({
+                id: battleInfo.id,
+                location: battleInfo.location,
+                playerDetails: battleInfo.playerDetails,
+                battleLog: battleUpdate.battleInfo.battleLog,
+                hostiles: battleUpdate.battleInfo.hostiles,
+                players: battleUpdate.battleInfo.players,
+                active: battleUpdate.battleInfo.active
+            });
+        }
+    }
 
     if(battleInfo === null || battleInfo === undefined) {
         return <span>{t('battle.not.found', {ns: 'battle'})}: {id}</span>
@@ -98,10 +142,17 @@ export const BattleMainPanel = ({translation}: BattlePanelProperties) => {
     }
 
     function checkValidAction() {
-        console.log("ValidActionCheck");
-        console.log(skill);
-        console.log(target);
-        console.log(consumable);
+
+        // TODO check if battle actions has any not executed actions by executing
+        // and disable button with message "waiting" or something if that's so
+        for(const key in battleInfo?.battleLog.rounds) {
+            const roundBattleLog = battleInfo?.battleLog.rounds[key];
+            if(roundBattleLog?.find(item => item.executed === false && item.executing?.id === state.characterData!.id)) {
+                setValidAction(false);
+                setStartButtonText(t('battle.button.start.already.entered', {ns:'battle'}));
+                return;
+            }
+        }
 
         if(skill === undefined
             && target === undefined
@@ -191,7 +242,7 @@ export const BattleMainPanel = ({translation}: BattlePanelProperties) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json' ,
-                    'X-CSRF-TOKEN' : state[0].token!.token
+                    'X-CSRF-TOKEN' : state.token!.token
                 },
                 body: JSON.stringify(requestBody)
             };
@@ -219,7 +270,9 @@ export const BattleMainPanel = ({translation}: BattlePanelProperties) => {
                         // any combination of action type, target, skill and consumable is not allowed
                         break;
                     case 200:
-                        // Everything seems to be okay here.
+                        // Everything seems to be okay here. Set battle info.
+                        response.json()
+                            .then(json => setBattleInfo(json));
                         break;
                     default:
                         // unknown error, log
@@ -245,12 +298,79 @@ export const BattleMainPanel = ({translation}: BattlePanelProperties) => {
                      onActionSelect={onActionSelect}/>
             <Button disabled={!validAction}
                     onClick={performAction}
-                    style={{width: "100%", marginTop: "1em"}}>
+                    style={{width: "80%", marginTop: "1em"}}>
                 {startButtonText}
             </Button>
+            <BattleLog battleLog={battleInfo.battleLog} translation={t} />
         </Container>
     )
 }
+
+interface BattleLogProps extends TranslationAsProperty {
+    battleLog: REST.BattleLog;
+}
+
+const BattleLog: React.FC<BattleLogProps> = (props) => {
+    const t =  props.translation;
+    const battleLog = props.battleLog;
+
+    if(battleLog === undefined || battleLog === null) {
+        return <div>{t('battle.log.empty', {ns: 'battle'})}</div>
+    }
+
+    let rounds: JSX.Element[] = [];
+    for(const key in battleLog.rounds) {
+        const roundBattleLog = battleLog.rounds[key];
+        let roundElements: JSX.Element[];
+        roundElements = roundBattleLog
+            .sort((e1,e2) => e1.ordinal > e2.ordinal ? 1 : -1)
+            .map(entry => {
+            return (
+                <CardGroup>
+                    <Card>
+                        <CardBody>
+                            <CardText>{entry.executing.name}</CardText>
+                        </CardBody>
+                    </Card>
+                    <Card>
+                        <CardBody>
+                            <CardText>{entry.usedSkill.name} for {entry.amount}</CardText>
+                            <CardText>{entry.outcome}</CardText>
+                        </CardBody>
+                    </Card>
+                    <Card>
+                        <CardBody>
+                            <CardText>{entry.target.name}</CardText>
+                        </CardBody>
+                    </Card>
+                </CardGroup>
+            )
+        });
+
+        rounds.push(
+            <Accordion defaultExpanded={true}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}
+                                            aria-controls="panel1a-content"
+                                            id="panel1a-header">
+                    <Typography>Round {key}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    {roundElements}
+                </AccordionDetails>
+            </Accordion>
+        );
+    }
+    rounds = rounds.reverse();
+
+    return(
+        <Container>
+            <div>BattleLog TODO</div>
+            {rounds}
+        </Container>
+    )
+}
+
+
 interface ToolbarProps extends TranslationAsProperty {
     skills: REST.BattleSkill[];
     consumables: REST.InventoryItem[];

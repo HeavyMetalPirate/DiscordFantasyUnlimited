@@ -68,8 +68,11 @@ export const UserInformation = () => {
     useEffect(() => {
         const userBattle = async() => {
             const resp = await fetch('/api/game/battle/current');
-            const data = await resp.json();
-            return data;
+            if(resp.status === 200) {
+                const data = await resp.json();
+                return data;
+            }
+            else return null;
         }
         userBattle()
             .then(data => {
@@ -78,7 +81,6 @@ export const UserInformation = () => {
                 }
                 else {
                     let battleInfo: FantasyUnlimited.REST.BattleBasicInfo = data;
-                    console.log("setting activeBattleId from " + fooState.activeBattleId)
                     setState((prevState) => ({ ...prevState, activeBattleId: battleInfo.id}));
                 }
             });
@@ -99,14 +101,10 @@ const GlobalStatePanel = ({translation}: GlobalStateProps) => {
     // and display a message with link to the right spot
 
     useEffect(() => {
-        console.log("global state");
-        console.log(state.activeBattleId);
         setActiveBattleId(state.activeBattleId);
     }, [state.activeBattleId])
 
     if(activeBattleId !== null && (location && location.pathname.startsWith('/game/battle') === false)) {
-        console.log(location)
-        console.log('Returning activeBattleId');
         return (
             <div className={"global-info-panel"}>
                 <Alert color="primary">
@@ -117,8 +115,6 @@ const GlobalStatePanel = ({translation}: GlobalStateProps) => {
             </div>
         )
     }
-    console.log('Returning nothing.');
-    console.log(activeBattleId);
     return <div/>
 }
 

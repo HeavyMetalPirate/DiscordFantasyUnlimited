@@ -33,7 +33,7 @@ export default class AppNavbar extends Component<NavbarProps, NavbarState> {
                 </NavbarBrand>
             </Navbar>
             <Menu
-                customBurgerIcon={<img src="../images/fu.png" />}
+                customBurgerIcon={<img src="/images/fu.png" />}
                 noOverlay
                 outerContainerId={"menuContainer"}
                 pageWrapId={"page-wrap"}>

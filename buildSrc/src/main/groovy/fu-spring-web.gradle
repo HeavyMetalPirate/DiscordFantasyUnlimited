@@ -4,11 +4,9 @@ plugins {
 
 dependencies {
     // Spring Data Web
-    implementation ('org.springframework.boot:spring-boot-starter-web'){
-        exclude module: 'spring-boot-starter-tomcat'
-    }
-    implementation 'org.springframework.boot:spring-boot-starter-jetty'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
     implementation 'org.springdoc:springdoc-openapi-ui:1.6.8'
 }

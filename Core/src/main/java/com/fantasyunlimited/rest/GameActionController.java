@@ -73,90 +73,7 @@ public class GameActionController {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
 
-        LocationItem location = new LocationItem(
-                battleInformation.getLocation().getId(),
-                battleInformation.getLocation().getName(),
-                battleInformation.getLocation().getIconName(),
-                battleInformation.getLocation().getBannerImage()
-        );
-
-        List<BattleSkill> toolbarSkills = new ArrayList<>();
-        selectedCharacter.getClassId().getSkillInstances().stream()
-                .map(skill -> utils.buildBattleSkill(skill, selectedCharacter))
-                .forEach(toolbarSkills::add);
-
-        int missingSkills = toolbarSkills.size() % 10;
-        if(missingSkills > 0) {
-            for(int i = 0; i < missingSkills; i++) {
-                toolbarSkills.add(new BattleSkill(
-                    "empty",
-                    "empty",
-                    "empty",
-                    "/images/emptySlotIcon.png",
-                    null,
-                    null,
-                    null,
-                    null,
-                    0,
-                    0,
-                    false,
-                    0,
-                    0,
-                    0,
-                    0
-                ));
-            }
-        }
-
-        List<InventoryItem> consumables = new ArrayList<>();
-        selectedCharacter.getInventory().entrySet().stream()
-                .map(entry -> {
-                    String itemId = entry.getKey();
-                    int itemCount = entry.getValue();
-                    Dropable item = dropableUtils.getDropableItem(itemId);
-                    if(item instanceof Consumable consumable && consumable.isDuringBattle()) {
-                        return new InventoryItem(item, "consumable", itemCount);
-                    }
-                    else {
-                        return null;
-                    }
-                })
-                .filter(Objects::nonNull)
-                .forEach(consumables::add);
-
-        BattlePlayerDetails playerDetails = new BattlePlayerDetails(
-                selectedCharacter.getId(),
-                battleService.isParticipating(selectedCharacter, battleInformation),
-                toolbarSkills,
-                consumables
-        );
-
-        List<BattleParticipantDetails> players = new ArrayList<>();
-        battleInformation.getPlayers().stream()
-                .map(player -> utils.buildBattleParticipantDetails(player))
-                .forEach(players::add);
-
-        List<BattleParticipantDetails> hostiles = new ArrayList<>();
-        battleInformation.getHostiles().stream()
-                .map(hostile -> utils.buildBattleParticipantDetails(hostile))
-                .forEach(hostiles::add);
-
-        List<BattleLogItem> battleLog = new ArrayList<>();
-        battleInformation.getActions().stream()
-                .map(action -> utils.buildBattleLogItem(action))
-                .forEach(battleLog::add);
-
-        BattleDetailInfo detailInfo = new BattleDetailInfo(
-                battleInformation.getBattleId().toString(),
-                battleService.isBattleActive(battleInformation),
-                location,
-                playerDetails,
-                players,
-                hostiles,
-                battleLog
-        );
-
-        return new ResponseEntity<>(detailInfo, HttpStatus.OK);
+        return new ResponseEntity<>(utils.buildBattleDetailInfo(battleInformation, selectedCharacter), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/character/equip", consumes = "application/json", method = RequestMethod.POST)
@@ -391,6 +308,11 @@ public class GameActionController {
             return new ResponseEntity<>(battleInfo, HttpStatus.OK);
         }
         PlayerCharacter selectedCharacter = utils.getPlayerCharacterFromSession(request);
+
+        if(selectedCharacter == null) {
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+
         BattleInformation existingBattle = battleService.findActiveBattleForPlayer(selectedCharacter);
         if(existingBattle != null) {
             BattleBasicInfo battleInfo = new BattleBasicInfo(

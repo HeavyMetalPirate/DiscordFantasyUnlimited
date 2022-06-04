@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { useTranslation } from 'react-i18next';
 import { ListGroup, ListGroupItem } from 'reactstrap';
+import {REST} from "../types/rest-entities";
+import {IMessage} from "@stomp/stompjs";
+import {useStompClient} from "../WebsocketClient";
 
 export function SearchList({filteredUsers}: FilteredUserList) {
     const filtered = filteredUsers.map(user =>  {
@@ -13,14 +16,29 @@ export function SearchList({filteredUsers}: FilteredUserList) {
     );
 }
 
-export function UserSearch({details}: UserList) {
+export function UserSearch() {
     const { t, i18n } = useTranslation();
     const [searchField, setSearchField] = useState("");
+    const client = useStompClient();
+    const [userList, setUserList] = useState<REST.ActiveUserItem[]>();
 
-    if(!details) {
+    useEffect(() => {
+        client.subscribe('/topic/users', onMessageReceived);
+        client.publish({
+            destination : '/api/websocket/actives'
+        });
+    }, [])
+
+
+    const onMessageReceived = (msg: IMessage) => {
+        let foo: REST.ActiveUserItem[] = JSON.parse(msg.body);
+        setUserList(foo);
+    }
+
+    if(!userList) {
         return <div/>
     }
-    const filteredUsers = details.filter(
+    const filteredUsers = userList.filter(
         user => {
             return (
                 user.name.toLowerCase().includes(searchField.toLowerCase())
@@ -31,12 +49,6 @@ export function UserSearch({details}: UserList) {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchField(e.target.value);
     };
-
-    function searchList() {
-        return (
-            <SearchList filteredUsers={filteredUsers} />
-        );
-    }
 
     return (
         <section>

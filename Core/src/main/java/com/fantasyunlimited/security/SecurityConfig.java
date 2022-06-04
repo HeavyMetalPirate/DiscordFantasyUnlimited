@@ -26,19 +26,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
     @Autowired
     private SessionRegistry sessionRegistry;
+    @Autowired
+    private AuthenticationSuccessHandlerImpl authenticationSuccessHandler;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-
             .csrf()
                 .ignoringAntMatchers("/api/user/register", "/login", "/perform_login")
+                .ignoringAntMatchers("/gs-guide-websocket/**", "/api/websocket/**")
             .and()
             .sessionManagement()
                 .maximumSessions(1)
                 .sessionRegistry(sessionRegistry).and()
             .and()
             .authorizeRequests()
+                .antMatchers("/gs-guide-websocket/**", "/api/websocket/**").permitAll()
                 .antMatchers("/", "/content/**").permitAll()
                 .antMatchers("/api/content/**").permitAll()
                 .antMatchers("/register").permitAll()
@@ -52,6 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login")
                 .failureUrl("/login?error")
                 .defaultSuccessUrl("/game", true)
+                .successHandler(authenticationSuccessHandler)
                 .permitAll()
             .and()
                 .logout()
