@@ -520,7 +520,7 @@ const CharacterStatsBlock = ({stats, secondarySkills, combatSkills, t} :Characte
     )
 }
 
-const ItemDetailView = ({translation, item, visible, x, y}: ItemDetailViewProperties) => {
+export const ItemDetailView = ({translation, item, visible, x, y}: ItemDetailViewProperties) => {
     const t = translation;
     const [selectedItem, setSelectedItem] = useState<DropableItem | null>(null);
     const state = useTrackedState();
@@ -531,6 +531,10 @@ const ItemDetailView = ({translation, item, visible, x, y}: ItemDetailViewProper
         }
         setSelectedItem(item.item);
     }, [item]);
+
+    if(item === null || item === undefined || item.item.id === 'empty') {
+        return null;
+    }
 
     function getGearBonuses() {
         let attributeBonus: JSX.Element[] = [];

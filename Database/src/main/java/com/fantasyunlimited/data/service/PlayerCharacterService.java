@@ -1,16 +1,21 @@
 package com.fantasyunlimited.data.service;
 
+import com.fantasyunlimited.data.converter.PlayerCharacterConverter;
 import com.fantasyunlimited.data.dao.PlayerCharacterRepository;
 import com.fantasyunlimited.data.entity.PlayerCharacter;
-import com.fantasyunlimited.data.enums.EquipmentSlot;
 import com.fantasyunlimited.items.bags.ConsumablesBag;
 import com.fantasyunlimited.items.entity.*;
 import com.fantasyunlimited.items.util.DropableUtils;
+import com.fantasyunlimited.rest.dto.EquipmentSlot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.PostConstruct;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class PlayerCharacterService {
@@ -21,6 +26,71 @@ public class PlayerCharacterService {
     private ConsumablesBag consumablesBag;
     @Autowired
     private DropableUtils dropableUtils;
+
+    private Map<Integer, Long> experienceTable;
+
+    @PostConstruct
+    public void initializeExperienceTable() {
+        experienceTable = new HashMap<>();
+        for (int i = 1; i < 100; i++) {
+            double log = (Math.log(i) / Math.log(2));
+            long experience = (long) Math.floor(Math.pow(i, 2) * 100 * log);
+            experienceTable.put(i, experience);
+        }
+    }
+
+    @Transactional
+    public boolean addExperience(Long id, int experience) {
+        return addExperience(repository.findById(id).get(), experience);
+    }
+    @Transactional
+    public boolean addExperience(PlayerCharacter selectedCharacter, int experience) {
+        if(selectedCharacter == null) return false;
+
+        PlayerCharacter character = repository.findById(selectedCharacter.getId()).get();
+
+        character.setCurrentXp(character.getCurrentXp() + experience);
+        int oldLevel = character.getCurrentLevel();
+
+        if (character.getCurrentXp() >= getExperienceForNextLevel(oldLevel)
+                && oldLevel < 100) {
+            character.setCurrentLevel(oldLevel + 1);
+            character.getAttributes().raiseUnspent(5);
+
+            character.getAttributes().raiseEndurance(character.getClassId().getAttributes().getEnduranceGrowth());
+            character.getAttributes().raiseStrength(character.getClassId().getAttributes().getStrengthGrowth());
+            character.getAttributes().raiseDexterity(character.getClassId().getAttributes().getDexterityGrowth());
+            character.getAttributes().raiseWisdom(character.getClassId().getAttributes().getWisdomGrowth());
+            character.getAttributes().raiseIntelligence(character.getClassId().getAttributes().getIntelligenceGrowth());
+            character.getAttributes().raiseDefense(character.getClassId().getAttributes().getDefenseGrowth());
+            character.getAttributes().raiseLuck(character.getClassId().getAttributes().getLuckGrowth());
+
+            character.setCurrentHealth(character.getMaxHealth());
+        }
+
+        character = repository.save(character);
+
+        return oldLevel != character.getCurrentLevel();
+    }
+
+    private Long getExperienceForNextLevel(int currentLevel) {
+        if (currentLevel == 100) {
+            return 0L;
+        }
+        int nextLevel = currentLevel + 1;
+        return experienceTable.get(nextLevel);
+    }
+
+    @Transactional(readOnly = true)
+    public PlayerCharacter findCharacter(Long id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    public PlayerCharacter addGold(Long characterId, int gold) {
+        PlayerCharacter character = repository.findById(characterId).get();
+        character.addGold(gold);
+        return repository.save(character);
+    }
 
     @Transactional
     public PlayerCharacter updateHealthAndAtk(long characterId, int newHealth, int newAtk) {
@@ -306,6 +376,28 @@ public class PlayerCharacterService {
         // Remove item from inventory
         character = removeItemFromInventory(character, itemId, count, "Dropping");
 
+        return repository.save(character);
+    }
+
+    @Transactional
+    public PlayerCharacter addItemToInventory(Long id, Dropable item, int count) {
+        return addItemToInventory(repository.findById(id).get(), item, count);
+    }
+
+    @Transactional
+    public PlayerCharacter addItemToInventory(PlayerCharacter selectedCharacter, Dropable item, int count) {
+        if(selectedCharacter == null) return null;
+
+        // read into transaction
+        PlayerCharacter character = repository.findById(selectedCharacter.getId()).get();
+
+        if(character.getInventory().containsKey(item.getId())) {
+            int currentCount = character.getInventory().get(item.getId());
+            character.getInventory().put(item.getId(), currentCount + count);
+        }
+        else {
+            character.getInventory().put(item.getId(), count);
+        }
         return repository.save(character);
     }
 

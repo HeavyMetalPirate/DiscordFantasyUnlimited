@@ -12,4 +12,5 @@ include 'ItemHandling'
 include 'Battles'
 include 'GUI'
 include 'Library'
+include 'Utils'
 

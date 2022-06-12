@@ -34,7 +34,7 @@ export type InventoryType = {
 }
 
 export type InventoryItem = {
-    type: 'weapon' | 'equipment' | 'consumable';
+    type: 'weapon' | 'equipment' | 'consumable' | 'empty';
     count: number;
     item: DropableItem;
 }

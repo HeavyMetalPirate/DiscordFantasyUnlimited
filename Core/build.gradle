@@ -8,6 +8,7 @@ dependencies {
     implementation project(":ItemHandling")
     implementation project(":Battles")
     implementation project(":Library")
+    implementation project(":Utils")
 }
 
 task cleanPublicFolder(type: Delete) {

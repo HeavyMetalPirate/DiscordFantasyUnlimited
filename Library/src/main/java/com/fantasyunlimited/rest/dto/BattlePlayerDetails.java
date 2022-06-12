@@ -6,5 +6,5 @@ public record BattlePlayerDetails(
         long id,
         boolean participation,
         List<BattleSkill> toolbarSkills,
-        List<InventoryItem> consumables
+        List<ToolbarConsumableItem> consumables
 ) {}

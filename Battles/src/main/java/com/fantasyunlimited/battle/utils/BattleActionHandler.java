@@ -2,11 +2,11 @@ package com.fantasyunlimited.battle.utils;
 
 import com.fantasyunlimited.battle.entity.BattleAction;
 import com.fantasyunlimited.battle.entity.BattleParticipant;
+import com.fantasyunlimited.battle.entity.BattlePlayer;
 import com.fantasyunlimited.battle.entity.BattleStatus;
-import com.fantasyunlimited.items.entity.CharacterClass;
-import com.fantasyunlimited.items.entity.Skill;
-import com.fantasyunlimited.items.entity.SkillRank;
-import com.fantasyunlimited.items.entity.Weapon;
+import com.fantasyunlimited.data.entity.PlayerCharacter;
+import com.fantasyunlimited.data.service.PlayerCharacterService;
+import com.fantasyunlimited.items.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +17,8 @@ public class BattleActionHandler {
 
     @Autowired
     private BattleStatsUtils statsUtils;
+    @Autowired
+    private PlayerCharacterService playerCharacterService;
 
     /*
      *public static final Integer DODGED = -2 ^ 22;
@@ -53,6 +55,80 @@ public class BattleActionHandler {
             action.setIncapacitated(true);
             return action;
         }
+
+        if(action.getUsedSkill() != null) {
+            return handleSkillAction(action);
+        }
+        return handleConsumableAction(action);
+    }
+
+    private BattleAction handleConsumableAction(BattleAction action) {
+        Consumable usedConsumable = action.getUsedConsumable();
+
+        if(action.getExecuting() instanceof BattlePlayer == false) {
+            return action;
+        }
+
+        BattlePlayer executing = (BattlePlayer) action.getExecuting();
+        PlayerCharacter character = playerCharacterService.findCharacter(executing.getCharacterId());
+
+        // check inventory
+        if(character.getInventory().containsKey(usedConsumable.getId()) == false ||
+                character.getInventory().get(usedConsumable.getId()) == 0) {
+            return action;
+        }
+
+        // Execute health changes
+        executing.setCurrentHealth(executing.getCurrentHealth() + usedConsumable.getHealthRestored());
+        if(executing.getCurrentHealth() > executing.getMaxHealth()) {
+            executing.setCurrentHealth(executing.getMaxHealth());
+        }
+
+        // Only perform atkResource Changes if for the right type, else potion just gets wasted /shrug
+        if(usedConsumable.getResourceType() == executing.getCharClassId().getEnergyType()) {
+            executing.setCurrentAtkResource(executing.getCurrentAtkResource() + usedConsumable.getAtkResourceRestored());
+            if (executing.getCurrentAtkResource() > executing.getMaxAtkResource()) {
+                executing.setCurrentAtkResource(executing.getMaxAtkResource());
+            }
+        }
+
+        // Add status effects
+        usedConsumable.getAttributeModifiers().stream()
+                .forEach(modifier -> {
+                    BattleStatus status = buildBattleStatus(modifier);
+                    status.setModifiedAttribute(modifier.getAttribute());
+                    status.setRoundsRemaining(usedConsumable.getDurationRounds());
+                    executing.getStatusModifiers().add(status);
+                });
+        usedConsumable.getCombatSkillModifiers().stream()
+                .forEach(modifier -> {
+                    BattleStatus status = buildBattleStatus(modifier);
+                    status.setModifiedSkill(modifier.getSkill());
+                    status.setRoundsRemaining(usedConsumable.getDurationRounds());
+                    executing.getStatusModifiers().add(status);
+                });
+
+        // Drop the item after usage
+        playerCharacterService.dropItems(character, usedConsumable.getId(),1);
+        return action;
+    }
+
+    private BattleStatus buildBattleStatus(AbstractStatus modifier) {
+        BattleStatus status = new BattleStatus();
+        status.setStatusName(modifier.getStatusName());
+        status.setStatusIcon(modifier.getStatusIcon());
+
+        if(modifier.getBonus() >= 0) {
+            status.setModifierType(BattleStatus.ModifierType.RAISE);
+        }
+        else {
+            status.setModifierType(BattleStatus.ModifierType.LOWER);
+        }
+        status.setAmountModifier(Math.abs(modifier.getBonus()));
+        return status;
+    }
+
+    private BattleAction handleSkillAction(BattleAction action) {
         Skill usedSkill = action.getUsedSkill();
         // plus one to get to the actual max
         SkillRank rank = getSkillRank(usedSkill, action.getExecuting());
@@ -85,8 +161,6 @@ public class BattleActionHandler {
 
         action.setActionAmount(actionAmount);
 
-        // below needs to be done once we decided which type of attack (single/area) it
-        // is
         // TODO stats multiplier
         // TODO def reducer
         // TODO level multiplier
@@ -112,7 +186,7 @@ public class BattleActionHandler {
     }
 
     private void performAtkUsageAndRegen(int totalcost, BattleAction action) {
-        if (action.getExecuting().getCharClassId().getEnergyType() == CharacterClass.EnergyType.RAGE) {
+        if (action.getExecuting().getCharClassId().getEnergyType() == EnergyType.RAGE) {
             action.getExecuting().consumeAtkResource(totalcost);
             if (action.isDodged() || action.isParried() || action.isBlocked()) {
                 // no rage gain for attacks evaded

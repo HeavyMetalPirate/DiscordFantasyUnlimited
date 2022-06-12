@@ -24,12 +24,14 @@ import {useTrackedState} from "../SessionStore";
 import {
     Accordion,
     AccordionDetails,
-    AccordionSummary,
+    AccordionSummary, Avatar, ImageList, ImageListItem, ImageListItemBar,
     Typography
 } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {useStompClient} from "../WebsocketClient";
 import {IMessage} from "@stomp/stompjs";
+import {ItemDetailView} from "./ItemManagement";
+import {DropableItem, InventoryItem} from "./utils/ItemTypes";
 
 interface BattlePanelProperties extends TranslationAsProperty {
 
@@ -83,7 +85,8 @@ export const BattleMainPanel = ({translation}: BattlePanelProperties) => {
                 battleLog: battleUpdate.battleInfo.battleLog,
                 hostiles: battleUpdate.battleInfo.hostiles,
                 players: battleUpdate.battleInfo.players,
-                active: battleUpdate.battleInfo.active
+                active: battleUpdate.battleInfo.active,
+                summary: battleUpdate.battleInfo.summary
             });
         }
     }
@@ -216,7 +219,6 @@ export const BattleMainPanel = ({translation}: BattlePanelProperties) => {
 
     function performAction() {
         const addBattleAction = async() => {
-            // TODO Build RequestOptions
             const playerCharacter = battleInfo?.players.find(player => player.details.id === battleInfo?.playerDetails.id)
 
             let actionType: REST.BattleActionType;
@@ -231,12 +233,17 @@ export const BattleMainPanel = ({translation}: BattlePanelProperties) => {
                 actionType = 'PASS';
             }
 
+            let consumableId: string = "";
+            if(consumable !== undefined && consumable?.item !== undefined) {
+                consumableId = consumable.item.id;
+            }
+
             const requestBody: REST.BattleParticipantAction = {
                 actionType: actionType,
                 executing: playerCharacter!,
                 target: target!,
                 usedSkill: skill!,
-                usedConsumable: consumable!
+                usedConsumable: consumableId
             };
             const requestOptions = {
                 method: 'POST',
@@ -301,7 +308,27 @@ export const BattleMainPanel = ({translation}: BattlePanelProperties) => {
                     style={{width: "80%", marginTop: "1em"}}>
                 {startButtonText}
             </Button>
+            <BattleResult result={battleInfo.summary} translation={t} />
             <BattleLog battleLog={battleInfo.battleLog} translation={t} />
+        </Container>
+    )
+}
+
+interface BattleResultProps extends TranslationAsProperty {
+    result: REST.BattleResultSummary;
+}
+
+const BattleResult: React.FC<BattleResultProps> = (props) => {
+    const t =  props.translation;
+    const result = props.result;
+
+    return (
+        <Container>
+            <div>BattleResult TODO</div>
+            <div>{result.winningSide}</div>
+            <div>{result.lootSummaryList.map(loot => {
+                return <div>{loot.experience}</div>;
+            })}</div>
         </Container>
     )
 }
@@ -325,26 +352,48 @@ const BattleLog: React.FC<BattleLogProps> = (props) => {
         roundElements = roundBattleLog
             .sort((e1,e2) => e1.ordinal > e2.ordinal ? 1 : -1)
             .map(entry => {
-            return (
-                <CardGroup>
-                    <Card>
-                        <CardBody>
-                            <CardText>{entry.executing.name}</CardText>
-                        </CardBody>
-                    </Card>
-                    <Card>
-                        <CardBody>
-                            <CardText>{entry.usedSkill.name} for {entry.amount}</CardText>
-                            <CardText>{entry.outcome}</CardText>
-                        </CardBody>
-                    </Card>
-                    <Card>
-                        <CardBody>
-                            <CardText>{entry.target.name}</CardText>
-                        </CardBody>
-                    </Card>
-                </CardGroup>
-            )
+                if(entry.usedSkill !== null) {
+                    return (
+                        <CardGroup>
+                            <Card>
+                                <CardBody>
+                                    <CardText>{entry.executing.name}</CardText>
+                                </CardBody>
+                            </Card>
+                            <Card>
+                                <CardBody>
+                                    <CardText>{entry.usedSkill.name} for {entry.amount}</CardText>
+                                    <CardText>{entry.outcome}</CardText>
+                                </CardBody>
+                            </Card>
+                            <Card>
+                                <CardBody>
+                                    <CardText>{entry.target.name}</CardText>
+                                </CardBody>
+                            </Card>
+                        </CardGroup>
+                    )
+                }
+                return (
+                    <CardGroup>
+                        <Card>
+                            <CardBody>
+                                <CardText>{entry.executing.name}</CardText>
+                            </CardBody>
+                        </Card>
+                        <Card>
+                            <CardBody>
+                                <CardText>Used {entry.usedConsumable.name}</CardText>
+                                <CardText>{entry.outcome}</CardText>
+                            </CardBody>
+                        </Card>
+                        <Card>
+                            <CardBody>
+                                <CardText>-</CardText>
+                            </CardBody>
+                        </Card>
+                    </CardGroup>
+                )
         });
 
         rounds.push(
@@ -373,7 +422,7 @@ const BattleLog: React.FC<BattleLogProps> = (props) => {
 
 interface ToolbarProps extends TranslationAsProperty {
     skills: REST.BattleSkill[];
-    consumables: REST.InventoryItem[];
+    consumables: REST.ToolbarConsumableItem[];
     participation: boolean;
     onActionSelect(event: React.MouseEvent, action: REST.BattleSkill | REST.InventoryItem): void;
 }
@@ -381,9 +430,9 @@ interface ToolbarProps extends TranslationAsProperty {
 const Toolbar = ({skills, consumables, participation, translation, onActionSelect}: ToolbarProps) => {
     const t = translation;
     const [selectedSkill, setSelectedSkill] = useState<REST.BattleSkill>();
-    const [selectedConsumable, setSelectedConsumable] = useState<REST.InventoryItem>();
+    const [selectedConsumable, setSelectedConsumable] = useState<InventoryItem>();
     const [hoveredSkill, setHoveredSkill] = useState<REST.BattleSkill>();
-    const [hoveredConsumable, setHoveredConsumable] = useState<REST.InventoryItem>();
+    const [hoveredConsumable, setHoveredConsumable] = useState<InventoryItem | null>(null);
     const [x, setX] = useState(0);
     const [y, setY] = useState(0);
 
@@ -403,7 +452,7 @@ const Toolbar = ({skills, consumables, participation, translation, onActionSelec
         onActionSelect(event, skill);
     }
 
-    function selectConsumable(event: React.MouseEvent, consumable: REST.InventoryItem) {
+    function selectConsumable(event: React.MouseEvent, consumable: InventoryItem) {
         setSelectedSkill(undefined);
         if(consumable.type === 'empty') {
             setSelectedConsumable(undefined);
@@ -419,7 +468,7 @@ const Toolbar = ({skills, consumables, participation, translation, onActionSelec
         setX(event.clientX);
         setY(event.clientY);
     }
-    function showConsumableTooltip(event: React.MouseEvent, consumable: REST.InventoryItem) {
+    function showConsumableTooltip(event: React.MouseEvent, consumable: InventoryItem) {
         event.preventDefault();
         setHoveredConsumable(consumable);
         setX(event.clientX);
@@ -428,7 +477,7 @@ const Toolbar = ({skills, consumables, participation, translation, onActionSelec
     function hideTooltip(event: React.MouseEvent) {
         event.preventDefault();
         setHoveredSkill(undefined);
-        setHoveredConsumable(undefined);
+        setHoveredConsumable(null);
     }
 
     let skillCards : JSX.Element[] = skills.map(skill => {
@@ -453,7 +502,17 @@ const Toolbar = ({skills, consumables, participation, translation, onActionSelec
             </Card>
         )
     });
-    let consumablesCards : JSX.Element[] = consumables.map(consumable => {
+
+    let consumableItems: InventoryItem[] = consumables.map(consumable => {
+        let item: InventoryItem = {
+            type: 'consumable',
+            count: consumable.count,
+            item: consumable.consumable
+        }
+        return item;
+    });
+
+    let consumablesCards : JSX.Element[] = consumableItems.map(consumable => {
         let className = consumable.item.id === selectedConsumable?.item.id
                             ? "toolbar-consumable-card select"
                             : "toolbar-consumable-card";
@@ -477,6 +536,7 @@ const Toolbar = ({skills, consumables, participation, translation, onActionSelec
             <div className={"toolbar-skills-container"}>{skillCards}</div>
             <div className={"toolbar-consumables-container"}>{consumablesCards}</div>
             <SkillDetailView skill={hoveredSkill} x={x} y={y} translation={t} />
+            <ItemDetailView item={hoveredConsumable} visible={'visible'} x={x} y={y} translation={t} />
         </Container>
     )
 }
@@ -570,6 +630,19 @@ interface ParticipantCard extends TranslationAsProperty {
 }
 const PlayerCard = ({translation, participant, className, onTargetSelect}: ParticipantCard) => {
     const t = translation;
+
+    console.log("Status:" , participant.statusEffects);
+
+    let statusPanel: JSX.Element[] = participant.statusEffects.map(status => {
+        return (
+            <ImageListItem className={"status-icon status-type-" + status.statusType.toLowerCase()}
+                           key={status.name}>
+                <img src={status.iconName} alt={status.name} />
+                <div className="player-status-rounds">{status.roundsRemaining}</div>
+            </ImageListItem>
+        )
+    });
+
     return (
         <div onClick={(e) => onTargetSelect(e, participant)}>
             <Card className={className ? "player-card " + className : "player-card"}>
@@ -584,6 +657,9 @@ const PlayerCard = ({translation, participant, className, onTargetSelect}: Parti
                         <span className="card-header-text">{participant.details.name}</span>
                         <span className="card-header-text">{t('battle.stats.level', {ns:'battle'})}:{participant.details.level}</span>
                     </div>
+                    <ImageList className="player-status-icons" >
+                        {statusPanel}
+                    </ImageList>
                 </CardHeader>
                 <CardBody>
                     <HealthBar id={participant.id} details={participant.details} statusEffects={participant.statusEffects} />
@@ -595,6 +671,17 @@ const PlayerCard = ({translation, participant, className, onTargetSelect}: Parti
 }
 const HostileCard = ({translation, participant, className, onTargetSelect}: ParticipantCard) => {
     const t = translation;
+
+    let statusPanel: JSX.Element[] = participant.statusEffects.map(status => {
+        return (
+            <ImageListItem className={"status-icon status-type-" + status.statusType.toLowerCase()}
+                           key={status.name}>
+                <img src={status.iconName} alt={status.name} />
+                <div className="hostile-status-rounds">{status.roundsRemaining}</div>
+            </ImageListItem>
+        )
+    });
+
     return (
         <div onClick={(e) => onTargetSelect(e, participant)}>
             <Card className={className ? "hostile-card " + className : "hostile-card"}>
@@ -609,6 +696,10 @@ const HostileCard = ({translation, participant, className, onTargetSelect}: Part
                         <span className="card-header-text">{participant.details.name}</span>
                         <span className="card-header-text">{t('battle.stats.level', {ns:'battle'})}:{participant.details.level}</span>
                     </div>
+
+                    <ImageList className="hostile-status-icons" >
+                        {statusPanel}
+                    </ImageList>
                 </CardHeader>
                 <CardBody>
                     <HealthBar id={participant.id} details={participant.details} statusEffects={participant.statusEffects} />

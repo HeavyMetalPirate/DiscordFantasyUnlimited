@@ -11,6 +11,8 @@
   <combatSkillModifiers />
   <attributeModifiers>
     <AttributeBonus>
+      <statusName>It's bigger</statusName>
+      <statusIcon>/images/items/memberEnlargingPotion.png</statusIcon>
       <attribute>ENDURANCE</attribute>
       <bonus>5</bonus>
     </AttributeBonus>

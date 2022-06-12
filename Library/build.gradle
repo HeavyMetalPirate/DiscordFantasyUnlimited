@@ -14,9 +14,11 @@ plugins {
 apply plugin: 'cz.habarta.typescript-generator'
 
 dependencies {
-    implementation project(':ItemHandling')
-    implementation project(':Database')
     implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    implementation 'com.thoughtworks.xstream:xstream:1.4.19'
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.3'
 }
 
 generateTypeScript {

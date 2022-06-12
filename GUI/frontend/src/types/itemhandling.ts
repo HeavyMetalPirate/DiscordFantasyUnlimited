@@ -1,17 +1,22 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.36.1070 on 2022-06-03 17:35:37.
+// Generated using typescript-generator version 2.36.1070 on 2022-06-11 16:00:55.
 
 export namespace Items {
+
+    export interface AbstractStatus {
+        statusName: string;
+        statusIcon: string;
+        bonus: number;
+    }
 
     export interface AttackResourceBonus extends Serializable {
         bonus: number;
         skill: EnergyType;
     }
 
-    export interface AttributeBonus extends Serializable {
+    export interface AttributeBonus extends AbstractStatus, Serializable {
         attribute: Attribute;
-        bonus: number;
     }
 
     export interface Attributes extends Serializable {
@@ -68,9 +73,8 @@ export namespace Items {
         modifier: number;
     }
 
-    export interface CombatSkillBonus extends Serializable {
+    export interface CombatSkillBonus extends AbstractStatus, Serializable {
         skill: CombatSkill;
-        bonus: number;
     }
 
     export interface Consumable extends RarityClassifiedItem {
@@ -176,7 +180,6 @@ export namespace Items {
         startingLocationId: string;
         humanPlayable: boolean;
         bonuses: RacialBonus[];
-        startingLocation: Location;
     }
 
     export interface RacialBonus extends GenericItem {
@@ -246,13 +249,13 @@ export namespace Items {
 
     export type CombatSkill = "DODGE" | "CRITICAL" | "BLOCK" | "PARRY" | "SPELLPOWER" | "HEALPOWER";
 
+    export type EnergyType = "RAGE" | "FOCUS" | "MANA";
+
     export type EquipmentType = "HELMET" | "CHEST" | "GLOVES" | "PANTS" | "BOOTS" | "RING" | "NECK";
 
     export type ItemRarity = "COMMON" | "UNCOMMON" | "RARE" | "EPIC" | "LEGENDARY" | "ARTIFACT";
 
     export type SecondarySkill = "WOODCUTTING" | "FISHING" | "MINING" | "ALCHEMY" | "ENCHANTING";
-
-    export type EnergyType = "RAGE" | "FOCUS" | "MANA";
 
     export type Attribute = "STRENGTH" | "ENDURANCE" | "DEXTERITY" | "WISDOM" | "INTELLIGENCE" | "DEFENSE" | "LUCK" | "ALL";
 

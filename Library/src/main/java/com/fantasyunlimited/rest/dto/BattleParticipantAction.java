@@ -5,5 +5,5 @@ public record BattleParticipantAction(
         BattleParticipantDetails executing,
         BattleParticipantDetails target,
         BattleSkill usedSkill,
-        InventoryItem usedConsumable
+        String usedConsumable
 ) {}

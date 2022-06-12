@@ -18,6 +18,7 @@
             <option value="$PROJECT_DIR$/GUI" />
             <option value="$PROJECT_DIR$/ItemHandling" />
             <option value="$PROJECT_DIR$/Library" />
+            <option value="$PROJECT_DIR$/Utils" />
             <option value="$PROJECT_DIR$/buildSrc" />
           </set>
         </option>

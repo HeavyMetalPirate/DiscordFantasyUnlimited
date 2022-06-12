@@ -4,22 +4,14 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import javax.persistence.*;
 
 import com.fantasyunlimited.data.converter.CharacterClassConverter;
 import com.fantasyunlimited.data.converter.LocationConverter;
 import com.fantasyunlimited.data.converter.RaceConverter;
-import com.fantasyunlimited.items.bags.ClassBag;
-import com.fantasyunlimited.items.bags.EquipmentBag;
-import com.fantasyunlimited.items.bags.RaceBag;
-import com.fantasyunlimited.items.bags.WeaponBag;
 import com.fantasyunlimited.items.entity.*;
 import com.fantasyunlimited.items.entity.Attributes.Attribute;
-import com.fantasyunlimited.items.entity.CharacterClass.EnergyType;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class PlayerCharacter implements Serializable {
@@ -180,7 +172,7 @@ public class PlayerCharacter implements Serializable {
 		this.gold -= amount;
 	}
 
-	public int getSecondarySkill(SecondarySkill skill, WeaponBag weaponBag, EquipmentBag equipmentBag, RaceBag raceBag) {
+	public int getSecondarySkill(SecondarySkill skill) {
 		AtomicInteger skillBonus = new AtomicInteger(0);
 
 		equipment.getGear().stream()

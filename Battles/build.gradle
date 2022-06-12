@@ -7,6 +7,8 @@ dependencies {
     api project(':Database')
     api project(':ItemHandling')
     api project(':Library')
+    implementation project(":Utils")
+
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
 }
 

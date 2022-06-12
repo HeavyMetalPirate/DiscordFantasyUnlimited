@@ -9,5 +9,6 @@ public record BattleDetailInfo(
         BattlePlayerDetails playerDetails,
         List<BattleParticipantDetails> players,
         List<BattleParticipantDetails> hostiles,
-        BattleLog battleLog
+        BattleLog battleLog,
+        BattleResultSummary summary
 ) {}

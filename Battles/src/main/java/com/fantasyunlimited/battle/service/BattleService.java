@@ -2,28 +2,25 @@ package com.fantasyunlimited.battle.service;
 
 import com.fantasyunlimited.battle.entity.*;
 import com.fantasyunlimited.battle.utils.BattleActionHandler;
-import com.fantasyunlimited.battle.utils.BattleDTOUtils;
-import com.fantasyunlimited.battle.utils.BattleUtils;
 import com.fantasyunlimited.data.entity.PlayerCharacter;
+import com.fantasyunlimited.data.service.PlayerCharacterService;
 import com.fantasyunlimited.items.bags.LocationBag;
-import com.fantasyunlimited.items.entity.Location;
-import com.fantasyunlimited.items.entity.Skill;
-import com.fantasyunlimited.items.entity.SkillRank;
-import com.fantasyunlimited.rest.dto.BattleDetailInfo;
+import com.fantasyunlimited.items.entity.*;
+import com.fantasyunlimited.items.util.DropableUtils;
+import com.fantasyunlimited.rest.dto.BattleSide;
 import com.fantasyunlimited.rest.dto.BattleUpdate;
+import com.fantasyunlimited.utils.service.BattleUtils;
+import com.fantasyunlimited.utils.service.DTOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.util.Pair;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
@@ -35,13 +32,18 @@ public class BattleService {
     @Autowired
     private BattleUtils battleUtils;
     @Autowired
-    private BattleDTOUtils utils;
+    @Qualifier("dtoUtils")
+    private DTOUtils utils;
     @Autowired
     private BattleActionHandler actionHandler;
     @Autowired
     private SimpMessagingTemplate template;
     @Autowired
     private LocationBag locationBag;
+    @Autowired
+    private DropableUtils dropableUtils;
+    @Autowired
+    private PlayerCharacterService characterService;
 
 
     private Random randomGenerator = new Random();
@@ -66,20 +68,34 @@ public class BattleService {
         return battle;
     }
 
-    public BattleInformation addBattleAction(BattleInformation battleInfo, BattleParticipant executing, BattleParticipant target, Skill usedSkill){
+    public BattleInformation addBattleAction(BattleInformation battleInfo, BattleParticipant executing, Consumable usedConsumable) {
+        BattleAction action = buildBaseAction(battleInfo);
+
+        action.setExecuting(executing);
+        action.setUsedConsumable(usedConsumable);
+
+        return crudService.saveBattle(battleInfo);
+    }
+
+    public BattleInformation addBattleAction(BattleInformation battleInfo, BattleParticipant executing, BattleParticipant target, Skill usedSkill) {
+        BattleAction action = buildBaseAction(battleInfo);
+
+        action.setExecuting(executing);
+        action.setTarget(target);
+        action.setUsedSkill(usedSkill);
+
+        return crudService.saveBattle(battleInfo);
+    }
+
+    private BattleAction buildBaseAction(BattleInformation battleInfo) {
         BattleAction action = new BattleAction();
         action.setBattle(battleInfo);
         action.setBattleId(battleInfo.getBattleId().toString());
         action.setSequence(battleInfo.getNextActionSequence());
         action.setExecuted(false);
         action.setRound(battleInfo.getCurrentRound());
-
-        action.setExecuting(executing);
-        action.setTarget(target);
-        action.setUsedSkill(usedSkill);
-
         battleInfo.getActions().add(action);
-        return crudService.saveBattle(battleInfo);
+        return action;
     }
 
     public BattleInformation initializeBattle(List<PlayerCharacter> players, String locationId) {
@@ -202,7 +218,147 @@ public class BattleService {
         battleInfo.setCurrentRound(battleInfo.getCurrentRound() + 1);
         battleInfo.setActive(battleUtils.isBattleActive(battleInfo));
 
-        return Pair.of(true,crudService.saveBattle(battleInfo));
+        BattleInformation toStore = handleBattleFinalized(battleInfo);
+        return Pair.of(true,crudService.saveBattle(toStore));
+    }
+
+    private BattleInformation handleBattleFinalized(BattleInformation battleInfo) {
+        if(battleInfo.isActive()) return battleInfo; // Not yet finalized
+        if(battleInfo.getResult() != null) return battleInfo; // Already calculated
+
+        BattleResult result = new BattleResult();
+        result.setBattleInformation(battleInfo);
+        result.setLootList(new ArrayList<>());
+
+        if(battleInfo.getPlayers().stream().allMatch(player -> player.isDefeated())) {
+            result.setWinningSide(BattleSide.RIGHT);
+        }
+        else {
+            result.setWinningSide(BattleSide.LEFT);
+        }
+
+        Map<Dropable, Integer> loot = new HashMap<>();
+
+        AtomicInteger xppool = new AtomicInteger(0);
+        AtomicInteger goldpool = new AtomicInteger(0);
+        AtomicInteger averagelevel = new AtomicInteger(0);
+
+        battleInfo.getHostiles().stream()
+                .forEach(npc -> {
+                    double level = npc.getLevel();
+                    xppool.getAndAdd((int) Math.ceil(Math.log10(level) * level + (10 + level)
+                            + ThreadLocalRandom.current().nextDouble(level * 2 / 3)));
+                    averagelevel.getAndAdd(npc.getLevel());
+
+                    if(npc.getBase().getMaximumGold() != 0) {
+                        int gold = ThreadLocalRandom.current().nextInt(npc.getBase().getMinimumGold(), npc.getBase().getMaximumGold());
+                        goldpool.getAndAdd(gold);
+                    }
+
+                    Map<String, Double> lootTable = npc.getBase().getLoottable();
+                    lootTable.keySet().stream()
+                            .filter(id -> {
+                                float chance = ThreadLocalRandom.current().nextFloat() * 100;
+                                return lootTable.get(id) < chance;
+                            })
+                            .map(id -> dropableUtils.getDropableItem(id))
+                            .filter(Objects::nonNull)
+                            .forEach(item -> {
+                                if (loot.containsKey(item)) {
+                                    loot.put(item, loot.get(item) + 1);
+                                } else {
+                                    loot.put(item, 1);
+                                }
+                            });
+                });
+        averagelevel.set(Math.floorDiv(averagelevel.get(), battleInfo.getHostiles().size()));
+        log.trace("Average level: " + averagelevel);
+        log.trace("XP pool: " + xppool);
+
+        Map<Long, List<Dropable>> lootDistribution = new HashMap<>();
+        if (battleInfo.getPlayers().size() == 1) {
+            long playerId = battleInfo.getPlayers().stream()
+                    .findFirst()
+                    .get()
+                    .getCharacterId();
+            lootDistribution.put(playerId, new ArrayList<>());
+            // player gets everything
+            loot.keySet().stream()
+                    .forEach(dropable -> lootDistribution.get(playerId).add(dropable));
+
+        } else {
+            battleInfo.getPlayers().forEach(player -> lootDistribution.put(player.getCharacterId(), new ArrayList<>()));
+            // roll for every item, highest bidder wins
+            loot.keySet().stream()
+                    .forEach(dropable -> {
+                        int highestRoll = 0;
+                        BattlePlayer highestRoller = null;
+                        log.trace("Rolling for Item {}.", dropable);
+                        for(BattlePlayer player: battleInfo.getPlayers()) {
+                            int roll = ThreadLocalRandom.current().nextInt(1,100);
+                            log.trace("{} rolled: {}", player, roll);
+                            if (roll > highestRoll) {
+                                highestRoll = roll;
+                                highestRoller = player;
+                            }
+                        }
+                        log.trace("Awarding {} with roll {} the item {}.", highestRoller, highestRoll, dropable);
+                        lootDistribution.get(highestRoller.getCharacterId()).add(dropable);
+                    });
+        }
+
+        battleInfo.getPlayers().stream()
+                .forEach(player -> {
+                    BattleLoot battleLoot = new BattleLoot();
+                    battleLoot.setPlayer(player.getPlayerCharacter());
+                    battleLoot.setItems(new HashMap<>());
+
+                    int yield = Math.floorDiv(xppool.get(), battleInfo.getPlayers().size());
+                    log.trace("XP for player " + player.getName() + " before level bonus: " + yield);
+                    int level = player.getLevel();
+                    double multiplier = Math.sqrt(Math.abs(level - averagelevel.get()));
+                    if (multiplier == 0) {
+                        multiplier = 1;
+                    }
+                    if (level > averagelevel.get()) {
+                        multiplier = 1 / multiplier;
+                        if (level > averagelevel.get() + 10) {
+                            multiplier = 0;
+                        }
+                    }
+                    yield = (int) Math.ceil(yield * multiplier);
+                    log.trace("Character level: " + player.getLevel());
+                    log.trace("XP for player " + player.getName() + " after level bonus: " + yield);
+                    boolean levelUp = characterService.addExperience(player.getCharacterId(), yield);
+                    battleLoot.setLevelUp(levelUp);
+                    battleLoot.setExperienceAwarded(yield);
+
+                    yield = Math.floorDiv(goldpool.get(), battleInfo.getPlayers().size());
+                    characterService.addGold(player.getCharacterId(), yield);
+                    battleLoot.setGoldAwarded(yield);
+
+                    List<Dropable> items = lootDistribution.get(player.getCharacterId());
+                    if(items != null) {
+                        items.forEach(item -> {
+                            characterService.addItemToInventory(player.getCharacterId(), item, 1);
+                            if(battleLoot.getItems().containsKey(item.getId())) {
+                                battleLoot.getItems().put(
+                                        item.getId(),
+                                        battleLoot.getItems().get(item.getId()) + 1
+                                );
+                            }
+                            else {
+                                battleLoot.getItems().put(item.getId(), 1);
+                            }
+                        });
+                    }
+
+                    battleLoot.setResult(result);
+                    result.getLootList().add(battleLoot);
+                });
+
+        battleInfo.setResult(result);
+        return battleInfo;
     }
 
     private Skill calculateSkillUsed(BattleNPC hostile) {

@@ -40,12 +40,6 @@ public class GameActionController {
     @Autowired
     private LocationBag locationBag;
     @Autowired
-    private WeaponBag weaponBag;
-    @Autowired
-    private EquipmentBag equipmentBag;
-    @Autowired
-    private RaceBag raceBag;
-    @Autowired
     private DropableUtils dropableUtils;
     @Autowired
     private PlayerCharacterService characterService;
@@ -363,7 +357,7 @@ public class GameActionController {
             boolean requirementMet = true;
             String reason = null;
 
-            if(selectedCharacter.getSecondarySkill(skill, weaponBag, equipmentBag, raceBag) < requirement) {
+            if(selectedCharacter.getSecondarySkill(skill) < requirement) {
                 requirementMet = false;
                 reason = "location.skill.low";
             }

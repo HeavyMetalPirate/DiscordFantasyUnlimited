@@ -7,6 +7,7 @@ import com.fantasyunlimited.data.entity.PlayerCharacter;
 import com.fantasyunlimited.data.enums.UserFoundStatus;
 import com.fantasyunlimited.items.bags.*;
 import com.fantasyunlimited.items.entity.CharacterClass;
+import com.fantasyunlimited.items.entity.EnergyType;
 import com.fantasyunlimited.items.entity.Race;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -90,7 +91,7 @@ public class FantasyUnlimitedUserService {
         character.setCurrentLevel(1);
         character.setCurrentXp(0);
         character.setCurrentHealth(character.getMaxHealth());
-        if(selectedClass.getEnergyType() == CharacterClass.EnergyType.RAGE) {
+        if(selectedClass.getEnergyType() == EnergyType.RAGE) {
             character.setCurrentAtkResource(0);
         }
         else {

@@ -13,6 +13,8 @@ plugins {
 apply plugin: 'cz.habarta.typescript-generator'
 
 dependencies {
+    implementation project(':Library')
+
     // https://mvnrepository.com/artifact/com.thoughtworks.xstream/xstream
     api 'com.thoughtworks.xstream:xstream:1.4.19'
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations
