@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.36.1070 on 2022-06-11 16:00:55.
+// Generated using typescript-generator version 2.36.1070 on 2022-06-16 15:53:53.
 
 export namespace Items {
 

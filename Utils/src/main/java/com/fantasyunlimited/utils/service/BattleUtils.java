@@ -44,6 +44,7 @@ public class BattleUtils {
         BattlePlayer battlePlayer = new BattlePlayer();
 
         battlePlayer.setCharacterId(base.getId());
+        battlePlayer.setPlayerCharacter(base);
 
         battlePlayer.setRaceId(base.getRaceId());
         battlePlayer.setCharClassId(base.getClassId());

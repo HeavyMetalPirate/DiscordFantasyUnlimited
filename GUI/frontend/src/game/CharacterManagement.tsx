@@ -19,7 +19,12 @@ import * as FantasyUnlimited from "../types/rest-entities";
 import * as ItemTypes from "../types/itemhandling"
 
 import './GamePanel.css'
-import { get_steps, calculateHealthPercentage, calculateResourcePercentage } from './utils/StatusbarUtils'
+import {
+    get_steps,
+    calculateHealthPercentage,
+    calculateResourcePercentage,
+    caclulcateExperiencePercentage
+} from './utils/StatusbarUtils'
 import { useTrackedState } from '../SessionStore';
 import { UserSearch } from '../user/UserComponents'
 import {useStompClient} from "../WebsocketClient";
@@ -67,6 +72,23 @@ const HealthBar = ({character}: PlayerCharacterData) => {
                 <span className="stat">
                     <span className="left">{ character.resources.currentHealth }</span>
                     <span className="right">{ character.resources.maxHealth }</span>
+                </span>
+            </div>
+        </div>
+    )
+}
+
+const ExperienceBar = ({character}: PlayerCharacterData) => {
+    const steps = get_steps('rgb(110, 150, 0)', 'rgb(110, 255, 0)' , 100);
+    const p = caclulcateExperiencePercentage(character.exp, character.nextLevelExp);
+
+    return (
+        <div className="player">
+            <div className="experience">
+                <div className="bar" style= {{ width: p + '%', background: Object.keys(steps)[Math.floor(p)] }}></div>
+                <span className="stat">
+                    <span className="left">{character.exp}</span>
+                    <span className="right">{character.nextLevelExp}</span>
                 </span>
             </div>
         </div>
@@ -144,6 +166,7 @@ export const CurrentCharacterPanel = ({translation}: TranslationAsProperty) => {
                 <CardBody>
                     <CardTitle tag="h5">{character.name}</CardTitle>
                     <CardSubtitle className="mb-2 text-muted" tag="h6">{t('character.current.panel.level', {ns: 'character'})} {character.level} {t(character.race.name, {ns: 'race'})} {t(character.characterClass.name, {ns: 'characterClass'})} </CardSubtitle>
+                    <span style={{ width: "9em" }}><ExperienceBar character={character} /></span>
                     <CardSubtitle className="mb-2 text-muted" tag="h6">{t(character.location.name, {ns:'location'})}</CardSubtitle>
                 </CardBody>
                 <CardBody>

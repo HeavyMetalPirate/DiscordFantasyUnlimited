@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.36.1070 on 2022-06-11 16:00:56.
+// Generated using typescript-generator version 2.36.1070 on 2022-06-16 15:53:53.
 
 export namespace REST {
 
@@ -185,6 +185,7 @@ export namespace REST {
         location: LocationItem;
         level: number;
         exp: number;
+        nextLevelExp: number;
         resources: BattleResourceItem;
     }
 
@@ -218,6 +219,7 @@ export namespace REST {
     }
 
     export interface PlayerLootSummary {
+        character: PlayerCharacterItem;
         experience: number;
         levelUp: boolean;
         gold: number;
@@ -330,8 +332,8 @@ export namespace REST {
     }
 
     export interface CsrfToken extends Serializable {
-        parameterName: string;
         token: string;
+        parameterName: string;
         headerName: string;
     }
 

@@ -2,6 +2,7 @@ package com.fantasyunlimited.utils.service;
 
 import com.fantasyunlimited.battle.entity.*;
 import com.fantasyunlimited.data.entity.PlayerCharacter;
+import com.fantasyunlimited.data.service.PlayerCharacterService;
 import com.fantasyunlimited.items.entity.*;
 import com.fantasyunlimited.items.util.DropableUtils;
 import com.fantasyunlimited.rest.dto.*;
@@ -18,6 +19,8 @@ public class DTOUtils {
     private DropableUtils dropableUtils;
     @Autowired
     private BattleUtils battleUtils;
+    @Autowired
+    private PlayerCharacterService characterService;
 
     public PlayerCharacterItem buildPlayerCharacterItem(PlayerCharacter character) {
         ClassItem classItem = buildClassItem(character.getClassId());
@@ -33,6 +36,7 @@ public class DTOUtils {
                 locationItem,
                 character.getCurrentLevel(),
                 character.getCurrentXp(),
+                characterService.getExperienceForNextLevel(character.getCurrentLevel()),
                 battleResourceItem
         );
     }
@@ -83,6 +87,7 @@ public class DTOUtils {
                     locationItem,
                     character.getLevel(),
                     0, // BattleParticipants don't have exp
+                    0, //BattleParticipants don't have exp to next level either
                     battleResourceItem
             );
         }
@@ -95,6 +100,7 @@ public class DTOUtils {
                     locationItem,
                     character.getLevel(),
                     0, // BattleParticipants don't have exp
+                    0, //BattleParticipants don't have exp to next level either
                     battleResourceItem
             );
         }
@@ -329,18 +335,18 @@ public class DTOUtils {
 
         List<BattleParticipantDetails> players = new ArrayList<>();
         battleInformation.getPlayers().stream()
-                .map(player -> buildBattleParticipantDetails(player))
+                .map(this::buildBattleParticipantDetails)
                 .forEach(players::add);
 
         List<BattleParticipantDetails> hostiles = new ArrayList<>();
         battleInformation.getHostiles().stream()
-                .map(hostile -> buildBattleParticipantDetails(hostile))
+                .map(this::buildBattleParticipantDetails)
                 .forEach(hostiles::add);
 
         Map<Integer, List<BattleLogItem>> battleLog = new HashMap<>();
         battleInformation.getActions().stream()
                 .sorted((log1, log2) -> Integer.compare(log2.getRound(), log1.getRound()))
-                .map(action -> buildBattleLogItem(action))
+                .map(this::buildBattleLogItem)
                 .forEach(log -> {
                     if(battleLog.containsKey(log.round()) == false) {
                         battleLog.put(log.round(), new ArrayList<>());
@@ -371,7 +377,6 @@ public class DTOUtils {
         battleInfo.getResult().getLootList().stream()
                 .map(lootList -> {
                     List<InventoryItem> items = new ArrayList<>();
-
                     lootList.getItems().keySet().stream()
                             .map(id -> {
                                 int count = lootList.getItems().get(id);
@@ -379,13 +384,13 @@ public class DTOUtils {
                             }).forEach(items::add);
 
                     return new PlayerLootSummary(
+                            buildPlayerCharacterItem(lootList.getPlayer()),
                             lootList.getExperienceAwarded(),
                             lootList.isLevelUp(),
                             lootList.getGoldAwarded(),
                             items
                     );
                 })
-                .filter(Objects::nonNull)
                 .forEach(lootSummary::add);
 
         return new BattleResultSummary(
@@ -412,7 +417,7 @@ public class DTOUtils {
         List<BattleParticipantStatus> statusEffects = new ArrayList<>();
 
         participant.getStatusModifiers().stream()
-                .map(status -> buildBattleParticipantStatus(status))
+                .map(this::buildBattleParticipantStatus)
                 .forEach(statusEffects::add);
 
         return new BattleParticipantDetails(

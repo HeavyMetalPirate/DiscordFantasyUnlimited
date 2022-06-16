@@ -5,11 +5,31 @@ div.battle-container {
 }
 
 div.battle-container > div {
+    height: 100%;
+}
+
+div.battle-container > div > div {
     margin-top: auto;
     margin-bottom: auto;
 }
 
-img.icon-character {
+div.battle-container > div.winner,
+div.battle-container > div.winner > *,
+div.battle-container > div.winner > * > * {
+    background-color: rgba(110,255,110,0.25);
+    border: lawngreen 1px solid;
+    border-radius: 0.25em;
+}
+
+div.battle-container > div.loser,
+div.battle-container > div.loser > *,
+div.battle-container > div.loser > * > * {
+    background-color: rgba(255,50,50,0.25);
+    border: indianred 1px solid;
+    border-radius: 0.25em;
+}
+
+img.icon-character, img.icon-skill {
     max-height: 2.5em;
     min-height: 2.5em;
     min-width: 2.5em;
@@ -30,7 +50,13 @@ div.card-header-text {
     color: #FFF;
 }
 
-div > div.card.player-card > div.card-header {
+div.skill-card > div.card-header > div.card-header-text {
+    left: 3.5em;
+    top: 0.5em;
+}
+
+div > div.card.player-card > div.card-header,
+div > div.card.skill-card > div.card-header {
     text-align: left;
 }
 div > div.card.hostile-card > div.card-header {

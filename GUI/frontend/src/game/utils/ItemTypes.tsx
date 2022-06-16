@@ -47,7 +47,7 @@ export type DropableItem = {
     iconName: string;
 
     // RarityClassifiedItem
-    rarity: string;
+    rarity?: string;
 
     // Dropable
     value: number;

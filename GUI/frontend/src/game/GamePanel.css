@@ -44,7 +44,7 @@ img.location-banner-image {
    float: left;
 }
 
-.health, .mana {
+.health, .mana, .experience {
    position: relative;
    height: 1em;
    width: 100%;
@@ -52,7 +52,7 @@ img.location-banner-image {
    background: #FFFFFF;
 }
 
-.health .bar, .mana .bar {
+.health .bar, .mana .bar, .experience .bar {
    position: absolute;
    left: 0;
    top: 0;
@@ -62,7 +62,7 @@ img.location-banner-image {
    transition: width 250ms, background 100ms;
 }
 
-.health .bar:after, .mana .bar:after{
+.health .bar:after, .mana .bar:after, .experience .bar:after{
    content: ' ';
    display: block;
    position: absolute;
@@ -74,7 +74,7 @@ img.location-banner-image {
    z-index: 1;
 }
 
-.health .stat, .mana .stat{
+.health .stat, .mana .stat, .experience .stat {
    text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
    font-family: Monospace, sans-serif;
    top: 2px;
@@ -85,12 +85,12 @@ img.location-banner-image {
    color: #FFF;
 }
 
-.health .stat .left, .mana .stat .left {
+.health .stat .left, .mana .stat .left, .experience .stat .left {
    position: absolute;
    left: 3px;
 }
 
-.health .stat .right, .mana .stat .right {
+.health .stat .right, .mana .stat .right, .experience .stat .right {
    position: absolute;
    right: 1px;
 }

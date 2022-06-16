@@ -11,7 +11,7 @@ import {
     CardFooter, CardGroup,
     CardHeader,
     CardImg,
-    CardText
+    CardText, CardTitle
 } from "reactstrap";
 
 import './BattlePanel.css';
@@ -288,6 +288,18 @@ export const BattleMainPanel = ({translation}: BattlePanelProperties) => {
             });
     }
 
+    let playerWinClass = "";
+    let hostilesWinClass = "";
+
+    if(battleInfo.summary?.winningSide === 'LEFT') {
+        playerWinClass = "winner";
+        hostilesWinClass = "loser";
+    }
+    else if(battleInfo.summary?.winningSide === 'RIGHT') {
+        playerWinClass = "loser";
+        hostilesWinClass = "winner";
+    }
+
     return (
         <Container fluid>
             <header className={"location-banner"}>
@@ -295,10 +307,11 @@ export const BattleMainPanel = ({translation}: BattlePanelProperties) => {
             </header>
             <span>Battle Panel TODO {id}</span>
             <div className={"battle-container"}>
-                <div>{playerCards}</div>
-                <div>{hostileCards}</div>
+                <div className={playerWinClass}>{playerCards}</div>
+                <div className={hostilesWinClass}>{hostileCards}</div>
             </div>
-            <Toolbar skills={battleInfo.playerDetails.toolbarSkills}
+            <Toolbar
+                     skills={battleInfo.playerDetails.toolbarSkills}
                      consumables={battleInfo.playerDetails.consumables}
                      participation={battleInfo.playerDetails.participation}
                      translation={t}
@@ -322,13 +335,80 @@ const BattleResult: React.FC<BattleResultProps> = (props) => {
     const t =  props.translation;
     const result = props.result;
 
+    if(result === null || result.lootSummaryList === null) {
+        return <div />
+    }
+
+    let lootSummary: JSX.Element[];
+
+    lootSummary = result.lootSummaryList.map(loot => {
+        let itemCards = loot.items
+            .map(item => {
+                let converted: InventoryItem = {
+                    type: 'consumable',
+                    count: item.count,
+                    item: item.item
+                };
+
+                return converted;
+            }).map(item => {
+                return (
+                    <Card className="item-card"
+                          key={item.item.id}>
+                        <CardBody className="item-card-body">
+                            <CardImg className={"item-icon " + item.item.rarity?.toLowerCase()} top src={item.item.iconName} />
+                            <CardTitle tag="p">{t(item.item.name, {ns: 'items'})}</CardTitle>
+                            <CardText tag="p" className="item-count">x{item.count}</CardText>
+                        </CardBody>
+                    </Card>
+                );
+            })
+        itemCards.push(
+            <Card className="item-card"
+                  key={loot.character.id + "-gold"}>
+                <CardBody className="item-card-body">
+                    <CardImg className={"item-icon "} top src="/images/items/gold.png" />
+                    <CardTitle tag="p">{loot.gold} {t("character.stats.gold", {ns: 'character'})}</CardTitle>
+                </CardBody>
+            </Card>
+        )
+        itemCards.push(
+            <Card className="item-card"
+                  key={loot.character.id + "-gold"}>
+                <CardBody className="item-card-body">
+                    <CardImg className={"item-icon "} top src="/images/items/experience.png" />
+                    <CardTitle tag="p">{loot.experience} {t("character.stats.experience", {ns: 'character'})}</CardTitle>
+                </CardBody>
+            </Card>
+        )
+
+        return (
+            <Accordion defaultExpanded={true}
+                       key={loot.character.id}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}
+                                  aria-controls="panel1a-content"
+                                  id="panel1a-header"
+                                  className={"player-loot-tab player-lvlup-" + loot.levelUp}>
+                    <Typography>{loot.character.name}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <div className={"player-loot-list"}>
+                        <CardGroup>
+                            {itemCards}
+                        </CardGroup>
+                    </div>
+                </AccordionDetails>
+            </Accordion>
+        )
+    });
+
+
+
     return (
-        <Container>
-            <div>BattleResult TODO</div>
-            <div>{result.winningSide}</div>
-            <div>{result.lootSummaryList.map(loot => {
-                return <div>{loot.experience}</div>;
-            })}</div>
+        <Container className={"battle-summary"}>
+            <h2 className={"battle-outcome"}>{result.winningSide === 'LEFT' ? t('battle.outcome.winning.players', {ns: 'battle'})
+                                                : t('battle.outcome.winning.hostiles', {ns:'battle'})}</h2>
+            <div>{lootSummary}</div>
         </Container>
     )
 }
@@ -345,6 +425,138 @@ const BattleLog: React.FC<BattleLogProps> = (props) => {
         return <div>{t('battle.log.empty', {ns: 'battle'})}</div>
     }
 
+    function getLeftSideCard(entry: REST.BattleLogItem) {
+        return (
+            <Card className={"player-card"}>
+                <CardHeader>
+                    <CardImg left className={"icon-character icon-character-race"}
+                             src={entry.executing.race.icon}
+                             title={t(entry.executing.race.name, {ns:'race'})}/>
+                    <CardImg left className={"icon-character icon-character-class"}
+                             src={entry.executing.characterClass.icon}
+                             title={t(entry.executing.characterClass.name, {ns:'characterClass'})}/>
+                    <div className="card-header-text">
+                        <span className="card-header-text">{entry.executing.name}</span>
+                        <span className="card-header-text">{t('battle.stats.level', {ns:'battle'})}:{entry.executing.level}</span>
+                    </div>
+                </CardHeader>
+                <CardBody>
+                    <CardText>
+                        <div style={{position: 'unset', transform: 'unset'}}
+                            className="card-header-text">{new Date(entry.timestamp).toUTCString()}</div>
+                    </CardText>
+                </CardBody>
+            </Card>
+        )
+    }
+
+    function getCenterCard(entry: REST.BattleLogItem) {
+        if(entry.usedConsumable !== null) {
+            return (
+                <Card className={"skill-card"}>
+                    <CardHeader>
+                        <CardImg left className={"icon-skill"}
+                                 src={entry.usedConsumable.iconName}/>
+                        <div className="card-header-text">
+                            <span className="card-header-text">{t(entry.usedConsumable.name, {ns: 'items'})}</span>
+                        </div>
+                    </CardHeader>
+                    <CardBody>
+                    </CardBody>
+                </Card>
+            )
+        }
+
+        let actionAmountText: JSX.Element;
+        switch(entry.usedSkill.skillType) {
+            case "DEBUFF":
+                actionAmountText = (
+                    <div style={{position: 'unset', transform: 'unset'}} className="card-header-text">
+                        {t('battle.action.type.debuff', {ns:'battle'})}
+                    </div>
+                )
+                break;
+            case "BUFF":
+                actionAmountText = (
+                    <div style={{position: 'unset', transform: 'unset'}} className="card-header-text">
+                        {t('battle.action.type.buff', {ns:'battle'})}
+                    </div>
+                )
+                break;
+            case "DEFENSIVE":
+                actionAmountText = (
+                    <div style={{position: 'unset', transform: 'unset'}} className="card-header-text">
+                        {t('battle.action.type.heal', {ns:'battle'})} {t('battle.action.amount.for', {ns:'battle'})} {entry.amount} {t('character.current.panel.health', {ns:'character'})}
+                    </div>
+                )
+                break;
+            case "OFFENSIVE":
+                actionAmountText = (
+                    <div style={{position: 'unset', transform: 'unset'}} className="card-header-text">
+                        {t('battle.action.type.damage', {ns:'battle'})} {t('battle.action.amount.for', {ns:'battle'})} {entry.amount} {t('character.current.panel.health', {ns:'character'})}
+                    </div>
+                )
+                break;
+            default:
+                actionAmountText = <div />
+                // No Op
+        }
+
+        return (
+            <Card className={"skill-card"}>
+                <CardHeader>
+                    <CardImg left className={"icon-skill"}
+                             src={entry.usedSkill.iconName}/>
+                    <div className="card-header-text">
+                        <span className="card-header-text">{t(entry.usedSkill.name, {ns: 'skills'})} ({t('skills.rank', {ns:'skills'})}: {entry.usedSkill.rank})</span>
+                    </div>
+                </CardHeader>
+                <CardBody>
+                    <CardText>{actionAmountText}</CardText>
+                </CardBody>
+            </Card>
+        )
+    }
+
+    function getRightSideCard(entry: REST.BattleLogItem) {
+        if(entry.usedConsumable !== null) {
+            return (
+                <Card className={"hostile-card"}>
+                    <CardHeader>
+                        <CardImg left className={"icon-character icon-character-race"}
+                                 src="/images/emptySlotIcon.png"/>
+                        <div className="card-header-text">
+                            <span className="card-header-text">-</span>
+                        </div>
+                    </CardHeader>
+                </Card>
+            )
+        }
+
+        return (
+            <Card className={"hostile-card"}>
+                <CardHeader>
+                    <CardImg left className={"icon-character icon-character-race"}
+                             src={entry.target.race.icon}
+                             title={t(entry.target.race.name, {ns:'race'})}/>
+                    <CardImg left className={"icon-character icon-character-class"}
+                             src={entry.target.characterClass.icon}
+                             title={t(entry.target.characterClass.name, {ns:'characterClass'})}/>
+                    <div className="card-header-text">
+                        <span className="card-header-text">{entry.target.name}</span>
+                        <span className="card-header-text">{t('battle.stats.level', {ns:'battle'})}:{entry.target.level}</span>
+                    </div>
+                </CardHeader>
+                <CardBody>
+                    <CardText>
+                        <div style={{position: 'unset', transform: 'unset'}}
+                             className="card-header-text">{t('battle.action.outcome.' + entry.outcome, {ns: 'battle'})}</div>
+                    </CardText>
+                </CardBody>
+            </Card>
+        )
+    }
+
     let rounds: JSX.Element[] = [];
     for(const key in battleLog.rounds) {
         const roundBattleLog = battleLog.rounds[key];
@@ -352,46 +564,11 @@ const BattleLog: React.FC<BattleLogProps> = (props) => {
         roundElements = roundBattleLog
             .sort((e1,e2) => e1.ordinal > e2.ordinal ? 1 : -1)
             .map(entry => {
-                if(entry.usedSkill !== null) {
-                    return (
-                        <CardGroup>
-                            <Card>
-                                <CardBody>
-                                    <CardText>{entry.executing.name}</CardText>
-                                </CardBody>
-                            </Card>
-                            <Card>
-                                <CardBody>
-                                    <CardText>{entry.usedSkill.name} for {entry.amount}</CardText>
-                                    <CardText>{entry.outcome}</CardText>
-                                </CardBody>
-                            </Card>
-                            <Card>
-                                <CardBody>
-                                    <CardText>{entry.target.name}</CardText>
-                                </CardBody>
-                            </Card>
-                        </CardGroup>
-                    )
-                }
                 return (
                     <CardGroup>
-                        <Card>
-                            <CardBody>
-                                <CardText>{entry.executing.name}</CardText>
-                            </CardBody>
-                        </Card>
-                        <Card>
-                            <CardBody>
-                                <CardText>Used {entry.usedConsumable.name}</CardText>
-                                <CardText>{entry.outcome}</CardText>
-                            </CardBody>
-                        </Card>
-                        <Card>
-                            <CardBody>
-                                <CardText>-</CardText>
-                            </CardBody>
-                        </Card>
+                        {getLeftSideCard(entry)}
+                        {getCenterCard(entry)}
+                        {getRightSideCard(entry)}
                     </CardGroup>
                 )
         });
@@ -412,8 +589,8 @@ const BattleLog: React.FC<BattleLogProps> = (props) => {
     rounds = rounds.reverse();
 
     return(
-        <Container>
-            <div>BattleLog TODO</div>
+        <Container className={"battle-log"}>
+            <h2>{t('battle.log.header', {ns:'battle'})}</h2>
             {rounds}
         </Container>
     )

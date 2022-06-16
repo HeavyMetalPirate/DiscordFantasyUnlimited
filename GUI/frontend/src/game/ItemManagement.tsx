@@ -730,10 +730,10 @@ export const ItemDetailView = ({translation, item, visible, x, y}: ItemDetailVie
         return (
             <Card>
                 <CardHeader>
-                    <CardImg className={"item-icon " + selectedItem.rarity.toLowerCase()} left src={selectedItem.iconName} />
+                    <CardImg className={"item-icon " + selectedItem.rarity?.toLowerCase()} left src={selectedItem.iconName} />
                     <div className="card-header-text">
                         <span className="card-header-text">{t(selectedItem.name, {ns: 'items'})}</span>
-                        <span className="card-header-text">{t('items.rarity.' + selectedItem.rarity.toLowerCase(), {ns: 'items'})}</span>
+                        <span className="card-header-text">{t('items.rarity.' + selectedItem.rarity?.toLowerCase(), {ns: 'items'})}</span>
                     </div>
                 </CardHeader>
                 {bodyContent}
@@ -1106,7 +1106,7 @@ const InventoryList = ({inventory, translation, onReload}: InventoryListProperti
                     className="item-card"
                     key={entry.item.id}>
                   <CardBody className="item-card-body">
-                      <CardImg className={"item-icon " + entry.item.rarity.toLowerCase()} top src={entry.item.iconName} />
+                      <CardImg className={"item-icon " + entry.item.rarity?.toLowerCase()} top src={entry.item.iconName} />
                       <CardTitle tag="p">{t(entry.item.name, {ns: 'items'})}</CardTitle>
                       <CardText tag="p" className="item-count">x{entry.count}</CardText>
                   </CardBody>

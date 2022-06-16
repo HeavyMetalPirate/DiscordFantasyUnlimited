@@ -2,6 +2,7 @@ package com.fantasyunlimited.items.entity;
 
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ public class CharacterClass extends GenericItem {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = -4076926648887811462L;
 
 	private String lore;

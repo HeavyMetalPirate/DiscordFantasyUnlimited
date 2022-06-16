@@ -27,14 +27,14 @@ public class PlayerCharacterService {
     @Autowired
     private DropableUtils dropableUtils;
 
-    private Map<Integer, Long> experienceTable;
+    private Map<Integer, Integer> experienceTable;
 
     @PostConstruct
     public void initializeExperienceTable() {
         experienceTable = new HashMap<>();
         for (int i = 1; i < 100; i++) {
             double log = (Math.log(i) / Math.log(2));
-            long experience = (long) Math.floor(Math.pow(i, 2) * 100 * log);
+            int experience = (int) Math.floor(Math.pow(i, 2) * 100 * log);
             experienceTable.put(i, experience);
         }
     }
@@ -73,9 +73,9 @@ public class PlayerCharacterService {
         return oldLevel != character.getCurrentLevel();
     }
 
-    private Long getExperienceForNextLevel(int currentLevel) {
+    public Integer getExperienceForNextLevel(int currentLevel) {
         if (currentLevel == 100) {
-            return 0L;
+            return 0;
         }
         int nextLevel = currentLevel + 1;
         return experienceTable.get(nextLevel);

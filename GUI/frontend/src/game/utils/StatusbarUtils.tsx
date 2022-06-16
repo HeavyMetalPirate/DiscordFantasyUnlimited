@@ -62,6 +62,10 @@ export function get_steps(c1_string:string, c2_string: string, st: number){
    return steps;
 };
 
+export function caclulcateExperiencePercentage(currentExperience: number, nextLevelExperience: number) {
+   return (currentExperience / nextLevelExperience) * 100;
+}
+
 export function calculateHealthPercentage({resources}: FantasyUnlimited.REST.PlayerCharacterItem){
    return (resources.currentHealth / resources.maxHealth) * 100;
 };

@@ -1,6 +1,7 @@
 {
   "character.foo": "This is another Foo text",
   "character.stats.gold": "Gold",
+  "character.stats.experience": "Experience",
   "character.attributes.header": "Attribute",
   "character.attributes.header.allocated": "Allocated",
   "character.attributes.header.gear": "Equipment",

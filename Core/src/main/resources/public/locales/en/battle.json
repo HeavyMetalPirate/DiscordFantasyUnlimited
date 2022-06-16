@@ -3,5 +3,19 @@
   "battle.button.start.valid": "Perform selected action",
   "battle.button.start.invalid": "Selection invalid",
   "battle.button.start.no.selection": "No selection made",
-  "battle.button.start.already.entered": "Already entered an action, wait for the round to end."
+  "battle.button.start.already.entered": "Already entered an action, wait for the round to end.",
+  "battle.action.outcome.HIT": "Hit",
+  "battle.action.outcome.MISS": "Missed",
+  "battle.action.outcome.DODGED": "Dodged",
+  "battle.action.outcome.CRITICAL": "Critical strike",
+  "battle.action.outcome.PARRIED": "Parried",
+  "battle.action.outcome.NONE": "-",
+  "battle.action.type.damage": "Dealt damage",
+  "battle.action.type.heal": "Healed",
+  "battle.action.type.buff": "Applied a buff",
+  "battle.action.type.debuff": "Applied a debuff",
+  "battle.action.amount.for": "for",
+  "battle.outcome.winning.players": "The heroes remain victorious!",
+  "battle.outcome.winning.hostiles": "The villains won - this time...",
+  "battle.log.header": "Combat Log"
 }

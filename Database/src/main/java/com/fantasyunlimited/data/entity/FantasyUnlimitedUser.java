@@ -1,13 +1,17 @@
 package com.fantasyunlimited.data.entity;
 
 import javax.persistence.*;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "FU_Users",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"userName", "userEmail"})}
 )
-public class FantasyUnlimitedUser {
+public class FantasyUnlimitedUser implements Serializable {
+    @Serial
+    private static final long serialVersionUID = -2625346866246608898L;
     @Id
     private String userName;
 
