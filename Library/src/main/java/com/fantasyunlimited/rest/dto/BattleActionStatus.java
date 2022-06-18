@@ -4,6 +4,7 @@ public enum BattleActionStatus {
     FLEE,
     PASS,
     INCAPACITATED,
+    DEFEATED,
     EXECUTED,
     WAITING
 }

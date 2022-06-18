@@ -12,14 +12,6 @@ import java.util.*;
 @Qualifier("controllerUtils")
 public class ControllerUtils extends DTOUtils {
 
-    public UUID getBattleIdFromSession(HttpServletRequest request) {
-        return (UUID) request.getSession().getAttribute("battleId");
-    }
-
-    public void setBattleIdFromSession(HttpServletRequest request, UUID battleId) {
-        request.getSession().setAttribute("battleId", battleId);
-    }
-
     public PlayerCharacter getPlayerCharacterFromSession(HttpServletRequest request) {
         return (PlayerCharacter) request.getSession().getAttribute("selectedCharacter");
     }

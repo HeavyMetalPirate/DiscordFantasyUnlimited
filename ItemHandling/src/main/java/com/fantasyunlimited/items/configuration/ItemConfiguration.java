@@ -52,6 +52,7 @@ public class ItemConfiguration {
         xstream.alias("ClassBonus", ClassBonus.class);
         xstream.alias("Skill", Skill.class);
         xstream.alias("SkillRank", SkillRank.class);
+        xstream.alias("StatusEffect", StatusEffect.class);
         xstream.alias("RacialBonus", RacialBonus.class);
         xstream.alias("Weapon", Weapon.class);
         xstream.alias("Equipment", Equipment.class);

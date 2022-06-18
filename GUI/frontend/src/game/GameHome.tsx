@@ -216,8 +216,10 @@ const GamePanel = ({translation}: TranslationAsProperty) => {
                     console.log("Battle was null.");
                     return;
                 }
-
-
+                setState((prev) => ({
+                    ...prev,
+                    activeBattleId: battle.id
+                }));
             });
     }
 

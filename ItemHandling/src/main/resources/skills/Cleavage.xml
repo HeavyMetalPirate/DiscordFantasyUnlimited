@@ -22,6 +22,5 @@
         </SkillRank>
     </ranks>
     <requirements />
-    <buffModifier>0</buffModifier>
-    <durationInTurns>0</durationInTurns>
+    <statusEffects />
 </Skill>

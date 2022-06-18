@@ -37,6 +37,7 @@ public class BattleAction implements Serializable {
 	private boolean isArea;
 	private boolean isPass;
 	private boolean isIncapacitated;
+	private boolean isDefeated;
 	private boolean executed;
 
 	private boolean dodged;
@@ -218,4 +219,12 @@ public class BattleAction implements Serializable {
     public void setOrdinal(int ordinal) {
         this.ordinal = ordinal;
     }
+
+	public boolean isDefeated() {
+		return isDefeated;
+	}
+
+	public void setDefeated(boolean defeated) {
+		isDefeated = defeated;
+	}
 }

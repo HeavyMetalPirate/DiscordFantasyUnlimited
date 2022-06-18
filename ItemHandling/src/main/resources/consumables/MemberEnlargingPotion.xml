@@ -17,7 +17,7 @@
       <bonus>5</bonus>
     </AttributeBonus>
   </attributeModifiers>
-  <durationRounds>0</durationRounds>
+  <durationRounds>-1</durationRounds>
   <healthRestored>0</healthRestored>
   <atkResourceRestored>0</atkResourceRestored>
   <resourceType>RAGE</resourceType>

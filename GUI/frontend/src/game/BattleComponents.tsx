@@ -68,6 +68,15 @@ export const BattleMainPanel = ({translation}: BattlePanelProperties) => {
 
     useEffect(() => {
         checkValidAction();
+        if(battleInfo?.active === false) {
+            // check if the battle id is in global state
+            if(battleInfo.id === state.activeBattleId) {
+                setState((previous) => ({
+                        ... previous,
+                        activeBattleId: null
+                }));
+            }
+        }
     }, [battleInfo]);
 
     useEffect(() => {
@@ -300,6 +309,29 @@ export const BattleMainPanel = ({translation}: BattlePanelProperties) => {
         hostilesWinClass = "winner";
     }
 
+    let toolbar: JSX.Element;
+    if(battleInfo.active) {
+        toolbar = (
+            <div>
+                <Toolbar
+                    skills={battleInfo.playerDetails?.toolbarSkills}
+                    consumables={battleInfo.playerDetails?.consumables}
+                    participation={battleInfo.playerDetails?.participation}
+                    translation={t}
+                    onActionSelect={onActionSelect}/>
+
+                <Button disabled={!validAction}
+                        onClick={performAction}
+                        style={{width: "80%", marginTop: "1em"}}>
+                    {startButtonText}
+                </Button>
+            </div>
+        )
+    }
+    else {
+        toolbar = <div/>
+    }
+
     return (
         <Container fluid>
             <header className={"location-banner"}>
@@ -310,17 +342,7 @@ export const BattleMainPanel = ({translation}: BattlePanelProperties) => {
                 <div className={playerWinClass}>{playerCards}</div>
                 <div className={hostilesWinClass}>{hostileCards}</div>
             </div>
-            <Toolbar
-                     skills={battleInfo.playerDetails.toolbarSkills}
-                     consumables={battleInfo.playerDetails.consumables}
-                     participation={battleInfo.playerDetails.participation}
-                     translation={t}
-                     onActionSelect={onActionSelect}/>
-            <Button disabled={!validAction}
-                    onClick={performAction}
-                    style={{width: "80%", marginTop: "1em"}}>
-                {startButtonText}
-            </Button>
+            {toolbar}
             <BattleResult result={battleInfo.summary} translation={t} />
             <BattleLog battleLog={battleInfo.battleLog} translation={t} />
         </Container>
@@ -451,6 +473,67 @@ const BattleLog: React.FC<BattleLogProps> = (props) => {
     }
 
     function getCenterCard(entry: REST.BattleLogItem) {
+        if(entry.status === 'INCAPACITATED') {
+            return (
+                <Card className={"skill-card"}>
+                    <CardHeader>
+                        <CardImg left className={"icon-skill"}
+                                 src={"/images/battle/status-incapacitated.png"}/>
+                        <div className="card-header-text">
+                            <span className="card-header-text">{t('battle.status.incapacitated', {ns: 'battle'})}</span>
+                        </div>
+                    </CardHeader>
+                    <CardBody>
+                    </CardBody>
+                </Card>
+            )
+        }
+        if(entry.status === 'FLEE') {
+            return (
+                <Card className={"skill-card"}>
+                    <CardHeader>
+                        <CardImg left className={"icon-skill"}
+                                 src={"/images/battle/status-flee.png"}/>
+                        <div className="card-header-text">
+                            <span className="card-header-text">{t('battle.status.flee', {ns: 'battle'})}</span>
+                        </div>
+                    </CardHeader>
+                    <CardBody>
+                    </CardBody>
+                </Card>
+            )
+        }
+        if(entry.status === 'PASS') {
+            return (
+                <Card className={"skill-card"}>
+                    <CardHeader>
+                        <CardImg left className={"icon-skill"}
+                                 src={"/images/battle/status-pass.png"}/>
+                        <div className="card-header-text">
+                            <span className="card-header-text">{t('battle.status.pass', {ns: 'battle'})}</span>
+                        </div>
+                    </CardHeader>
+                    <CardBody>
+                    </CardBody>
+                </Card>
+            )
+        }
+        if(entry.status === 'DEFEATED') {
+            return (
+                <Card className={"skill-card"}>
+                    <CardHeader>
+                        <CardImg left className={"icon-skill"}
+                                 src={"/images/battle/status-defeat.png"}/>
+                        <div className="card-header-text">
+                            <span className="card-header-text">{t('battle.status.defeat', {ns: 'battle'})}</span>
+                        </div>
+                    </CardHeader>
+                    <CardBody>
+                    </CardBody>
+                </Card>
+            )
+        }
+
         if(entry.usedConsumable !== null) {
             return (
                 <Card className={"skill-card"}>
@@ -469,20 +552,6 @@ const BattleLog: React.FC<BattleLogProps> = (props) => {
 
         let actionAmountText: JSX.Element;
         switch(entry.usedSkill.skillType) {
-            case "DEBUFF":
-                actionAmountText = (
-                    <div style={{position: 'unset', transform: 'unset'}} className="card-header-text">
-                        {t('battle.action.type.debuff', {ns:'battle'})}
-                    </div>
-                )
-                break;
-            case "BUFF":
-                actionAmountText = (
-                    <div style={{position: 'unset', transform: 'unset'}} className="card-header-text">
-                        {t('battle.action.type.buff', {ns:'battle'})}
-                    </div>
-                )
-                break;
             case "DEFENSIVE":
                 actionAmountText = (
                     <div style={{position: 'unset', transform: 'unset'}} className="card-header-text">
@@ -519,6 +588,23 @@ const BattleLog: React.FC<BattleLogProps> = (props) => {
     }
 
     function getRightSideCard(entry: REST.BattleLogItem) {
+        if(entry.status === 'INCAPACITATED' ||
+            entry.status === "PASS" ||
+            entry.status === 'FLEE' ||
+            entry.status === 'DEFEATED') {
+            // Empty card
+            return (
+                <Card className={"hostile-card"}>
+                    <CardBody>
+                        <CardText>
+                            <div style={{position: 'unset', transform: 'unset'}}
+                                 className="card-header-text">{t('battle.action.outcome.' + entry.outcome, {ns: 'battle'})}</div>
+                        </CardText>
+                    </CardBody>
+                </Card>
+            )
+        }
+
         if(entry.usedConsumable !== null) {
             return (
                 <Card className={"hostile-card"}>
@@ -613,7 +699,7 @@ const Toolbar = ({skills, consumables, participation, translation, onActionSelec
     const [x, setX] = useState(0);
     const [y, setY] = useState(0);
 
-    if(participation === false) {
+    if(participation === false || skills === undefined) {
         return (
             <div>TODO No-Participation Frame</div>
         )
@@ -745,13 +831,10 @@ const SkillDetailView = ({translation, skill, x, y}: SkillDetailProperties) => {
     }
     let cost: JSX.Element = <span className="card-header-text">{t('skills.cost', {ns: 'skills'})}: {skill.cost}</span>
 
-    let statusApplied: JSX.Element | null = null;
-    if(skill.incapacitates) {
-        statusApplied = <span className="card-header-text">{t('skills.status.incapacitate', {ns: 'skills'})}: {skill.durationInTurns} {t('skills.duration.rounds', {ns: 'skills'})} </span>
-    }
-    else {
-        // TODO when status handling has been done
-    }
+    let statusApplied: JSX.Element[];
+    statusApplied = skill.statusEffects.map(effect => {
+        return <div>Status: {effect.statusName}</div>
+    })
 
     let preparation: JSX.Element | null = null;
     if(skill.preparationRounds > 0) {
@@ -808,14 +891,19 @@ interface ParticipantCard extends TranslationAsProperty {
 const PlayerCard = ({translation, participant, className, onTargetSelect}: ParticipantCard) => {
     const t = translation;
 
-    console.log("Status:" , participant.statusEffects);
-
     let statusPanel: JSX.Element[] = participant.statusEffects.map(status => {
+        let roundsRemaining: string;
+        if(status.roundsRemaining > 0) {
+            roundsRemaining = "" + status.roundsRemaining;
+        }
+        else {
+            roundsRemaining = "∞";
+        }
         return (
             <ImageListItem className={"status-icon status-type-" + status.statusType.toLowerCase()}
                            key={status.name}>
                 <img src={status.iconName} alt={status.name} />
-                <div className="player-status-rounds">{status.roundsRemaining}</div>
+                <div className="player-status-rounds">{roundsRemaining}</div>
             </ImageListItem>
         )
     });
@@ -850,11 +938,18 @@ const HostileCard = ({translation, participant, className, onTargetSelect}: Part
     const t = translation;
 
     let statusPanel: JSX.Element[] = participant.statusEffects.map(status => {
+        let roundsRemaining: string;
+        if(status.roundsRemaining > 0) {
+            roundsRemaining = "" + status.roundsRemaining;
+        }
+        else {
+            roundsRemaining = "∞";
+        }
         return (
             <ImageListItem className={"status-icon status-type-" + status.statusType.toLowerCase()}
                            key={status.name}>
                 <img src={status.iconName} alt={status.name} />
-                <div className="hostile-status-rounds">{status.roundsRemaining}</div>
+                <div className="hostile-status-rounds">{roundsRemaining}</div>
             </ImageListItem>
         )
     });

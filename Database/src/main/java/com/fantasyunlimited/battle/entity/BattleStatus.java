@@ -20,6 +20,7 @@ public class BattleStatus {
 
 	private String statusName;
 	private String statusIcon;
+	private boolean permanent;
 	private int roundsRemaining;
 	private int healthchangePerRound;
 	private int healthchangeOnEnd;
@@ -116,6 +117,14 @@ public class BattleStatus {
 
 	public void setStatusIcon(String statusIcon) {
 		this.statusIcon = statusIcon;
+	}
+
+	public boolean isPermanent() {
+		return permanent;
+	}
+
+	public void setPermanent(boolean permanent) {
+		this.permanent = permanent;
 	}
 
 	public enum ModifierType {

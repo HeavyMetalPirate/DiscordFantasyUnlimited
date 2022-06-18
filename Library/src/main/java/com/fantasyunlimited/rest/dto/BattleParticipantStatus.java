@@ -3,9 +3,10 @@ package com.fantasyunlimited.rest.dto;
 import com.fantasyunlimited.items.entity.Attributes;
 import com.fantasyunlimited.items.entity.CombatSkill;
 import com.fantasyunlimited.items.entity.Skill;
+import com.fantasyunlimited.items.entity.StatusEffect;
 
 public record BattleParticipantStatus (
-        Skill.SkillType statusType,
+        StatusEffect.StatusEffectType statusType,
         String name,
         String iconName,
         Attributes.Attribute attribute,

@@ -33,6 +33,7 @@ public class BattleActionHandler {
 
         // if you die in that round, don't do actions because u ded
         if (action.getExecuting().isDefeated()) {
+            action.setDefeated(true);
             return action;
         }
 
@@ -98,6 +99,13 @@ public class BattleActionHandler {
                     BattleStatus status = buildBattleStatus(modifier);
                     status.setModifiedAttribute(modifier.getAttribute());
                     status.setRoundsRemaining(usedConsumable.getDurationRounds());
+                    if(usedConsumable.getDurationRounds() < 0) {
+                        status.setPermanent(true);
+                    }
+                    else {
+                        status.setPermanent(false);
+                    }
+
                     executing.getStatusModifiers().add(status);
                 });
         usedConsumable.getCombatSkillModifiers().stream()
@@ -105,6 +113,12 @@ public class BattleActionHandler {
                     BattleStatus status = buildBattleStatus(modifier);
                     status.setModifiedSkill(modifier.getSkill());
                     status.setRoundsRemaining(usedConsumable.getDurationRounds());
+                    if(usedConsumable.getDurationRounds() < 0) {
+                        status.setPermanent(true);
+                    }
+                    else {
+                        status.setPermanent(false);
+                    }
                     executing.getStatusModifiers().add(status);
                 });
 
@@ -166,23 +180,40 @@ public class BattleActionHandler {
         // TODO level multiplier
 
         if (usedSkill.getTargetType() == null
-                && (usedSkill.getType() == Skill.SkillType.OFFENSIVE || usedSkill.getType() == Skill.SkillType.DEBUFF)) {
+                && (usedSkill.getType() == Skill.SkillType.OFFENSIVE)) {
             usedSkill.setTargetType(Skill.TargetType.ENEMY); // fallback
         } else if (usedSkill.getTargetType() == null
-                && (usedSkill.getType() == Skill.SkillType.DEFENSIVE || usedSkill.getType() == Skill.SkillType.BUFF)) {
+                && (usedSkill.getType() == Skill.SkillType.DEFENSIVE)) {
             usedSkill.setTargetType(Skill.TargetType.FRIEND); // fallback
         }
-
-        switch (usedSkill.getType()) {
-            case BUFF, DEBUFF -> executeStatusChanging(action);
-            case DEFENSIVE, OFFENSIVE -> executeHealthChanging(action);
-            default -> { }
+        if(performHitCheck(action)) {
+            executeHealthChanging(action);
+            executeStatusChanging(action);
         }
+
         int totalcost = usedSkill.getCostOfExecution();
         totalcost += rank.getCostModifier();
         performAtkUsageAndRegen(totalcost, action);
 
         return action;
+    }
+
+    private boolean performHitCheck(BattleAction action) {
+        switch (action.getUsedSkill().getTargetType()) {
+            case AREA:
+            case ENEMY:
+                if (hasEvadedAttack(action)) {
+                    action.setActionAmount(0);
+                    return false;
+                }
+                break;
+            case FRIEND:
+            case OWN:
+            default:
+                break;
+
+        }
+        return true;
     }
 
     private void performAtkUsageAndRegen(int totalcost, BattleAction action) {
@@ -205,66 +236,55 @@ public class BattleActionHandler {
     }
 
     private void executeStatusChanging(BattleAction action) {
-        switch (action.getUsedSkill().getTargetType()) {
-            case AREA:
-            case ENEMY:
-                if (hasEvadedAttack(action)) {
-                    action.setActionAmount(0);
-                    return;
+
+        if(action.getUsedSkill().getStatusEffects().isEmpty()) {
+            return;
+        }
+
+        action.getUsedSkill().getStatusEffects().stream()
+            .forEach(effect -> {
+                BattleStatus status = new BattleStatus();
+                status.setStatusName(effect.getStatusName());
+                status.setStatusIcon(effect.getStatusIcon());
+
+                if (effect.getStatusType() == StatusEffect.StatusEffectType.BUFF) {
+                    status.setModifierType(BattleStatus.ModifierType.RAISE);
+                } else {
+                    status.setModifierType(BattleStatus.ModifierType.LOWER);
                 }
-                break;
-            case FRIEND:
-            case OWN:
-            default:
-                break;
+                status.setIncapacitated(effect.isSkillIncapacitates());
 
-        }
+                if (effect.getBuffModifiesAttribute() != null) {
+                    // stat modifier
+                    status.setModifiedAttribute(effect.getBuffModifiesAttribute());
+                }
+                if (effect.getBuffModifiesCombatSkill() != null) {
+                    // combat skill mod
+                    status.setModifiedSkill(effect.getBuffModifiesCombatSkill());
+                }
 
-        BattleStatus status = new BattleStatus();
-        status.setStatusName(action.getUsedSkill().getName());
-        if (action.getUsedSkill().getType() == Skill.SkillType.BUFF) {
-            status.setModifierType(BattleStatus.ModifierType.RAISE);
-        } else {
-            status.setModifierType(BattleStatus.ModifierType.LOWER);
-        }
+                status.setAmountModifier(effect.getBuffModifier());
+                status.setRoundsRemaining(effect.getDurationInTurns());
+                status.setHealthchangePerRound(action.getActionAmount());
 
-        status.setIncapacitated(action.getUsedSkill().isSkillIncapacitates());
-
-        if (action.getUsedSkill().getPreparationRounds() > 0) {
-            // wind up attack
-            status.setAmountModifier(0);
-            status.setHealthchangePerRound(0);
-            status.setHealthchangeOnEnd(action.getActionAmount());
-            status.setRoundsRemaining(action.getUsedSkill().getPreparationRounds());
-        } else {
-            if (action.getUsedSkill().getBuffModifiesAttribute() != null) {
-                // stat modifier
-                status.setModifiedAttribute(action.getUsedSkill().getBuffModifiesAttribute());
-            } else if (action.getUsedSkill().getBuffModifiesCombatSkill() != null) {
-                // combat skill mod
-                status.setModifiedSkill(action.getUsedSkill().getBuffModifiesCombatSkill());
-            } else {
-                // damage / heal over time
-                // nothing because all other things are added anyways
-            }
-            status.setAmountModifier(action.getUsedSkill().getBuffModifier());
-            status.setRoundsRemaining(action.getUsedSkill().getDurationInTurns());
-            status.setHealthchangePerRound(action.getActionAmount());
-        }
-
-        switch (action.getUsedSkill().getTargetType()) {
-            case AREA:
-            case ENEMY:
-            case FRIEND:
-            case OWN:
-            default:
+                if(effect.getDurationInTurns() < 0) {
+                    status.setPermanent(true);
+                }
+                else{
+                    status.setPermanent(false);
+                }
                 action.getTarget().getStatusModifiers().add(status);
-        }
+            });
     }
 
     private boolean hasEvadedAttack(BattleAction action) {
 
         BattleParticipant target = action.getTarget();
+
+        // No dodge/parry/block if you are incapacitated!
+        if(target.getStatusModifiers().stream().anyMatch(status -> status.isIncapacitated())) {
+            return false;
+        }
 
         float chance = ThreadLocalRandom.current().nextFloat();
         float dodge = statsUtils.calculateDodgeChance(target) / 100;
@@ -290,21 +310,6 @@ public class BattleActionHandler {
         return false;
     }
     private void executeHealthChanging(BattleAction action) {
-        switch (action.getUsedSkill().getTargetType()) {
-            case AREA:
-            case ENEMY:
-                if (hasEvadedAttack(action)) {
-                    action.setActionAmount(0);
-                    return;
-                }
-                break;
-            case FRIEND:
-            case OWN:
-            default:
-                break;
-
-        }
-
         switch (action.getUsedSkill().getTargetType()) {
             case AREA:
             case ENEMY:

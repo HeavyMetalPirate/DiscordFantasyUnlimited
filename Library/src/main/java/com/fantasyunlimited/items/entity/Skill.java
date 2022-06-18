@@ -27,11 +27,7 @@ public class Skill extends GenericItem {
 	private List<SkillRank> ranks = new ArrayList<>();
 	private List<SkillRequirement> requirements = new ArrayList<>();
 
-	private Attribute buffModifiesAttribute;
-	private CombatSkill buffModifiesCombatSkill;
-	private int buffModifier;
-	private boolean skillIncapacitates;
-	private int durationInTurns;
+	private List<StatusEffect> statusEffects = new ArrayList<>();
 
 	public Attribute getAttribute() {
 		return attribute;
@@ -71,30 +67,6 @@ public class Skill extends GenericItem {
 
 	public void setMaxDamage(int maxDamage) {
 		this.maxDamage = maxDamage;
-	}
-
-	public Attribute getBuffModifiesAttribute() {
-		return buffModifiesAttribute;
-	}
-
-	public void setBuffModifiesAttribute(Attribute buffModifiesAttribute) {
-		this.buffModifiesAttribute = buffModifiesAttribute;
-	}
-
-	public int getBuffModifier() {
-		return buffModifier;
-	}
-
-	public void setBuffModifier(int buffModifier) {
-		this.buffModifier = buffModifier;
-	}
-
-	public int getDurationInTurns() {
-		return durationInTurns;
-	}
-
-	public void setDurationInTurns(int durationInTurns) {
-		this.durationInTurns = durationInTurns;
 	}
 
 	public SkillWeaponModifier getWeaponModifier() {
@@ -145,20 +117,12 @@ public class Skill extends GenericItem {
 		this.requirements = requirements;
 	}
 
-	public CombatSkill getBuffModifiesCombatSkill() {
-		return buffModifiesCombatSkill;
+	public List<StatusEffect> getStatusEffects() {
+		return statusEffects;
 	}
 
-	public void setBuffModifiesCombatSkill(CombatSkill buffModifiesCombatSkill) {
-		this.buffModifiesCombatSkill = buffModifiesCombatSkill;
-	}
-
-	public boolean isSkillIncapacitates() {
-		return skillIncapacitates;
-	}
-
-	public void setSkillIncapacitates(boolean skillIncapacitates) {
-		this.skillIncapacitates = skillIncapacitates;
+	public void setStatusEffects(List<StatusEffect> statusEffects) {
+		this.statusEffects = statusEffects;
 	}
 
 	public enum SkillWeaponModifier {
@@ -177,7 +141,7 @@ public class Skill extends GenericItem {
 	}
 
 	public enum SkillType {
-		OFFENSIVE, DEFENSIVE, BUFF, DEBUFF
+		OFFENSIVE, DEFENSIVE
 	}
 
 	public enum TargetType {

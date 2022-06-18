@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.36.1070 on 2022-06-16 15:53:53.
+// Generated using typescript-generator version 2.36.1070 on 2022-06-18 12:54:37.
 
 export namespace Items {
 
@@ -211,11 +211,7 @@ export namespace Items {
         preparationRounds: number;
         ranks: SkillRank[];
         requirements: SkillRequirement[];
-        buffModifiesAttribute: Attribute;
-        buffModifiesCombatSkill: CombatSkill;
-        buffModifier: number;
-        skillIncapacitates: boolean;
-        durationInTurns: number;
+        statusEffects: StatusEffect[];
     }
 
     export interface SkillRank extends Serializable {
@@ -229,6 +225,16 @@ export namespace Items {
     export interface SkillRequirement extends Serializable {
         skillIdOnSelf: string;
         skillIdOnTarget: string;
+    }
+
+    export interface StatusEffect extends AbstractStatus {
+        statusType: StatusEffectType;
+        buffModifiesAttribute: Attribute;
+        buffModifiesCombatSkill: CombatSkill;
+        buffModifier: number;
+        skillIncapacitates: boolean;
+        durationInTurns: number;
+        healthChangedOverTime: number;
     }
 
     export interface TravelConnection extends Serializable {
@@ -261,11 +267,13 @@ export namespace Items {
 
     export type WeaponType = "NONE" | "SWORD" | "AXE" | "DAGGER" | "POLEARM" | "GREATSWORD" | "GREATAXE" | "BOW" | "CROSSBOW" | "STAFF" | "WAND" | "SHIELD";
 
-    export type SkillType = "OFFENSIVE" | "DEFENSIVE" | "BUFF" | "DEBUFF";
+    export type SkillType = "OFFENSIVE" | "DEFENSIVE";
 
     export type TargetType = "ENEMY" | "FRIEND" | "OWN" | "AREA";
 
     export type SkillWeaponModifier = "WEAPON_MAINHAND" | "WEAPON_OFFHAND" | "NONE";
+
+    export type StatusEffectType = "BUFF" | "DEBUFF";
 
     export type Hand = "LEFT" | "RIGHT" | "BOTH" | "TWOHANDED";
 

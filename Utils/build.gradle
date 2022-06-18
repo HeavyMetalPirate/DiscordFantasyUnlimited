@@ -6,3 +6,4 @@ dependencies {
     api project(":Library")
     api project(":Database")
 }
+bootJar.enabled = false

@@ -108,9 +108,9 @@ public class DTOUtils {
     }
 
     public BattleParticipantStatus buildBattleParticipantStatus(BattleStatus status) {
-        Skill.SkillType type = status.getModifierType() == BattleStatus.ModifierType.RAISE
-                                ? Skill.SkillType.BUFF
-                                : Skill.SkillType.DEBUFF;
+        StatusEffect.StatusEffectType type = status.getModifierType() == BattleStatus.ModifierType.RAISE
+                                ? StatusEffect.StatusEffectType.BUFF
+                                : StatusEffect.StatusEffectType.DEBUFF;
 
         return new BattleParticipantStatus(
                 type,
@@ -132,6 +132,10 @@ public class DTOUtils {
 
         if(action.isExecuted() == false) {
             status = BattleActionStatus.WAITING;
+            outcome = BattleActionOutcome.NONE;
+        }
+        else if(action.isDefeated()) {
+            status = BattleActionStatus.DEFEATED;
             outcome = BattleActionOutcome.NONE;
         }
         else if(action.isFlee()) {
@@ -204,6 +208,11 @@ public class DTOUtils {
         int maxDamage = usedSkill.getMaxDamage() + skillRank.getDamageModifier();
         int cost = usedSkill.getCostOfExecution() + skillRank.getCostModifier();
 
+        List<BattleStatusEffect> statusEffects = new ArrayList<>();
+        usedSkill.getStatusEffects().stream()
+                .map(effect -> buildBattleStatusEffect(effect))
+                .forEach(statusEffects::add);
+
         return new BattleSkill(
                 usedSkill.getId(),
                 usedSkill.getName(),
@@ -214,12 +223,26 @@ public class DTOUtils {
                 usedSkill.getTargetType(),
                 usedSkill.getWeaponModifier(),
                 usedSkill.getPreparationRounds(),
-                usedSkill.getDurationInTurns(),
-                usedSkill.isSkillIncapacitates(),
                 minDamage,
                 maxDamage,
                 cost,
-                skillRank.getRank()
+                skillRank.getRank(),
+                statusEffects
+        );
+    }
+
+    public BattleStatusEffect buildBattleStatusEffect(StatusEffect statusEffect) {
+        return new BattleStatusEffect(
+                statusEffect.getStatusName(),
+                statusEffect.getStatusIcon(),
+                statusEffect.isSkillIncapacitates(),
+                statusEffect.getDurationInTurns() > 0? false : true,
+                statusEffect.getDurationInTurns(),
+                statusEffect.getBuffModifiesAttribute(),
+                statusEffect.getBuffModifiesCombatSkill(),
+                statusEffect.getBuffModifier(),
+                statusEffect.getStatusType(),
+                statusEffect.getHealthChangedOverTime()
         );
     }
 
@@ -298,11 +321,10 @@ public class DTOUtils {
                             null,
                             0,
                             0,
-                            false,
                             0,
                             0,
                             0,
-                            0
+                            new ArrayList<>()
                     ));
                 }
             }

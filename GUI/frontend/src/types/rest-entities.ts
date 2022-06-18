@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.36.1070 on 2022-06-16 15:53:53.
+// Generated using typescript-generator version 2.36.1070 on 2022-06-18 12:54:38.
 
 export namespace REST {
 
@@ -63,7 +63,7 @@ export namespace REST {
     }
 
     export interface BattleParticipantStatus {
-        statusType: SkillType;
+        statusType: StatusEffectType;
         name: string;
         iconName: string;
         attribute: Attribute;
@@ -105,12 +105,24 @@ export namespace REST {
         targetType: TargetType;
         weaponModifier: SkillWeaponModifier;
         preparationRounds: number;
-        durationInTurns: number;
-        incapacitates: boolean;
         minDamage: number;
         maxDamage: number;
         cost: number;
         rank: number;
+        statusEffects: BattleStatusEffect[];
+    }
+
+    export interface BattleStatusEffect {
+        statusName: string;
+        statusIcon: string;
+        incapacitates: boolean;
+        permanent: boolean;
+        durationInRounds: number;
+        modifiedAttribute: Attribute;
+        modifiedSkill: CombatSkill;
+        modifier: number;
+        statusType: StatusEffectType;
+        healthChangeOverTime: number;
     }
 
     export interface BattleUpdate {
@@ -332,9 +344,9 @@ export namespace REST {
     }
 
     export interface CsrfToken extends Serializable {
-        token: string;
         parameterName: string;
         headerName: string;
+        token: string;
     }
 
     export interface CombatSkillBonus extends AbstractStatus, Serializable {
@@ -386,7 +398,7 @@ export namespace REST {
 
     export type BattleActionOutcome = "HIT" | "MISS" | "DODGED" | "CRITICAL" | "BLOCKED" | "PARRIED" | "NONE";
 
-    export type BattleActionStatus = "FLEE" | "PASS" | "INCAPACITATED" | "EXECUTED" | "WAITING";
+    export type BattleActionStatus = "FLEE" | "PASS" | "INCAPACITATED" | "DEFEATED" | "EXECUTED" | "WAITING";
 
     export type BattleActionType = "SKILL" | "CONSUMABLE" | "PASS" | "FLEE";
 
@@ -398,13 +410,15 @@ export namespace REST {
 
     export type UserRegistrationStatus = "REGISTERED" | "USERNAME_FOUND" | "EMAIL_FOUND" | "INTERNAL_ERROR";
 
-    export type SkillType = "OFFENSIVE" | "DEFENSIVE" | "BUFF" | "DEBUFF";
+    export type StatusEffectType = "BUFF" | "DEBUFF";
 
     export type Attribute = "STRENGTH" | "ENDURANCE" | "DEXTERITY" | "WISDOM" | "INTELLIGENCE" | "DEFENSE" | "LUCK" | "ALL";
 
     export type CombatSkill = "DODGE" | "CRITICAL" | "BLOCK" | "PARRY" | "SPELLPOWER" | "HEALPOWER";
 
     export type EnergyType = "RAGE" | "FOCUS" | "MANA";
+
+    export type SkillType = "OFFENSIVE" | "DEFENSIVE";
 
     export type TargetType = "ENEMY" | "FRIEND" | "OWN" | "AREA";
 

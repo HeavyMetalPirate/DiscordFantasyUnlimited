@@ -5,7 +5,7 @@
     <iconName>bleed</iconName>
     <iconId>/images/skills/bleedout.png</iconId>
     <attribute>STRENGTH</attribute>
-    <type>DEBUFF</type>
+    <type>OFFENSIVE</type>
     <targetType>ENEMY</targetType>
     <weaponModifier>NONE</weaponModifier>
     <minDamage>2</minDamage>
@@ -21,8 +21,14 @@
             <requiredPlayerLevel>1</requiredPlayerLevel>
         </SkillRank>
     </ranks>
+    <statusEffects>
+        <StatusEffect>
+            <statusName>Dizzy</statusName>
+            <statusIcon>/images/items/dizzy.png</statusIcon>
+            <skillIncapacitates>true</skillIncapacitates>
+            <buffModifier>0</buffModifier>
+            <durationInTurns>3</durationInTurns>
+        </StatusEffect>
+    </statusEffects>
     <requirements />
-    <skillIncapacitates>true</skillIncapacitates>
-    <buffModifier>0</buffModifier>
-    <durationInTurns>3</durationInTurns>
 </Skill>

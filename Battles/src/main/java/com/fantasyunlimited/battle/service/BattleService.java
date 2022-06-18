@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @Service
 public class BattleService {
@@ -78,6 +79,8 @@ public class BattleService {
     }
 
     public BattleInformation addBattleAction(BattleInformation battleInfo, BattleParticipant executing, BattleParticipant target, Skill usedSkill) {
+        if(target.isDefeated()) return battleInfo;
+
         BattleAction action = buildBaseAction(battleInfo);
 
         action.setExecuting(executing);
@@ -190,7 +193,9 @@ public class BattleService {
 
                     if(usedSkill.getTargetType() == Skill.TargetType.AREA) {
                         // add actions for each player target
-                        battleInfo.getPlayers().forEach(player -> {
+                        battleInfo.getPlayers().stream()
+                                .filter(player -> player.isDefeated() == false)
+                                .forEach(player -> {
                             BattleAction action = calculateEnemyAction(battleInfo, usedSkill, hostile, player);
 
                             battleInfo.getActions().add(action);
@@ -217,6 +222,32 @@ public class BattleService {
 
         battleInfo.setCurrentRound(battleInfo.getCurrentRound() + 1);
         battleInfo.setActive(battleUtils.isBattleActive(battleInfo));
+
+        // TODO handle status effects and timeouts
+        battleInfo.getPlayers().stream()
+                .forEach(player -> {
+
+                    // Apply DoTs and HoTs
+
+                    // Expiry
+                    player.getStatusModifiers().stream()
+                            .filter(status -> status.isPermanent() == false)
+                            .forEach(status -> status.setRoundsRemaining(status.getRoundsRemaining() - 1));
+                    player.getStatusModifiers().removeIf(status -> status.isPermanent() == false && status.getRoundsRemaining() == 0);
+                });
+
+        battleInfo.getHostiles().stream()
+                .forEach(hostile -> {
+
+                    // Apply DoTs and HoTs
+
+                    // Expiry
+                    hostile.getStatusModifiers().stream()
+                            .filter(status -> status.isPermanent() == false)
+                            .forEach(status -> status.setRoundsRemaining(status.getRoundsRemaining() - 1));
+                    hostile.getStatusModifiers().removeIf(status -> status.isPermanent() == false && status.getRoundsRemaining() == 0);
+                });
+
 
         BattleInformation toStore = handleBattleFinalized(battleInfo);
         return Pair.of(true,crudService.saveBattle(toStore));
@@ -403,10 +434,10 @@ public class BattleService {
 
     private BattleParticipant calculateHostileActionTarget(Skill usedSkill, BattleParticipant executing, BattleInformation battleInformation) {
         if (usedSkill.getTargetType() == null
-                && (usedSkill.getType() == Skill.SkillType.OFFENSIVE || usedSkill.getType() == Skill.SkillType.DEBUFF)) {
+                && (usedSkill.getType() == Skill.SkillType.OFFENSIVE)) {
             usedSkill.setTargetType(Skill.TargetType.ENEMY); // fallback
         } else if (usedSkill.getTargetType() == null
-                && (usedSkill.getType() == Skill.SkillType.DEFENSIVE || usedSkill.getType() == Skill.SkillType.BUFF)) {
+                && (usedSkill.getType() == Skill.SkillType.DEFENSIVE)) {
             usedSkill.setTargetType(Skill.TargetType.FRIEND); // fallback
         }
 

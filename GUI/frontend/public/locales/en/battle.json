@@ -17,5 +17,9 @@
   "battle.action.amount.for": "for",
   "battle.outcome.winning.players": "The heroes remain victorious!",
   "battle.outcome.winning.hostiles": "The villains won - this time...",
-  "battle.log.header": "Combat Log"
+  "battle.log.header": "Combat Log",
+  "battle.status.incapacitated": "Can not move",
+  "battle.status.flee": "Ran away from battle",
+  "battle.status.pass": "No action taken",
+  "battle.status.defeat": "Was defeat before they could act"
 }

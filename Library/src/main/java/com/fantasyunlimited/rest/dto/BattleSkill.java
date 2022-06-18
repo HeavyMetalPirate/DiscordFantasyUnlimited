@@ -3,6 +3,8 @@ package com.fantasyunlimited.rest.dto;
 import com.fantasyunlimited.items.entity.Attributes;
 import com.fantasyunlimited.items.entity.Skill;
 
+import java.util.List;
+
 public record BattleSkill(
         String id,
         String name,
@@ -13,10 +15,9 @@ public record BattleSkill(
         Skill.TargetType targetType,
         Skill.SkillWeaponModifier weaponModifier,
         int preparationRounds,
-        int durationInTurns,
-        boolean incapacitates,
         int minDamage,
         int maxDamage,
         int cost,
-        int rank
+        int rank,
+        List<BattleStatusEffect> statusEffects
 ) {}

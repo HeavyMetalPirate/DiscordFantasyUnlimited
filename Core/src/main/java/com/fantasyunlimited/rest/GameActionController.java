@@ -258,17 +258,6 @@ public class GameActionController {
     public ResponseEntity<BattleBasicInfo> findBattle(@PathVariable(name = "id") String locationId, HttpServletRequest request) {
 
         PlayerCharacter selectedCharacter = utils.getPlayerCharacterFromSession(request);
-        UUID battleId = utils.getBattleIdFromSession(request);
-
-        if(battleId != null) {
-            BattleInformation battleInformation = battleService.getBattleInformation(battleId);
-
-            BattleBasicInfo battleInfo = new BattleBasicInfo(
-                    battleInformation.getBattleId().toString()
-            );
-
-            return new ResponseEntity<>(battleInfo, HttpStatus.FOUND);
-        }
 
         // read from the database if there is a battle from last session
         // TODO group handling? here?
@@ -282,9 +271,6 @@ public class GameActionController {
 
         // find a new battle, create and store it, then return basic information for display
         BattleInformation battleInformation = battleService.initializeBattle(Arrays.asList(selectedCharacter), locationId);
-
-        utils.setBattleIdFromSession(request, battleInformation.getBattleId());
-
         BattleBasicInfo battleInfo = new BattleBasicInfo(
                 battleInformation.getBattleId().toString()
         );
@@ -294,13 +280,6 @@ public class GameActionController {
 
     @RequestMapping(value = "/battle/current", produces = "application/json", method = RequestMethod.GET)
     public ResponseEntity<BattleBasicInfo> getCurrentActiveBattle(HttpServletRequest request) {
-        UUID battleId = utils.getBattleIdFromSession(request);
-        if(battleId != null) {
-            BattleBasicInfo battleInfo = new BattleBasicInfo(
-                    battleId.toString()
-            );
-            return new ResponseEntity<>(battleInfo, HttpStatus.OK);
-        }
         PlayerCharacter selectedCharacter = utils.getPlayerCharacterFromSession(request);
 
         if(selectedCharacter == null) {
