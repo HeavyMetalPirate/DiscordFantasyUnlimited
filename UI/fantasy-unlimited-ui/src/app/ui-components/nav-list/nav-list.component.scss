@@ -1,0 +1,29 @@
+nav-list {
+  .mat-nav-list .mat-list-item {
+    &:hover,
+    &.active {
+      background-color: rebeccapurple;
+      color: white;
+    }
+  }
+
+  &.nav-list--expandable {
+    .mat-expansion-panel {
+      border-radius: 0;
+    }
+
+    .mat-expansion-panel-header {
+      padding-left: 16px;
+      height: 48px;
+    }
+
+    .mat-expansion-indicator::after {
+      position: relative;
+      top: -3px;
+    }
+
+    .mat-expansion-panel-body {
+      padding: 0;
+    }
+  }
+}
