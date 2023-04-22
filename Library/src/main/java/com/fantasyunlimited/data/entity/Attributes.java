@@ -1,8 +1,7 @@
 package com.fantasyunlimited.data.entity;
 
 import java.io.Serializable;
-
-import javax.persistence.Embeddable;
+import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class Attributes implements Serializable {

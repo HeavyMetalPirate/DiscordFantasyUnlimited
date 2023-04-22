@@ -2,12 +2,15 @@ package com.fantasyunlimited.battle.entity;
 
 import com.fantasyunlimited.items.entity.Attributes.Attribute;
 import com.fantasyunlimited.items.entity.CombatSkill;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+
+import java.sql.Types;
 import java.util.UUID;
 
 @Entity
@@ -15,7 +18,7 @@ public class BattleStatus {
 
 	@Id
 	@GeneratedValue
-	@Type(type="org.hibernate.type.UUIDCharType")
+	@JdbcTypeCode(Types.VARCHAR)
 	private UUID statusId;
 
 	private String statusName;

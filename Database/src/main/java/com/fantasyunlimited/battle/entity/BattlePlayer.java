@@ -3,8 +3,8 @@ package com.fantasyunlimited.battle.entity;
 import com.fantasyunlimited.data.converter.PlayerCharacterConverter;
 import com.fantasyunlimited.data.entity.PlayerCharacter;
 
-import javax.persistence.Convert;
-import javax.persistence.Entity;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
 
 @Entity
 public class BattlePlayer extends BattleParticipant {

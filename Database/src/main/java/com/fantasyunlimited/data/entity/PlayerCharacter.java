@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import com.fantasyunlimited.data.converter.CharacterClassConverter;
 import com.fantasyunlimited.data.converter.LocationConverter;

@@ -6,7 +6,7 @@ import com.fantasyunlimited.battle.entity.BattlePlayer;
 import com.fantasyunlimited.battle.service.BattleParticipantCrudService;
 import org.springframework.context.ApplicationContext;
 
-import javax.persistence.AttributeConverter;
+import jakarta.persistence.AttributeConverter;
 
 public class BattleParticipantConverter implements AttributeConverter<BattleParticipant, String> {
 

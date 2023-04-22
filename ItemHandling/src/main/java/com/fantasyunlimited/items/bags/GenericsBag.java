@@ -21,7 +21,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 public abstract class GenericsBag<T extends GenericItem> {
 	@Autowired

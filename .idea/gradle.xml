@@ -4,18 +4,25 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <option name="delegatedBuild" value="true" />
-        <option name="testRunner" value="GRADLE" />
-        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <compositeConfiguration>
+          <compositeBuild compositeDefinitionSource="SCRIPT">
+            <builds>
+              <build path="$PROJECT_DIR$/buildSrc" name="buildSrc">
+                <projects>
+                  <project path="$PROJECT_DIR$/buildSrc" />
+                </projects>
+              </build>
+            </builds>
+          </compositeBuild>
+        </compositeConfiguration>
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleJvm" value="temurin-17" />
+        <option name="gradleJvm" value="temurin-17 (2)" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/Battles" />
             <option value="$PROJECT_DIR$/Core" />
             <option value="$PROJECT_DIR$/Database" />
-            <option value="$PROJECT_DIR$/GUI" />
             <option value="$PROJECT_DIR$/ItemHandling" />
             <option value="$PROJECT_DIR$/Library" />
             <option value="$PROJECT_DIR$/Utils" />

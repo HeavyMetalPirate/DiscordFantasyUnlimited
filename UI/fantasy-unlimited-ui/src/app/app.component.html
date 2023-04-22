@@ -1,0 +1,23 @@
+<mat-sidenav-container class="example-container">
+  <mat-sidenav mode="side" opened>
+    <app-sidebar></app-sidebar>
+  </mat-sidenav>
+  <mat-sidenav position="end" mode="side" opened>
+    <app-sidebar></app-sidebar>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <div id="banner">
+      <app-banner></app-banner>
+    </div>
+    <div id="content">
+      <!-- Router here -->
+      <router-outlet></router-outlet>
+    </div>
+    <div id="footer">
+      (C) OASCHLOCH
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+
+

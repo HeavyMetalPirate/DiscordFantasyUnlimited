@@ -1,9 +1,12 @@
 package com.fantasyunlimited.battle.entity;
 
 import com.fantasyunlimited.rest.dto.BattleSide;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
+import java.sql.Types;
 import java.util.List;
 import java.util.UUID;
 
@@ -11,7 +14,7 @@ import java.util.UUID;
 public class BattleResult {
     @Id
     @GeneratedValue
-    @Type(type="org.hibernate.type.UUIDCharType")
+    @JdbcTypeCode(Types.VARCHAR)
     private UUID id;
 
     @OneToOne

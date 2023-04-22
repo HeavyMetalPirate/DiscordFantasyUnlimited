@@ -2,7 +2,7 @@ package com.fantasyunlimited.data.converter;
 
 import com.fantasyunlimited.items.entity.GenericItem;
 
-import javax.persistence.AttributeConverter;
+import jakarta.persistence.AttributeConverter;
 
 public abstract class GenericItemConverter<T extends GenericItem> implements AttributeConverter<T, String> {
 

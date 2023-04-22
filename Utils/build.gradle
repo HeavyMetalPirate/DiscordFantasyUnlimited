@@ -1,9 +1,0 @@
-plugins {
-    id 'foo-plugin'
-}
-
-dependencies {
-    api project(":Library")
-    api project(":Database")
-}
-bootJar.enabled = false

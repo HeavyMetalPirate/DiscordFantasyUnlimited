@@ -11,8 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class FantasyUnlimitedErrorController implements ErrorController {
@@ -23,8 +23,8 @@ public class FantasyUnlimitedErrorController implements ErrorController {
     public String error(HttpServletRequest request) {
         try {
             Object originUrl = request.getAttribute(RequestDispatcher.FORWARD_REQUEST_URI);
-            Object errorCode = request.getAttribute("javax.servlet.error.status_code");
-            Object errorMessage = request.getAttribute("javax.servlet.error.message");
+            Object errorCode = request.getAttribute("jakarta.servlet.error.status_code");
+            Object errorMessage = request.getAttribute("jakarta.servlet.error.message");
 
             log.debug("Error: HTTP {} - {} - {}", errorCode, errorMessage, originUrl);
 

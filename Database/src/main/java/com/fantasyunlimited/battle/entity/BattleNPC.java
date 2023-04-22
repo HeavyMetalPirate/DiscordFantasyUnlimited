@@ -3,8 +3,8 @@ package com.fantasyunlimited.battle.entity;
 import com.fantasyunlimited.data.converter.HostileNPCConverter;
 import com.fantasyunlimited.items.entity.HostileNPC;
 
-import javax.persistence.Convert;
-import javax.persistence.Entity;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
 
 @Entity
 public class BattleNPC extends BattleParticipant {

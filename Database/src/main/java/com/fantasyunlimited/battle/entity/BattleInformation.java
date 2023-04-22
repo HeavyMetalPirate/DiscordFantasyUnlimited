@@ -2,10 +2,12 @@ package com.fantasyunlimited.battle.entity;
 
 import com.fantasyunlimited.data.converter.LocationConverter;
 import com.fantasyunlimited.items.entity.Location;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
+import java.sql.Types;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -19,7 +21,7 @@ public class BattleInformation implements Serializable {
 
     @Id
     @GeneratedValue
-    @Type(type="org.hibernate.type.UUIDCharType")
+    @JdbcTypeCode(Types.VARCHAR)
     private UUID battleId;
     private ZonedDateTime begin = ZonedDateTime.now(ZoneId.of("UTC"));
 

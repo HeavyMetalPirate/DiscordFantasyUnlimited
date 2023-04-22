@@ -10,7 +10,7 @@ import com.fantasyunlimited.data.converter.SkillConverter;
 import com.fantasyunlimited.items.entity.Consumable;
 import com.fantasyunlimited.items.entity.Skill;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @IdClass(BattleActionId.class)

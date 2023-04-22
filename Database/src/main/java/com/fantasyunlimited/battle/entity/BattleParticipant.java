@@ -1,6 +1,7 @@
 package com.fantasyunlimited.battle.entity;
 
 import java.io.Serializable;
+import java.sql.Types;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -10,16 +11,18 @@ import com.fantasyunlimited.data.entity.Attributes;
 import com.fantasyunlimited.items.entity.*;
 import com.fantasyunlimited.items.entity.Attributes.Attribute;
 import com.fantasyunlimited.items.entity.Weapon.WeaponType;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @MappedSuperclass
 public abstract class BattleParticipant implements Serializable {
 
+
 	@Id
 	@GeneratedValue
-	@Type(type="org.hibernate.type.UUIDCharType")
+	@JdbcTypeCode(Types.VARCHAR)
 	private UUID id;
 
 	@ManyToOne

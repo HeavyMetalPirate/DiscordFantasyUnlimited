@@ -4,7 +4,7 @@ import com.fantasyunlimited.data.entity.PlayerCharacter;
 import com.fantasyunlimited.data.service.PlayerCharacterService;
 import org.springframework.context.ApplicationContext;
 
-import javax.persistence.AttributeConverter;
+import jakarta.persistence.AttributeConverter;
 
 public class PlayerCharacterConverter implements AttributeConverter<PlayerCharacter, String> {
 

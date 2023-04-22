@@ -2,6 +2,9 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="17">
+      <module name="FantasyUnlimited.FantasyUnlimitedBuild" target="1.8" />
+      <module name="FantasyUnlimited.FantasyUnlimitedBuild.main" target="1.8" />
+      <module name="FantasyUnlimited.FantasyUnlimitedBuild.test" target="1.8" />
       <module name="FantasyUnlimited.FantasyUnlimitedCore" target="17" />
       <module name="FantasyUnlimited.FantasyUnlimitedCore.main" target="17" />
       <module name="FantasyUnlimited.FantasyUnlimitedCore.test" target="17" />

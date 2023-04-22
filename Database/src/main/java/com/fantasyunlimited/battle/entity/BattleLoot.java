@@ -2,9 +2,12 @@ package com.fantasyunlimited.battle.entity;
 
 import com.fantasyunlimited.data.converter.PlayerCharacterConverter;
 import com.fantasyunlimited.data.entity.PlayerCharacter;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
+import java.sql.Types;
 import java.util.Map;
 import java.util.UUID;
 
@@ -12,7 +15,7 @@ import java.util.UUID;
 public class BattleLoot {
     @Id
     @GeneratedValue
-    @Type(type="org.hibernate.type.UUIDCharType")
+    @JdbcTypeCode(Types.VARCHAR)
     private UUID id;
 
     @ManyToOne
